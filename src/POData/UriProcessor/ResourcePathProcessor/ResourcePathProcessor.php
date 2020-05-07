@@ -29,18 +29,17 @@ class ResourcePathProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @return RequestDescription
      * @throws AnnotationException
      * @throws InvalidOperationException
-     *                                                          or in case of any version incompatibility
+     *                                   or in case of any version incompatibility
      * @throws UrlFormatException
      * @throws ReflectionException
-     *
-     * @throws ODataException                                   If any exception occurs while processing the segments
+     * @throws ODataException            If any exception occurs while processing the segments
+     * @return RequestDescription
      */
     public static function process(IService $service)
     {
-        $host = $service->getHost();
+        $host               = $service->getHost();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
         $absoluteServiceUri = $host->getAbsoluteServiceUri();
 
@@ -55,13 +54,13 @@ class ResourcePathProcessor
             true
         );
 
-        $dataType = null;
+        $dataType         = null;
         $operationContext = $service->getOperationContext();
         if ($operationContext && $operationContext->incomingRequest()->getMethod() != HTTPRequestMethod::GET()) {
             $dataType = $service->getHost()->getRequestContentType();
         }
         $incoming = isset($operationContext) ? $operationContext->incomingRequest() : null;
-        $request = new RequestDescription(
+        $request  = new RequestDescription(
             $segments,
             $absoluteRequestUri,
             $service->getConfiguration()->getMaxDataServiceVersion(),

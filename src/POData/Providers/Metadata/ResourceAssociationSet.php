@@ -42,7 +42,7 @@ class ResourceAssociationSet
     /**
      * Construct new instance of ResourceAssociationSet.
      *
-     * @param string $name Name of the association set
+     * @param string                    $name Name of the association set
      * @param ResourceAssociationSetEnd $end1 First end set participating
      *                                        in the association set
      * @param ResourceAssociationSetEnd $end2 Second end set participating
@@ -54,8 +54,7 @@ class ResourceAssociationSet
         $name,
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
-    )
-    {
+    ) {
         if (null === $end1->getResourceProperty()
             && null === $end2->getResourceProperty()
         ) {
@@ -78,9 +77,9 @@ class ResourceAssociationSet
     }
 
     /**
-     * @param ResourceEntityType $sourceType
-     * @param string $linkName
-     * @param ResourceSet $targetResourceSet
+     * @param  ResourceEntityType $sourceType
+     * @param  string             $linkName
+     * @param  ResourceSet        $targetResourceSet
      * @return string
      */
     public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
@@ -89,8 +88,8 @@ class ResourceAssociationSet
     }
 
     /**
-     * @param ResourceEntityType $sourceType
-     * @param ResourceProperty $property
+     * @param  ResourceEntityType $sourceType
+     * @param  ResourceProperty   $property
      * @return string
      */
     public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
@@ -101,9 +100,9 @@ class ResourceAssociationSet
     /**
      * Retrieve the end for the given resource set, type and property.
      *
-     * @param ResourceSet $resourceSet Resource set for the end
-     * @param ResourceEntityType $resourceType Resource type for the end
-     * @param ResourceProperty $resourceProperty Resource property for the end
+     * @param ResourceSet        $resourceSet      Resource set for the end
+     * @param ResourceEntityType $resourceType     Resource type for the end
+     * @param ResourceProperty   $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Resource association set end for the
      *                                        given parameters
@@ -112,8 +111,7 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    )
-    {
+    ) {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end1;
         }
@@ -127,9 +125,9 @@ class ResourceAssociationSet
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceSet $resourceSet Resource set for the end
-     * @param ResourceEntityType $resourceType Resource type for the end
-     * @param ResourceProperty $resourceProperty Resource property for the end
+     * @param ResourceSet        $resourceSet      Resource set for the end
+     * @param ResourceEntityType $resourceType     Resource type for the end
+     * @param ResourceProperty   $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Related resource association set end
      *                                        for the given parameters
@@ -138,8 +136,7 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    )
-    {
+    ) {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end2;
         }

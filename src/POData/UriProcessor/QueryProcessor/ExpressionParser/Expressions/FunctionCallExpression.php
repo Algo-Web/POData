@@ -24,15 +24,15 @@ class FunctionCallExpression extends AbstractExpression
     /**
      * Creates new instance of FunctionCallExpression.
      *
-     * @param FunctionDescription $functionDescription The signature of function-call
-     * @param array<AbstractExpression> $paramExpressions The parameters to the function
+     * @param FunctionDescription       $functionDescription The signature of function-call
+     * @param array<AbstractExpression> $paramExpressions    The parameters to the function
      */
     public function __construct(FunctionDescription $functionDescription, $paramExpressions)
     {
         $this->functionDescription = $functionDescription;
-        $this->paramExpressions = $paramExpressions;
-        $this->nodeType = ExpressionType::CALL();
-        $this->type = $functionDescription->returnType;
+        $this->paramExpressions    = $paramExpressions;
+        $this->nodeType            = ExpressionType::CALL();
+        $this->type                = $functionDescription->returnType;
     }
 
     /**

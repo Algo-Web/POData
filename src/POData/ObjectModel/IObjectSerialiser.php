@@ -57,7 +57,7 @@ interface IObjectSerialiser
      * Write top level complex resource.
      *
      * @param QueryResult  &$complexValue Results property contains the complex object to be written
-     * @param string $propertyName The name of the complex property
+     * @param string       $propertyName  The name of the complex property
      * @param ResourceType &$resourceType Describes the type of complex object
      *
      * @return ODataPropertyContent
@@ -67,9 +67,9 @@ interface IObjectSerialiser
     /**
      * Write top level bag resource.
      *
-     * @param QueryResult $bagValue
-     * @param string $propertyName The name of the bag property
-     * @param ResourceType         &$resourceType Describes the type of bag object
+     * @param  QueryResult          $bagValue
+     * @param  string               $propertyName  The name of the bag property
+     * @param  ResourceType         &$resourceType Describes the type of bag object
      * @return ODataPropertyContent
      * @internal param QueryResult $BagValue Results property contains the bag object to be written
      */
@@ -78,7 +78,7 @@ interface IObjectSerialiser
     /**
      * Write top level primitive value.
      *
-     * @param QueryResult      &$primitiveValue Results property contains the primitive value to be written
+     * @param QueryResult      &$primitiveValue   Results property contains the primitive value to be written
      * @param ResourceProperty &$resourceProperty Resource property describing the primitive property to be written
      *
      * @return ODataPropertyContent
@@ -95,7 +95,7 @@ interface IObjectSerialiser
     /**
      * Sets reference to the request submitted by client.
      *
-     * @param RequestDescription $request
+     * @param  RequestDescription $request
      * @return void
      */
     public function setRequest(RequestDescription $request);
@@ -110,7 +110,7 @@ interface IObjectSerialiser
     /**
      * Sets the data service instance.
      *
-     * @param IService $service
+     * @param  IService $service
      * @return void
      */
     public function setService(IService $service);

@@ -38,10 +38,10 @@ class SimpleDataService extends BaseService implements IService
     /**
      * SimpleDataService constructor.
      * @param $db
-     * @param SimpleMetadataProvider $metaProvider
-     * @param ServiceHost $host
-     * @param IObjectSerialiser|null $serialiser
-     * @param IStreamProvider2|null $streamProvider
+     * @param  SimpleMetadataProvider $metaProvider
+     * @param  ServiceHost            $host
+     * @param  IObjectSerialiser|null $serialiser
+     * @param  IStreamProvider2|null  $streamProvider
      * @throws ODataException
      */
     public function __construct(
@@ -50,14 +50,13 @@ class SimpleDataService extends BaseService implements IService
         ServiceHost $host,
         IObjectSerialiser $serialiser = null,
         IStreamProvider2 $streamProvider = null
-    )
-    {
+    ) {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
             $this->queryProvider = $db;
         } elseif (!empty($db->queryProviderClassName)) {
             $queryProviderClassName = $db->queryProviderClassName;
-            $this->queryProvider = new $queryProviderClassName($db);
+            $this->queryProvider    = new $queryProviderClassName($db);
         } else {
             throw new ODataException('Invalid query provider supplied', 500);
         }
@@ -68,7 +67,7 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
-     * @param IStreamProvider2|null $streamProvider
+     * @param  IStreamProvider2|null $streamProvider
      * @return void
      */
     public function setStreamProvider(IStreamProvider2 $streamProvider = null)

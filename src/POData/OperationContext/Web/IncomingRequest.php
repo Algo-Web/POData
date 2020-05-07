@@ -56,10 +56,10 @@ class IncomingRequest implements IHTTPRequest
      */
     public function __construct()
     {
-        $this->method = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
-        $this->queryOptions = [];
+        $this->method            = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
+        $this->queryOptions      = [];
         $this->queryOptionsCount = [];
-        $this->headers = [];
+        $this->headers           = [];
     }
 
     /**
@@ -151,7 +151,7 @@ class IncomingRequest implements IHTTPRequest
                     || (0 === strpos($key, 'SERVER_'))
                     || (0 === strpos($key, 'CONTENT_'))
                 ) {
-                    $trimmedValue = trim(strval($value));
+                    $trimmedValue        = trim(strval($value));
                     $this->headers[$key] = isset($trimmedValue) ? $trimmedValue : null;
                 }
             }
@@ -168,15 +168,15 @@ class IncomingRequest implements IHTTPRequest
     public function getQueryParameters(): array
     {
         if (0 == count($this->queryOptions)) {
-            $queryString = $this->getQueryString();
+            $queryString        = $this->getQueryString();
             $this->queryOptions = [];
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
                 if (!empty($queryOptionAsString)) {
-                    $result = explode('=', $queryOptionAsString, 2);
+                    $result         = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = 2 == count($result);
-                    $rawUrl = rawurldecode($result[0]);
+                    $rawUrl         = rawurldecode($result[0]);
                     if ($isNamedOptions) {
                         $this->queryOptions[] = [$rawUrl => trim(rawurldecode($result[1]))];
                     } else {

@@ -57,25 +57,25 @@ class RootProjectionNode extends ExpandedProjectionNode
      * Constructs a new instance of 'RootProjectionNode' representing root
      * of 'Projection Tree'.
      *
-     * @param ResourceSetWrapper $resourceSetWrapper ResourceSetWrapper of
+     * @param ResourceSetWrapper  $resourceSetWrapper  ResourceSetWrapper of
      *                                                 the resource pointed
      *                                                 by the resource path
      * @param InternalOrderByInfo $internalOrderByInfo Details of ordering
      *                                                 to be applied to the
      *                                                 resource set pointed
      *                                                 by the resource path
-     * @param int $skipCount Number of resources to
+     * @param int                 $skipCount           Number of resources to
      *                                                 be skipped from the
      *                                                 resource set pointed
      *                                                 by the resource path
-     * @param int $takeCount Number of resources to
+     * @param int                 $takeCount           Number of resources to
      *                                                 be taken from the
      *                                                 resource set pointed
      *                                                 by the resource path
-     * @param int $maxResultCount The maximum limit
+     * @param int                 $maxResultCount      The maximum limit
      *                                                 configured for the
      *                                                 resource set
-     * @param ResourceType $baseResourceType Resource type of the
+     * @param ResourceType        $baseResourceType    Resource type of the
      *                                                 resource pointed
      *                                                 by the resource path
      */
@@ -86,8 +86,7 @@ class RootProjectionNode extends ExpandedProjectionNode
         $takeCount,
         $maxResultCount,
         ResourceType $baseResourceType
-    )
-    {
+    ) {
         $this->baseResourceType = $baseResourceType;
         parent::__construct(
             null,
@@ -176,9 +175,9 @@ class RootProjectionNode extends ExpandedProjectionNode
         // and return it.
 
         // set up tracking stack and scratchpad
-        $trackStack = [];
+        $trackStack   = [];
         $trackStack[] = ['node' => $this, 'name' => null, 'index' => 0];
-        $scratchpad = [];
+        $scratchpad   = [];
 
         // now start the dance
         while (0 < count($trackStack)) {
@@ -190,7 +189,7 @@ class RootProjectionNode extends ExpandedProjectionNode
             $topNode = $trackStack[$stackDex];
             /** @var ExpandedProjectionNode $rawNode */
             $rawNode = $topNode['node'];
-            $nodes = $rawNode->getChildNodes();
+            $nodes   = $rawNode->getChildNodes();
             // have we finished processing current level?
             // this treats a leaf node as simply another exhausted parent node with all of its zero children having
             // been processed

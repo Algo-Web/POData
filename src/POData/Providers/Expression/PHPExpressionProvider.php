@@ -17,26 +17,26 @@ use POData\UriProcessor\QueryProcessor\FunctionDescription;
  */
 class PHPExpressionProvider implements IExpressionProvider
 {
-    const ADD = '+';
-    const CLOSE_BRACKET = ')';
-    const COMMA = ',';
-    const DIVIDE = '/';
-    const SUBTRACT = '-';
-    const EQUAL = '==';
-    const GREATER_THAN = '>';
+    const ADD                   = '+';
+    const CLOSE_BRACKET         = ')';
+    const COMMA                 = ',';
+    const DIVIDE                = '/';
+    const SUBTRACT              = '-';
+    const EQUAL                 = '==';
+    const GREATER_THAN          = '>';
     const GREATER_THAN_OR_EQUAL = '>=';
-    const LESS_THAN = '<';
-    const LESS_THAN_OR_EQUAL = '<=';
-    const LOGICAL_AND = '&&';
-    const LOGICAL_NOT = '!';
-    const LOGICAL_OR = '||';
-    const MEMBER_ACCESS = '->';
-    const MODULO = '%';
-    const MULTIPLY = '*';
-    const NEGATE = '-';
-    const NOT_EQUAL = '!=';
-    const OPEN_BRACKET = '(';
-    const TYPE_NAMESPACE = 'POData\\Providers\\Metadata\\Type\\';
+    const LESS_THAN             = '<';
+    const LESS_THAN_OR_EQUAL    = '<=';
+    const LOGICAL_AND           = '&&';
+    const LOGICAL_NOT           = '!';
+    const LOGICAL_OR            = '||';
+    const MEMBER_ACCESS         = '->';
+    const MODULO                = '%';
+    const MULTIPLY              = '*';
+    const NEGATE                = '-';
+    const NOT_EQUAL             = '!=';
+    const OPEN_BRACKET          = '(';
+    const TYPE_NAMESPACE        = 'POData\\Providers\\Metadata\\Type\\';
 
     /**
      * The name of iterator.
@@ -76,8 +76,8 @@ class PHPExpressionProvider implements IExpressionProvider
      * Call-back for logical expression.
      *
      * @param ExpressionType $expressionType The type of logical expression
-     * @param string $left The left expression
-     * @param string $right The left expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
      *
      * @return string
      */
@@ -100,8 +100,8 @@ class PHPExpressionProvider implements IExpressionProvider
      * To format binary expression.
      *
      * @param string $operator The binary operator
-     * @param string $left The left operand
-     * @param string $right The right operand
+     * @param string $left     The left operand
+     * @param string $right    The right operand
      *
      * @return string
      */
@@ -115,8 +115,8 @@ class PHPExpressionProvider implements IExpressionProvider
      * Call-back for arithmetic expression.
      *
      * @param ExpressionType $expressionType The type of arithmetic expression
-     * @param string $left The left expression
-     * @param string $right The left expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
      *
      * @return string
      */
@@ -147,8 +147,8 @@ class PHPExpressionProvider implements IExpressionProvider
      * Call-back for relational expression.
      *
      * @param ExpressionType $expressionType The type of relation expression
-     * @param string $left The left expression
-     * @param string $right The left expression
+     * @param string         $left           The left expression
+     * @param string         $right          The left expression
      *
      * @return string
      */
@@ -182,7 +182,7 @@ class PHPExpressionProvider implements IExpressionProvider
      * Call-back for unary expression.
      *
      * @param ExpressionType $expressionType The type of unary expression
-     * @param string $child The child expression
+     * @param string         $child          The child expression
      *
      * @return string
      */
@@ -204,7 +204,7 @@ class PHPExpressionProvider implements IExpressionProvider
      * To format unary expression.
      *
      * @param string $operator The unary operator
-     * @param string $child The operand
+     * @param string $child    The operand
      *
      * @return string
      */
@@ -216,7 +216,7 @@ class PHPExpressionProvider implements IExpressionProvider
     /**
      * Call-back for constant expression.
      *
-     * @param IType $type The type of constant
+     * @param IType $type  The type of constant
      * @param mixed $value The value of the constant
      *
      * @return string
@@ -250,12 +250,12 @@ class PHPExpressionProvider implements IExpressionProvider
         if (null == $expression->getResourceProperty()) {
             throw new InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
         }
-        $parent = $expression;
+        $parent   = $expression;
         $variable = null;
 
         do {
             $variable = $parent->getResourceProperty()->getName() . self::MEMBER_ACCESS . $variable;
-            $parent = $parent->getParent();
+            $parent   = $parent->getParent();
         } while ($parent != null);
 
         $variable = rtrim($variable, self::MEMBER_ACCESS);
@@ -278,7 +278,7 @@ class PHPExpressionProvider implements IExpressionProvider
      * Call-back for function call expression.
      *
      * @param FunctionDescription $functionDescription Description of the function
-     * @param array<string> $params Parameters to the function
+     * @param array<string>       $params              Parameters to the function
      *
      * @return string
      */

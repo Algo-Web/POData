@@ -28,9 +28,8 @@ class Null1 implements IType
      *
      * @param IType $type Type to check compatibility
      *
-     * @return bool
      * @throws NotImplementedException
-     *
+     * @return bool
      */
     public function isCompatibleWith(IType $type)
     {
@@ -41,7 +40,7 @@ class Null1 implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -79,8 +78,8 @@ class Null1 implements IType
      *
      * @param mixed $value value to convert
      *
-     * @return bool
      * @throws NotImplementedException
+     * @return bool
      */
     public function convertToOData($value)
     {

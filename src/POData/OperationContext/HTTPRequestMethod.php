@@ -19,11 +19,11 @@ use MyCLabs\Enum\Enum;
  */
 class HTTPRequestMethod extends Enum
 {
-    protected const GET = 'GET';
-    protected const POST = 'POST';
-    protected const PUT = 'PUT';
+    protected const GET    = 'GET';
+    protected const POST   = 'POST';
+    protected const PUT    = 'PUT';
     protected const DELETE = 'DELETE';
-    protected const PATCH = 'PATCH';
-    protected const MERGE = 'MERGE';
-    protected const NONE = 'NONE';
+    protected const PATCH  = 'PATCH';
+    protected const MERGE  = 'MERGE';
+    protected const NONE   = 'NONE';
 }

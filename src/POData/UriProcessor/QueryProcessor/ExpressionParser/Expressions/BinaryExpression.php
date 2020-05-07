@@ -24,12 +24,12 @@ abstract class BinaryExpression extends AbstractExpression
     /**
      * Create new instance of BinaryExpression.
      *
-     * @param AbstractExpression $left The left expression
+     * @param AbstractExpression $left  The left expression
      * @param AbstractExpression $right The right expression
      */
     public function __construct($left, $right)
     {
-        $this->left = $left;
+        $this->left  = $left;
         $this->right = $right;
     }
 

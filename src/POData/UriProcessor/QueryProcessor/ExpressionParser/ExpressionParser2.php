@@ -54,10 +54,10 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Create new instance of ExpressionParser2.
      *
-     * @param string $text The text expression to parse
-     * @param ResourceType $resourceType The resource type in which
+     * @param  string         $text                    The text expression to parse
+     * @param  ResourceType   $resourceType            The resource type in which
      *                                                 expression will be applied
-     * @param bool $isPHPExpressionProvider True if IExpressionProvider provider is
+     * @param  bool           $isPHPExpressionProvider True if IExpressionProvider provider is
      *                                                 implemented by user, False otherwise
      * @throws ODataException
      */
@@ -65,29 +65,27 @@ class ExpressionParser2 extends ExpressionParser
     {
         parent::__construct($text, $resourceType, $isPHPExpressionProvider);
         $this->navigationPropertiesUsedInTheExpression = [];
-        $this->isPHPExpressionProvider = $isPHPExpressionProvider;
+        $this->isPHPExpressionProvider                 = $isPHPExpressionProvider;
     }
 
     /**
      * Parse and generate expression from the the given odata expression.
      *
      *
-     * @param string $text The text expression to parse
-     * @param ResourceType $resourceType The resource type in which
+     * @param string              $text               The text expression to parse
+     * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
-     * @return FilterInfo
      * @throws NotImplementedException
      * @throws ReflectionException
-     *
-     *
-     * @throws ODataException                         If any error occurs while parsing the odata expression
-     *                                                or building the php/custom expression
+     * @throws ODataException          If any error occurs while parsing the odata expression
+     *                                 or building the php/custom expression
+     * @return FilterInfo
      */
     public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider)
     {
         $expressionParser2 = new self($text, $resourceType, $expressionProvider instanceof PHPExpressionProvider);
-        $expressionTree = $expressionParser2->parseFilter();
+        $expressionTree    = $expressionParser2->parseFilter();
 
         $expressionProvider->setResourceType($resourceType);
         $expressionProcessor = new ExpressionProcessor($expressionProvider);
@@ -107,13 +105,12 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Parse the expression.
      *
-     * @return AbstractExpression
      * @throws NotImplementedException
      * @throws ReflectionException
-     *
      * @throws ODataException
-     * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
+     * @return AbstractExpression
      *
+     * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
      */
     public function parseFilter()
     {
@@ -136,18 +133,17 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process the expression node for nullability.
      *
-     * @param AbstractExpression $parentExpression The parent expression of expression node to process
-     * @param AbstractExpression|null $expression The expression node to process
-     * @param bool $checkNullForMostChild Whether to include null check for current property
-     * @return AbstractExpression|null
+     * @param  AbstractExpression      $parentExpression      The parent expression of expression node to process
+     * @param  AbstractExpression|null $expression            The expression node to process
+     * @param  bool                    $checkNullForMostChild Whether to include null check for current property
      * @throws ODataException
+     * @return AbstractExpression|null
      */
     private function processNodeForNullability(
         $parentExpression,
         AbstractExpression $expression = null,
         $checkNullForMostChild = true
-    )
-    {
+    ) {
         if ($expression instanceof ArithmeticExpression) {
             return $this->processArithmeticNode($expression);
         } elseif ($expression instanceof ConstantExpression) {
@@ -179,23 +175,23 @@ class ExpressionParser2 extends ExpressionParser
      * @param ArithmeticExpression $expression The arithmetic expression node
      *                                         to process
      *
-     * @return AbstractExpression|null
      * @throws ODataException
+     * @return AbstractExpression|null
      */
     private function processArithmeticNode(ArithmeticExpression $expression)
     {
-        $leftNullableExpTree = $this->processNodeForNullability($expression, $expression->getLeft());
+        $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
-        $resultExpression = $this->calculateResultExpression($leftNullableExpTree, $rightNullableExpTree);
+        $resultExpression     = $this->calculateResultExpression($leftNullableExpTree, $rightNullableExpTree);
 
         return $resultExpression;
     }
 
     /**
-     * @param AbstractExpression|null $leftNullableExpTree
-     * @param AbstractExpression|null $rightNullableExpTree
-     * @return null|AbstractExpression
+     * @param  AbstractExpression|null $leftNullableExpTree
+     * @param  AbstractExpression|null $rightNullableExpTree
      * @throws ODataException
+     * @return null|AbstractExpression
      */
     private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
     {
@@ -216,14 +212,13 @@ class ExpressionParser2 extends ExpressionParser
      * @param AbstractExpression $nullCheckExpTree1 First expression
      * @param AbstractExpression $nullCheckExpTree2 Second expression
      *
-     * @return LogicalExpression|UnaryExpression|null
      * @throws ODataException
+     * @return LogicalExpression|UnaryExpression|null
      */
     private function mergeNullableExpressionTrees(
         $nullCheckExpTree1,
         $nullCheckExpTree2
-    )
-    {
+    ) {
         $this->mapTable = [];
         $this->map($nullCheckExpTree1);
         $this->map($nullCheckExpTree2);
@@ -278,9 +273,9 @@ class ExpressionParser2 extends ExpressionParser
             $this->map($param[0]);
         } elseif ($nullCheckExpTree instanceof PropertyAccessExpression) {
             $parent = $nullCheckExpTree;
-            $key = null;
+            $key    = null;
             do {
-                $key = $parent->getResourceProperty()->getName() . '_' . $key;
+                $key    = $parent->getResourceProperty()->getName() . '_' . $key;
                 $parent = $parent->getParent();
             } while (null != $parent);
 
@@ -295,22 +290,21 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an arithmetic expression node for nullability.
      *
-     * @param FunctionCallExpression $expression The function call expression
+     * @param FunctionCallExpression $expression       The function call expression
      *                                                 node to process
-     * @param AbstractExpression $parentExpression The parent expression of
+     * @param AbstractExpression     $parentExpression The parent expression of
      *                                                 expression node to process
      *
-     * @return null|AbstractExpression
      * @throws ODataException
+     * @return null|AbstractExpression
      */
     private function processFunctionCallNode(
         FunctionCallExpression $expression,
         $parentExpression
-    )
-    {
-        $paramExpressions = $expression->getParamExpressions();
+    ) {
+        $paramExpressions      = $expression->getParamExpressions();
         $checkNullForMostChild = strcmp($expression->getFunctionDescription()->name, 'is_null') === 0;
-        $resultExpression = null;
+        $resultExpression      = null;
         foreach ($paramExpressions as $paramExpression) {
             $resultExpression1 = $this->processNodeForNullability(
                 $expression,
@@ -338,20 +332,19 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an logical expression node for nullability.
      *
-     * @param LogicalExpression $expression The logical expression node
+     * @param LogicalExpression  $expression       The logical expression node
      *                                             to process
      * @param AbstractExpression $parentExpression The parent expression of
      *                                             expression node to process
      *
-     * @return null|AbstractExpression
      * @throws ODataException
+     * @return null|AbstractExpression
      */
     private function processLogicalNode(
         LogicalExpression $expression,
         $parentExpression
-    )
-    {
-        $leftNullableExpTree = $this->processNodeForNullability($expression, $expression->getLeft());
+    ) {
+        $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
         if ($expression->getNodeType() == ExpressionType::OR_LOGICAL()) {
             if (null !== $leftNullableExpTree) {
@@ -395,11 +388,11 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an property access expression node for nullability.
      *
-     * @param PropertyAccessExpression $expression The property access
+     * @param PropertyAccessExpression $expression            The property access
      *                                                        expression node to process
-     * @param AbstractExpression $parentExpression The parent expression of
+     * @param AbstractExpression       $parentExpression      The parent expression of
      *                                                        expression node to process
-     * @param bool $checkNullForMostChild Whether to check null for
+     * @param bool                     $checkNullForMostChild Whether to check null for
      *                                                        most child node or not
      *
      * @return LogicalExpression|UnaryExpression|null
@@ -408,8 +401,7 @@ class ExpressionParser2 extends ExpressionParser
         PropertyAccessExpression $expression,
         $parentExpression,
         $checkNullForMostChild
-    )
-    {
+    ) {
         $navigationsUsed = $expression->getNavigationPropertiesInThePath();
         if (!empty($navigationsUsed)) {
             $this->navigationPropertiesUsedInTheExpression[] = $navigationsUsed;
@@ -431,20 +423,19 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process a relational expression node for nullability.
      *
-     * @param RelationalExpression $expression The relational expression node
+     * @param RelationalExpression $expression       The relational expression node
      *                                               to process
-     * @param AbstractExpression $parentExpression The parent expression of
+     * @param AbstractExpression   $parentExpression The parent expression of
      *                                               expression node to process
      *
-     * @return null|AbstractExpression
      * @throws ODataException
+     * @return null|AbstractExpression
      */
     private function processRelationalNode(
         RelationalExpression $expression,
         $parentExpression
-    )
-    {
-        $leftNullableExpTree = $this->processNodeForNullability($expression, $expression->getLeft());
+    ) {
+        $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
 
         $resultExpression = $this->calculateResultExpression($leftNullableExpTree, $rightNullableExpTree);
@@ -467,19 +458,18 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an unary expression node for nullability.
      *
-     * @param UnaryExpression $expression The unary expression node
+     * @param UnaryExpression    $expression       The unary expression node
      *                                             to process
      * @param AbstractExpression $parentExpression The parent expression of
      *                                             expression node to process
      *
-     * @return AbstractExpression|null
      * @throws ODataException
+     * @return AbstractExpression|null
      */
     private function processUnaryNode(
         UnaryExpression $expression,
         $parentExpression
-    )
-    {
+    ) {
         if (ExpressionType::NEGATE() == $expression->getNodeType()) {
             return $this->processNodeForNullability($expression, $expression->getChild());
         }

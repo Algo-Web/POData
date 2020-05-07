@@ -17,8 +17,8 @@ class ReflectionHandler
      * @param $entryObject
      * @param $property
      *
-     * @return mixed
      * @throws ReflectionException
+     * @return mixed
      */
     public static function getProperty(&$entryObject, $property)
     {
@@ -39,9 +39,9 @@ class ReflectionHandler
     }
 
     /**
-     * @param object $entity
-     * @param string $property
-     * @param mixed $value
+     * @param  object              $entity
+     * @param  string              $property
+     * @param  mixed               $value
      * @throws ReflectionException
      */
     public static function setProperty(&$entity, $property, $value)
@@ -50,7 +50,7 @@ class ReflectionHandler
         if (method_exists($entity, '__set')) {
             $entity->{$property} = $value;
         } else {
-            $reflect = new ReflectionProperty($entity, $property);
+            $reflect   = new ReflectionProperty($entity, $property);
             $oldAccess = $reflect->isPublic();
             $reflect->setAccessible(true);
             $reflect->setValue($entity, $value);

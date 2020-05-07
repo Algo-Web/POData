@@ -33,7 +33,7 @@ trait http
      * Format a message to show error when request uri is not
      * based on configured relative uri.
      *
-     * @param string $requestUri The request uri
+     * @param string $requestUri  The request uri
      * @param string $relativeUri The relative uri in service.config.xml
      *
      * @return string The formatted message
@@ -60,7 +60,7 @@ trait http
     /**
      * Format a message to show error when the uri for verb is wrong.
      *
-     * @param string $uri Url pointing to resource
+     * @param string $uri  Url pointing to resource
      * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
      *
      * @return string The formatted message

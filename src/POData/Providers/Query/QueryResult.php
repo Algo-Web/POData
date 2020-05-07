@@ -28,13 +28,12 @@ class QueryResult
     public $hasMore;
 
     /**
-     * @param int $count
+     * @param int      $count
      * @param int|null $top
      * @param int|null $skip
      *
-     * @return int the paging adjusted count
      * @throws InvalidArgumentException if $count is not numeric
-     *
+     * @return int                      the paging adjusted count
      */
     public static function adjustCountForPaging(int $count, ?int $top, ?int $skip)
     {

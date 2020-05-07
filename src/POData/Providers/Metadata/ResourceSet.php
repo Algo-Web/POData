@@ -30,7 +30,7 @@ class ResourceSet
     /**
      * Creates new instance of ResourceSet.
      *
-     * @param string $name Name of the resource set (entity set)
+     * @param string             $name         Name of the resource set (entity set)
      * @param ResourceEntityType $resourceType Type ResourceType describing the resource
      *                                         this entity set holds
      *
@@ -38,7 +38,7 @@ class ResourceSet
      */
     public function __construct($name, ResourceEntityType $resourceType)
     {
-        $this->name = $name;
+        $this->name         = $name;
         $this->resourceType = $resourceType;
     }
 

@@ -30,7 +30,7 @@ trait objectModelSerializer
      *
      * @param string $resourceTypeName The name of the resource type of the
      *                                 instance with null key
-     * @param string $keyName Name of the key with null value
+     * @param string $keyName          Name of the key with null value
      *
      * @return string The formatted message
      */
@@ -44,7 +44,7 @@ trait objectModelSerializer
      * Format a message to show error when object model serializer failed to
      * access some of the properties of a type instance.
      *
-     * @param string $propertyName The name of the property in question
+     * @param string $propertyName     The name of the property in question
      * @param string $parentObjectName The entity instance in question
      *
      * @return string The formatted message

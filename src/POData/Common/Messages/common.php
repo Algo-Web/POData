@@ -14,7 +14,7 @@ trait common
      * Format a message to show error when a non-integer value passed to
      * a function, which expects integer parameter.
      *
-     * @param mixed $argument The non-integer argument
+     * @param mixed  $argument     The non-integer argument
      * @param string $functionName The name of function
      *
      * @return string The formatted message
@@ -29,7 +29,7 @@ trait common
      * Format a message to show error when a negative value passed to a
      * function, which expects non-negative parameter.
      *
-     * @param mixed $argument The negative argument
+     * @param mixed  $argument     The negative argument
      * @param string $functionName The name of function
      *
      * @return string The formatted message
@@ -70,7 +70,7 @@ trait common
      * Format a message to show error when data service failed to
      * access some of the properties of dummy object.
      *
-     * @param string $propertyName Property name
+     * @param string $propertyName     Property name
      * @param string $parentObjectName Parent object name
      *
      * @return string The formatted message
@@ -95,7 +95,7 @@ trait common
      * Format a message to show error when found a invalid property name.
      *
      * @param string $resourceTypeName The name of the resource type
-     * @param string $propertyName The name of the property
+     * @param string $propertyName     The name of the property
      *
      * @return string The formatted message
      */

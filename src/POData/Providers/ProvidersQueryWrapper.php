@@ -46,22 +46,21 @@ class ProvidersQueryWrapper
     /**
      * Get related resource set for a resource.
      *
-     * @param QueryType $queryType Indicates if this is a query for a count, entities, or entities
+     * @param QueryType          $queryType         Indicates if this is a query for a count, entities, or entities
      *                                              with a count
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntity The source entity instance
-     * @param ResourceSet $targetResourceSet The resource set containing the target of the navigation property
-     * @param ResourceProperty $targetProperty The navigation property to retrieve
-     * @param FilterInfo|null $filterInfo Represents the $filter parameter of the OData query.
+     * @param ResourceSet        $sourceResourceSet The entity set containing the source entity
+     * @param object             $sourceEntity      The source entity instance
+     * @param ResourceSet        $targetResourceSet The resource set containing the target of the navigation property
+     * @param ResourceProperty   $targetProperty    The navigation property to retrieve
+     * @param FilterInfo|null    $filterInfo        Represents the $filter parameter of the OData query.
      *                                              NULL if no $filter specified
-     * @param mixed|null $orderBy sorted order if we want to get the data in some specific order
-     * @param int|null $top The top count
-     * @param int|null $skip The skip count
-     * @param SkipTokenInfo|null $skipToken The skip token
+     * @param mixed|null         $orderBy           sorted order if we want to get the data in some specific order
+     * @param int|null           $top               The top count
+     * @param int|null           $skip              The skip count
+     * @param SkipTokenInfo|null $skipToken         The skip token
      *
-     * @return QueryResult
      * @throws ODataException
-     *
+     * @return QueryResult
      */
     public function getRelatedResourceSet(
         QueryType $queryType,
@@ -74,8 +73,7 @@ class ProvidersQueryWrapper
         $top = null,
         $skip = null,
         $skipToken = null
-    )
-    {
+    ) {
         $queryResult = $this->getQueryProvider()->getRelatedResourceSet(
             $queryType,
             $sourceResourceSet,
@@ -104,8 +102,8 @@ class ProvidersQueryWrapper
 
     /**
      * @param QueryResult $queryResult
-     * @param QueryType $queryType
-     * @param string $methodName
+     * @param QueryType   $queryType
+     * @param string      $methodName
      *
      * @throws ODataException
      */
@@ -159,17 +157,17 @@ class ProvidersQueryWrapper
      * IE: http://host/EntitySet
      *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value.
      *
-     * @param QueryType $queryType Is this is a query for a count, entities, or entities-with-count
-     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-     * @param FilterInfo|null $filterInfo The $filter parameter of the OData query.  NULL if none specified
-     * @param null|InternalOrderByInfo $orderBy sorted order if we want to get the data in some specific order
-     * @param int|null $top number of records which need to be retrieved
-     * @param int|null $skip number of records which need to be skipped
-     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
-     * @param string[]|null $eagerLoad array of relations to eager load
+     * @param QueryType                $queryType   Is this is a query for a count, entities, or entities-with-count
+     * @param ResourceSet              $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo|null          $filterInfo  The $filter parameter of the OData query.  NULL if none specified
+     * @param null|InternalOrderByInfo $orderBy     sorted order if we want to get the data in some specific order
+     * @param int|null                 $top         number of records which need to be retrieved
+     * @param int|null                 $skip        number of records which need to be skipped
+     * @param SkipTokenInfo|null       $skipToken   value indicating what records to skip
+     * @param string[]|null            $eagerLoad   array of relations to eager load
      *
-     * @return QueryResult
      * @throws ODataException
+     * @return QueryResult
      */
     public function getResourceSet(
         QueryType $queryType,
@@ -180,8 +178,7 @@ class ProvidersQueryWrapper
         $skip = null,
         SkipTokenInfo $skipToken = null,
         array $eagerLoad = null
-    )
-    {
+    ) {
         $queryResult = $this->getQueryProvider()->getResourceSet(
             $queryType,
             $resourceSet,
@@ -201,7 +198,7 @@ class ProvidersQueryWrapper
     /**
      * Puts an entity instance to entity set identified by a key.
      *
-     * @param ResourceSet $resourceSet The entity set containing the entity to update
+     * @param ResourceSet   $resourceSet   The entity set containing the entity to update
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to update
      * @param $data
      *
@@ -211,8 +208,7 @@ class ProvidersQueryWrapper
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
         $data
-    )
-    {
+    ) {
         $queryResult = $this->getQueryProvider()->putResource(
             $resourceSet,
             $keyDescriptor,
@@ -226,9 +222,8 @@ class ProvidersQueryWrapper
      * Gets the underlying custom expression provider, the end developer is
      * responsible for implementing IExpressionProvider if he choose for.
      *
-     * @return IExpressionProvider Instance of IExpressionProvider implementation
      * @throws ODataException
-     *
+     * @return IExpressionProvider Instance of IExpressionProvider implementation
      */
     public function getExpressionProvider()
     {
@@ -249,9 +244,9 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @param ResourceSet $resourceSet The entity set containing the entity to fetch
+     * @param ResourceSet $resourceSet          The entity set containing the entity to fetch
      * @param object|null $sourceEntityInstance The source entity instance
-     * @param object $data the New data for the entity instance
+     * @param object      $data                 the New data for the entity instance
      *
      * @return object|null returns the newly created model if successful, or null if model creation failed
      */
@@ -259,8 +254,7 @@ class ProvidersQueryWrapper
         ResourceSet $resourceSet,
         $sourceEntityInstance,
         $data
-    )
-    {
+    ) {
         return $this->getQueryProvider()->createResourceforResourceSet(
             $resourceSet,
             $sourceEntityInstance,
@@ -272,15 +266,14 @@ class ProvidersQueryWrapper
      * Delete resource from a resource set.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      *
      * @return bool true if resources successfully deleted, otherwise false
      */
     public function deleteResource(
         ResourceSet $sourceResourceSet,
         $sourceEntityInstance
-    )
-    {
+    ) {
         return $this->getQueryProvider()->deleteResource(
             $sourceResourceSet,
             $sourceEntityInstance
@@ -290,11 +283,11 @@ class ProvidersQueryWrapper
     /**
      * Updates a resource.
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param object $data the New data for the entity instance
-     * @param bool $shouldUpdate Should undefined values be updated or reset to default
+     * @param ResourceSet   $sourceResourceSet    The entity set containing the source entity
+     * @param object        $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor $keyDescriptor        The key identifying the entity to fetch
+     * @param object        $data                 the New data for the entity instance
+     * @param bool          $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object|null the new resource value if it is assignable, or throw exception for null
      */
@@ -304,8 +297,7 @@ class ProvidersQueryWrapper
         KeyDescriptor $keyDescriptor,
         $data,
         $shouldUpdate = false
-    )
-    {
+    ) {
         return $this->getQueryProvider()->updateResource(
             $sourceResourceSet,
             $sourceEntityInstance,
@@ -318,15 +310,14 @@ class ProvidersQueryWrapper
     /**
      * Create multiple new resources in a resource set.
      * @param ResourceSet $sourceResourceSet The entity set containing the entity to fetch
-     * @param object[] $data The new data for the entity instance
+     * @param object[]    $data              The new data for the entity instance
      *
      * @return object[]|null returns the newly created model if successful, or null if model creation failed
      */
     public function createBulkResourceforResourceSet(
         ResourceSet $sourceResourceSet,
         array $data
-    )
-    {
+    ) {
         return $this->getQueryProvider()->createBulkResourceforResourceSet(
             $sourceResourceSet,
             $data
@@ -336,11 +327,11 @@ class ProvidersQueryWrapper
     /**
      * Updates a group of resources in a resource set.
      *
-     * @param ResourceSet $sourceResourceSet The entity set containing the source entity
-     * @param object $sourceEntityInstance The source entity instance
-     * @param KeyDescriptor[] $keyDescriptor The key identifying the entity to fetch
-     * @param object[] $data The new data for the entity instances
-     * @param bool $shouldUpdate Should undefined values be updated or reset to default
+     * @param ResourceSet     $sourceResourceSet    The entity set containing the source entity
+     * @param object          $sourceEntityInstance The source entity instance
+     * @param KeyDescriptor[] $keyDescriptor        The key identifying the entity to fetch
+     * @param object[]        $data                 The new data for the entity instances
+     * @param bool            $shouldUpdate         Should undefined values be updated or reset to default
      *
      * @return object[]|null the new resource value if it is assignable, or throw exception for null
      */
@@ -350,8 +341,7 @@ class ProvidersQueryWrapper
         array $keyDescriptor,
         array $data,
         $shouldUpdate = false
-    )
-    {
+    ) {
         return $this->getQueryProvider()->updateBulkResource(
             $sourceResourceSet,
             $sourceEntityInstance,
@@ -364,26 +354,24 @@ class ProvidersQueryWrapper
     /**
      * Get related resource for a resource.
      *
-     * @param ResourceSet $sourceResourceSet The source resource set
-     * @param object $sourceEntity The source resource
-     * @param ResourceSet $targetResourceSet The resource set of the navigation
+     * @param ResourceSet      $sourceResourceSet The source resource set
+     * @param object           $sourceEntity      The source resource
+     * @param ResourceSet      $targetResourceSet The resource set of the navigation
      *                                            property
-     * @param ResourceProperty $targetProperty The navigation property to be
+     * @param ResourceProperty $targetProperty    The navigation property to be
      *                                            retrieved
      *
-     * @return object|null The related resource if exists, else null
      * @throws InvalidOperationException
      * @throws ReflectionException
-     *
      * @throws ODataException
+     * @return object|null               The related resource if exists, else null
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,
         $sourceEntity,
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty
-    )
-    {
+    ) {
         $entityInstance = $this->getQueryProvider()->getRelatedResourceReference(
             $sourceResourceSet,
             $sourceEntity,
@@ -424,15 +412,14 @@ class ProvidersQueryWrapper
      * @param $entityInstance
      * @param ResourceSet $resourceSet
      *
-     * @return ResourceEntityType
      * @throws ReflectionException
-     *
      * @throws ODataException
+     * @return ResourceEntityType
      */
     private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
     {
         $resourceType = $resourceSet->getResourceType();
-        $entityName = $resourceType->getInstanceType()->getName();
+        $entityName   = $resourceType->getInstanceType()->getName();
         if (!($entityInstance instanceof $entityName)) {
             throw ODataException::createInternalServerError(
                 Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
@@ -448,16 +435,16 @@ class ProvidersQueryWrapper
     /**
      * Gets a related entity instance from an entity set identified by a key.
      *
-     * @param ResourceSet $sourceResourceSet The entity set related to the entity to be fetched
-     * @param object $sourceEntity The related entity instance
-     * @param ResourceSet $targetResourceSet The entity set from which entity needs to be fetched
-     * @param ResourceProperty $targetProperty The metadata of the target property
-     * @param KeyDescriptor $keyDescriptor The key to identify the entity to be fetched
+     * @param ResourceSet      $sourceResourceSet The entity set related to the entity to be fetched
+     * @param object           $sourceEntity      The related entity instance
+     * @param ResourceSet      $targetResourceSet The entity set from which entity needs to be fetched
+     * @param ResourceProperty $targetProperty    The metadata of the target property
+     * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
      *
-     * @return object|null                              Returns entity instance if found, else null
      * @throws InvalidOperationException
      * @throws ReflectionException
      * @throws ODataException
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -465,8 +452,7 @@ class ProvidersQueryWrapper
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         KeyDescriptor $keyDescriptor
-    )
-    {
+    ) {
         $entityInstance = $this->getQueryProvider()->getResourceFromRelatedResourceSet(
             $sourceResourceSet,
             $sourceEntity,
@@ -488,11 +474,11 @@ class ProvidersQueryWrapper
     /**
      * Validate the given entity instance.
      *
-     * @param object|null $entityInstance Entity instance to validate
-     * @param ResourceSet   &$resourceSet Resource set to which the entity
+     * @param object|null   $entityInstance Entity instance to validate
+     * @param ResourceSet   &$resourceSet   Resource set to which the entity
      *                                      instance belongs to
      * @param KeyDescriptor &$keyDescriptor The key descriptor
-     * @param string $methodName Method from which this function
+     * @param string        $methodName     Method from which this function
      *                                      invoked
      *
      * @throws ODataException
@@ -504,8 +490,7 @@ class ProvidersQueryWrapper
         ResourceSet &$resourceSet,
         KeyDescriptor &$keyDescriptor,
         $methodName
-    )
-    {
+    ) {
         if (null === $entityInstance) {
             throw ODataException::createResourceNotFoundError($resourceSet->getName());
         }
@@ -536,21 +521,20 @@ class ProvidersQueryWrapper
     /**
      * Gets an entity instance from an entity set identified by a key.
      *
-     * @param ResourceSet $resourceSet The entity set containing the entity to fetch
+     * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
-     * @param string[]|null $eagerLoad array of relations to eager load
+     * @param string[]|null $eagerLoad     array of relations to eager load
      *
-     * @return object|null                              Returns entity instance if found, else null
      * @throws InvalidOperationException
      * @throws ReflectionException
      * @throws ODataException
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
         array $eagerLoad = null
-    )
-    {
+    ) {
         $entityInstance = $this->getQueryProvider()
             ->getResourceFromResourceSet($resourceSet, $keyDescriptor, $eagerLoad);
         $this->validateEntityInstance(
@@ -567,9 +551,9 @@ class ProvidersQueryWrapper
      * Attaches child model to parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -580,8 +564,7 @@ class ProvidersQueryWrapper
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         return $this->getQueryProvider()->hookSingleModel(
             $sourceResourceSet,
             $sourceEntityInstance,
@@ -595,9 +578,9 @@ class ProvidersQueryWrapper
      * Removes child model from parent model.
      *
      * @param ResourceSet $sourceResourceSet
-     * @param object $sourceEntityInstance
+     * @param object      $sourceEntityInstance
      * @param ResourceSet $targetResourceSet
-     * @param object $targetEntityInstance
+     * @param object      $targetEntityInstance
      * @param $navPropName
      *
      * @return bool
@@ -608,8 +591,7 @@ class ProvidersQueryWrapper
         ResourceSet $targetResourceSet,
         $targetEntityInstance,
         $navPropName
-    )
-    {
+    ) {
         return $this->getQueryProvider()->unhookSingleModel(
             $sourceResourceSet,
             $sourceEntityInstance,
@@ -622,7 +604,7 @@ class ProvidersQueryWrapper
     /**
      * Start database transaction.
      *
-     * @param bool $isBulk Is this transaction inside a batch request?
+     * @param  bool $isBulk Is this transaction inside a batch request?
      * @return void
      */
     public function startTransaction($isBulk = false)

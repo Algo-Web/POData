@@ -35,10 +35,10 @@ class OrderByNode extends OrderByBaseNode
     /**
      * Construct a new instance of OrderByNode.
      *
-     * @param string|null $propertyName Name of the property corresponds to the sub path
+     * @param string|null             $propertyName       Name of the property corresponds to the sub path
      *                                                    segment represented by this node, this parameter
      *                                                    will be null if this node is root
-     * @param ResourceProperty|null $resourceProperty Resource property corresponds to the sub path
+     * @param ResourceProperty|null   $resourceProperty   Resource property corresponds to the sub path
      *                                                    segment represented by this node, this parameter
      *                                                    will be null if  this node is root
      * @param ResourceSetWrapper|null $resourceSetWrapper The resource set wrapper associated with the sub path
@@ -82,7 +82,6 @@ class OrderByNode extends OrderByBaseNode
      *
      * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
-     *
      */
     public function getResourceType()
     {
@@ -120,8 +119,8 @@ class OrderByNode extends OrderByBaseNode
      *
      * @param OrderByBaseNode $node The child node
      *
-     * @return void
      * @throws InvalidArgumentException
+     * @return void
      */
     public function addNode(OrderByBaseNode $node)
     {

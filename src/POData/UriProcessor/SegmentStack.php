@@ -42,8 +42,8 @@ class SegmentStack
      */
     public function __construct(RequestDescription $request = null)
     {
-        $this->request = $request;
-        $this->segmentNames = [];
+        $this->request                    = $request;
+        $this->segmentNames               = [];
         $this->segmentResourceSetWrappers = [];
         assert(count($this->segmentNames) == count($this->segmentResourceSetWrappers), $this->mismatch);
     }
@@ -53,12 +53,12 @@ class SegmentStack
      * retrieved from the IDSQP implementation
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @param string $segmentName Name of segment to push
+     * @param string             $segmentName         Name of segment to push
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
      *                                                to push
      *
-     * @return bool                      true if the segment was push, false otherwise
      * @throws InvalidOperationException
+     * @return bool                      true if the segment was push, false otherwise
      */
     public function pushSegment(string $segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {

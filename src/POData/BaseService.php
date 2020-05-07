@@ -211,7 +211,7 @@ abstract class BaseService implements IRequestHandler, IService
             $this->createProviders();
             $this->getHost()->validateQueryParameters();
             $uriProcessor = UriProcessorNew::process($this);
-            $request = $uriProcessor->getRequest();
+            $request      = $uriProcessor->getRequest();
             if (TargetKind::BATCH() == $request->getTargetKind()) {
                 //dd($request);
                 $this->getProvidersWrapper()->startTransaction(true);
@@ -256,7 +256,7 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
-        $this->config = new ServiceConfiguration($metadataProvider);
+        $this->config           = new ServiceConfiguration($metadataProvider);
         $this->providersWrapper = new ProvidersWrapper(
             $metadataProvider,
             $queryProvider,
@@ -287,9 +287,9 @@ abstract class BaseService implements IRequestHandler, IService
      */
     public function registerWriters()
     {
-        $registry = $this->getODataWriterRegistry();
+        $registry       = $this->getODataWriterRegistry();
         $serviceVersion = $this->getConfiguration()->getMaxDataServiceVersion();
-        $serviceURI = $this->getHost()->getAbsoluteServiceUri()->getUrlAsString();
+        $serviceURI     = $this->getHost()->getAbsoluteServiceUri()->getUrlAsString();
 
         //We always register the v1 stuff
         $registry->register(new JsonODataV1Writer());
@@ -367,7 +367,7 @@ abstract class BaseService implements IRequestHandler, IService
      */
     private function handleBatchRequest($request)
     {
-        $cloneThis = clone $this;
+        $cloneThis      = clone $this;
         $batchProcessor = new BatchProcessor($cloneThis, $request);
         $batchProcessor->handleBatch();
         $response = $batchProcessor->getResponse();
@@ -382,8 +382,8 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Serialize the requested resource.
      *
-     * @param RequestDescription $request The description of the request  submitted by the client
-     * @param IUriProcessor $uriProcessor Reference to the uri processor
+     * @param RequestDescription $request      The description of the request  submitted by the client
+     * @param IUriProcessor      $uriProcessor Reference to the uri processor
      *
      * @throws Common\HttpHeaderFailure
      * @throws Common\UrlFormatException
@@ -415,7 +415,7 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         $odataModelInstance = null;
-        $hasResponseBody = true;
+        $hasResponseBody    = true;
         // Execution required at this point if request points to any resource other than
 
         // (1) media resource - For Media resource 'getResponseContentType' already performed execution as
@@ -439,7 +439,7 @@ abstract class BaseService implements IRequestHandler, IService
                 throw new InvalidOperationException('Target resource type cannot be null');
             }
 
-            $methodIsNotPost = (HTTPRequestMethod::POST() != $method);
+            $methodIsNotPost   = (HTTPRequestMethod::POST() != $method);
             $methodIsNotDelete = (HTTPRequestMethod::DELETE() != $method);
             if (!$request->isSingleResult() && $methodIsNotPost) {
                 // Code path for collection (feed or links)
@@ -468,11 +468,11 @@ abstract class BaseService implements IRequestHandler, IService
                 // primitive type or primitive value
                 $result = $request->getTargetResult();
                 if (!$result instanceof QueryResult) {
-                    $result = new QueryResult();
+                    $result          = new QueryResult();
                     $result->results = $request->getTargetResult();
                 }
                 $requestTargetKind = $request->getTargetKind();
-                $requestProperty = $request->getProjectedProperty();
+                $requestProperty   = $request->getProjectedProperty();
                 if ($request->isLinkUri()) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
@@ -493,7 +493,7 @@ abstract class BaseService implements IRequestHandler, IService
                     }
                     // handle entry resource
                     $needToSerializeResponse = true;
-                    $eTag = $this->compareETag(
+                    $eTag                    = $this->compareETag(
                         $result,
                         $targetResourceType,
                         $needToSerializeResponse
@@ -577,8 +577,8 @@ abstract class BaseService implements IRequestHandler, IService
     /**
      * Gets the response format for the requested resource.
      *
-     * @param RequestDescription $request The request submitted by client and it's execution result
-     * @param IUriProcessor $uriProcessor The reference to the IUriProcessor
+     * @param RequestDescription $request      The request submitted by client and it's execution result
+     * @param IUriProcessor      $uriProcessor The reference to the IUriProcessor
      *
      * @throws Common\HttpHeaderFailure
      * @throws InvalidOperationException
@@ -591,8 +591,7 @@ abstract class BaseService implements IRequestHandler, IService
     public function getResponseContentType(
         RequestDescription $request,
         IUriProcessor $uriProcessor
-    ): ?string
-    {
+    ): ?string {
         $baseMimeTypes = [
             MimeTypes::MIME_APPLICATION_JSON,
             MimeTypes::MIME_APPLICATION_JSON_FULL_META,
@@ -602,9 +601,9 @@ abstract class BaseService implements IRequestHandler, IService
 
         // The Accept request-header field specifies media types which are acceptable for the response
 
-        $host = $this->getHost();
+        $host              = $this->getHost();
         $requestAcceptText = $host->getRequestAccept();
-        $requestVersion = $request->getResponseVersion();
+        $requestVersion    = $request->getResponseVersion();
 
         //if the $format header is present it overrides the accepts header
         $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
@@ -621,7 +620,7 @@ abstract class BaseService implements IRequestHandler, IService
 
         //The response format can be dictated by the target resource kind. IE a $value will be different then expected
         //getTargetKind doesn't deal with link resources directly and this can change things
-        $targetKind = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
+        $targetKind         = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
         $acceptStringOrNull = is_string($requestAcceptText) || !isset($requestAcceptText);
         if (!$acceptStringOrNull) {
             throw new InvalidOperationException('Request accept text not either string or null');
@@ -752,30 +751,29 @@ abstract class BaseService implements IRequestHandler, IService
      * For the given entry object compare its eTag (if it has eTag properties)
      * with current eTag request headers (if present).
      *
-     * @param mixed        &$entryObject entity resource for which etag
+     * @param mixed        &$entryObject             entity resource for which etag
      *                                               needs to be checked
-     * @param ResourceType &$resourceType Resource type of the entry
+     * @param ResourceType &$resourceType            Resource type of the entry
      *                                               object
      * @param bool         &$needToSerializeResponse On return, this will contain
      *                                               True if response needs to be
      *                                               serialized, False otherwise
      *
-     * @return string|null               The ETag for the entry object if it has eTag properties
-     *                                   NULL otherwise
      * @throws InvalidOperationException
      * @throws ReflectionException
      * @throws ODataException
+     * @return string|null               The ETag for the entry object if it has eTag properties
+     *                                   NULL otherwise
      */
     protected function compareETag(
         &$entryObject,
         ResourceType &$resourceType,
         &$needToSerializeResponse
-    ): ?string
-    {
+    ): ?string {
         $needToSerializeResponse = true;
-        $eTag = null;
-        $ifMatch = $this->getHost()->getRequestIfMatch();
-        $ifNoneMatch = $this->getHost()->getRequestIfNoneMatch();
+        $eTag                    = null;
+        $ifMatch                 = $this->getHost()->getRequestIfMatch();
+        $ifNoneMatch             = $this->getHost()->getRequestIfNoneMatch();
         if (null === $entryObject) {
             if (null !== $ifMatch) {
                 throw ODataException::createPreConditionFailedError(
@@ -854,20 +852,20 @@ abstract class BaseService implements IRequestHandler, IService
      * Note: This function will not add W\" prefix and " suffix, that is caller's
      * responsibility.
      *
-     * @param mixed        &$entryObject Resource for which etag value needs to
+     * @param mixed        &$entryObject  Resource for which etag value needs to
      *                                    be returned
      * @param ResourceType &$resourceType Resource type of the $entryObject
      *
-     * @return string|null               ETag value for the given resource (with values encoded
-     *                                   for use in a URI) there are etag properties, NULL if
-     *                                   there is no etag property
      * @throws InvalidOperationException
      * @throws ReflectionException
      * @throws ODataException
+     * @return string|null               ETag value for the given resource (with values encoded
+     *                                   for use in a URI) there are etag properties, NULL if
+     *                                   there is no etag property
      */
     protected function getETagForEntry(&$entryObject, ResourceType &$resourceType): ?string
     {
-        $eTag = null;
+        $eTag  = null;
         $comma = null;
         foreach ($resourceType->getETagProperties() as $eTagProperty) {
             $type = $eTagProperty->getInstanceType();
@@ -875,7 +873,7 @@ abstract class BaseService implements IRequestHandler, IService
                 throw new InvalidOperationException('!$type instanceof IType');
             }
 
-            $value = null;
+            $value    = null;
             $property = $eTagProperty->getName();
             try {
                 //TODO #88...also this seems like dupe work
@@ -887,7 +885,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
 
             $eTagBase = $eTag . $comma;
-            $eTag = $eTagBase . ((null == $value) ? 'null' : $type->convertToOData($value));
+            $eTag     = $eTagBase . ((null == $value) ? 'null' : $type->convertToOData($value));
 
             $comma = ',';
         }

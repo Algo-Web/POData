@@ -57,7 +57,7 @@ trait segmentParser
      * Format a message to show error when a segment other than
      * $value is followed by primitive segment.
      *
-     * @param string $segment The segment follows
+     * @param string $segment                  The segment follows
      *                                         primitive property segment
      * @param string $primitivePropertySegment The primitive property segment
      *
@@ -66,8 +66,7 @@ trait segmentParser
     public static function segmentParserOnlyValueSegmentAllowedAfterPrimitivePropertySegment(
         $segment,
         $primitivePropertySegment
-    )
-    {
+    ) {
         return 'The segment \'' . $segment . '\' in the request URI is not valid. Since the segment \''
             . $primitivePropertySegment . '\' refers to a primitive type property, the only supported value from'
             . ' the next segment is \'$value\'.';

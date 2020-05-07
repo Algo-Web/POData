@@ -214,15 +214,15 @@ class RequestDescription
     private $readerRegistry;
 
     /**
-     * @param SegmentDescriptor[] $segmentDescriptors Description of segments
-     *                                                                              in the resource path
-     * @param Url $requestUri
-     * @param Version $serviceMaxVersion
-     * @param string|null $requestVersion
-     * @param string|null $maxRequestVersion
-     * @param string|null $dataType
-     * @param IHTTPRequest|null $payload
-     * @param ODataReaderRegistry $readerRegistry
+     * @param  SegmentDescriptor[] $segmentDescriptors Description of segments
+     *                                                 in the resource path
+     * @param  Url                 $requestUri
+     * @param  Version             $serviceMaxVersion
+     * @param  string|null         $requestVersion
+     * @param  string|null         $maxRequestVersion
+     * @param  string|null         $dataType
+     * @param  IHTTPRequest|null   $payload
+     * @param  ODataReaderRegistry $readerRegistry
      * @throws ODataException
      * @throws AnnotationException
      */
@@ -235,14 +235,13 @@ class RequestDescription
         $dataType = null,
         IHTTPRequest $payload = null,
         ODataReaderRegistry $readerRegistry = null
-    )
-    {
+    ) {
         $this->readerRegistry = $readerRegistry;
-        $this->segments = $segmentDescriptors;
-        $this->segmentCount = count($this->segments);
-        $this->requestUrl = $requestUri;
-        $this->lastSegment = $segmentDescriptors[$this->segmentCount - 1];
-        $this->queryType = QueryType::ENTITIES();
+        $this->segments       = $segmentDescriptors;
+        $this->segmentCount   = count($this->segments);
+        $this->requestUrl     = $requestUri;
+        $this->lastSegment    = $segmentDescriptors[$this->segmentCount - 1];
+        $this->queryType      = QueryType::ENTITIES();
         //we use this for validation checks down in validateVersions...
         //but maybe we should check that outside of this object...
         $this->maxServiceVersion = $serviceMaxVersion;
@@ -250,7 +249,7 @@ class RequestDescription
         //Per OData 1 & 2 spec we must return the smallest size
         //We start at 1.0 and move it up as features are requested
         $this->requiredMinResponseVersion = clone Version::v1();
-        $this->requiredMinRequestVersion = clone Version::v1();
+        $this->requiredMinRequestVersion  = clone Version::v1();
 
         //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
         //if requestVersion isn't there, use Service Max Version
@@ -276,17 +275,17 @@ class RequestDescription
             $this->requiredMinResponseVersion = clone $this->requestMaxVersion;
         }
 
-        $this->containerName = null;
-        $this->skipCount = null;
-        $this->topCount = null;
-        $this->topOptionCount = null;
-        $this->internalOrderByInfo = null;
+        $this->containerName         = null;
+        $this->skipCount             = null;
+        $this->topCount              = null;
+        $this->topOptionCount        = null;
+        $this->internalOrderByInfo   = null;
         $this->internalSkipTokenInfo = null;
 
         $this->filterInfo = null;
         $this->countValue = null;
         $this->isExecuted = false;
-        $this->data = isset($payload) ? $payload->getAllInput() : null;
+        $this->data       = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
         if (null !== $dataType) {
@@ -298,21 +297,20 @@ class RequestDescription
      * Validates the given version in string format and returns the version as instance of Version.
      *
      * @param string $versionHeader The DataServiceVersion or MaxDataServiceVersion header value
-     * @param string $headerName The name of the header
+     * @param string $headerName    The name of the header
      *
-     * @return Version
      * @throws ODataException If the version is malformed or not supported
-     *
+     * @return Version
      */
     private static function parseVersionHeader($versionHeader, $headerName)
     {
         $versionHeader = trim($versionHeader);
-        $libNameIndex = strpos($versionHeader, ';');
+        $libNameIndex  = strpos($versionHeader, ';');
         if (false === $libNameIndex) {
             $libNameIndex = strlen($versionHeader);
         }
 
-        $dotIndex = -1;
+        $dotIndex      = -1;
         $badVersionMsg = Messages::requestDescriptionInvalidVersionHeader(
             $versionHeader,
             $headerName
@@ -394,7 +392,7 @@ class RequestDescription
     /**
      * Define request data from body.
      *
-     * @param string $dataType
+     * @param  string $dataType
      * @return void
      */
     private function readData($dataType)
@@ -404,7 +402,7 @@ class RequestDescription
         }
         $string = $this->data;
         if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data = !is_array($string) ? json_decode($string, true) : $string;
+            $data       = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
             return;
         }
@@ -798,8 +796,7 @@ class RequestDescription
      */
     public function setInternalSkipTokenInfo(
         InternalSkipTokenInfo &$internalSkipTokenInfo
-    )
-    {
+    ) {
         $this->internalSkipTokenInfo = $internalSkipTokenInfo;
     }
 
