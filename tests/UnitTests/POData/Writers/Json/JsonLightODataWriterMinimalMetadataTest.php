@@ -466,7 +466,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         $oDataFeed->rowCount = null; //simulate no inline count
 
-        $writer = new JsonLightODataWriter(PHP_EOL, true,JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
+        $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
 

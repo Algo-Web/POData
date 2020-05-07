@@ -484,7 +484,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $oDataFeed->rowCount = null; //simulate no inline count
 
-        $writer = new JsonLightODataWriter(PHP_EOL, true,JsonLightMetadataLevel::FULL(), $this->serviceBase);
+        $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
 
@@ -537,7 +537,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $oDataFeed->rowCount = 55; //simulate  $inlinecount=allpages
 
-        $writer = new JsonLightODataWriter(PHP_EOL, true,JsonLightMetadataLevel::FULL(), $this->serviceBase);
+        $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
 
@@ -629,7 +629,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $entry->links = [$link];
 
-        $writer = new JsonLightODataWriter(PHP_EOL, true,JsonLightMetadataLevel::FULL(), $this->serviceBase);
+        $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 

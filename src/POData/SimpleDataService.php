@@ -38,11 +38,11 @@ class SimpleDataService extends BaseService implements IService
     /**
      * SimpleDataService constructor.
      * @param $db
-     * @param SimpleMetadataProvider $metaProvider
-     * @param ServiceHost $host
-     * @param IObjectSerialiser|null $serialiser
-     * @param IStreamProvider2|null $streamProvider
-     * @param IServiceConfiguration|null $config
+     * @param  SimpleMetadataProvider     $metaProvider
+     * @param  ServiceHost                $host
+     * @param  IObjectSerialiser|null     $serialiser
+     * @param  IStreamProvider2|null      $streamProvider
+     * @param  IServiceConfiguration|null $config
      * @throws ODataException
      */
     public function __construct(

@@ -34,7 +34,7 @@ class JsonWriter
      *
      * @param string $writer      writer to which text needs to be written
      * @param string $eol         the line terminator character
-     * @param bool   $prettyPrint if output should be well formatted.
+     * @param bool   $prettyPrint if output should be well formatted
      */
     public function __construct($writer, string $eol, bool $prettyPrint)
     {

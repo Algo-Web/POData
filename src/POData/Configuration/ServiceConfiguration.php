@@ -96,12 +96,12 @@ class ServiceConfiguration implements IServiceConfiguration
     private $validateETagHeader;
 
     /**
-     * @var string value to be used as line terminator.
+     * @var string value to be used as line terminator
      */
     private $eol;
 
     /**
-     * @var bool value to indicate if output should be printed human readable.
+     * @var bool value to indicate if output should be printed human readable
      */
     private $prettyPrint;
 
@@ -475,7 +475,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Gets whether to format the output as human readable or single line.
      *
-     * @return bool True if output should be formatted for human readability.
+     * @return bool true if output should be formatted for human readability
      */
     public function getPrettyOutput(): bool
     {
@@ -493,7 +493,7 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Sets if output should be well formatted for human review
+     * Sets if output should be well formatted for human review.
      *
      * @param bool $on True if output should be well formatted
      */

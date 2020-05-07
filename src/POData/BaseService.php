@@ -117,9 +117,9 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * BaseService constructor.
-     * @param IObjectSerialiser|null     $serialiser
-     * @param IMetadataProvider|null     $metaProvider
-     * @param IServiceConfiguration|null $config
+     * @param  IObjectSerialiser|null     $serialiser
+     * @param  IMetadataProvider|null     $metaProvider
+     * @param  IServiceConfiguration|null $config
      * @throws \Exception
      */
     protected function __construct(
