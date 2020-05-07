@@ -69,17 +69,6 @@ class Byte implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.Byte';
-    }
-
-    /**
      * Converts the given string value to byte type.
      * Note: This function will not perform any conversion.
      *
@@ -101,5 +90,16 @@ class Byte implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Byte';
     }
 }

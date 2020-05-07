@@ -78,11 +78,10 @@ interface IStreamProvider2
      * @param IOperationContext       $operationContext     A reference to the context for the current operation
      *
      * @throws ODataException if a valid stream or null cannot be returned for the given arguments
-     *
-     * @return mixed A valid stream the data service use to query/read a named stream which is
-     *               associated with the $entity. Null may be returned from this method if the requested named
-     *               stream has not been created since the creation of $entity. The data service will respond
-     *               with 204 if this method returns null
+     * @return mixed          A valid stream the data service use to query/read a named stream which is
+     *                        associated with the $entity. Null may be returned from this method if the requested named
+     *                        stream has not been created since the creation of $entity. The data service will respond
+     *                        with 204 if this method returns null
      */
     public function getReadStream2(
         $entity,

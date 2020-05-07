@@ -11,6 +11,7 @@ use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use ReflectionException;
 
 /**
  * Class SkipTokenParser.
@@ -39,9 +40,8 @@ class SkipTokenParser
      * @param InternalOrderByInfo &$internalOrderByInfo The $orderby details
      * @param string              $skipToken            The $skiptoken value
      *
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \ReflectionException
-     *
      * @return InternalSkipTokenInfo
      */
     public static function parseSkipTokenClause(

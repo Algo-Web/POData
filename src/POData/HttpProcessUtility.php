@@ -92,78 +92,12 @@ class HttpProcessUtility
     }
 
     /**
-     * Selects an acceptable MIME type that satisfies the Accepts header.
-     *
-     * @param string   $acceptTypesText Text for Accepts header
-     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference
-     *
-     * @throws HttpHeaderFailure
-     *
-     * @return string|null The best MIME type for the client
-     */
-    public static function selectMimeType(string $acceptTypesText, array $availableTypes): ?string
-    {
-        $selectedContentType     = null;
-        $selectedMatchingParts   = -1;
-        $selectedQualityValue    = 0;
-        $selectedPreferenceIndex = PHP_INT_MAX;
-        $acceptable              = false;
-        $acceptTypesEmpty        = true;
-
-        $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-        $numAvailable = count($availableTypes);
-        foreach ($acceptTypes as $acceptType) {
-            $acceptTypesEmpty = false;
-            for ($i = 0; $i < $numAvailable; ++$i) {
-                $availableType = $availableTypes[$i];
-                $matchRating   = $acceptType->getMatchingRating($availableType);
-                if (0 > $matchRating) {
-                    continue;
-                }
-
-                $candidateQualityValue = $acceptType->getQualityValue();
-                if ($matchRating > $selectedMatchingParts) {
-                    // A more specific type wins.
-                    $selectedContentType     = $availableType;
-                    $selectedMatchingParts   = $matchRating;
-                    $selectedQualityValue    = $candidateQualityValue;
-                    $selectedPreferenceIndex = $i;
-                    $acceptable              = 0 != $selectedQualityValue;
-                } elseif ($matchRating == $selectedMatchingParts) {
-                    // A type with a higher q-value wins.
-                    if ($candidateQualityValue > $selectedQualityValue) {
-                        $selectedContentType     = $availableType;
-                        $selectedQualityValue    = $candidateQualityValue;
-                        $selectedPreferenceIndex = $i;
-                        $acceptable              = 0 != $selectedQualityValue;
-                    } elseif ($candidateQualityValue == $selectedQualityValue) {
-                        // A type that is earlier in the availableTypes array wins.
-                        if ($i < $selectedPreferenceIndex) {
-                            $selectedContentType     = $availableType;
-                            $selectedPreferenceIndex = $i;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($acceptTypesEmpty) {
-            $selectedContentType = $availableTypes[0];
-        } elseif (!$acceptable) {
-            $selectedContentType = null;
-        }
-
-        return $selectedContentType;
-    }
-
-    /**
      * Returns all MIME types from the $text.
      *
      * @param string $text Text as it appears on an HTTP Accepts header
      *
      * @throws HttpHeaderFailure If found any syntax error in the given text
-     *
-     * @return MediaType[] Array of media (MIME) type description
+     * @return MediaType[]       Array of media (MIME) type description
      */
     public static function mimeTypesFromAcceptHeaders(string $text): array
     {
@@ -359,8 +293,7 @@ class HttpProcessUtility
      * @param int    &$textIndex    Parsing index in $text
      *
      * @throws HttpHeaderFailure
-     *
-     * @return string String representing the value of the $parameterName parameter
+     * @return string            String representing the value of the $parameterName parameter
      */
     public static function readQuotedParameterValue(
         string $parameterName,
@@ -426,6 +359,70 @@ class HttpProcessUtility
     }
 
     /**
+     * Selects an acceptable MIME type that satisfies the Accepts header.
+     *
+     * @param string   $acceptTypesText Text for Accepts header
+     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference
+     *
+     * @throws HttpHeaderFailure
+     * @return string|null       The best MIME type for the client
+     */
+    public static function selectMimeType(string $acceptTypesText, array $availableTypes): ?string
+    {
+        $selectedContentType     = null;
+        $selectedMatchingParts   = -1;
+        $selectedQualityValue    = 0;
+        $selectedPreferenceIndex = PHP_INT_MAX;
+        $acceptable              = false;
+        $acceptTypesEmpty        = true;
+
+        $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        $numAvailable = count($availableTypes);
+        foreach ($acceptTypes as $acceptType) {
+            $acceptTypesEmpty = false;
+            for ($i = 0; $i < $numAvailable; ++$i) {
+                $availableType = $availableTypes[$i];
+                $matchRating   = $acceptType->getMatchingRating($availableType);
+                if (0 > $matchRating) {
+                    continue;
+                }
+
+                $candidateQualityValue = $acceptType->getQualityValue();
+                if ($matchRating > $selectedMatchingParts) {
+                    // A more specific type wins.
+                    $selectedContentType     = $availableType;
+                    $selectedMatchingParts   = $matchRating;
+                    $selectedQualityValue    = $candidateQualityValue;
+                    $selectedPreferenceIndex = $i;
+                    $acceptable              = 0 != $selectedQualityValue;
+                } elseif ($matchRating == $selectedMatchingParts) {
+                    // A type with a higher q-value wins.
+                    if ($candidateQualityValue > $selectedQualityValue) {
+                        $selectedContentType     = $availableType;
+                        $selectedQualityValue    = $candidateQualityValue;
+                        $selectedPreferenceIndex = $i;
+                        $acceptable              = 0 != $selectedQualityValue;
+                    } elseif ($candidateQualityValue == $selectedQualityValue) {
+                        // A type that is earlier in the availableTypes array wins.
+                        if ($i < $selectedPreferenceIndex) {
+                            $selectedContentType     = $availableType;
+                            $selectedPreferenceIndex = $i;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($acceptTypesEmpty) {
+            $selectedContentType = $availableTypes[0];
+        } elseif (!$acceptable) {
+            $selectedContentType = null;
+        }
+
+        return $selectedContentType;
+    }
+
+    /**
      * Reads the numeric part of a quality value substring, normalizing it to 0-1000.
      * rather than the standard 0.000-1.000 ranges.
      *
@@ -434,8 +431,7 @@ class HttpProcessUtility
      *
      * @throws HttpHeaderFailure If any error occurred while reading and processing
      *                           the quality factor
-     *
-     * @return int The normalised qvalue
+     * @return int               The normalised qvalue
      */
     public static function readQualityValue(string $text, int &$textIndex): int
     {
@@ -490,8 +486,7 @@ class HttpProcessUtility
      * @param string $c Character to convert
      *
      * @throws HttpHeaderFailure If $c is not ASCII value for digit or element separator
-     *
-     * @return int The Int32 value for $c, or -1 if it is an element separator
+     * @return int               The Int32 value for $c, or -1 if it is an element separator
      */
     public static function digitToInt32(string $c): int
     {

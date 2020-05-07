@@ -43,9 +43,8 @@ class OrderByRootNode extends OrderByNode
     /**
      * (non-PHPdoc).
      *
-     * @see library/POData/QueryProcessorOrderByParser.OrderByNode::getResourceType()
-     *
      * @return ResourceType
+     * @see library/POData/QueryProcessorOrderByParser.OrderByNode::getResourceType()
      */
     public function getResourceType()
     {

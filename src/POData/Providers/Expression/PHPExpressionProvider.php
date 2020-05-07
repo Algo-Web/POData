@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Expression;
 
+use InvalidArgumentException;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
@@ -60,16 +61,6 @@ class PHPExpressionProvider implements IExpressionProvider
     }
 
     /**
-     * Get the name of the iterator.
-     *
-     * @return string
-     */
-    public function getIteratorName()
-    {
-        return $this->iteratorName;
-    }
-
-    /**
      * call-back for setting the resource type.
      *
      * @param ResourceType $resourceType The resource type on which the filter is going to be applied
@@ -101,8 +92,23 @@ class PHPExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::LOGICAL_OR, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onLogicalExpression');
+                throw new InvalidArgumentException('onLogicalExpression');
         }
+    }
+
+    /**
+     * To format binary expression.
+     *
+     * @param string $operator The binary operator
+     * @param string $left     The left operand
+     * @param string $right    The right operand
+     *
+     * @return string
+     */
+    private function prepareBinaryExpression($operator, $left, $right)
+    {
+        return
+            self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
     }
 
     /**
@@ -133,7 +139,7 @@ class PHPExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::SUBTRACT, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onArithmeticExpression');
+                throw new InvalidArgumentException('onArithmeticExpression');
         }
     }
 
@@ -168,7 +174,7 @@ class PHPExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::NOT_EQUAL, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onRelationalExpression');
+                throw new InvalidArgumentException('onRelationalExpression');
         }
     }
 
@@ -190,8 +196,21 @@ class PHPExpressionProvider implements IExpressionProvider
                 return $this->prepareUnaryExpression(self::LOGICAL_NOT, $child);
 
             default:
-                throw new \InvalidArgumentException('onUnaryExpression');
+                throw new InvalidArgumentException('onUnaryExpression');
         }
+    }
+
+    /**
+     * To format unary expression.
+     *
+     * @param string $operator The unary operator
+     * @param string $child    The operand
+     *
+     * @return string
+     */
+    private function prepareUnaryExpression($operator, $child)
+    {
+        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
     }
 
     /**
@@ -223,13 +242,13 @@ class PHPExpressionProvider implements IExpressionProvider
     public function onPropertyAccessExpression(PropertyAccessExpression $expression): string
     {
         if (null == $this->resourceType) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
+            throw new InvalidArgumentException('onPropertyAccessExpression - resourceType null');
         }
         if (null == $this->resourceType->getName()) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
+            throw new InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
         }
         if (null == $expression->getResourceProperty()) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
+            throw new InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
         }
         $parent   = $expression;
         $variable = null;
@@ -243,6 +262,16 @@ class PHPExpressionProvider implements IExpressionProvider
         $variable = $this->getIteratorName() . self::MEMBER_ACCESS . $variable;
 
         return $variable;
+    }
+
+    /**
+     * Get the name of the iterator.
+     *
+     * @return string
+     */
+    public function getIteratorName()
+    {
+        return $this->iteratorName;
     }
 
     /**
@@ -261,7 +290,7 @@ class PHPExpressionProvider implements IExpressionProvider
 
             case ODataConstants::STRFUN_ENDSWITH:
                 return '(strcmp(substr(' . $params[0] . ', strlen(' . $params[0] . ') - strlen(' . $params[1] . ')), '
-                        . $params[1] . ') === 0)';
+                    . $params[1] . ') === 0)';
 
             case ODataConstants::STRFUN_INDEXOF:
                 return 'strpos(' . $params[0] . ', ' . $params[1] . ')';
@@ -336,35 +365,7 @@ class PHPExpressionProvider implements IExpressionProvider
                 return 'is_null(' . $params[0] . ')';
 
             default:
-                throw new \InvalidArgumentException('onFunctionCallExpression');
+                throw new InvalidArgumentException('onFunctionCallExpression');
         }
-    }
-
-    /**
-     * To format binary expression.
-     *
-     * @param string $operator The binary operator
-     * @param string $left     The left operand
-     * @param string $right    The right operand
-     *
-     * @return string
-     */
-    private function prepareBinaryExpression($operator, $left, $right)
-    {
-        return
-            self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
-    }
-
-    /**
-     * To format unary expression.
-     *
-     * @param string $operator The unary operator
-     * @param string $child    The operand
-     *
-     * @return string
-     */
-    private function prepareUnaryExpression($operator, $child)
-    {
-        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
     }
 }

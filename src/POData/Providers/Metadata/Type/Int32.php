@@ -63,17 +63,6 @@ class Int32 implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.Int32';
-    }
-
-    /**
      * Converts the given string value to int type.
      *
      * @param string $stringValue value to convert
@@ -108,5 +97,16 @@ class Int32 implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Int32';
     }
 }

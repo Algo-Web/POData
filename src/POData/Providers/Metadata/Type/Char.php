@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata\Type;
 
-use Mockery\Matcher\Not;
 use POData\Common\NotImplementedException;
 
 /**
@@ -24,6 +23,64 @@ class Char implements IType
     const NEWLINE         = 10;
     const CARRIAGE_RETURN = 13;
     const SPACE           = 32;
+
+    /**
+     * Checks a character is whitespace.
+     *
+     * @param char|string $char character to check
+     *
+     * @return bool
+     */
+    public static function isWhiteSpace($char)
+    {
+        $asciiVal = ord($char);
+
+        return self::SPACE == $asciiVal
+            || self::TAB == $asciiVal
+            || self::CARRIAGE_RETURN == $asciiVal
+            || self::NEWLINE == $asciiVal;
+    }
+
+    /**
+     * Checks a character is letter or digit.
+     *
+     * @param char|string $char character to check
+     *
+     * @return bool
+     */
+    public static function isLetterOrDigit($char)
+    {
+        return self::isDigit($char) || self::isLetter($char);
+    }
+
+    /**
+     * Checks a character is digit.
+     *
+     * @param char|string $char character to check
+     *
+     * @return bool
+     */
+    public static function isDigit($char)
+    {
+        $asciiVal = ord($char);
+
+        return self::ZERO <= $asciiVal && self::NINE >= $asciiVal;
+    }
+
+    /**
+     * Checks a character is letter.
+     *
+     * @param char|string $char character to check
+     *
+     * @return bool
+     */
+    public static function isLetter($char)
+    {
+        $asciiVal = ord($char);
+
+        return ($asciiVal >= self::A && $asciiVal <= self::Z)
+            || ($asciiVal >= self::SMALL_A && $asciiVal <= self::SMALL_Z);
+    }
 
     /**
      * Gets the type code
@@ -73,17 +130,6 @@ class Char implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'System.Char';
-    }
-
-    /**
      * Converts the given string value to char type.
      * Note: This function will not perform any conversion.
      *
@@ -111,64 +157,6 @@ class Char implements IType
     }
 
     /**
-     * Checks a character is whitespace.
-     *
-     * @param char|string $char character to check
-     *
-     * @return bool
-     */
-    public static function isWhiteSpace($char)
-    {
-        $asciiVal = ord($char);
-
-        return self::SPACE == $asciiVal
-            || self::TAB == $asciiVal
-            || self::CARRIAGE_RETURN == $asciiVal
-            || self::NEWLINE == $asciiVal;
-    }
-
-    /**
-     * Checks a character is letter.
-     *
-     * @param char|string $char character to check
-     *
-     * @return bool
-     */
-    public static function isLetter($char)
-    {
-        $asciiVal = ord($char);
-
-        return ($asciiVal >= self::A && $asciiVal <= self::Z)
-            || ($asciiVal >= self::SMALL_A && $asciiVal <= self::SMALL_Z);
-    }
-
-    /**
-     * Checks a character is digit.
-     *
-     * @param char|string $char character to check
-     *
-     * @return bool
-     */
-    public static function isDigit($char)
-    {
-        $asciiVal = ord($char);
-
-        return self::ZERO <= $asciiVal && self::NINE >= $asciiVal;
-    }
-
-    /**
-     * Checks a character is letter or digit.
-     *
-     * @param char|string $char character to check
-     *
-     * @return bool
-     */
-    public static function isLetterOrDigit($char)
-    {
-        return self::isDigit($char) || self::isLetter($char);
-    }
-
-    /**
      * Gets full name of the type implementing this interface in EDM namespace
      * Note: implementation of IType::getFullTypeName.
      *
@@ -177,5 +165,16 @@ class Char implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'System.Char';
     }
 }

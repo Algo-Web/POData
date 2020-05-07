@@ -9,6 +9,7 @@ use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Query\QueryResult;
+use ReflectionException;
 
 /**
  * Class InternalOrderByInfo.
@@ -90,16 +91,6 @@ class InternalOrderByInfo
     }
 
     /**
-     * Get reference to the orderby path segment information.
-     *
-     * @return OrderByPathSegment[]
-     */
-    public function getOrderByPathSegments()
-    {
-        return $this->orderByInfo->getOrderByPathSegments();
-    }
-
-    /**
      * Gets reference to the top level sorter function.
      *
      * @return callable
@@ -130,23 +121,12 @@ class InternalOrderByInfo
     }
 
     /**
-     * Get resource type this InternalOrderByInfo object points to.
-     *
-     * @return ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->resourceType;
-    }
-
-    /**
      * Build value of $skiptoken from the given object which will be the
      * last object in the page.
      *
      * @param mixed $lastObject entity instance from which skiptoken needs to be built
      *
      * @throws ODataException If reflection exception occurs while accessing property
-     *
      * @return string
      */
     public function buildSkipTokenValue($lastObject)
@@ -192,7 +172,7 @@ class InternalOrderByInfo
                         $value = $type->convertToOData($currentObject);
                         $nextPageLink .= $value . ', ';
                     }
-                } catch (\ReflectionException $reflectionException) {
+                } catch (ReflectionException $reflectionException) {
                     $msg = Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty($segName);
                     throw ODataException::createInternalServerError($msg);
                 }
@@ -202,5 +182,25 @@ class InternalOrderByInfo
         }
 
         return rtrim(strval($nextPageLink), ', ');
+    }
+
+    /**
+     * Get reference to the orderby path segment information.
+     *
+     * @return OrderByPathSegment[]
+     */
+    public function getOrderByPathSegments()
+    {
+        return $this->orderByInfo->getOrderByPathSegments();
+    }
+
+    /**
+     * Get resource type this InternalOrderByInfo object points to.
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceType;
     }
 }

@@ -56,7 +56,7 @@ trait orderByInfo
     public static function orderByParserPropertyNotFound($resourceTypeName, $propertyName)
     {
         return 'Error in the \'orderby\' clause. Type ' . $resourceTypeName
-               . ' does not have a property named \'' . $propertyName . '\'.';
+            . ' does not have a property named \'' . $propertyName . '\'.';
     }
 
     /**
@@ -70,7 +70,7 @@ trait orderByInfo
     public static function orderByParserBagPropertyNotAllowed($bagPropertyName)
     {
         return 'orderby clause does not support Bag property in the path, the property \'' . $bagPropertyName
-                . '\' is a bag property';
+            . '\' is a bag property';
     }
 
     /**
@@ -84,7 +84,7 @@ trait orderByInfo
     public static function orderByParserPrimitiveAsIntermediateSegment($propertyName)
     {
         return 'The primitive property \'' . $propertyName . '\' cannot be used as intermediate segment, it should'
-                . ' be last segment';
+            . ' be last segment';
     }
 
     /**
@@ -111,7 +111,7 @@ trait orderByInfo
     public static function orderByParserResourceSetReferenceNotAllowed($propertyName, $definedType)
     {
         return 'Navigation property points to a collection cannot be used in orderby clause, The property \''
-                . $propertyName . '\' defined on type \'' . $definedType . '\' is such a property';
+            . $propertyName . '\' defined on type \'' . $definedType . '\' is such a property';
     }
 
     /**
@@ -138,7 +138,7 @@ trait orderByInfo
     public static function orderByParserSortByComplexPropertyIsNotAllowed($complexPropertyName)
     {
         return 'Complex property cannot be used as sort key, the property \'' . $complexPropertyName
-                . '\' is a complex property';
+            . '\' is a complex property';
     }
 
     /**
@@ -185,6 +185,6 @@ trait orderByInfo
     public static function orderByParserFailedToAccessOrInitializeProperty($propertyName, $parentObjectName)
     {
         return 'OrderBy parser failed to access or initialize the property ' . $propertyName .
-               ' of ' . $parentObjectName;
+            ' of ' . $parentObjectName;
     }
 }

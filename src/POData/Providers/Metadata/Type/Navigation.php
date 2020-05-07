@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata\Type;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\NotImplementedException;
 use POData\Providers\Metadata\ResourceType;
@@ -26,14 +27,14 @@ class Navigation implements INavigationType
      *
      * @param ResourceType $resourceType The resource type for this navigation
      *
-     * @throws \InvalidArgumentException when the resource type kind is not complex or entity
+     * @throws InvalidArgumentException when the resource type kind is not complex or entity
      */
     public function __construct($resourceType)
     {
         if (ResourceTypeKind::COMPLEX() != $resourceType->getResourceTypeKind()
             && ResourceTypeKind::ENTITY() != $resourceType->getResourceTypeKind()
         ) {
-            throw new \InvalidArgumentException(Messages::navigationInvalidResourceType());
+            throw new InvalidArgumentException(Messages::navigationInvalidResourceType());
         }
 
         $this->resourceType = $resourceType;
@@ -91,17 +92,6 @@ class Navigation implements INavigationType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return $this->resourceType->getFullName();
-    }
-
-    /**
      * Converts the given string value to navigation type.
      *
      * @param string $stringValue value to convert
@@ -136,6 +126,17 @@ class Navigation implements INavigationType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return $this->resourceType->getFullName();
     }
 
     //End implementation of IType interface

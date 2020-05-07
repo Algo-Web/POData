@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use Exception;
+
 /**
  * Class InvalidOperationException.
  */
-class InvalidOperationException extends \Exception
+class InvalidOperationException extends Exception
 {
     /**
      * Creates new instance of InvalidOperationException.

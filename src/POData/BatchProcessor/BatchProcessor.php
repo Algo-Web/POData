@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace POData\BatchProcessor;
 
 use POData\BaseService;
@@ -45,7 +46,7 @@ class BatchProcessor
         if (is_array($rawData)) {
             $rawData = $rawData[0];
         }
-        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
+        $ODataEOL            = $this->getService()->getConfiguration()->getLineEndings();
         $this->data          = trim($rawData);
         $this->data          = preg_replace('~\r\n?~', $ODataEOL, $this->data);
         $this->batchBoundary = substr($contentType, 26);
@@ -68,21 +69,19 @@ class BatchProcessor
     }
 
     /**
-     * @return string
+     * @return BaseService
      */
-    public function getResponse()
+    public function getService()
     {
-        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
+        return $this->service;
+    }
 
-        $response = '';
-        $splitter =  '--' . $this->batchBoundary . $ODataEOL;
-        $raw      = $this->changeSetProcessors;
-        foreach ($raw as $contentID => &$workingObject) {
-            $response .= $splitter;
-            $response .= $workingObject->getResponse() . $ODataEOL;
-        }
-        $response .= trim($splitter) . '--' . $ODataEOL;
-        return $response;
+    /**
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -100,18 +99,20 @@ class BatchProcessor
     }
 
     /**
-     * @return BaseService
+     * @return string
      */
-    public function getService()
+    public function getResponse()
     {
-        return $this->service;
-    }
+        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
 
-    /**
-     * @return RequestDescription
-     */
-    public function getRequest()
-    {
-        return $this->request;
+        $response = '';
+        $splitter = '--' . $this->batchBoundary . $ODataEOL;
+        $raw      = $this->changeSetProcessors;
+        foreach ($raw as $contentID => &$workingObject) {
+            $response .= $splitter;
+            $response .= $workingObject->getResponse() . $ODataEOL;
+        }
+        $response .= trim($splitter) . '--' . $ODataEOL;
+        return $response;
     }
 }

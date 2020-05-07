@@ -44,16 +44,6 @@ abstract class BinaryExpression extends AbstractExpression
     }
 
     /**
-     * Get right operand (expression) of binary expression.
-     *
-     * @return AbstractExpression|null
-     */
-    public function getRight()
-    {
-        return isset($this->right) ? $this->right : null;
-    }
-
-    /**
      * Set left operand (expression) of binary expression.
      *
      * @param AbstractExpression $expression Expression to set as left operand
@@ -61,6 +51,16 @@ abstract class BinaryExpression extends AbstractExpression
     public function setLeft($expression)
     {
         $this->left = $expression;
+    }
+
+    /**
+     * Get right operand (expression) of binary expression.
+     *
+     * @return AbstractExpression|null
+     */
+    public function getRight()
+    {
+        return isset($this->right) ? $this->right : null;
     }
 
     /**

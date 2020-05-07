@@ -75,7 +75,7 @@ class ODataLink
     }
 
     /**
-     * @return null|\POData\ObjectModel\ODataExpandedResult
+     * @return null|ODataExpandedResult
      */
     public function getExpandResult()
     {
@@ -91,7 +91,7 @@ class ODataLink
     }
 
     /**
-     * @param \POData\ObjectModel\ODataExpandedResult $eResult
+     * @param ODataExpandedResult $eResult
      */
     public function setExpandResult(ODataExpandedResult $eResult)
     {

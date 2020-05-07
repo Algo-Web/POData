@@ -9,6 +9,7 @@ use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Readers\ODataReaderRegistry;
 use POData\Writers\ODataWriterRegistry;
@@ -51,7 +52,7 @@ interface IService
     public function getStreamProviderWrapper();
 
     /**
-     * @return \POData\Providers\Stream\IStreamProvider2
+     * @return IStreamProvider2
      */
     public function getStreamProviderX();
 

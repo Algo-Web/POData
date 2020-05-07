@@ -35,7 +35,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportNull($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the \'null\''
-                . ' literal; only equality checks are supported';
+            . ' literal; only equality checks are supported';
     }
 
     /**
@@ -49,7 +49,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportGuid($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Guid;'
-                . ' only equality checks are supported';
+            . ' only equality checks are supported';
     }
 
     /**
@@ -63,7 +63,7 @@ trait expressionParser
     public static function expressionParserOperatorNotSupportBinary($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Binary;'
-                . ' only equality checks are supported';
+            . ' only equality checks are supported';
     }
 
     /**
@@ -138,6 +138,6 @@ trait expressionParser
     public static function expressionParserEntityCollectionNotAllowedInFilter($property, $parentProperty, $pos)
     {
         return 'The \'' . $property . '\' is an entity collection property of \'' . $parentProperty .
-               '\' (position: ' . $pos . '), which cannot be used in $filter query option';
+            '\' (position: ' . $pos . '), which cannot be used in $filter query option';
     }
 }

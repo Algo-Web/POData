@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Expression;
 
+use InvalidArgumentException;
 use POData\Common\ODataConstants;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
@@ -93,8 +94,32 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::LOGICAL_OR, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onLogicalExpression');
+                throw new InvalidArgumentException('onLogicalExpression');
         }
+    }
+
+    /**
+     * To format binary expression.
+     *
+     * @param string $operator The binary operator
+     * @param string $left     The left operand
+     * @param string $right    The right operand
+     *
+     * @return string
+     */
+    private function prepareBinaryExpression($operator, $left, $right)
+    {
+        //DATETIMECMP
+        if (0 == substr_compare($left, 'DATETIMECMP', 0, 11)) {
+            $str    = explode(';', $left, 2);
+            $str[0] = str_replace('DATETIMECMP', '', $str[0]);
+
+            return self::OPEN_BRACKET
+                . $str[0] . ' ' . $operator
+                . ' ' . $str[1] . self::CLOSE_BRACKET;
+        }
+
+        return self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
     }
 
     /**
@@ -125,7 +150,7 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::SUBTRACT, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onArithmeticExpression');
+                throw new InvalidArgumentException('onArithmeticExpression');
         }
     }
 
@@ -160,7 +185,7 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return $this->prepareBinaryExpression(self::NOT_EQUAL, $left, $right);
 
             default:
-                throw new \InvalidArgumentException('onRelationalExpression');
+                throw new InvalidArgumentException('onRelationalExpression');
         }
     }
 
@@ -182,8 +207,21 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return $this->prepareUnaryExpression(self::LOGICAL_NOT, $child);
 
             default:
-                throw new \InvalidArgumentException('onUnaryExpression');
+                throw new InvalidArgumentException('onUnaryExpression');
         }
+    }
+
+    /**
+     * To format unary expression.
+     *
+     * @param string $operator The unary operator
+     * @param string $child    The operand
+     *
+     * @return string
+     */
+    private function prepareUnaryExpression($operator, $child)
+    {
+        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
     }
 
     /**
@@ -215,13 +253,13 @@ class MySQLExpressionProvider implements IExpressionProvider
     public function onPropertyAccessExpression(PropertyAccessExpression $expression): string
     {
         if (null == $this->resourceType) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType null');
+            throw new InvalidArgumentException('onPropertyAccessExpression - resourceType null');
         }
         if (null == $this->resourceType->getName()) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
+            throw new InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
         }
         if (null == $expression->getResourceProperty()) {
-            throw new \InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
+            throw new InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
         }
         $parent         = $expression;
         $entityTypeName = $this->resourceType->getName();
@@ -324,44 +362,7 @@ class MySQLExpressionProvider implements IExpressionProvider
                 return 'is_null(' . $params[0] . ')';
 
             default:
-                throw new \InvalidArgumentException('onFunctionCallExpression');
+                throw new InvalidArgumentException('onFunctionCallExpression');
         }
-    }
-
-    /**
-     * To format binary expression.
-     *
-     * @param string $operator The binary operator
-     * @param string $left     The left operand
-     * @param string $right    The right operand
-     *
-     * @return string
-     */
-    private function prepareBinaryExpression($operator, $left, $right)
-    {
-        //DATETIMECMP
-        if (0 == substr_compare($left, 'DATETIMECMP', 0, 11)) {
-            $str    = explode(';', $left, 2);
-            $str[0] = str_replace('DATETIMECMP', '', $str[0]);
-
-            return self::OPEN_BRACKET
-                . $str[0] . ' ' . $operator
-                . ' ' . $str[1] . self::CLOSE_BRACKET;
-        }
-
-        return self::OPEN_BRACKET . $left . ' ' . $operator . ' ' . $right . self::CLOSE_BRACKET;
-    }
-
-    /**
-     * To format unary expression.
-     *
-     * @param string $operator The unary operator
-     * @param string $child    The operand
-     *
-     * @return string
-     */
-    private function prepareUnaryExpression($operator, $child)
-    {
-        return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
     }
 }

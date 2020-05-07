@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 
@@ -67,7 +68,7 @@ class ResourceAssociationTypeEnd
         ?ResourceProperty $fromProperty
     ) {
         if (null === $resourceProperty && null === $fromProperty) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationTypeEndBothPropertyCannotBeNull()
             );
         }

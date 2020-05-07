@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace POData\Providers;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use ReflectionException;
 
 /**
  * Class ProvidersQueryWrapper.
@@ -44,14 +44,6 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * @return IQueryProvider
-     */
-    public function getQueryProvider()
-    {
-        return $this->queryProvider;
-    }
-
-    /**
      * Get related resource set for a resource.
      *
      * @param QueryType          $queryType         Indicates if this is a query for a count, entities, or entities
@@ -68,7 +60,6 @@ class ProvidersQueryWrapper
      * @param SkipTokenInfo|null $skipToken         The skip token
      *
      * @throws ODataException
-     *
      * @return QueryResult
      */
     public function getRelatedResourceSet(
@@ -99,6 +90,66 @@ class ProvidersQueryWrapper
         $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getRelatedResourceSet');
 
         return $queryResult;
+    }
+
+    /**
+     * @return IQueryProvider
+     */
+    public function getQueryProvider()
+    {
+        return $this->queryProvider;
+    }
+
+    /**
+     * @param QueryResult $queryResult
+     * @param QueryType   $queryType
+     * @param string      $methodName
+     *
+     * @throws ODataException
+     */
+    protected function validateQueryResult($queryResult, QueryType $queryType, $methodName)
+    {
+        if (!$queryResult instanceof QueryResult) {
+            throw ODataException::createInternalServerError(
+                Messages::queryProviderReturnsNonQueryResult($methodName)
+            );
+        }
+
+        $isResultArray = is_array($queryResult->results);
+
+        if (QueryType::hasCount($queryType)) {
+            //and the provider is supposed to handle the ordered paging they must return a count!
+            if ($this->handlesOrderedPaging() && !is_numeric($queryResult->count)) {
+                throw ODataException::createInternalServerError(
+                    Messages::queryProviderResultCountMissing($methodName, $queryType)
+                );
+            }
+
+            //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
+            if (!$this->handlesOrderedPaging() && !$isResultArray) {
+                throw ODataException::createInternalServerError(
+                    Messages::queryProviderResultsMissing($methodName, $queryType)
+                );
+            }
+        }
+
+        if ((QueryType::hasEntities($queryType)) && !$isResultArray) {
+            throw ODataException::createInternalServerError(
+                Messages::queryProviderResultsMissing($methodName, $queryType)
+            );
+        }
+    }
+
+    /**
+     * Indicates if the QueryProvider can handle ordered paging, this means respecting order, skip, and top parameters
+     * If the query provider can not handle ordered paging, it must return the entire result set and POData will
+     * perform the ordering and paging.
+     *
+     * @return bool True if the query provider can handle ordered paging, false if POData should perform the paging
+     */
+    public function handlesOrderedPaging()
+    {
+        return $this->getQueryProvider()->handlesOrderedPaging();
     }
 
     /**
@@ -168,23 +219,10 @@ class ProvidersQueryWrapper
     }
 
     /**
-     * Indicates if the QueryProvider can handle ordered paging, this means respecting order, skip, and top parameters
-     * If the query provider can not handle ordered paging, it must return the entire result set and POData will
-     * perform the ordering and paging.
-     *
-     * @return bool True if the query provider can handle ordered paging, false if POData should perform the paging
-     */
-    public function handlesOrderedPaging()
-    {
-        return $this->getQueryProvider()->handlesOrderedPaging();
-    }
-
-    /**
      * Gets the underlying custom expression provider, the end developer is
      * responsible for implementing IExpressionProvider if he choose for.
      *
      * @throws ODataException
-     *
      * @return IExpressionProvider Instance of IExpressionProvider implementation
      */
     public function getExpressionProvider()
@@ -323,11 +361,10 @@ class ProvidersQueryWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be
      *                                            retrieved
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     *
-     * @return object|null The related resource if exists, else null
+     * @return object|null               The related resource if exists, else null
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,
@@ -361,13 +398,38 @@ class ProvidersQueryWrapper
                             )
                         );
                     }
-                } catch (\ReflectionException $reflectionException) {
+                } catch (ReflectionException $reflectionException) {
                     // Left blank - we're simply squashing reflection exceptions
                 }
             }
         }
 
         return $entityInstance;
+    }
+
+    /**
+     * @param string $methodName
+     * @param $entityInstance
+     * @param ResourceSet $resourceSet
+     *
+     * @throws ReflectionException
+     * @throws ODataException
+     * @return ResourceEntityType
+     */
+    private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
+    {
+        $resourceType = $resourceSet->getResourceType();
+        $entityName   = $resourceType->getInstanceType()->getName();
+        if (!($entityInstance instanceof $entityName)) {
+            throw ODataException::createInternalServerError(
+                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
+                    $entityName,
+                    $methodName
+                )
+            );
+        }
+
+        return $resourceType;
     }
 
     /**
@@ -379,10 +441,10 @@ class ProvidersQueryWrapper
      * @param ResourceProperty $targetProperty    The metadata of the target property
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     * @return object|null                              Returns entity instance if found, else null
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -410,16 +472,63 @@ class ProvidersQueryWrapper
     }
 
     /**
+     * Validate the given entity instance.
+     *
+     * @param object|null   $entityInstance Entity instance to validate
+     * @param ResourceSet   &$resourceSet   Resource set to which the entity
+     *                                      instance belongs to
+     * @param KeyDescriptor &$keyDescriptor The key descriptor
+     * @param string        $methodName     Method from which this function
+     *                                      invoked
+     *
+     * @throws ODataException
+     * @throws InvalidOperationException
+     * @throws ReflectionException
+     */
+    protected function validateEntityInstance(
+        $entityInstance,
+        ResourceSet &$resourceSet,
+        KeyDescriptor &$keyDescriptor,
+        $methodName
+    ) {
+        if (null === $entityInstance) {
+            throw ODataException::createResourceNotFoundError($resourceSet->getName());
+        }
+
+        $resourceType = $this->verifyResourceType($methodName, $entityInstance, $resourceSet);
+
+        foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
+            try {
+                $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
+                if (null === $keyValue) {
+                    throw ODataException::createInternalServerError(
+                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
+                    );
+                }
+
+                $convertedValue = $valueDescription[1]->convert($valueDescription[0]);
+                if ($keyValue != $convertedValue) {
+                    throw ODataException::createInternalServerError(
+                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
+                    );
+                }
+            } catch (ReflectionException $reflectionException) {
+                // Left blank - we're simply squashing reflection exceptions
+            }
+        }
+    }
+
+    /**
      * Gets an entity instance from an entity set identified by a key.
      *
      * @param ResourceSet   $resourceSet   The entity set containing the entity to fetch
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      * @param string[]|null $eagerLoad     array of relations to eager load
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     * @return object|null                              Returns entity instance if found, else null
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
@@ -490,120 +599,6 @@ class ProvidersQueryWrapper
             $targetEntityInstance,
             $navPropName
         );
-    }
-
-
-    /**
-     * @param QueryResult $queryResult
-     * @param QueryType   $queryType
-     * @param string      $methodName
-     *
-     * @throws ODataException
-     */
-    protected function validateQueryResult($queryResult, QueryType $queryType, $methodName)
-    {
-        if (!$queryResult instanceof QueryResult) {
-            throw ODataException::createInternalServerError(
-                Messages::queryProviderReturnsNonQueryResult($methodName)
-            );
-        }
-
-        $isResultArray = is_array($queryResult->results);
-
-        if (QueryType::hasCount($queryType)) {
-            //and the provider is supposed to handle the ordered paging they must return a count!
-            if ($this->handlesOrderedPaging() && !is_numeric($queryResult->count)) {
-                throw ODataException::createInternalServerError(
-                    Messages::queryProviderResultCountMissing($methodName, $queryType)
-                );
-            }
-
-            //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
-            if (!$this->handlesOrderedPaging() && !$isResultArray) {
-                throw ODataException::createInternalServerError(
-                    Messages::queryProviderResultsMissing($methodName, $queryType)
-                );
-            }
-        }
-
-        if ((QueryType::hasEntities($queryType)) && !$isResultArray) {
-            throw ODataException::createInternalServerError(
-                Messages::queryProviderResultsMissing($methodName, $queryType)
-            );
-        }
-    }
-
-    /**
-     * Validate the given entity instance.
-     *
-     * @param object|null   $entityInstance Entity instance to validate
-     * @param ResourceSet   &$resourceSet   Resource set to which the entity
-     *                                      instance belongs to
-     * @param KeyDescriptor &$keyDescriptor The key descriptor
-     * @param string        $methodName     Method from which this function
-     *                                      invoked
-     *
-     * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     */
-    protected function validateEntityInstance(
-        $entityInstance,
-        ResourceSet &$resourceSet,
-        KeyDescriptor &$keyDescriptor,
-        $methodName
-    ) {
-        if (null === $entityInstance) {
-            throw ODataException::createResourceNotFoundError($resourceSet->getName());
-        }
-
-        $resourceType = $this->verifyResourceType($methodName, $entityInstance, $resourceSet);
-
-        foreach ($keyDescriptor->getValidatedNamedValues() as $keyName => $valueDescription) {
-            try {
-                $keyValue = $resourceType->getPropertyValue($entityInstance, $keyName);
-                if (null === $keyValue) {
-                    throw ODataException::createInternalServerError(
-                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties($methodName)
-                    );
-                }
-
-                $convertedValue = $valueDescription[1]->convert($valueDescription[0]);
-                if ($keyValue != $convertedValue) {
-                    throw ODataException::createInternalServerError(
-                        Messages::providersWrapperIDSQPMethodReturnsInstanceWithNonMatchingKeys($methodName)
-                    );
-                }
-            } catch (\ReflectionException $reflectionException) {
-                // Left blank - we're simply squashing reflection exceptions
-            }
-        }
-    }
-
-    /**
-     * @param string $methodName
-     * @param $entityInstance
-     * @param ResourceSet $resourceSet
-     *
-     * @throws ODataException
-     * @throws \ReflectionException
-     *
-     * @return ResourceEntityType
-     */
-    private function verifyResourceType($methodName, $entityInstance, ResourceSet $resourceSet)
-    {
-        $resourceType = $resourceSet->getResourceType();
-        $entityName   = $resourceType->getInstanceType()->getName();
-        if (!($entityInstance instanceof $entityName)) {
-            throw ODataException::createInternalServerError(
-                Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
-                    $entityName,
-                    $methodName
-                )
-            );
-        }
-
-        return $resourceType;
     }
 
     /**

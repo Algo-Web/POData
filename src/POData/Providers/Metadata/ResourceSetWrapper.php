@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
-use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
 
 /**
@@ -119,8 +119,8 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @param ProvidersWrapper $provider
      *
-     * @throws \POData\Common\InvalidOperationException
      * @throws ODataException
+     * @throws InvalidOperationException
      * @return bool
      */
     public function hasNamedStreams(ProvidersWrapper $provider)
@@ -147,8 +147,8 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @param ProvidersWrapper $provider Metadata query provider wrapper
      *
-     * @throws \POData\Common\InvalidOperationException
      * @throws ODataException
+     * @throws InvalidOperationException
      * @return bool
      */
     public function hasBagProperty(ProvidersWrapper $provider)
@@ -173,6 +173,21 @@ class ResourceSetWrapper extends ResourceSet
     }
 
     /**
+     * Checks whether this request has the reading rights.
+     *
+     * @param bool $singleResult Check for multiple result read if false else single result read
+     *
+     * @throws ODataException exception if read-access to this resource set is forbidden
+     */
+    public function checkResourceSetRightsForRead($singleResult)
+    {
+        $this->checkResourceSetRights(
+            $singleResult ?
+                EntitySetRights::READ_SINGLE() : EntitySetRights::READ_MULTIPLE()
+        );
+    }
+
+    /**
      * Checks whether this request has the specified rights.
      *
      * @param EntitySetRights $requiredRights The rights to check
@@ -184,20 +199,5 @@ class ResourceSetWrapper extends ResourceSet
         if (($this->resourceSetRights->getValue() & $requiredRights->getValue()) == 0) {
             throw ODataException::createForbiddenError();
         }
-    }
-
-    /**
-     * Checks whether this request has the reading rights.
-     *
-     * @param bool $singleResult Check for multiple result read if false else single result read
-     *
-     * @throws ODataException exception if read-access to this resource set is forbidden
-     */
-    public function checkResourceSetRightsForRead($singleResult)
-    {
-        $this->checkResourceSetRights(
-            $singleResult ?
-            EntitySetRights::READ_SINGLE() : EntitySetRights::READ_MULTIPLE()
-        );
     }
 }

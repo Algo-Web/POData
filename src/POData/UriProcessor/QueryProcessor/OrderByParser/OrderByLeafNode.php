@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use Closure;
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\StringType;
@@ -68,9 +71,8 @@ class OrderByLeafNode extends OrderByBaseNode
     /**
      * (non-PHPdoc).
      *
+     * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
-     *
-     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {
@@ -92,13 +94,13 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @param string[] $ancestors Array of parent properties e.g. ['Orders', 'Customer', 'Customer_Demographics']
      *
-     * @return \Closure
+     * @return Closure
      */
     public function buildComparisonFunction($ancestors)
     {
         if (0 == count($ancestors)) {
             $msg = Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray();
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         $ascend = $this->isAscending ? 1 : -1;
@@ -132,9 +134,9 @@ class OrderByLeafNode extends OrderByBaseNode
             if ($flag1 && $flag2) {
                 return 0;
             } elseif ($flag1) {
-                return $ascend*-1;
+                return $ascend * -1;
             } elseif ($flag2) {
-                return $ascend*1;
+                return $ascend * 1;
             }
             $type = $this->resourceProperty->getInstanceType();
             if ($type instanceof DateTime) {
@@ -145,10 +147,10 @@ class OrderByLeafNode extends OrderByBaseNode
                 $result = strcmp($accessor1, $accessor2);
             } else {
                 $delta  = $accessor1 - $accessor2;
-                $result = (0 == $delta) ? 0 : $delta/abs($delta);
+                $result = (0 == $delta) ? 0 : $delta / abs($delta);
             }
 
-            return $ascend*$result;
+            return $ascend * $result;
         };
 
         return $retVal;

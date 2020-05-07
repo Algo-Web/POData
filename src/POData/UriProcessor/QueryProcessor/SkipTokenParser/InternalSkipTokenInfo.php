@@ -11,6 +11,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Null1;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use ReflectionException;
 
 /**
  * Class InternalSkipTokenInfo.
@@ -118,15 +119,14 @@ class InternalSkipTokenInfo
      *
      * @param array &$searchArray The sorted array to search
      *
-     * @throws InvalidArgumentException
      * @throws ODataException
-     *
-     * @return int (1) If the array is empty then return -1,
-     *             (2) If the key object found then return index of first record
-     *             in the next page,
-     *             (3) If partial matching found (means found matching for first
-     *             m keys where m < n, where n is total number of positional
-     *             keys, then return the index of the object which has most matching
+     * @throws InvalidArgumentException
+     * @return int                      (1) If the array is empty then return -1,
+     *                                  (2) If the key object found then return index of first record
+     *                                  in the next page,
+     *                                  (3) If partial matching found (means found matching for first
+     *                                  m keys where m < n, where n is total number of positional
+     *                                  keys, then return the index of the object which has most matching
      */
     public function getIndexOfFirstEntryInTheNextPage(array &$searchArray): int
     {
@@ -141,7 +141,7 @@ class InternalSkipTokenInfo
         $searchArraySize = count($searchArray) - 1;
         $high            = $searchArraySize;
         do {
-            $mid    = intval($low + round(($high - $low)/2));
+            $mid    = intval($low + round(($high - $low) / 2));
             $result = $comparer($keyObject, $searchArray[$mid]);
             if ($result > 0) {
                 $low = $mid + 1;
@@ -175,7 +175,6 @@ class InternalSkipTokenInfo
      * then do it from skiptoken positional values.
      *
      * @throws ODataException If reflection exception occurs while accessing or setting property
-     *
      * @return mixed
      */
     public function getKeyObject()
@@ -213,7 +212,7 @@ class InternalSkipTokenInfo
                                 $this->resourceType->setPropertyValue($currentObject, $subSegName, $value);
                             }
                         }
-                    } catch (\ReflectionException $reflectionException) {
+                    } catch (ReflectionException $reflectionException) {
                         throw ODataException::createInternalServerError(
                             Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty(
                                 $subPathSegment->getName()
@@ -239,7 +238,6 @@ class InternalSkipTokenInfo
      *
      * @throws ODataException If reflection exception occurs while accessing
      *                        property
-     *
      * @return string
      */
     public function buildNextPageLink($lastObject)
@@ -263,7 +261,7 @@ class InternalSkipTokenInfo
                         $value = $type->convertToOData($currentObject);
                         $nextPageLink .= $value . ', ';
                     }
-                } catch (\ReflectionException $reflectionException) {
+                } catch (ReflectionException $reflectionException) {
                     throw ODataException::createInternalServerError(
                         Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty(
                             $subPathSegment->getName()

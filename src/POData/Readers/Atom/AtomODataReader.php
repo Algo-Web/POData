@@ -5,8 +5,10 @@ declare(strict_types=1);
 
 namespace POData\Readers\Atom;
 
+use ParseError;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
+use POData\Common\Version;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
@@ -68,7 +70,7 @@ class AtomODataReader implements IODataReader
     public function characterData($parser, $data)
     {
         if ($this->stack->isEmpty()) {
-            throw new \ParseError('encountered character data outside of xml tag');
+            throw new ParseError('encountered character data outside of xml tag');
         }
         $this->stack->top()->handleCharacterData($data);
     }
@@ -89,7 +91,7 @@ class AtomODataReader implements IODataReader
                 break;
             default:
                 if ($this->stack->isEmpty()) {
-                    throw new \ParseError(sprintf('encountered node %s while not in a feed or a stack', $tag));
+                    throw new ParseError(sprintf('encountered node %s while not in a feed or a stack', $tag));
                 }
                 list($namespsace, $name) = explode('|', $tag);
                 $this->stack->top()->handleStartNode($namespsace, $name, $attributes);
@@ -114,7 +116,7 @@ class AtomODataReader implements IODataReader
                 break;
             default:
                 if ($this->stack->isEmpty()) {
-                    throw new \ParseError('encountered node %s while not in a feed or a stack');
+                    throw new ParseError('encountered node %s while not in a feed or a stack');
                 }
                 list($namespsace, $name) = explode('|', $tag);
                 $this->stack->top()->handleEndNode($namespsace, $name);
@@ -122,11 +124,11 @@ class AtomODataReader implements IODataReader
     }
 
     /**
-     * @param \POData\Common\Version $responseVersion
+     * @param Version $responseVersion
      * @param $contentType
      * @return bool|mixed
      */
-    public function canHandle(\POData\Common\Version $responseVersion, $contentType)
+    public function canHandle(Version $responseVersion, $contentType)
     {
         return MimeTypes::MIME_APPLICATION_ATOM == $contentType || MimeTypes::MIME_APPLICATION_XML === $contentType;
     }

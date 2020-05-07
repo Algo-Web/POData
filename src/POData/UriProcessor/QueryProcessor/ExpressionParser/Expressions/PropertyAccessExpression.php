@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use ReflectionException;
 
 /**
  * Class PropertyAccessExpression.
@@ -39,7 +41,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @param  ResourceProperty              $resourceProperty The ResourceProperty
      * @param  PropertyAccessExpression|null $parent           The parent expression
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($resourceProperty, PropertyAccessExpression $parent = null)
     {
@@ -63,16 +65,6 @@ class PropertyAccessExpression extends AbstractExpression
     }
 
     /**
-     * To set the child if any.
-     *
-     * @param PropertyAccessExpression $child The child expression
-     */
-    public function setChild($child)
-    {
-        $this->child = $child;
-    }
-
-    /**
      * To get the parent. If this property is property of entity
      * then return null, If this property is property of complex type
      * then return PropertyAccessExpression for the parent complex type.
@@ -82,26 +74,6 @@ class PropertyAccessExpression extends AbstractExpression
     public function getParent()
     {
         return isset($this->parent) ? $this->parent : null;
-    }
-
-    /**
-     * To get the child. Returns null if no child property.
-     *
-     * @return PropertyAccessExpression|null
-     */
-    public function getChild()
-    {
-        return isset($this->child) ? $this->child : null;
-    }
-
-    /**
-     * Get the resource type of the property hold by this expression.
-     *
-     * @return \POData\Providers\Metadata\ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->resourceProperty->getResourceType();
     }
 
     /**
@@ -142,6 +114,16 @@ class PropertyAccessExpression extends AbstractExpression
         }
 
         return $navigationPropertiesInThePath;
+    }
+
+    /**
+     * Get the resource type of the property hold by this expression.
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceProperty->getResourceType();
     }
 
     /**
@@ -193,7 +175,7 @@ class PropertyAccessExpression extends AbstractExpression
             new Boolean()
         );
         while (($basePropertyExpression->getChild() != null)
-                && ($basePropertyExpression->getChild()->getChild() != null)) {
+            && ($basePropertyExpression->getChild()->getChild() != null)) {
             $basePropertyExpression = $basePropertyExpression->getChild();
             $expression2            = new UnaryExpression(
                 new FunctionCallExpression(
@@ -228,6 +210,26 @@ class PropertyAccessExpression extends AbstractExpression
         }
 
         return $expression;
+    }
+
+    /**
+     * To get the child. Returns null if no child property.
+     *
+     * @return PropertyAccessExpression|null
+     */
+    public function getChild()
+    {
+        return isset($this->child) ? $this->child : null;
+    }
+
+    /**
+     * To set the child if any.
+     *
+     * @param PropertyAccessExpression $child The child expression
+     */
+    public function setChild($child)
+    {
+        $this->child = $child;
     }
 
     /**

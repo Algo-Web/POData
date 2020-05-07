@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Providers\Metadata\Type\IType;
 
 /**
@@ -16,7 +17,7 @@ class ResourcePrimitiveType extends ResourceType
      * Create new instance of ResourcePrimitiveType.
      * @param IType $primitive Instance type for the primitive type
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(IType $primitive)
     {

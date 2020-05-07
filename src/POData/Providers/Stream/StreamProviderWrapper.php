@@ -12,7 +12,6 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\Version;
 use POData\IService;
-use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceStreamInfo;
 
 /**
@@ -72,8 +71,8 @@ class StreamProviderWrapper
      *                                                    holding the details of
      *                                                    named stream
      *
-     * @throws ODataException
      * @throws InvalidOperationException
+     * @throws ODataException
      * @return string|null
      */
     public function getReadStream($entity, ResourceStreamInfo $resourceStreamInfo = null)
@@ -136,46 +135,133 @@ class StreamProviderWrapper
     }
 
     /**
-     * Gets the IANA content type (aka media type) of the stream associated with
-     * the specified media resource.
+     * Get ETag header value from request header.
      *
-     * @param object                  $entity             The entity instance
-     *                                                    (media resource) associated with
-     *                                                    the stream for which the content
-     *                                                    type is to be obtained
-     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null if
-     *                                                    media resource is MLE,
-     *                                                    if media resource is named
-     *                                                    stream then will be the
-     *                                                    ResourceStreamInfo instance
-     *                                                    holding the details of
-     *                                                    named stream
-     *
-     * @throws InvalidOperationException
-     * @throws ODataException
-     * @return string|null
+     * @param mixed &$eTag                 On return, this parameter will hold
+     *                                     value of IfMatch or IfNoneMatch
+     *                                     header, if this header is absent then
+     *                                     this parameter will hold NULL
+     * @param mixed &$checkETagForEquality On return, this parameter will hold
+     *                                     true if IfMatch is present, false if
+     *                                     IfNoneMatch header is present, null
+     *                                     otherwise
      */
-    public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
+    private function getETagFromHeaders(&$eTag, &$checkETagForEquality)
     {
-        $this->saveContentTypeAndETag();
-        $opContext = $this->service->getOperationContext();
-        if (null === $resourceStreamInfo) {
-            $this->loadAndValidateStreamProvider();
-            $contentType = $this->streamProvider->getStreamContentType2($entity, null, $opContext);
-            if (null === $contentType) {
-                throw new InvalidOperationException(
-                    Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
-                );
-            }
-        } else {
-            $this->loadAndValidateStreamProvider2();
-            assert($this->streamProvider instanceof IStreamProvider2);
-            $contentType = $this->streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
+        $dataServiceHost = $this->service->getHost();
+        //TODO Do check for mutual exclusion of RequestIfMatch and
+        //RequestIfNoneMatch in ServiceHost
+        $eTag = $dataServiceHost->getRequestIfMatch();
+        if (null !== $eTag) {
+            $checkETagForEquality = true;
+
+            return;
         }
 
-        $this->verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
+        $eTag = $dataServiceHost->getRequestIfNoneMatch();
+        if (null !== $eTag) {
+            $checkETagForEquality = false;
 
-        return $contentType;
+            return;
+        }
+
+        $checkETagForEquality = null;
+    }
+
+    /**
+     * Save value of content type and etag headers before invoking implementor
+     * methods.
+     */
+    private function saveContentTypeAndETag()
+    {
+        $this->responseContentType = $this->service->getHost()->getResponseContentType();
+        $this->responseETag        = $this->service->getHost()->getResponseETag();
+    }
+
+    /**
+     * Validates that an implementation of IStreamProvider exists and
+     * load it.
+     *
+     *
+     * @throws ODataException
+     */
+    private function loadAndValidateStreamProvider()
+    {
+        if (null === $this->streamProvider) {
+            $this->loadStreamProvider();
+            if (null === $this->streamProvider) {
+                throw ODataException::createInternalServerError(
+                    Messages::streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
+                );
+            }
+        }
+    }
+
+    /**
+     * Ask data service to load stream provider instance.
+     *
+     *
+     * @throws ODataException
+     */
+    private function loadStreamProvider()
+    {
+        if (null === $this->streamProvider) {
+            $this->streamProvider = $this->service->getStreamProviderX();
+            if (null !== $this->streamProvider && (!$this->streamProvider instanceof IStreamProvider2)) {
+                throw ODataException::createInternalServerError(
+                    Messages::streamProviderWrapperInvalidStream2Instance()
+                );
+            }
+        }
+    }
+
+    /**
+     * Validates that an implementation of IStreamProvider2 exists and
+     * load it.
+     *
+     *
+     * @throws ODataException
+     */
+    private function loadAndValidateStreamProvider2()
+    {
+        $maxServiceVersion = $this->service->getConfiguration()->getMaxDataServiceVersion();
+        if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
+            throw ODataException::createInternalServerError(
+                Messages::streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
+            );
+        }
+
+        if (null === $this->streamProvider) {
+            $this->loadStreamProvider();
+            if (null === $this->streamProvider) {
+                throw ODataException::createInternalServerError(
+                    Messages::streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
+                );
+            } elseif (!$this->streamProvider instanceof IStreamProvider2) {
+                throw ODataException::createInternalServerError(
+                    Messages::streamProviderWrapperInvalidStream2Instance()
+                );
+            }
+        }
+    }
+
+    /**
+     * Check whether implementor modified content type or etag header
+     * if so throw InvalidOperationException.
+     *
+     * @param string $methodName NAme of the method
+     *
+     * @throws InvalidOperationException
+     */
+    private function verifyContentTypeOrETagModified($methodName)
+    {
+        if ($this->responseContentType !== $this->service->getHost()->getResponseContentType()
+            || $this->responseETag !== $this->service->getHost()->getResponseETag()
+        ) {
+            throw new InvalidOperationException(
+                Messages::streamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
+            );
+        }
     }
 
     /**
@@ -193,10 +279,9 @@ class StreamProviderWrapper
      *                                                    instance holding the
      *                                                    details of named stream
      *
-     * @throws InvalidOperationException
      * @throws ODataException
-     *
-     * @return string Etag
+     * @throws InvalidOperationException
+     * @return string                    Etag
      */
     public function getStreamETag($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
@@ -219,68 +304,6 @@ class StreamProviderWrapper
         }
 
         return $eTag;
-    }
-
-    /**
-     * Gets the URI clients should use when making retrieve (ie. GET) requests
-     * to the stream.
-     *
-     * @param object                  $entity             The entity instance
-     *                                                    associated with the
-     *                                                    stream for which a
-     *                                                    read stream URI is to
-     *                                                    be obtained
-     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null
-     *                                                    if media resource
-     *                                                    is MLE, if media
-     *                                                    resource is named
-     *                                                    stream then will be
-     *                                                    the ResourceStreamInfo
-     *                                                    instance holding the
-     *                                                    details of named stream
-     * @param string                  $mediaLinkEntryUri  MLE uri
-     *
-     * @throws InvalidOperationException
-     * @throws ODataException
-     *
-     * @return string
-     */
-    public function getReadStreamUri(
-        $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        $mediaLinkEntryUri
-    ) {
-        $this->saveContentTypeAndETag();
-        $opContext = $this->service->getOperationContext();
-        if (null === $resourceStreamInfo) {
-            $this->loadAndValidateStreamProvider();
-            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, null, $opContext);
-        } else {
-            $this->loadAndValidateStreamProvider2();
-            assert($this->streamProvider instanceof IStreamProvider2);
-            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
-        }
-
-        $this->verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
-        if (null !== $readStreamUri) {
-            try {
-                new Url($readStreamUri);
-            } catch (UrlFormatException $ex) {
-                throw new InvalidOperationException(
-                    Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
-                );
-            }
-        } else {
-            if (null === $resourceStreamInfo) {
-                // For MLEs the content src attribute is
-                //required so we cannot return null.
-                $readStreamUri = $this->getDefaultStreamEditMediaUri($mediaLinkEntryUri, null);
-            }
-        }
-
-        // Note if readStreamUri is null, the self link for the
-        // named stream will be omitted.
-        return $readStreamUri;
     }
 
     /**
@@ -328,104 +351,107 @@ class StreamProviderWrapper
     }
 
     /**
-     * Get ETag header value from request header.
+     * Gets the IANA content type (aka media type) of the stream associated with
+     * the specified media resource.
      *
-     * @param mixed &$eTag                 On return, this parameter will hold
-     *                                     value of IfMatch or IfNoneMatch
-     *                                     header, if this header is absent then
-     *                                     this parameter will hold NULL
-     * @param mixed &$checkETagForEquality On return, this parameter will hold
-     *                                     true if IfMatch is present, false if
-     *                                     IfNoneMatch header is present, null
-     *                                     otherwise
+     * @param object                  $entity             The entity instance
+     *                                                    (media resource) associated with
+     *                                                    the stream for which the content
+     *                                                    type is to be obtained
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null if
+     *                                                    media resource is MLE,
+     *                                                    if media resource is named
+     *                                                    stream then will be the
+     *                                                    ResourceStreamInfo instance
+     *                                                    holding the details of
+     *                                                    named stream
+     *
+     * @throws ODataException
+     * @throws InvalidOperationException
+     * @return string|null
      */
-    private function getETagFromHeaders(&$eTag, &$checkETagForEquality)
+    public function getStreamContentType($entity, ResourceStreamInfo $resourceStreamInfo = null)
     {
-        $dataServiceHost = $this->service->getHost();
-        //TODO Do check for mutual exclusion of RequestIfMatch and
-        //RequestIfNoneMatch in ServiceHost
-        $eTag = $dataServiceHost->getRequestIfMatch();
-        if (null !== $eTag) {
-            $checkETagForEquality = true;
-
-            return;
+        $this->saveContentTypeAndETag();
+        $opContext = $this->service->getOperationContext();
+        if (null === $resourceStreamInfo) {
+            $this->loadAndValidateStreamProvider();
+            $contentType = $this->streamProvider->getStreamContentType2($entity, null, $opContext);
+            if (null === $contentType) {
+                throw new InvalidOperationException(
+                    Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
+                );
+            }
+        } else {
+            $this->loadAndValidateStreamProvider2();
+            assert($this->streamProvider instanceof IStreamProvider2);
+            $contentType = $this->streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
         }
 
-        $eTag = $dataServiceHost->getRequestIfNoneMatch();
-        if (null !== $eTag) {
-            $checkETagForEquality = false;
+        $this->verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
 
-            return;
-        }
-
-        $checkETagForEquality = null;
+        return $contentType;
     }
 
     /**
-     * Validates that an implementation of IStreamProvider exists and
-     * load it.
+     * Gets the URI clients should use when making retrieve (ie. GET) requests
+     * to the stream.
      *
-     *
-     * @throws ODataException
-     */
-    private function loadAndValidateStreamProvider()
-    {
-        if (null === $this->streamProvider) {
-            $this->loadStreamProvider();
-            if (null === $this->streamProvider) {
-                throw ODataException::createInternalServerError(
-                    Messages::streamProviderWrapperMustImplementIStreamProviderToSupportStreaming()
-                );
-            }
-        }
-    }
-
-    /**
-     * Validates that an implementation of IStreamProvider2 exists and
-     * load it.
-     *
+     * @param object                  $entity             The entity instance
+     *                                                    associated with the
+     *                                                    stream for which a
+     *                                                    read stream URI is to
+     *                                                    be obtained
+     * @param ResourceStreamInfo|null $resourceStreamInfo This will be null
+     *                                                    if media resource
+     *                                                    is MLE, if media
+     *                                                    resource is named
+     *                                                    stream then will be
+     *                                                    the ResourceStreamInfo
+     *                                                    instance holding the
+     *                                                    details of named stream
+     * @param string                  $mediaLinkEntryUri  MLE uri
      *
      * @throws ODataException
+     * @throws InvalidOperationException
+     * @return string
      */
-    private function loadAndValidateStreamProvider2()
-    {
-        $maxServiceVersion = $this->service->getConfiguration()->getMaxDataServiceVersion();
-        if ($maxServiceVersion->compare(new Version(3, 0)) < 0) {
-            throw ODataException::createInternalServerError(
-                Messages::streamProviderWrapperMaxProtocolVersionMustBeV3OrAboveToSupportNamedStreams()
-            );
+    public function getReadStreamUri(
+        $entity,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        $mediaLinkEntryUri
+    ) {
+        $this->saveContentTypeAndETag();
+        $opContext = $this->service->getOperationContext();
+        if (null === $resourceStreamInfo) {
+            $this->loadAndValidateStreamProvider();
+            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, null, $opContext);
+        } else {
+            $this->loadAndValidateStreamProvider2();
+            assert($this->streamProvider instanceof IStreamProvider2);
+            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
         }
 
-        if (null === $this->streamProvider) {
-            $this->loadStreamProvider();
-            if (null === $this->streamProvider) {
-                throw ODataException::createInternalServerError(
-                    Messages::streamProviderWrapperMustImplementStreamProvider2ToSupportNamedStreams()
-                );
-            } elseif (!$this->streamProvider instanceof IStreamProvider2) {
-                throw ODataException::createInternalServerError(
-                    Messages::streamProviderWrapperInvalidStream2Instance()
+        $this->verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
+        if (null !== $readStreamUri) {
+            try {
+                new Url($readStreamUri);
+            } catch (UrlFormatException $ex) {
+                throw new InvalidOperationException(
+                    Messages::streamProviderWrapperGetReadStreamUriMustReturnAbsoluteUriOrNull()
                 );
             }
+        } else {
+            if (null === $resourceStreamInfo) {
+                // For MLEs the content src attribute is
+                //required so we cannot return null.
+                $readStreamUri = $this->getDefaultStreamEditMediaUri($mediaLinkEntryUri, null);
+            }
         }
-    }
 
-    /**
-     * Ask data service to load stream provider instance.
-     *
-     *
-     * @throws ODataException
-     */
-    private function loadStreamProvider()
-    {
-        if (null === $this->streamProvider) {
-            $this->streamProvider = $this->service->getStreamProviderX();
-            if (null !== $this->streamProvider && (!$this->streamProvider instanceof IStreamProvider2)) {
-                throw ODataException::createInternalServerError(
-                    Messages::streamProviderWrapperInvalidStream2Instance()
-                );
-            }
-        }
+        // Note if readStreamUri is null, the self link for the
+        // named stream will be omitted.
+        return $readStreamUri;
     }
 
     /**
@@ -444,34 +470,5 @@ class StreamProviderWrapper
             : ltrim($resourceStreamInfo->getName(), '/');
 
         return $base . $end;
-    }
-
-    /**
-     * Save value of content type and etag headers before invoking implementor
-     * methods.
-     */
-    private function saveContentTypeAndETag()
-    {
-        $this->responseContentType = $this->service->getHost()->getResponseContentType();
-        $this->responseETag        = $this->service->getHost()->getResponseETag();
-    }
-
-    /**
-     * Check whether implementor modified content type or etag header
-     * if so throw InvalidOperationException.
-     *
-     * @param string $methodName NAme of the method
-     *
-     * @throws InvalidOperationException
-     */
-    private function verifyContentTypeOrETagModified($methodName)
-    {
-        if ($this->responseContentType !== $this->service->getHost()->getResponseContentType()
-            || $this->responseETag !== $this->service->getHost()->getResponseETag()
-        ) {
-            throw new InvalidOperationException(
-                Messages::streamProviderWrapperMustNotSetContentTypeAndEtag($methodName)
-            );
-        }
     }
 }

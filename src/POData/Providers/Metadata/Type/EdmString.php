@@ -60,17 +60,6 @@ class EdmString implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.String';
-    }
-
-    /**
      * Converts the given string value to string type.
      *
      * @param string $stringValue value to convert
@@ -121,5 +110,16 @@ class EdmString implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.String';
     }
 }

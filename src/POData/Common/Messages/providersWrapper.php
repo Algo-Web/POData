@@ -18,7 +18,7 @@ trait providersWrapper
     public static function providersWrapperNull()
     {
         return 'For custom providers, GetService should not return null for both IMetadataProvider and'
-                . ' IQueryProvider types.';
+            . ' IQueryProvider types.';
     }
 
     /**
@@ -41,7 +41,7 @@ trait providersWrapper
     public static function providersWrapperInvalidExpressionProviderInstance()
     {
         return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation'
-                . ' of IExpressionProvider';
+            . ' of IExpressionProvider';
     }
 
     /**
@@ -78,7 +78,7 @@ trait providersWrapper
     public static function providersWrapperEntitySetNameShouldBeUnique($entitySetName)
     {
         return 'More than one entity set with the name \'' . $entitySetName
-                . '\' was found. Entity set names must be unique';
+            . '\' was found. Entity set names must be unique';
     }
 
     /**
@@ -92,7 +92,7 @@ trait providersWrapper
     public static function providersWrapperEntityTypeNameShouldBeUnique($entityTypeName)
     {
         return 'More than one entity type with the name \'' . $entityTypeName
-                . '\' was found. Entity type names must be unique';
+            . '\' was found. Entity type names must be unique';
     }
 
     /**
@@ -111,8 +111,8 @@ trait providersWrapper
         $resourcePropertyName
     ) {
         return 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params' .
-                ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
-                . ', ResourceProperty with name ' . $resourcePropertyName . '}.';
+            ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
+            . ', ResourceProperty with name ' . $resourcePropertyName . '}.';
     }
 
     /**
@@ -127,7 +127,7 @@ trait providersWrapper
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
         return 'The implementation of the method ' . $methodName . ' must return an instance of type described'
-                . ' by resource set\'s type(' . $entityTypeName . ') or null if resource does not exist.';
+            . ' by resource set\'s type(' . $entityTypeName . ') or null if resource does not exist.';
     }
 
     /**

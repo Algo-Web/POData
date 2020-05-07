@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use Exception;
 use POData\HttpProcessUtility;
 use POData\IService;
 use POData\Writers\Atom\AtomODataWriter;
@@ -17,14 +18,14 @@ class ErrorHandler
     /**
      * Common function to handle exceptions in the data service.
      *
-     * @param  \Exception     $exception exception
+     * @param  Exception      $exception exception
      * @param  IService       $service   service
      * @throws ODataException
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function handleException(\Exception $exception, IService $service)
+    public static function handleException(Exception $exception, IService $service)
     {
-        $acceptTypesText     = $service->getHost()->getRequestAccept() ?? '';
+        $acceptTypesText = $service->getHost()->getRequestAccept() ?? '';
         try {
             $responseContentType = HttpProcessUtility::selectMimeType(
                 $acceptTypesText,
@@ -38,7 +39,7 @@ class ErrorHandler
                 $headerException->getMessage(),
                 $headerException->getStatusCode()
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Never come here
         }
 

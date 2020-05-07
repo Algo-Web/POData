@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace POData\Readers\Atom\Processors\Entry;
 
 use POData\Common\ODataConstants;
-use POData\ObjectModel\AtomObjectModel\AtomContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
@@ -45,7 +44,7 @@ class PropertyProcessor extends BaseNodeHandler
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
-            return ;
+            return;
         }
         //TODO: this will need to be expanded with opengis namespaces as well when supported
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE ||
@@ -71,7 +70,7 @@ class PropertyProcessor extends BaseNodeHandler
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
-            return ;
+            return;
         }
         // Pops a complex object off the stack
         $prop                                                  = $this->properties->pop();

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
+use Exception;
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
+use POData\Common\ODataException;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class CynicDeserialiser.
@@ -47,10 +51,10 @@ class CynicDeserialiser
     }
 
     /**
-     * @param  ODataEntry                    $payload
+     * @param  ODataEntry                $payload
+     * @throws ODataException
+     * @throws ReflectionException
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
      * @return mixed
      */
     public function processPayload(ODataEntry &$payload)
@@ -88,14 +92,14 @@ class CynicDeserialiser
             if ($hasUrl) {
                 if (!is_string($link->url)) {
                     $msg = 'Url must be either string or null';
-                    throw new \InvalidArgumentException($msg);
+                    throw new InvalidArgumentException($msg);
                 }
             }
             if ($hasExpanded) {
                 $isGood = $link->expandedResult instanceof ODataEntry || $link->expandedResult instanceof ODataFeed;
                 if (!$isGood) {
                     $msg = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
-                    throw new \InvalidArgumentException($msg);
+                    throw new InvalidArgumentException($msg);
                 }
             }
             $isEntry = $link->expandedResult instanceof ODataEntry;
@@ -114,54 +118,25 @@ class CynicDeserialiser
         $set = $this->getMetaProvider()->resolveResourceSet($payload->resourceSetName);
         if (null === $set) {
             $msg = 'Specified resource set could not be resolved';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         return true;
     }
 
     /**
-     * @param  ODataEntry $payload
-     * @param  int        $depth
-     * @return bool
+     * @return IMetadataProvider
      */
-    protected function isEntryProcessed(ODataEntry $payload, $depth = 0)
+    protected function getMetaProvider()
     {
-        assert(is_int($depth) && 0 <= $depth && 100 >= $depth, 'Maximum recursion depth exceeded');
-        if (!$payload->id instanceof KeyDescriptor) {
-            return false;
-        }
-        foreach ($payload->links as $link) {
-            $expand = $link->expandedResult;
-            if (null === $expand) {
-                continue;
-            }
-            if ($expand instanceof ODataEntry) {
-                if (!$this->isEntryProcessed($expand, $depth + 1)) {
-                    return false;
-                } else {
-                    continue;
-                }
-            }
-            if ($expand instanceof ODataFeed) {
-                foreach ($expand->entries as $entry) {
-                    if (!$this->isEntryProcessed($entry, $depth + 1)) {
-                        return false;
-                    }
-                }
-                continue;
-            }
-            assert(false, 'Expanded result cannot be processed');
-        }
-
-        return true;
+        return $this->metaProvider;
     }
 
     /**
-     * @param  ODataEntry                    $content
+     * @param  ODataEntry                $content
+     * @throws ODataException
+     * @throws ReflectionException
+     * @throws Exception
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
-     * @throws \Exception
      * @return array
      */
     protected function processEntryContent(ODataEntry &$content)
@@ -173,7 +148,7 @@ class CynicDeserialiser
         assert($set instanceof ResourceSet, get_class($set));
         $type       = $set->getResourceType();
         $properties = $this->getDeserialiser()->bulkDeserialise($type, $content);
-        $properties = (object) $properties;
+        $properties = (object)$properties;
 
         if ($isCreate) {
             $result = $this->getWrapper()->createResourceforResourceSet($set, null, $properties);
@@ -204,11 +179,11 @@ class CynicDeserialiser
     }
 
     /**
-     * @return IMetadataProvider
+     * @return ModelDeserialiser
      */
-    protected function getMetaProvider()
+    protected function getDeserialiser()
     {
-        return $this->metaProvider;
+        return $this->cereal;
     }
 
     /**
@@ -220,19 +195,11 @@ class CynicDeserialiser
     }
 
     /**
-     * @return ModelDeserialiser
-     */
-    protected function getDeserialiser()
-    {
-        return $this->cereal;
-    }
-
-    /**
-     * @param  ResourceEntityType            $type
-     * @param  ODataPropertyContent|object   $result
-     * @param  string|null                   $id
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @param  ResourceEntityType          $type
+     * @param  ODataPropertyContent|object $result
+     * @param  string|null                 $id
+     * @throws ReflectionException
+     * @throws ODataException
      * @return null|KeyDescriptor
      */
     protected function generateKeyDescriptor(ResourceEntityType $type, $result, $id = null)
@@ -253,9 +220,9 @@ class CynicDeserialiser
             $keyPredicate[strlen($keyPredicate) - 2] = ' ';
         } else {
             $idBits       = explode('/', $id);
-            $keyRaw       = $idBits[count($idBits)-1];
+            $keyRaw       = $idBits[count($idBits) - 1];
             $rawBits      = explode('(', $keyRaw, 2);
-            $rawBits      = explode(')', $rawBits[count($rawBits)-1]);
+            $rawBits      = explode(')', $rawBits[count($rawBits) - 1]);
             $keyPredicate = $rawBits[0];
         }
         $keyPredicate = trim($keyPredicate);
@@ -274,8 +241,8 @@ class CynicDeserialiser
      * @param ResourceSet $sourceSet
      * @param $source
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @throws ODataException
+     * @throws ReflectionException
      */
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
@@ -305,11 +272,102 @@ class CynicDeserialiser
      * @param ODataLink   $link
      * @param ResourceSet $sourceSet
      * @param $source
+     * @param  bool                      $hasUrl
+     * @param  bool                      $hasPayload
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
+    {
+        assert(
+            $link->expandedResult instanceof ODataFeed,
+            get_class($link->expandedResult)
+        );
+        $propName = $link->title;
+
+        // if entries is empty, bail out - nothing to do
+        $numEntries = count($link->expandedResult->entries);
+        if (0 === $numEntries) {
+            return;
+        }
+        // check that each entry is of consistent resource set after checking it hasn't been processed
+        $first = $link->expandedResult->entries[0]->resourceSetName;
+        if ($link->expandedResult->entries[0]->id instanceof KeyDescriptor) {
+            return;
+        }
+        for ($i = 1; $i < $numEntries; $i++) {
+            if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
+                $msg = 'All entries in given feed must have same resource set';
+                throw new InvalidArgumentException($msg);
+            }
+        }
+
+        $targSet = $this->getMetaProvider()->resolveResourceSet($first);
+        assert($targSet instanceof ResourceSet);
+        $targType = $targSet->getResourceType();
+        assert($targType instanceof ResourceEntityType);
+        $instanceType = $targType->getInstanceType();
+        assert($instanceType instanceof ReflectionClass);
+        $targObj = $instanceType->newInstanceArgs();
+
+        // assemble payload
+        $data = [];
+        $keys = [];
+        for ($i = 0; $i < $numEntries; $i++) {
+            $data[] = $this->getDeserialiser()->bulkDeserialise(
+                $targType,
+                $link->expandedResult->entries[$i]
+            );
+            $keys[] = $hasUrl ? $this->generateKeyDescriptor(
+                $targType,
+                $link->expandedResult->entries[$i]->propertyContent
+            ) : null;
+        }
+
+        // creation
+        if (!$hasUrl && $hasPayload) {
+            $bulkResult = $this->getWrapper()->createBulkResourceforResourceSet($targSet, $data);
+            assert(is_array($bulkResult));
+            for ($i = 0; $i < $numEntries; $i++) {
+                $targEntityInstance = $bulkResult[$i];
+                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
+                $key                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
+                $link->expandedResult->entries[$i]->id = $key;
+            }
+        }
+        // update
+        if ($hasUrl && $hasPayload) {
+            $bulkResult = $this->getWrapper()->updateBulkResource($targSet, $targObj, $keys, $data);
+            for ($i = 0; $i < $numEntries; $i++) {
+                $targEntityInstance = $bulkResult[$i];
+                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
+                $link->expandedResult->entries[$i]->id = $keys[$i];
+            }
+        }
+        assert(isset($bulkResult) && is_array($bulkResult));
+
+        for ($i = 0; $i < $numEntries; $i++) {
+            assert($link->expandedResult->entries[$i]->id instanceof KeyDescriptor);
+            $numLinks = count($link->expandedResult->entries[$i]->links);
+            for ($j = 0; $j < $numLinks; $j++) {
+                $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * @param ODataLink   $link
+     * @param ResourceSet $sourceSet
+     * @param $source
      * @param $hasUrl
      * @param $hasPayload
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @throws ODataException
+     * @throws ReflectionException
      */
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
@@ -323,7 +381,7 @@ class CynicDeserialiser
         if (null !== $result || null !== $link->url) {
             $isUrlKey = $link->url instanceof KeyDescriptor;
             $isIdKey  = $result instanceof ODataEntry &&
-                       $result->id instanceof KeyDescriptor;
+                $result->id instanceof KeyDescriptor;
             if ($isUrlKey || $isIdKey) {
                 if ($isIdKey) {
                     $link->url = $result->id;
@@ -388,93 +446,39 @@ class CynicDeserialiser
     }
 
     /**
-     * @param ODataLink   $link
-     * @param ResourceSet $sourceSet
-     * @param $source
-     * @param  bool                          $hasUrl
-     * @param  bool                          $hasPayload
-     * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @param  ODataEntry $payload
+     * @param  int        $depth
+     * @return bool
      */
-    protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
+    protected function isEntryProcessed(ODataEntry $payload, $depth = 0)
     {
-        assert(
-            $link->expandedResult instanceof ODataFeed,
-            get_class($link->expandedResult)
-        );
-        $propName = $link->title;
-
-        // if entries is empty, bail out - nothing to do
-        $numEntries = count($link->expandedResult->entries);
-        if (0 === $numEntries) {
-            return;
+        assert(is_int($depth) && 0 <= $depth && 100 >= $depth, 'Maximum recursion depth exceeded');
+        if (!$payload->id instanceof KeyDescriptor) {
+            return false;
         }
-        // check that each entry is of consistent resource set after checking it hasn't been processed
-        $first = $link->expandedResult->entries[0]->resourceSetName;
-        if ($link->expandedResult->entries[0]->id instanceof KeyDescriptor) {
-            return;
-        }
-        for ($i = 1; $i < $numEntries; $i++) {
-            if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
-                $msg = 'All entries in given feed must have same resource set';
-                throw new \InvalidArgumentException($msg);
+        foreach ($payload->links as $link) {
+            $expand = $link->expandedResult;
+            if (null === $expand) {
+                continue;
             }
-        }
-
-        $targSet = $this->getMetaProvider()->resolveResourceSet($first);
-        assert($targSet instanceof ResourceSet);
-        $targType = $targSet->getResourceType();
-        assert($targType instanceof ResourceEntityType);
-        $instanceType = $targType->getInstanceType();
-        assert($instanceType instanceof \ReflectionClass);
-        $targObj = $instanceType->newInstanceArgs();
-
-        // assemble payload
-        $data = [];
-        $keys = [];
-        for ($i = 0; $i < $numEntries; $i++) {
-            $data[] = $this->getDeserialiser()->bulkDeserialise(
-                $targType,
-                $link->expandedResult->entries[$i]
-            );
-            $keys[] = $hasUrl ? $this->generateKeyDescriptor(
-                $targType,
-                $link->expandedResult->entries[$i]->propertyContent
-            ) : null;
-        }
-
-        // creation
-        if (!$hasUrl && $hasPayload) {
-            $bulkResult = $this->getWrapper()->createBulkResourceforResourceSet($targSet, $data);
-            assert(is_array($bulkResult));
-            for ($i = 0; $i < $numEntries; $i++) {
-                $targEntityInstance = $bulkResult[$i];
-                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $key                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
-                $link->expandedResult->entries[$i]->id = $key;
+            if ($expand instanceof ODataEntry) {
+                if (!$this->isEntryProcessed($expand, $depth + 1)) {
+                    return false;
+                } else {
+                    continue;
+                }
             }
-        }
-        // update
-        if ($hasUrl && $hasPayload) {
-            $bulkResult = $this->getWrapper()->updateBulkResource($targSet, $targObj, $keys, $data);
-            for ($i = 0; $i < $numEntries; $i++) {
-                $targEntityInstance = $bulkResult[$i];
-                $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $link->expandedResult->entries[$i]->id = $keys[$i];
+            if ($expand instanceof ODataFeed) {
+                foreach ($expand->entries as $entry) {
+                    if (!$this->isEntryProcessed($entry, $depth + 1)) {
+                        return false;
+                    }
+                }
+                continue;
             }
-        }
-        assert(isset($bulkResult) && is_array($bulkResult));
-
-        for ($i = 0; $i < $numEntries; $i++) {
-            assert($link->expandedResult->entries[$i]->id instanceof KeyDescriptor);
-            $numLinks = count($link->expandedResult->entries[$i]->links);
-            for ($j = 0; $j < $numLinks; $j++) {
-                $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
-            }
+            assert(false, 'Expanded result cannot be processed');
         }
 
-        return;
+        return true;
     }
 }

@@ -27,7 +27,7 @@ trait skipTokenInfo
         $orderByValuesVarName
     ) {
         return 'Either both the arguments ' . $orderByPathsVarName . ' and ' . $orderByValuesVarName . ' should be'
-                . ' null or not-null';
+            . ' null or not-null';
     }
 
     /**

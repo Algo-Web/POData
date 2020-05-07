@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers;
 
+use Exception;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -18,15 +19,14 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Query\IQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
-use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
+use ReflectionException;
 
 /**
  * Class ProvidersWrapper.
@@ -96,33 +96,12 @@ class ProvidersWrapper
     }
 
     /**
-     * @return ProvidersQueryWrapper
-     */
-    public function getProviderWrapper()
-    {
-        assert(null != $this->providerWrapper, 'Provider wrapper must be set');
-        return $this->providerWrapper;
-    }
-
-    /**
-     * @return IMetadataProvider
-     */
-    public function getMetaProvider()
-    {
-        assert(null != $this->metaProvider, 'Metadata provider must be set');
-        return $this->metaProvider;
-    }
-
-    //Wrappers for IMetadataProvider methods
-
-    /**
      * To get the Container name for the data source,
      * Note: Wrapper for IMetadataProvider::getContainerName method
      * implementation.
      *
      * @throws ODataException Exception if implementation returns empty container name
-     *
-     * @return string that contains the name of the container
+     * @return string         that contains the name of the container
      */
     public function getContainerName()
     {
@@ -138,12 +117,22 @@ class ProvidersWrapper
     }
 
     /**
+     * @return IMetadataProvider
+     */
+    public function getMetaProvider()
+    {
+        assert(null != $this->metaProvider, 'Metadata provider must be set');
+        return $this->metaProvider;
+    }
+
+    //Wrappers for IMetadataProvider methods
+
+    /**
      * To get Namespace name for the data source,
      * Note: Wrapper for IMetadataProvider::getContainerNamespace method implementation.
      *
      * @throws ODataException Exception if implementation returns empty container namespace
-     *
-     * @return string that contains the namespace name
+     * @return string         that contains the namespace name
      */
     public function getContainerNamespace()
     {
@@ -174,9 +163,8 @@ class ProvidersWrapper
      *  This method returns array of ResourceSetWrapper instances but the corresponding IDSMP method
      *  returns array of ResourceSet instances.
      *
-     *  @throws ODataException when two resource sets with the same name are encountered
-     *
-     *  @return ResourceSetWrapper[] The ResourceSetWrappers for the visible ResourceSets
+     * @throws ODataException       when two resource sets with the same name are encountered
+     * @return ResourceSetWrapper[] The ResourceSetWrappers for the visible ResourceSets
      */
     public function getResourceSets()
     {
@@ -197,6 +185,19 @@ class ProvidersWrapper
         }
 
         return $resourceSetWrappers;
+    }
+
+    /**
+     * Wrapper function over _validateResourceSetAndGetWrapper function.
+     *
+     * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
+     *
+     * @throws ODataException
+     * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
+     */
+    public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
+    {
+        return $this->validateResourceSetAndWrapper($resourceSet);
     }
 
     /**
@@ -237,7 +238,6 @@ class ProvidersWrapper
      * @param ResourceType $resourceType The ResourceType to validate
      *
      * @throws ODataException Exception if $resourceType is invalid
-     *
      * @return ResourceType
      */
     private function validateResourceType(ResourceType $resourceType)
@@ -321,8 +321,7 @@ class ProvidersWrapper
      *
      * @param string $name Name of the resource set
      *
-     * @throws ODataException If the ResourceType is invalid
-     *
+     * @throws ODataException    If the ResourceType is invalid
      * @return ResourceType|null resource type with the given resource set name if found else NULL
      */
     public function resolveResourceType($name)
@@ -359,9 +358,8 @@ class ProvidersWrapper
      *
      * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
-     * @throws InvalidOperationException when the meat provider doesn't return an array
      * @throws ODataException
-     *
+     * @throws InvalidOperationException when the meat provider doesn't return an array
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)
@@ -388,7 +386,6 @@ class ProvidersWrapper
      * @param ResourceEntityType $resourceType Resource to check for derived resource types
      *
      * @throws ODataException If the ResourceType is invalid
-     *
      * @return bool
      */
     public function hasDerivedTypes(ResourceEntityType $resourceType)
@@ -577,19 +574,6 @@ class ProvidersWrapper
     }
 
     /**
-     * Wrapper function over _validateResourceSetAndGetWrapper function.
-     *
-     * @param ResourceSet $resourceSet see the comments of _validateResourceSetAndGetWrapper
-     *
-     * @throws ODataException
-     * @return ResourceSetWrapper|null see the comments of _validateResourceSetAndGetWrapper
-     */
-    public function validateResourceSetAndGetWrapper(ResourceSet $resourceSet)
-    {
-        return $this->validateResourceSetAndWrapper($resourceSet);
-    }
-
-    /**
      * Gets the Edm Schema version compliance to the metadata.
      *
      * @return EdmSchemaVersion
@@ -610,6 +594,15 @@ class ProvidersWrapper
     public function getExpressionProvider()
     {
         return $this->getProviderWrapper()->getExpressionProvider();
+    }
+
+    /**
+     * @return ProvidersQueryWrapper
+     */
+    public function getProviderWrapper()
+    {
+        assert(null != $this->providerWrapper, 'Provider wrapper must be set');
+        return $this->providerWrapper;
     }
 
     /**
@@ -670,10 +663,10 @@ class ProvidersWrapper
      * @param KeyDescriptor $keyDescriptor The key identifying the entity to fetch
      * @param string[]|null $eagerLoad     array of relations to eager load
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     * @return object|null                              Returns entity instance if found, else null
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
@@ -721,7 +714,6 @@ class ProvidersWrapper
      * @param SkipTokenInfo|null $skipToken         value indicating what records to skip
      *
      * @throws ODataException
-     *
      * @return QueryResult
      */
     public function getRelatedResourceSet(
@@ -759,10 +751,10 @@ class ProvidersWrapper
      * @param ResourceProperty $targetProperty    The metadata of the target property
      * @param KeyDescriptor    $keyDescriptor     The key to identify the entity to be fetched
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     * @return object|null                              Returns entity instance if found, else null
+     * @return object|null               Returns entity instance if found, else null
      */
     public function getResourceFromRelatedResourceSet(
         ResourceSet $sourceResourceSet,
@@ -790,10 +782,10 @@ class ProvidersWrapper
      * @param ResourceProperty $targetProperty    The navigation property to be
      *                                            retrieved
      *
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     * @return object|null                              The related resource if exists, else null
+     * @return object|null               The related resource if exists, else null
      */
     public function getRelatedResourceReference(
         ResourceSet $sourceResourceSet,
@@ -972,7 +964,7 @@ class ProvidersWrapper
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      * @return mixed
      */
     public function getMetadataXML()

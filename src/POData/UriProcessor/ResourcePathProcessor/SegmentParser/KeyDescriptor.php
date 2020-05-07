@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
@@ -23,6 +24,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use ReflectionException;
 
 /**
  * Class KeyDescriptor.
@@ -122,112 +124,6 @@ class KeyDescriptor
     }
 
     /**
-     * @param  string             $keyString
-     * @param  bool               $isKey
-     * @param  KeyDescriptor|null $keyDescriptor
-     * @throws ODataException
-     * @return bool
-     */
-    protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
-    {
-        $result = self::tryParseKeysFromRawKeyPredicate(
-            $keyString,
-            $isKey,
-            !$isKey,
-            $keyDescriptor
-        );
-        assert(true === $result || false === $result, 'Result must be boolean');
-        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
-        return $result;
-    }
-
-    /**
-     * Gets collection of named key values.
-     *
-     * @return array[]
-     */
-    public function getNamedValues()
-    {
-        return $this->namedValues;
-    }
-
-    /**
-     * Gets collection of positional key values.
-     *
-     * @return array[]
-     */
-    public function getPositionalValues()
-    {
-        return $this->positionalValues;
-    }
-
-    /**
-     * Gets collection of positional key values by reference.
-     *
-     * @return array[]
-     */
-    public function &getPositionalValuesByRef()
-    {
-        return $this->positionalValues;
-    }
-
-    /**
-     * Gets validated named key values, this array will be populated
-     * in validate function.
-     *
-     * @throws InvalidOperationException If this function invoked before invoking validate function
-     *
-     * @return array[]
-     */
-    public function getValidatedNamedValues()
-    {
-        if (empty($this->validatedNamedValues)) {
-            throw new InvalidOperationException(
-                Messages::keyDescriptorValidateNotCalled()
-            );
-        }
-
-        return $this->validatedNamedValues;
-    }
-
-    /**
-     * Checks whether the key values have name.
-     *
-     * @return bool
-     */
-    public function areNamedValues()
-    {
-        return !empty($this->namedValues);
-    }
-
-    /**
-     * Check whether this KeyDescription has any key values.
-     *
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->namedValues)
-             && empty($this->positionalValues);
-    }
-
-    /**
-     * Gets number of values in the key.
-     *
-     * @return int
-     */
-    public function valueCount()
-    {
-        if ($this->isEmpty()) {
-            return 0;
-        } elseif (!empty($this->namedValues)) {
-            return count($this->namedValues);
-        }
-
-        return count($this->positionalValues);
-    }
-
-    /**
      * Attempts to parse value(s) of resource key(s) from the given key predicate
      *  and creates instance of KeyDescription representing the same, Once parsing
      *  is done one should call validate function to validate the created
@@ -249,125 +145,23 @@ class KeyDescriptor
     }
 
     /**
-     * Attempt to parse comma separated values representing a skiptoken and creates
-     * instance of KeyDescriptor representing the same.
-     *
-     * @param string        $skipToken      The skiptoken value to parse
-     * @param KeyDescriptor &$keyDescriptor On return, Description of values
-     *                                      after parsing
-     *
+     * @param  string             $keyString
+     * @param  bool               $isKey
+     * @param  KeyDescriptor|null $keyDescriptor
      * @throws ODataException
-     * @return bool           True if the given values were parsed; false if there was a syntax error
+     * @return bool
      */
-    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
+    protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
     {
-        $isKey     = false;
-        $keyString = $skipToken;
-        return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
-    }
-
-    /**
-     * Validate this KeyDescriptor, If valid, this function populates
-     * _validatedNamedValues array with key as keyName and value as an array of
-     * key value and key type.
-     *
-     * @param string       $segmentAsString The segment in the form identifier
-     *                                      (keyPredicate) which this descriptor
-     *                                      represents
-     * @param ResourceType $resourceType    The type of the identifier in the segment
-     *
-     * @throws ODataException       If validation fails
-     * @throws \ReflectionException
-     */
-    public function validate($segmentAsString, ResourceType $resourceType)
-    {
-        if ($this->isEmpty()) {
-            $this->validatedNamedValues = [];
-
-            return;
-        }
-
-        $keyProperties      = $resourceType->getKeyProperties();
-        $keyPropertiesCount = count($keyProperties);
-        if (!empty($this->namedValues)) {
-            if (count($this->namedValues) != $keyPropertiesCount) {
-                throw ODataException::createSyntaxError(
-                    Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString,
-                        $keyPropertiesCount,
-                        count($this->namedValues)
-                    )
-                );
-            }
-
-            foreach ($keyProperties as $keyName => $keyResourceProperty) {
-                if (!array_key_exists($keyName, $this->namedValues)) {
-                    $keysAsString = null;
-                    foreach (array_keys($keyProperties) as $key) {
-                        $keysAsString .= $key . ', ';
-                    }
-
-                    $keysAsString = rtrim($keysAsString, ' ,');
-                    throw ODataException::createSyntaxError(
-                        Messages::keyDescriptorMissingKeys(
-                            $segmentAsString,
-                            $keysAsString
-                        )
-                    );
-                }
-
-                /** @var IType $typeProvided */
-                $typeProvided = $this->namedValues[$keyName][1];
-                $expectedType = $keyResourceProperty->getInstanceType();
-                assert($expectedType instanceof IType, get_class($expectedType));
-                if (!$expectedType->isCompatibleWith($typeProvided)) {
-                    throw ODataException::createSyntaxError(
-                        Messages::keyDescriptorInCompatibleKeyType(
-                            $segmentAsString,
-                            $keyName,
-                            $expectedType->getFullTypeName(),
-                            $typeProvided->getFullTypeName()
-                        )
-                    );
-                }
-
-                $this->validatedNamedValues[$keyName] = $this->namedValues[$keyName];
-            }
-        } else {
-            if (count($this->positionalValues) != $keyPropertiesCount) {
-                throw ODataException::createSyntaxError(
-                    Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString,
-                        $keyPropertiesCount,
-                        count($this->positionalValues)
-                    )
-                );
-            }
-
-            $i = 0;
-            foreach ($keyProperties as $keyName => $keyResourceProperty) {
-                /** @var IType $typeProvided */
-                $typeProvided = $this->positionalValues[$i][1];
-                $expectedType = $keyResourceProperty->getInstanceType();
-                assert($expectedType instanceof IType, get_class($expectedType));
-
-                if (!$expectedType->isCompatibleWith($typeProvided)) {
-                    throw ODataException::createSyntaxError(
-                        Messages::keyDescriptorInCompatibleKeyTypeAtPosition(
-                            $segmentAsString,
-                            $keyResourceProperty->getName(),
-                            $i,
-                            $expectedType->getFullTypeName(),
-                            $typeProvided->getFullTypeName()
-                        )
-                    );
-                }
-
-                $this->validatedNamedValues[$keyName]
-                    = $this->positionalValues[$i];
-                ++$i;
-            }
-        }
+        $result = self::tryParseKeysFromRawKeyPredicate(
+            $keyString,
+            $isKey,
+            !$isKey,
+            $keyDescriptor
+        );
+        assert(true === $result || false === $result, 'Result must be boolean');
+        assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
+        return $result;
     }
 
     /**
@@ -554,12 +348,191 @@ class KeyDescriptor
     }
 
     /**
+     * Attempt to parse comma separated values representing a skiptoken and creates
+     * instance of KeyDescriptor representing the same.
+     *
+     * @param string        $skipToken      The skiptoken value to parse
+     * @param KeyDescriptor &$keyDescriptor On return, Description of values
+     *                                      after parsing
+     *
+     * @throws ODataException
+     * @return bool           True if the given values were parsed; false if there was a syntax error
+     */
+    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
+    {
+        $isKey     = false;
+        $keyString = $skipToken;
+        return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
+    }
+
+    /**
+     * Gets collection of positional key values.
+     *
+     * @return array[]
+     */
+    public function getPositionalValues()
+    {
+        return $this->positionalValues;
+    }
+
+    /**
+     * Gets collection of positional key values by reference.
+     *
+     * @return array[]
+     */
+    public function &getPositionalValuesByRef()
+    {
+        return $this->positionalValues;
+    }
+
+    /**
+     * Checks whether the key values have name.
+     *
+     * @return bool
+     */
+    public function areNamedValues()
+    {
+        return !empty($this->namedValues);
+    }
+
+    /**
+     * Gets number of values in the key.
+     *
+     * @return int
+     */
+    public function valueCount()
+    {
+        if ($this->isEmpty()) {
+            return 0;
+        } elseif (!empty($this->namedValues)) {
+            return count($this->namedValues);
+        }
+
+        return count($this->positionalValues);
+    }
+
+    /**
+     * Check whether this KeyDescription has any key values.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->namedValues)
+            && empty($this->positionalValues);
+    }
+
+    /**
+     * Validate this KeyDescriptor, If valid, this function populates
+     * _validatedNamedValues array with key as keyName and value as an array of
+     * key value and key type.
+     *
+     * @param string       $segmentAsString The segment in the form identifier
+     *                                      (keyPredicate) which this descriptor
+     *                                      represents
+     * @param ResourceType $resourceType    The type of the identifier in the segment
+     *
+     * @throws ODataException      If validation fails
+     * @throws ReflectionException
+     */
+    public function validate($segmentAsString, ResourceType $resourceType)
+    {
+        if ($this->isEmpty()) {
+            $this->validatedNamedValues = [];
+
+            return;
+        }
+
+        $keyProperties      = $resourceType->getKeyProperties();
+        $keyPropertiesCount = count($keyProperties);
+        if (!empty($this->namedValues)) {
+            if (count($this->namedValues) != $keyPropertiesCount) {
+                throw ODataException::createSyntaxError(
+                    Messages::keyDescriptorKeyCountNotMatching(
+                        $segmentAsString,
+                        $keyPropertiesCount,
+                        count($this->namedValues)
+                    )
+                );
+            }
+
+            foreach ($keyProperties as $keyName => $keyResourceProperty) {
+                if (!array_key_exists($keyName, $this->namedValues)) {
+                    $keysAsString = null;
+                    foreach (array_keys($keyProperties) as $key) {
+                        $keysAsString .= $key . ', ';
+                    }
+
+                    $keysAsString = rtrim($keysAsString, ' ,');
+                    throw ODataException::createSyntaxError(
+                        Messages::keyDescriptorMissingKeys(
+                            $segmentAsString,
+                            $keysAsString
+                        )
+                    );
+                }
+
+                /** @var IType $typeProvided */
+                $typeProvided = $this->namedValues[$keyName][1];
+                $expectedType = $keyResourceProperty->getInstanceType();
+                assert($expectedType instanceof IType, get_class($expectedType));
+                if (!$expectedType->isCompatibleWith($typeProvided)) {
+                    throw ODataException::createSyntaxError(
+                        Messages::keyDescriptorInCompatibleKeyType(
+                            $segmentAsString,
+                            $keyName,
+                            $expectedType->getFullTypeName(),
+                            $typeProvided->getFullTypeName()
+                        )
+                    );
+                }
+
+                $this->validatedNamedValues[$keyName] = $this->namedValues[$keyName];
+            }
+        } else {
+            if (count($this->positionalValues) != $keyPropertiesCount) {
+                throw ODataException::createSyntaxError(
+                    Messages::keyDescriptorKeyCountNotMatching(
+                        $segmentAsString,
+                        $keyPropertiesCount,
+                        count($this->positionalValues)
+                    )
+                );
+            }
+
+            $i = 0;
+            foreach ($keyProperties as $keyName => $keyResourceProperty) {
+                /** @var IType $typeProvided */
+                $typeProvided = $this->positionalValues[$i][1];
+                $expectedType = $keyResourceProperty->getInstanceType();
+                assert($expectedType instanceof IType, get_class($expectedType));
+
+                if (!$expectedType->isCompatibleWith($typeProvided)) {
+                    throw ODataException::createSyntaxError(
+                        Messages::keyDescriptorInCompatibleKeyTypeAtPosition(
+                            $segmentAsString,
+                            $keyResourceProperty->getName(),
+                            $i,
+                            $expectedType->getFullTypeName(),
+                            $typeProvided->getFullTypeName()
+                        )
+                    );
+                }
+
+                $this->validatedNamedValues[$keyName]
+                    = $this->positionalValues[$i];
+                ++$i;
+            }
+        }
+    }
+
+    /**
      * Generate relative edit url for this key descriptor and supplied resource set.
      *
      * @param ResourceSet $resourceSet
      *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
+     * @throws ReflectionException
+     * @throws InvalidArgumentException
      * @return string
      */
     public function generateRelativeUri(ResourceSet $resourceSet)
@@ -571,14 +544,14 @@ class KeyDescriptor
         assert(0 !== count($keys), 'count($keys) == 0');
         if (count($keys) !== count($namedKeys)) {
             $msg = 'Mismatch between supplied key predicates and number of keys defined on resource set';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $editUrl = $resourceSet->getName() . '(';
         $comma   = null;
         foreach ($keys as $keyName => $resourceProperty) {
             if (!array_key_exists($keyName, $namedKeys)) {
                 $msg = 'Key predicate ' . $keyName . ' not present in named values';
-                throw new \InvalidArgumentException($msg);
+                throw new InvalidArgumentException($msg);
             }
             $keyType = $resourceProperty->getInstanceType();
             assert($keyType instanceof IType, '$keyType not instanceof IType');
@@ -592,6 +565,16 @@ class KeyDescriptor
         $editUrl .= ')';
 
         return $editUrl;
+    }
+
+    /**
+     * Gets collection of named key values.
+     *
+     * @return array[]
+     */
+    public function getNamedValues()
+    {
+        return $this->namedValues;
     }
 
     /**
@@ -616,5 +599,23 @@ class KeyDescriptor
         }
 
         return $result;
+    }
+
+    /**
+     * Gets validated named key values, this array will be populated
+     * in validate function.
+     *
+     * @throws InvalidOperationException If this function invoked before invoking validate function
+     * @return array[]
+     */
+    public function getValidatedNamedValues()
+    {
+        if (empty($this->validatedNamedValues)) {
+            throw new InvalidOperationException(
+                Messages::keyDescriptorValidateNotCalled()
+            );
+        }
+
+        return $this->validatedNamedValues;
     }
 }

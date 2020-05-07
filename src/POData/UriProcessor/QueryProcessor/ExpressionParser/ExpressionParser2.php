@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
+use POData\Common\NotImplementedException;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Expression\PHPExpressionProvider;
@@ -20,6 +22,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\PropertyAcce
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\FunctionDescription;
+use ReflectionException;
 
 /**
  * Class ExpressionParser2.
@@ -73,12 +76,10 @@ class ExpressionParser2 extends ExpressionParser
      * @param ResourceType        $resourceType       The resource type in which
      * @param IExpressionProvider $expressionProvider Implementation of IExpressionProvider
      *
-     * @throws ODataException                         If any error occurs while parsing the odata expression
-     *                                                or building the php/custom expression
-     * @throws \POData\Common\NotImplementedException
-     * @throws \ReflectionException
-     *
-     *
+     * @throws NotImplementedException
+     * @throws ReflectionException
+     * @throws ODataException          If any error occurs while parsing the odata expression
+     *                                 or building the php/custom expression
      * @return FilterInfo
      */
     public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider)
@@ -91,7 +92,7 @@ class ExpressionParser2 extends ExpressionParser
 
         try {
             $expressionAsString = $expressionProcessor->processExpression($expressionTree);
-        } catch (\InvalidArgumentException $invalidArgumentException) {
+        } catch (InvalidArgumentException $invalidArgumentException) {
             throw ODataException::createInternalServerError($invalidArgumentException->getMessage());
         }
         $expressionAsString = (isset($expressionAsString)) ? $expressionAsString : '';
@@ -104,13 +105,12 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Parse the expression.
      *
-     * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
-     *
+     * @throws NotImplementedException
+     * @throws ReflectionException
      * @throws ODataException
-     * @throws \POData\Common\NotImplementedException
-     * @throws \ReflectionException
-     *
      * @return AbstractExpression
+     *
+     * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
      */
     public function parseFilter()
     {
@@ -185,6 +185,106 @@ class ExpressionParser2 extends ExpressionParser
         $resultExpression     = $this->calculateResultExpression($leftNullableExpTree, $rightNullableExpTree);
 
         return $resultExpression;
+    }
+
+    /**
+     * @param  AbstractExpression|null $leftNullableExpTree
+     * @param  AbstractExpression|null $rightNullableExpTree
+     * @throws ODataException
+     * @return null|AbstractExpression
+     */
+    private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
+    {
+        if (null != $leftNullableExpTree && null != $rightNullableExpTree) {
+            $resultExpression = $this->mergeNullableExpressionTrees(
+                $leftNullableExpTree,
+                $rightNullableExpTree
+            );
+        } else {
+            $resultExpression = null != $leftNullableExpTree ? $leftNullableExpTree : $rightNullableExpTree;
+        }
+        return $resultExpression;
+    }
+
+    /**
+     * Merge two null check expression trees by removing duplicate nodes.
+     *
+     * @param AbstractExpression $nullCheckExpTree1 First expression
+     * @param AbstractExpression $nullCheckExpTree2 Second expression
+     *
+     * @throws ODataException
+     * @return LogicalExpression|UnaryExpression|null
+     */
+    private function mergeNullableExpressionTrees(
+        $nullCheckExpTree1,
+        $nullCheckExpTree2
+    ) {
+        $this->mapTable = [];
+        $this->map($nullCheckExpTree1);
+        $this->map($nullCheckExpTree2);
+        $expression = null;
+        foreach ($this->mapTable as $node) {
+            if (null == $expression) {
+                $expression = new UnaryExpression(
+                    new FunctionCallExpression(
+                        FunctionDescription::isNullCheckFunction($node->getType()),
+                        [$node]
+                    ),
+                    ExpressionType::NOT_LOGICAL(),
+                    new Boolean()
+                );
+            } else {
+                $expression = new LogicalExpression(
+                    $expression,
+                    new UnaryExpression(
+                        new FunctionCallExpression(
+                            FunctionDescription::isNullCheckFunction(
+                                $node->getType()
+                            ),
+                            [$node]
+                        ),
+                        ExpressionType::NOT_LOGICAL(),
+                        new Boolean()
+                    ),
+                    ExpressionType::AND_LOGICAL()
+                );
+            }
+        }
+
+        return $expression;
+    }
+
+    /**
+     *  Populate map table.
+     *
+     * @param AbstractExpression $nullCheckExpTree The expression to verify
+     *
+     * @throws ODataException
+     */
+    private function map($nullCheckExpTree)
+    {
+        if ($nullCheckExpTree instanceof LogicalExpression) {
+            $this->map($nullCheckExpTree->getLeft());
+            $this->map($nullCheckExpTree->getRight());
+        } elseif ($nullCheckExpTree instanceof UnaryExpression) {
+            $this->map($nullCheckExpTree->getChild());
+        } elseif ($nullCheckExpTree instanceof FunctionCallExpression) {
+            $param = $nullCheckExpTree->getParamExpressions();
+            $this->map($param[0]);
+        } elseif ($nullCheckExpTree instanceof PropertyAccessExpression) {
+            $parent = $nullCheckExpTree;
+            $key    = null;
+            do {
+                $key    = $parent->getResourceProperty()->getName() . '_' . $key;
+                $parent = $parent->getParent();
+            } while (null != $parent);
+
+            $this->mapTable[$key] = $nullCheckExpTree;
+        } else {
+            throw ODataException::createSyntaxError(
+                Messages::expressionParser2UnexpectedExpression(get_class($nullCheckExpTree))
+            );
+        }
     }
 
     /**
@@ -394,105 +494,5 @@ class ExpressionParser2 extends ExpressionParser
         throw ODataException::createSyntaxError(
             Messages::expressionParser2UnexpectedExpression(get_class($expression))
         );
-    }
-
-    /**
-     * Merge two null check expression trees by removing duplicate nodes.
-     *
-     * @param AbstractExpression $nullCheckExpTree1 First expression
-     * @param AbstractExpression $nullCheckExpTree2 Second expression
-     *
-     * @throws ODataException
-     * @return LogicalExpression|UnaryExpression|null
-     */
-    private function mergeNullableExpressionTrees(
-        $nullCheckExpTree1,
-        $nullCheckExpTree2
-    ) {
-        $this->mapTable = [];
-        $this->map($nullCheckExpTree1);
-        $this->map($nullCheckExpTree2);
-        $expression = null;
-        foreach ($this->mapTable as $node) {
-            if (null == $expression) {
-                $expression = new UnaryExpression(
-                    new FunctionCallExpression(
-                        FunctionDescription::isNullCheckFunction($node->getType()),
-                        [$node]
-                    ),
-                    ExpressionType::NOT_LOGICAL(),
-                    new Boolean()
-                );
-            } else {
-                $expression = new LogicalExpression(
-                    $expression,
-                    new UnaryExpression(
-                        new FunctionCallExpression(
-                            FunctionDescription::isNullCheckFunction(
-                                $node->getType()
-                            ),
-                            [$node]
-                        ),
-                        ExpressionType::NOT_LOGICAL(),
-                        new Boolean()
-                    ),
-                    ExpressionType::AND_LOGICAL()
-                );
-            }
-        }
-
-        return $expression;
-    }
-
-    /**
-     *  Populate map table.
-     *
-     * @param AbstractExpression $nullCheckExpTree The expression to verify
-     *
-     * @throws ODataException
-     */
-    private function map($nullCheckExpTree)
-    {
-        if ($nullCheckExpTree instanceof LogicalExpression) {
-            $this->map($nullCheckExpTree->getLeft());
-            $this->map($nullCheckExpTree->getRight());
-        } elseif ($nullCheckExpTree instanceof UnaryExpression) {
-            $this->map($nullCheckExpTree->getChild());
-        } elseif ($nullCheckExpTree instanceof FunctionCallExpression) {
-            $param = $nullCheckExpTree->getParamExpressions();
-            $this->map($param[0]);
-        } elseif ($nullCheckExpTree instanceof PropertyAccessExpression) {
-            $parent = $nullCheckExpTree;
-            $key    = null;
-            do {
-                $key    = $parent->getResourceProperty()->getName() . '_' . $key;
-                $parent = $parent->getParent();
-            } while (null != $parent);
-
-            $this->mapTable[$key] = $nullCheckExpTree;
-        } else {
-            throw ODataException::createSyntaxError(
-                Messages::expressionParser2UnexpectedExpression(get_class($nullCheckExpTree))
-            );
-        }
-    }
-
-    /**
-     * @param  AbstractExpression|null $leftNullableExpTree
-     * @param  AbstractExpression|null $rightNullableExpTree
-     * @throws ODataException
-     * @return null|AbstractExpression
-     */
-    private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
-    {
-        if (null != $leftNullableExpTree && null != $rightNullableExpTree) {
-            $resultExpression = $this->mergeNullableExpressionTrees(
-                $leftNullableExpTree,
-                $rightNullableExpTree
-            );
-        } else {
-            $resultExpression = null != $leftNullableExpTree ? $leftNullableExpTree : $rightNullableExpTree;
-        }
-        return $resultExpression;
     }
 }

@@ -67,8 +67,8 @@ class OrderByNode extends OrderByBaseNode
     /**
      * (non-PHPdoc).
      *
-     * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      * @return void
+     * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      */
     public function free()
     {
@@ -80,9 +80,8 @@ class OrderByNode extends OrderByBaseNode
     /**
      * (non-PHPdoc).
      *
+     * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
-     *
-     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {

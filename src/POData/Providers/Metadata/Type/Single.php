@@ -68,17 +68,6 @@ class Single implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.Single';
-    }
-
-    /**
      * Converts the given string value to float type.
      *
      * @param string $stringValue value to convert
@@ -113,5 +102,16 @@ class Single implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Single';
     }
 }

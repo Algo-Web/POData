@@ -113,23 +113,13 @@ class RootProjectionNode extends ExpandedProjectionNode
     }
 
     /**
-     * Mark expansions are used in the query or not.
-     *
-     * @param bool $isExpansionSpecified True if expansion found, False else
-     */
-    public function setExpansionSpecified($isExpansionSpecified = true)
-    {
-        $this->expansionSpecified = $isExpansionSpecified;
-    }
-
-    /**
-     * Check whether expansion were specified in the query.
+     * Check whether selection were specified in the query.
      *
      * @return bool
      */
-    public function isExpansionSpecified()
+    public function isSelectionSpecified()
     {
-        return $this->expansionSpecified;
+        return $this->selectionSpecified;
     }
 
     /**
@@ -141,16 +131,6 @@ class RootProjectionNode extends ExpandedProjectionNode
     public function setSelectionSpecified($isSelectionSpecified = true)
     {
         $this->selectionSpecified = $isSelectionSpecified;
-    }
-
-    /**
-     * Check whether selection were specified in the query.
-     *
-     * @return bool
-     */
-    public function isSelectionSpecified()
-    {
-        return $this->selectionSpecified;
     }
 
     /**
@@ -250,5 +230,25 @@ class RootProjectionNode extends ExpandedProjectionNode
         // deliberately shuffle scratchpad to falsify any ordering assumptions downstream
         shuffle($scratchpad);
         return $scratchpad;
+    }
+
+    /**
+     * Check whether expansion were specified in the query.
+     *
+     * @return bool
+     */
+    public function isExpansionSpecified()
+    {
+        return $this->expansionSpecified;
+    }
+
+    /**
+     * Mark expansions are used in the query or not.
+     *
+     * @param bool $isExpansionSpecified True if expansion found, False else
+     */
+    public function setExpansionSpecified($isExpansionSpecified = true)
+    {
+        $this->expansionSpecified = $isExpansionSpecified;
     }
 }

@@ -9,7 +9,6 @@ use POData\IService;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestExpander;
-use POData\UriProcessor\UriProcessor;
 
 /**
  * Class UriProcessor.
@@ -28,7 +27,6 @@ interface IUriProcessor
      * @param IService $service Reference to the data service instance
      *
      * @throws ODataException
-     *
      * @return IUriProcessor
      */
     public static function process(IService $service);

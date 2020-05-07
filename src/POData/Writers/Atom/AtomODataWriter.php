@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace POData\Writers\Atom;
 
+use DateTimeZone;
+use Exception;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -22,6 +24,7 @@ use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\IODataWriter;
+use XMLWriter;
 
 /**
  * Class AtomODataWriter.
@@ -29,23 +32,34 @@ use POData\Writers\IODataWriter;
 class AtomODataWriter implements IODataWriter
 {
     /**
+     * XML prefix for the Atom namespace.
+     *
+     * @var string
+     */
+    const ATOM_NAMESPACE_PREFIX = 'atom';
+    /**
+     * XML prefix for the Atom Publishing Protocol namespace.
+     *
+     * @var string
+     */
+    const APP_NAMESPACE_PREFIX = 'app';
+
+    /*
+     * Update time to insert into ODataEntry/ODataFeed fields
+     * @var \DateTime;
+     */
+    /**
      * Writer to which output (CSDL Document) is sent.
      *
-     * @var \XMLWriter
+     * @var XMLWriter
      */
     public $xmlWriter;
-
     /**
      * The service base uri.
      *
      * @var string
      */
     protected $baseUri;
-
-    /*
-     * Update time to insert into ODataEntry/ODataFeed fields
-     * @var \DateTime;
-     */
     private $updated;
 
     /**
@@ -62,11 +76,52 @@ class AtomODataWriter implements IODataWriter
         $this->baseUri = $absoluteServiceUri;
         $this->updated = DateTime::now();
 
-        $this->xmlWriter = new \XMLWriter();
+        $this->xmlWriter = new XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
         $this->xmlWriter->setIndent($prettyPrint);
         $this->xmlWriter->setIndentString($prettyPrint ? '    ' : '');
+    }
+
+    /**
+     * Serialize the exception.
+     *
+     * @param ODataException $exception Exception to serialize
+     *
+     * @return string
+     */
+    public static function serializeException(ODataException $exception, ServiceConfiguration $config)
+    {
+        $xmlWriter = new XMLWriter();
+        $xmlWriter->openMemory();
+        $xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
+        $xmlWriter->setIndent($config->getPrettyOutput());
+        $xmlWriter->setIndentString($config->getPrettyOutput() ? '    ' : '');
+
+        $xmlWriter->startElement(ODataConstants::XML_ERROR_ELEMENT_NAME);
+        //$xmlWriter->writeAttributeNs(
+        //    ODataConstants::XMLNS_NAMESPACE_PREFIX,
+        //    ODataConstants::XML_NAMESPACE_PREFIX,
+        //    ODataConstants::XML_NAMESPACE,
+        //    null
+        //);
+        $xmlWriter->writeAttribute(
+            ODataConstants::XMLNS_NAMESPACE_PREFIX,
+            ODataConstants::ODATA_METADATA_NAMESPACE
+        );
+        $xmlWriter->endAttribute();
+        $xmlWriter->startElement(ODataConstants::XML_ERROR_CODE_ELEMENT_NAME);
+        if (null != $exception->getStatusCode()) {
+            $xmlWriter->text(strval($exception->getStatusCode()));
+        }
+        $xmlWriter->endElement();
+        $xmlWriter->startElement(ODataConstants::XML_ERROR_MESSAGE_ELEMENT_NAME);
+        $xmlWriter->text($exception->getMessage());
+        $xmlWriter->endElement();
+        $xmlWriter->endElement();
+        $xmlWriter->endDocument();
+
+        return $xmlWriter->outputMemory(true);
     }
 
     /**
@@ -85,8 +140,8 @@ class AtomODataWriter implements IODataWriter
         //TODO: i'm not sold about this first part not being constrained to v1 (or maybe v2)..
         //but it's how WS DS works. See #94
         return in_array(MimeTypes::MIME_APPLICATION_XML, $parts)
-               || in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts)
-               || in_array(MimeTypes::MIME_APPLICATION_ATOM, $parts);
+            || in_array(MimeTypes::MIME_APPLICATION_ATOMSERVICE, $parts)
+            || in_array(MimeTypes::MIME_APPLICATION_ATOM, $parts);
     }
 
     /**
@@ -94,7 +149,7 @@ class AtomODataWriter implements IODataWriter
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @throws \Exception
+     * @throws Exception
      * @return AtomODataWriter
      */
     public function write($model)
@@ -181,12 +236,225 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
+     * Function to create element only contain value without argument.
+     *
+     * @param string $node  Element name
+     * @param string $value Element value
+     *
+     * @return AtomODataWriter
+     */
+    public function writeNodeValue($node, $value)
+    {
+        $this->xmlWriter->startElement($node);
+        $this->xmlWriter->text($value ?? '');
+        $this->xmlWriter->endElement();
+
+        return $this;
+    }
+
+    /**
+     * Function to create link element with arguments.
+     *
+     * @param ODataLink $link       Link object to make link element
+     * @param bool      $isExpanded Is link expanded or not
+     *
+     * @return AtomODataWriter
+     */
+    protected function writeLinkNode(ODataLink $link, $isExpanded)
+    {
+        $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
+        $this->xmlWriter->writeAttribute(
+            ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
+            $link->name ?? ''
+        );
+        if ($link->type != null) {
+            $this->xmlWriter->writeAttribute(
+                ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+                $link->type ?? ''
+            );
+        }
+        if ($link->title != null) {
+            $this->xmlWriter->writeAttribute(
+                ODataConstants::ATOM_TITLE_ELELMET_NAME,
+                $link->title ?? ''
+            );
+        }
+        $this->xmlWriter->writeAttribute(
+            ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
+            $link->url ?? ''
+        );
+        if (!$isExpanded) {
+            $this->xmlWriter->endElement();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Write the given collection of properties.
+     * (properties of an entity or complex type).
+     *
+     * @param ODataPropertyContent $properties Collection of properties
+     * @param bool                 $topLevel   is this property content is the top level response to be written?
+     *
+     * @throws Exception
+     * @return AtomODataWriter
+     */
+    protected function writeProperties(ODataPropertyContent $properties = null, $topLevel = false)
+    {
+        if (null !== $properties) {
+            foreach ($properties->properties as $property) {
+                $this->beginWriteProperty($property, $topLevel);
+
+                if ($property->value == null) {
+                    $this->writeNullValue($property);
+                } elseif ($property->value instanceof ODataPropertyContent) {
+                    $this->writeProperties($property->value, false);
+                } elseif ($property->value instanceof ODataBagContent) {
+                    $this->writeBagContent($property->value);
+                } else {
+                    $value = $this->beforeWriteValue($property->value, $property->typeName);
+                    $this->xmlWriter->text(strval($value));
+                }
+
+                $this->xmlWriter->endElement();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Write a property.
+     *
+     * @param ODataProperty $property   Property to be written
+     * @param bool          $isTopLevel is link top level or not
+     *
+     * @return AtomODataWriter
+     */
+    protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
+    {
+        $this->xmlWriter->startElementNs(
+            ODataConstants::ODATA_NAMESPACE_PREFIX,
+            $property->name,
+            null
+        );
+        if ($property->typeName != null) {
+            $this->xmlWriter->startAttributeNs(
+                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+                ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+                null
+            );
+            $this->xmlWriter->text($property->typeName);
+        }
+        if ($isTopLevel) {
+            $this->xmlWriter->startAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX);
+            $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
+            $this->xmlWriter->startAttributeNs(
+                ODataConstants::XMLNS_NAMESPACE_PREFIX,
+                ODataConstants::ODATA_NAMESPACE_PREFIX,
+                null
+            );
+            $this->xmlWriter->text(ODataConstants::ODATA_NAMESPACE);
+            $this->xmlWriter->startAttributeNs(
+                ODataConstants::XMLNS_NAMESPACE_PREFIX,
+                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+                null
+            );
+            $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
+        }
+        if ($property->typeName != null || $isTopLevel) {
+            $this->xmlWriter->endAttribute();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Write null value.
+     *
+     * @param ODataProperty $property ODataProperty object to write null value
+     *                                according to property type
+     *
+     * @return AtomODataWriter
+     */
+    protected function writeNullValue(ODataProperty $property)
+    {
+        $this->xmlWriter->writeAttributeNs(
+            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+            ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
+            null,
+            ODataConstants::XML_TRUE_LITERAL
+        );
+
+        return $this;
+    }
+
+    /**
+     * Begin an item in a collection.
+     *
+     * @param ODataBagContent $bag Bag property object to begin write property
+     *
+     * @throws Exception
+     * @return AtomODataWriter
+     */
+    protected function writeBagContent(ODataBagContent $bag)
+    {
+        foreach ($bag->propertyContents as $content) {
+            if ($content instanceof ODataPropertyContent) {
+                $this->xmlWriter->startElementNs(
+                    ODataConstants::ODATA_NAMESPACE_PREFIX,
+                    ODataConstants::COLLECTION_ELEMENT_NAME,
+                    null
+                );
+                $this->writeProperties($content);
+                $this->xmlWriter->endElement();
+            } else {
+                //probably just a primitive string
+                $this->xmlWriter->startElementNs(
+                    ODataConstants::ODATA_NAMESPACE_PREFIX,
+                    ODataConstants::COLLECTION_ELEMENT_NAME,
+                    null
+                );
+                $this->xmlWriter->text($content);
+                $this->xmlWriter->endElement();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * XML write a basic data type (string, number, boolean, null).
+     *
+     * @param string $value value to be written
+     * @param string $type  |null data type of the value
+     *
+     * @throws Exception
+     * @return string
+     */
+    protected function beforeWriteValue($value, $type = null)
+    {
+        switch ($type) {
+            case 'Edm.DateTime':
+                $dateTime = new \DateTime($value, new DateTimeZone('UTC'));
+                $result   = $dateTime->format('Y-m-d\TH:i:s');
+                break;
+
+            default:
+                $result = $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * Begin write OData Feed.
      *
      * @param ODataFeed $feed       Object of OData feed to start writing feed
      * @param bool      $isTopLevel indicates if this is the top level feed in the response
      *
-     * @throws \Exception
+     * @throws Exception
      * @return AtomODataWriter
      */
     protected function writeFeed(ODataFeed $feed, $isTopLevel = false)
@@ -231,12 +499,77 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
+     * Function to write base uri and default namespaces for top level elements.
+     *
+     * @return AtomODataWriter
+     */
+    public function writeBaseUriAndDefaultNamespaces()
+    {
+        $this->xmlWriter->writeAttribute(
+            ODataConstants::XML_BASE_ATTRIBUTE_NAME_WITH_PREFIX,
+            $this->baseUri
+        );
+        $this->xmlWriter->writeAttributeNs(
+            ODataConstants::XMLNS_NAMESPACE_PREFIX,
+            ODataConstants::ODATA_NAMESPACE_PREFIX,
+            null,
+            ODataConstants::ODATA_NAMESPACE
+        );
+        $this->xmlWriter->writeAttributeNs(
+            ODataConstants::XMLNS_NAMESPACE_PREFIX,
+            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
+            null,
+            ODataConstants::ODATA_METADATA_NAMESPACE
+        );
+        $this->xmlWriter->writeAttribute(
+            ODataConstants::XMLNS_NAMESPACE_PREFIX,
+            ODataConstants::ATOM_NAMESPACE
+        );
+
+        return $this;
+    }
+
+    /**
+     * Function to create element with one attribute and value.
+     *
+     * @param string $node           Element name
+     * @param string $attribute      Attribute name
+     * @param string $attributeValue Attribute value
+     * @param string $nodeValue      Element value
+     *
+     * @return AtomODataWriter
+     */
+    public function writeNodeAttributeValue(
+        $node,
+        $attribute,
+        $attributeValue,
+        $nodeValue
+    ) {
+        $this->xmlWriter->startElement($node);
+        $this->xmlWriter->writeAttribute($attribute, $attributeValue);
+        $this->xmlWriter->text($nodeValue ?? '');
+        $this->xmlWriter->endElement();
+
+        return $this;
+    }
+
+    /**
+     * Get update timestamp.
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
      * Write top level entry.
      *
      * @param ODataEntry $entry      Object of ODataEntry
      * @param bool       $isTopLevel
      *
-     * @throws \Exception
+     * @throws Exception
      * @return AtomODataWriter
      */
     protected function writeEntry(ODataEntry $entry, $isTopLevel = false)
@@ -383,7 +716,7 @@ class AtomODataWriter implements IODataWriter
     /**
      * @param ODataLink $link Link to write
      *
-     * @throws \Exception
+     * @throws Exception
      * @return AtomODataWriter
      */
     protected function writeLink(ODataLink $link)
@@ -399,9 +732,9 @@ class AtomODataWriter implements IODataWriter
 
             if (null !== $link->expandedResult) {
                 if ($link->isCollection) {
-                    $this->writeFeed(/* @scrutinizer ignore-type */$link->expandedResult);
+                    $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
                 } else {
-                    $this->writeEntry(/* @scrutinizer ignore-type */$link->expandedResult);
+                    $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
                 }
             }
 
@@ -413,61 +746,20 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * Write the given collection of properties.
-     * (properties of an entity or complex type).
+     * Write after last property.
      *
-     * @param ODataPropertyContent $properties Collection of properties
-     * @param bool                 $topLevel   is this property content is the top level response to be written?
+     * @param ODataEntry $entry Entry object to post writing properties
      *
-     * @throws \Exception
      * @return AtomODataWriter
      */
-    protected function writeProperties(ODataPropertyContent $properties = null, $topLevel = false)
+    public function postWriteProperties(ODataEntry $entry)
     {
-        if (null !== $properties) {
-            foreach ($properties->properties as $property) {
-                $this->beginWriteProperty($property, $topLevel);
-
-                if ($property->value == null) {
-                    $this->writeNullValue($property);
-                } elseif ($property->value instanceof ODataPropertyContent) {
-                    $this->writeProperties($property->value, false);
-                } elseif ($property->value instanceof ODataBagContent) {
-                    $this->writeBagContent($property->value);
-                } else {
-                    $value = $this->beforeWriteValue($property->value, $property->typeName);
-                    $this->xmlWriter->text(strval($value));
-                }
-
-                $this->xmlWriter->endElement();
-            }
+        if (!$entry->isMediaLinkEntry) {
+            $this->xmlWriter->endElement();
         }
+        $this->xmlWriter->endElement();
 
         return $this;
-    }
-
-    /**
-     * XML write a basic data type (string, number, boolean, null).
-     *
-     * @param string $value value to be written
-     * @param string $type  |null data type of the value
-     *
-     * @throws \Exception
-     * @return string
-     */
-    protected function beforeWriteValue($value, $type = null)
-    {
-        switch ($type) {
-            case 'Edm.DateTime':
-                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
-                $result   = $dateTime->format('Y-m-d\TH:i:s');
-                break;
-
-            default:
-                $result = $value;
-        }
-
-        return $result;
     }
 
     /**
@@ -522,123 +814,6 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * Write a property.
-     *
-     * @param ODataProperty $property   Property to be written
-     * @param bool          $isTopLevel is link top level or not
-     *
-     * @return AtomODataWriter
-     */
-    protected function beginWriteProperty(ODataProperty $property, $isTopLevel)
-    {
-        $this->xmlWriter->startElementNs(
-            ODataConstants::ODATA_NAMESPACE_PREFIX,
-            $property->name,
-            null
-        );
-        if ($property->typeName != null) {
-            $this->xmlWriter->startAttributeNs(
-                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                null
-            );
-            $this->xmlWriter->text($property->typeName);
-        }
-        if ($isTopLevel) {
-            $this->xmlWriter->startAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX);
-            $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
-            $this->xmlWriter->startAttributeNs(
-                ODataConstants::XMLNS_NAMESPACE_PREFIX,
-                ODataConstants::ODATA_NAMESPACE_PREFIX,
-                null
-            );
-            $this->xmlWriter->text(ODataConstants::ODATA_NAMESPACE);
-            $this->xmlWriter->startAttributeNs(
-                ODataConstants::XMLNS_NAMESPACE_PREFIX,
-                ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-                null
-            );
-            $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
-        }
-        if ($property->typeName != null || $isTopLevel) {
-            $this->xmlWriter->endAttribute();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Write after last property.
-     *
-     * @param ODataEntry $entry Entry object to post writing properties
-     *
-     * @return AtomODataWriter
-     */
-    public function postWriteProperties(ODataEntry $entry)
-    {
-        if (!$entry->isMediaLinkEntry) {
-            $this->xmlWriter->endElement();
-        }
-        $this->xmlWriter->endElement();
-
-        return $this;
-    }
-
-    /**
-     * Begin an item in a collection.
-     *
-     * @param ODataBagContent $bag Bag property object to begin write property
-     *
-     * @throws \Exception
-     * @return AtomODataWriter
-     */
-    protected function writeBagContent(ODataBagContent $bag)
-    {
-        foreach ($bag->propertyContents as $content) {
-            if ($content instanceof ODataPropertyContent) {
-                $this->xmlWriter->startElementNs(
-                    ODataConstants::ODATA_NAMESPACE_PREFIX,
-                    ODataConstants::COLLECTION_ELEMENT_NAME,
-                    null
-                );
-                $this->writeProperties($content);
-                $this->xmlWriter->endElement();
-            } else {
-                //probably just a primitive string
-                $this->xmlWriter->startElementNs(
-                    ODataConstants::ODATA_NAMESPACE_PREFIX,
-                    ODataConstants::COLLECTION_ELEMENT_NAME,
-                    null
-                );
-                $this->xmlWriter->text($content);
-                $this->xmlWriter->endElement();
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Write null value.
-     *
-     * @param ODataProperty $property ODataProperty object to write null value
-     *                                according to property type
-     *
-     * @return AtomODataWriter
-     */
-    protected function writeNullValue(ODataProperty $property)
-    {
-        $this->xmlWriter->writeAttributeNs(
-            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-            ODataConstants::ATOM_NULL_ATTRIBUTE_NAME,
-            null,
-            ODataConstants::XML_TRUE_LITERAL
-        );
-
-        return $this;
-    }
-
-    /**
      * Get the final result as string.
      *
      * @return string output of requested data in Atom format
@@ -649,171 +824,6 @@ class AtomODataWriter implements IODataWriter
 
         return $this->xmlWriter->outputMemory(true);
     }
-
-    /**
-     * Serialize the exception.
-     *
-     * @param ODataException $exception Exception to serialize
-     *
-     * @return string
-     */
-    public static function serializeException(ODataException $exception, ServiceConfiguration $config)
-    {
-        $xmlWriter = new \XMLWriter();
-        $xmlWriter->openMemory();
-        $xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
-        $xmlWriter->setIndent($config->getPrettyOutput());
-        $xmlWriter->setIndentString($config->getPrettyOutput() ? '    ' : '');
-
-        $xmlWriter->startElement(ODataConstants::XML_ERROR_ELEMENT_NAME);
-        //$xmlWriter->writeAttributeNs(
-        //    ODataConstants::XMLNS_NAMESPACE_PREFIX,
-        //    ODataConstants::XML_NAMESPACE_PREFIX,
-        //    ODataConstants::XML_NAMESPACE,
-        //    null
-        //);
-        $xmlWriter->writeAttribute(
-            ODataConstants::XMLNS_NAMESPACE_PREFIX,
-            ODataConstants::ODATA_METADATA_NAMESPACE
-        );
-        $xmlWriter->endAttribute();
-        $xmlWriter->startElement(ODataConstants::XML_ERROR_CODE_ELEMENT_NAME);
-        if (null != $exception->getStatusCode()) {
-            $xmlWriter->text(strval($exception->getStatusCode()));
-        }
-        $xmlWriter->endElement();
-        $xmlWriter->startElement(ODataConstants::XML_ERROR_MESSAGE_ELEMENT_NAME);
-        $xmlWriter->text($exception->getMessage());
-        $xmlWriter->endElement();
-        $xmlWriter->endElement();
-        $xmlWriter->endDocument();
-
-        return $xmlWriter->outputMemory(true);
-    }
-
-    /**
-     * Function to create element only contain value without argument.
-     *
-     * @param string $node  Element name
-     * @param string $value Element value
-     *
-     * @return AtomODataWriter
-     */
-    public function writeNodeValue($node, $value)
-    {
-        $this->xmlWriter->startElement($node);
-        $this->xmlWriter->text($value ?? '');
-        $this->xmlWriter->endElement();
-
-        return $this;
-    }
-
-    /**
-     * Function to create element with one attribute and value.
-     *
-     * @param string $node           Element name
-     * @param string $attribute      Attribute name
-     * @param string $attributeValue Attribute value
-     * @param string $nodeValue      Element value
-     *
-     * @return AtomODataWriter
-     */
-    public function writeNodeAttributeValue(
-        $node,
-        $attribute,
-        $attributeValue,
-        $nodeValue
-    ) {
-        $this->xmlWriter->startElement($node);
-        $this->xmlWriter->writeAttribute($attribute, $attributeValue);
-        $this->xmlWriter->text($nodeValue ?? '');
-        $this->xmlWriter->endElement();
-
-        return $this;
-    }
-
-    /**
-     * Function to create link element with arguments.
-     *
-     * @param ODataLink $link       Link object to make link element
-     * @param bool      $isExpanded Is link expanded or not
-     *
-     * @return AtomODataWriter
-     */
-    protected function writeLinkNode(ODataLink $link, $isExpanded)
-    {
-        $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
-        $this->xmlWriter->writeAttribute(
-            ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
-            $link->name ?? ''
-        );
-        if ($link->type != null) {
-            $this->xmlWriter->writeAttribute(
-                ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                $link->type ?? ''
-            );
-        }
-        if ($link->title != null) {
-            $this->xmlWriter->writeAttribute(
-                ODataConstants::ATOM_TITLE_ELELMET_NAME,
-                $link->title ?? ''
-            );
-        }
-        $this->xmlWriter->writeAttribute(
-            ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
-            $link->url ?? ''
-        );
-        if (!$isExpanded) {
-            $this->xmlWriter->endElement();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Function to write base uri and default namespaces for top level elements.
-     *
-     * @return AtomODataWriter
-     */
-    public function writeBaseUriAndDefaultNamespaces()
-    {
-        $this->xmlWriter->writeAttribute(
-            ODataConstants::XML_BASE_ATTRIBUTE_NAME_WITH_PREFIX,
-            $this->baseUri
-        );
-        $this->xmlWriter->writeAttributeNs(
-            ODataConstants::XMLNS_NAMESPACE_PREFIX,
-            ODataConstants::ODATA_NAMESPACE_PREFIX,
-            null,
-            ODataConstants::ODATA_NAMESPACE
-        );
-        $this->xmlWriter->writeAttributeNs(
-            ODataConstants::XMLNS_NAMESPACE_PREFIX,
-            ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
-            null,
-            ODataConstants::ODATA_METADATA_NAMESPACE
-        );
-        $this->xmlWriter->writeAttribute(
-            ODataConstants::XMLNS_NAMESPACE_PREFIX,
-            ODataConstants::ATOM_NAMESPACE
-        );
-
-        return $this;
-    }
-
-    /**
-     * XML prefix for the Atom namespace.
-     *
-     * @var string
-     */
-    const ATOM_NAMESPACE_PREFIX = 'atom';
-
-    /**
-     * XML prefix for the Atom Publishing Protocol namespace.
-     *
-     * @var string
-     */
-    const APP_NAMESPACE_PREFIX = 'app';
 
     /**
      * @param ProvidersWrapper $providers
@@ -870,17 +880,7 @@ class AtomODataWriter implements IODataWriter
     }
 
     /**
-     * Get update timestamp.
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * @param \XMLWriter $writer
+     * @param XMLWriter $writer
      * @param $name
      */
     private function writeServiceDocumentNode(&$writer, $name)

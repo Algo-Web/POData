@@ -1,10 +1,14 @@
 <?php
 
 declare(strict_types=1);
+
 namespace POData\BatchProcessor;
 
+use Exception;
 use Illuminate\Support\Str;
 use POData\BaseService;
+use POData\Common\ODataException;
+use POData\Common\UrlFormatException;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\IncomingRequest;
@@ -20,7 +24,7 @@ class ChangeSetParser implements IBatchParser
     protected $changeSetBoundary;
     protected $rawRequests = [];
     protected $service;
-    protected $contentIDToLocationLookup =[];
+    protected $contentIDToLocationLookup = [];
 
     /**
      * ChangeSetParser constructor.
@@ -42,9 +46,9 @@ class ChangeSetParser implements IBatchParser
     }
 
     /**
-     * @throws \POData\Common\ODataException
-     * @throws \POData\Common\UrlFormatException
-     * @throws \Exception
+     * @throws ODataException
+     * @throws UrlFormatException
+     * @throws Exception
      */
     public function process()
     {
@@ -63,11 +67,42 @@ class ChangeSetParser implements IBatchParser
                 if (null === $workingObject->Response->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for ' . $workingObject->RequestVerb
                         . ' request url ' . $workingObject->RequestURL;
-                    throw new \Exception($msg);
+                    throw new Exception($msg);
                 }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawRequests()
+    {
+        return $this->rawRequests;
+    }
+
+    /**
+     * @param $workingObject
+     * @throws ODataException
+     * @throws UrlFormatException
+     */
+    protected function processSubRequest(&$workingObject)
+    {
+        $newContext = new WebOperationContext($workingObject->Request);
+        $newHost    = new ServiceHost($newContext);
+
+        $this->getService()->setHost($newHost);
+        $this->getService()->handleRequest();
+        $workingObject->Response = $newContext->outgoingResponse();
+    }
+
+    /**
+     * @return BaseService
+     */
+    public function getService()
+    {
+        return $this->service;
     }
 
     /**
@@ -81,7 +116,7 @@ class ChangeSetParser implements IBatchParser
         $splitter = false === $this->changeSetBoundary ?
             '' :
             '--' . $this->changeSetBoundary . $ODataEOL;
-        $raw      = $this->getRawRequests();
+        $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
@@ -119,7 +154,7 @@ class ChangeSetParser implements IBatchParser
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleData()
     {
@@ -173,7 +208,7 @@ class ChangeSetParser implements IBatchParser
                         }
                         $headerSides = explode(':', $line);
                         if (count($headerSides) != 2) {
-                            throw new \Exception('Malformed header line: ' . $line);
+                            throw new Exception('Malformed header line: ' . $line);
                         }
                         if (strtolower(trim($headerSides[0])) == strtolower('Content-ID')) {
                             $contentID = trim($headerSides[1]);
@@ -193,7 +228,7 @@ class ChangeSetParser implements IBatchParser
                         $content .= $line;
                         break;
                     default:
-                        throw new \Exception('how did we end up with more than 3 stages??');
+                        throw new Exception('how did we end up with more than 3 stages??');
                 }
             }
 
@@ -221,41 +256,10 @@ class ChangeSetParser implements IBatchParser
     }
 
     /**
-     * @return BaseService
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
-
-    /**
      * @return string
      */
     public function getData()
     {
         return $this->data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRawRequests()
-    {
-        return $this->rawRequests;
-    }
-
-    /**
-     * @param $workingObject
-     * @throws \POData\Common\ODataException
-     * @throws \POData\Common\UrlFormatException
-     */
-    protected function processSubRequest(&$workingObject)
-    {
-        $newContext = new WebOperationContext($workingObject->Request);
-        $newHost    = new ServiceHost($newContext);
-
-        $this->getService()->setHost($newHost);
-        $this->getService()->handleRequest();
-        $workingObject->Response = $newContext->outgoingResponse();
     }
 }

@@ -22,7 +22,7 @@ trait common
     public static function commonArgumentShouldBeInteger($argument, $functionName)
     {
         return 'The argument to the function ' . $functionName . ' should be integer, non-integer value \''
-                . $argument . '\' passed';
+            . $argument . '\' passed';
     }
 
     /**
@@ -37,7 +37,7 @@ trait common
     public static function commonArgumentShouldBeNonNegative($argument, $functionName)
     {
         return 'The argument to the function ' . $functionName . ' should be non-negative, negative value \''
-                . $argument . '\' passed';
+            . $argument . '\' passed';
     }
 
     /**
@@ -52,7 +52,7 @@ trait common
     public static function commonNotValidPrimitiveEDMType($argumentName, $functionName)
     {
         return 'The argument \'' . $argumentName . '\' to ' . $functionName . ' is not a valid ' .
-               'EdmPrimitiveType Enum value.';
+            'EdmPrimitiveType Enum value.';
     }
 
     /**
@@ -78,7 +78,7 @@ trait common
     public static function failedToAccessProperty($propertyName, $parentObjectName)
     {
         return 'Data Service failed to access or initialize the property ' . $propertyName .
-               ' of ' . $parentObjectName . '.';
+            ' of ' . $parentObjectName . '.';
     }
 
     /**
@@ -102,8 +102,8 @@ trait common
     public static function badRequestInvalidPropertyNameSpecified($resourceTypeName, $propertyName)
     {
         return 'Error processing request stream. The property name ' . $propertyName . ' specified for type '
-                . $resourceTypeName . ' is not valid. (Check the resource set of the navigation property \''
-                . $propertyName . '\' is visible)';
+            . $resourceTypeName . ' is not valid. (Check the resource set of the navigation property \''
+            . $propertyName . '\' is visible)';
     }
 
     /**

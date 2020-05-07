@@ -69,6 +69,15 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
+     * @param  IStreamProvider2|null $streamProvider
+     * @return void
+     */
+    public function setStreamProvider(IStreamProvider2 $streamProvider = null)
+    {
+        $this->streamProvider = (null == $streamProvider) ? new SimpleStreamProvider() : $streamProvider;
+    }
+
+    /**
      * {@inheritdoc}
      * @throws Common\InvalidOperationException
      */
@@ -101,14 +110,6 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
 
-    /**
-     * @param  IStreamProvider2|null $streamProvider
-     * @return void
-     */
-    public function setStreamProvider(IStreamProvider2 $streamProvider = null)
-    {
-        $this->streamProvider = (null == $streamProvider) ? new SimpleStreamProvider() : $streamProvider;
-    }
     /**
      * @return IStreamProvider2
      */

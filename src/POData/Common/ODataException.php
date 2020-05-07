@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use Exception;
+
 /**
  * Class ODataException.
  */
-class ODataException extends \Exception
+class ODataException extends Exception
 {
     /**
      * The error code.
@@ -41,13 +43,16 @@ class ODataException extends \Exception
     }
 
     /**
-     * Get the status code.
+     * Creates an instance of ODataException
+     * representing syntax error in the query.
      *
-     * @return int
+     * @param string $message The error message
+     *
+     * @return ODataException
      */
-    public function getStatusCode()
+    public static function createSyntaxError($message)
     {
-        return $this->statusCode;
+        return self::createBadRequestError($message);
     }
 
     /**
@@ -61,19 +66,6 @@ class ODataException extends \Exception
     public static function createBadRequestError($message)
     {
         return new self($message, 400);
-    }
-
-    /**
-     * Creates an instance of ODataException
-     * representing syntax error in the query.
-     *
-     * @param string $message The error message
-     *
-     * @return ODataException
-     */
-    public static function createSyntaxError($message)
-    {
-        return self::createBadRequestError($message);
     }
 
     /**
@@ -163,5 +155,15 @@ class ODataException extends \Exception
     public static function notAcceptableError($message)
     {
         return new self($message, 406);
+    }
+
+    /**
+     * Get the status code.
+     *
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 }

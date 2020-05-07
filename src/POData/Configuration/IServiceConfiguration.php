@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Configuration;
 
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Common\Version;
 use POData\Providers\Metadata\ResourceSet;
@@ -91,7 +92,7 @@ interface IServiceConfiguration
      * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
-     * @throws \InvalidArgumentException when the entity set rights are not known or the resource set is not known
+     * @throws InvalidArgumentException when the entity set rights are not known or the resource set is not known
      * @return void
      */
     public function setEntitySetAccessRule(string $name, EntitySetRights $rights): void;
@@ -103,7 +104,7 @@ interface IServiceConfiguration
      *
      * @return int
      */
-    public function getEntitySetPageSize(ResourceSet $resourceSet): int ;
+    public function getEntitySetPageSize(ResourceSet $resourceSet): int;
 
     /**
      * Sets the maximum page size for an entity set resource.
@@ -113,8 +114,8 @@ interface IServiceConfiguration
      * @param int    $pageSize Page size for the entity set resource that is
      *                         specified in name
      *
+     * @throws InvalidArgumentException
      * @throws InvalidOperationException
-     * @throws \InvalidArgumentException
      * @return void
      */
     public function setEntitySetPageSize(string $name, int $pageSize): void;

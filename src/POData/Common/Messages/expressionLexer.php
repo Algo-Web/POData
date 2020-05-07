@@ -75,7 +75,7 @@ trait expressionLexer
         $position
     ) {
         return 'No applicable function found for \'' . $functionName . '\' at position ' . $position .
-               ' with the specified arguments. The functions considered are: ' . $protoTypes;
+            ' with the specified arguments. The functions considered are: ' . $protoTypes;
     }
 
     /**

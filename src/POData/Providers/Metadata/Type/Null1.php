@@ -29,7 +29,6 @@ class Null1 implements IType
      * @param IType $type Type to check compatibility
      *
      * @throws NotImplementedException
-     *
      * @return bool
      */
     public function isCompatibleWith(IType $type)
@@ -56,17 +55,6 @@ class Null1 implements IType
         $outValue = $value;
 
         return true;
-    }
-
-    /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'System.NULL';
     }
 
     /**
@@ -107,5 +95,16 @@ class Null1 implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'System.NULL';
     }
 }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-use POData\ObjectModel\ODataEntry;
+use DateTime;
+use DateTimeZone;
+use Exception;
+use InvalidArgumentException;
 use POData\Providers\Metadata\ResourceEntityType;
 
 /**
@@ -28,25 +31,25 @@ class ModelDeserialiser
      * @param ResourceEntityType $entityType Entity type to deserialise to
      * @param ODataEntry         $payload    Raw data to deserialise
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws Exception
+     * @throws InvalidArgumentException
      * @return mixed[]
      */
     public function bulkDeserialise(ResourceEntityType $entityType, ODataEntry $payload)
     {
         if (!isset($payload->type)) {
             $msg = 'ODataEntry payload type not set';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         $payloadType = $payload->type->term;
         $pay         = explode('.', $payloadType);
-        $payloadType = $pay[count($pay)-1];
+        $payloadType = $pay[count($pay) - 1];
         $actualType  = $entityType->getName();
 
         if ($payloadType !== $actualType) {
             $msg = 'Payload resource type does not match supplied resource type.';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         if (!isset(self::$nonKeyPropertiesCache[$actualType])) {
@@ -83,15 +86,15 @@ class ModelDeserialiser
                         if (1 < strlen($rawVal)) {
                             $valLen     = strlen($rawVal) - 6;
                             $offsetChek = $rawVal[$valLen];
-                            $timezone   = new \DateTimeZone('UTC');
+                            $timezone   = new DateTimeZone('UTC');
                             if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
                                 $rawTz    = substr($rawVal, $valLen);
                                 $rawVal   = substr($rawVal, 0, $valLen);
                                 $rawBitz  = explode('.', $rawVal);
                                 $rawVal   = $rawBitz[0];
-                                $timezone = new \DateTimeZone($rawTz);
+                                $timezone = new DateTimeZone($rawTz);
                             }
-                            $newValue = new \DateTime($rawVal, $timezone);
+                            $newValue = new DateTime($rawVal, $timezone);
                             // clamp assignable times to:
                             // after 1752, since OData DateTime epoch is apparently midnight 1 Jan 1753
                             // before 10000, since OData has a Y10K problem

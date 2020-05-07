@@ -10,6 +10,24 @@ namespace POData\Providers\Metadata\Type;
 class Binary implements IType
 {
     /**
+     * Checks equality of binary values.
+     *
+     * @param string $binary1 First binary value
+     * @param string $binary2 Second binary value
+     *
+     * @return bool
+     */
+    public static function binaryEqual($binary1, $binary2)
+    {
+        //str cmp will return true if they are both null, so check short circuit that..
+        if (null === $binary1 || null === $binary2) {
+            return false;
+        }
+
+        return 0 == strcmp($binary1, $binary2);
+    }
+
+    /**
      * Gets the type code
      * Note: implementation of IType::getTypeCode.
      *
@@ -74,14 +92,39 @@ class Binary implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
+     * Checks a value is binary.
      *
-     * @return string
+     * @param string $value     value to check in base64 form
+     * @param string &$outValue Processed value
+     *
+     * @return bool
      */
-    public function getFullTypeName()
+    public static function validateWithoutPrefix($value, &$outValue)
     {
-        return 'Edm.Binary';
+        $length = strlen($value);
+        if (0 == $length || 0 != $length % 2) {
+            return false;
+        }
+
+        if (!ctype_xdigit($value)) {
+            $outValue = null;
+
+            return false;
+        }
+
+        $outValue    = [];
+        $outValIndex = 0;
+        $valueIndex  = 0;
+        while ($valueIndex < $length) {
+            $ch0 = $value[$valueIndex];
+            $ch1 = $value[$valueIndex + 1];
+
+            $outValue[$outValIndex] = hexdec($ch0) << 4 + hexdec($ch1);
+            $valueIndex += 2;
+            ++$outValIndex;
+        }
+
+        return true;
     }
 
     /**
@@ -112,60 +155,6 @@ class Binary implements IType
     }
 
     /**
-     * Checks a value is binary.
-     *
-     * @param string $value     value to check in base64 form
-     * @param string &$outValue Processed value
-     *
-     * @return bool
-     */
-    public static function validateWithoutPrefix($value, &$outValue)
-    {
-        $length = strlen($value);
-        if (0 == $length || 0 != $length%2) {
-            return false;
-        }
-
-        if (!ctype_xdigit($value)) {
-            $outValue = null;
-
-            return false;
-        }
-
-        $outValue    = [];
-        $outValIndex = 0;
-        $valueIndex  = 0;
-        while ($valueIndex < $length) {
-            $ch0 = $value[$valueIndex];
-            $ch1 = $value[$valueIndex + 1];
-
-            $outValue[$outValIndex] = hexdec($ch0) << 4 + hexdec($ch1);
-            $valueIndex += 2;
-            ++$outValIndex;
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks equality of binary values.
-     *
-     * @param string $binary1 First binary value
-     * @param string $binary2 Second binary value
-     *
-     * @return bool
-     */
-    public static function binaryEqual($binary1, $binary2)
-    {
-        //str cmp will return true if they are both null, so check short circuit that..
-        if (null === $binary1 || null === $binary2) {
-            return false;
-        }
-
-        return 0 == strcmp($binary1, $binary2);
-    }
-
-    /**
      * Gets full name of the type implementing this interface in EDM namespace
      * Note: implementation of IType::getFullTypeName.
      *
@@ -174,5 +163,16 @@ class Binary implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Binary';
     }
 }

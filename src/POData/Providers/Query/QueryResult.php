@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace POData\Providers\Query;
 
+use InvalidArgumentException;
+
 /**
  * Class QueryResult.
  * @package POData\Providers\Query
@@ -30,9 +32,8 @@ class QueryResult
      * @param int|null $top
      * @param int|null $skip
      *
-     * @throws \InvalidArgumentException if $count is not numeric
-     *
-     * @return int the paging adjusted count
+     * @throws InvalidArgumentException if $count is not numeric
+     * @return int                      the paging adjusted count
      */
     public static function adjustCountForPaging(int $count, ?int $top, ?int $skip)
     {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use ReflectionException;
+use ReflectionProperty;
+
 /**
  * Class ReflectionHandler.
  * @package POData\Common
@@ -14,7 +17,7 @@ class ReflectionHandler
      * @param $entryObject
      * @param $property
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @return mixed
      */
     public static function getProperty(&$entryObject, $property)
@@ -25,9 +28,9 @@ class ReflectionHandler
         } else {
             if (null === $entryObject) {
                 $msg = 'Property POData\\Common\\ReflectionHandler::$' . $property . ' does not exist';
-                throw new \ReflectionException($msg);
+                throw new ReflectionException($msg);
             }
-            $reflectionProperty = new \ReflectionProperty(get_class($entryObject), $property);
+            $reflectionProperty = new ReflectionProperty(get_class($entryObject), $property);
             $reflectionProperty->setAccessible(true);
             $value = $reflectionProperty->getValue($entryObject);
         }
@@ -36,10 +39,10 @@ class ReflectionHandler
     }
 
     /**
-     * @param  object               $entity
-     * @param  string               $property
-     * @param  mixed                $value
-     * @throws \ReflectionException
+     * @param  object              $entity
+     * @param  string              $property
+     * @param  mixed               $value
+     * @throws ReflectionException
      */
     public static function setProperty(&$entity, $property, $value)
     {
@@ -47,7 +50,7 @@ class ReflectionHandler
         if (method_exists($entity, '__set')) {
             $entity->{$property} = $value;
         } else {
-            $reflect   = new \ReflectionProperty($entity, $property);
+            $reflect   = new ReflectionProperty($entity, $property);
             $oldAccess = $reflect->isPublic();
             $reflect->setAccessible(true);
             $reflect->setValue($entity, $value);

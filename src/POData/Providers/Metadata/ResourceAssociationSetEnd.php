@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 
 /**
@@ -64,7 +65,7 @@ class ResourceAssociationSetEnd
                 || (($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE())
                     && ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE())))
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetEndPropertyMustBeNavigationProperty(
                     $resourceProperty->getName(),
                     $resourceType->getFullName()
@@ -75,7 +76,7 @@ class ResourceAssociationSetEnd
         if (!$resourceSet->getResourceType()->isAssignableFrom($resourceType)
             && !$resourceType->isAssignableFrom($resourceSet->getResourceType())
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet(
                     $resourceType->getFullName(),
                     $resourceSet->getName()
@@ -85,7 +86,7 @@ class ResourceAssociationSetEnd
         if (null !== $concreteType) {
             if ($concreteType->isAbstract()) {
                 $msg = 'Concrete type must not be abstract if explicitly supplied';
-                throw new \InvalidArgumentException($msg);
+                throw new InvalidArgumentException($msg);
             }
             $concType = $concreteType;
         } else {

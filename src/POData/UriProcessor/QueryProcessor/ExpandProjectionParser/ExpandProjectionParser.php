@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceAssociationSet;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
-use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -19,6 +19,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
+use ReflectionException;
 
 /**
  * Class ExpandProjectionParser.
@@ -94,11 +95,10 @@ class ExpandProjectionParser
      * @param string              $select             The value of $select clause
      * @param ProvidersWrapper    $providerWrapper    Reference to metadata and query provider wrapper
      *
-     * @throws ODataException                           If any error occur while parsing expand and/or select clause
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
-     *
-     * @return RootProjectionNode Returns root of the 'Projection Tree'
+     * @throws ODataException            If any error occur while parsing expand and/or select clause
+     * @throws InvalidOperationException
+     * @throws ReflectionException
+     * @return RootProjectionNode        Returns root of the 'Projection Tree'
      */
     public static function parseExpandAndSelectClause(
         ResourceSetWrapper $resourceSetWrapper,
@@ -131,10 +131,10 @@ class ExpandProjectionParser
      *
      * @param string $expand Value of $expand clause
      *
-     * @throws ODataException                           If any error occurs while reading expand clause
-     *                                                  or building the projection tree
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ODataException            If any error occurs while reading expand clause
+     *                                   or building the projection tree
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      */
     private function parseExpand(?string $expand): void
     {
@@ -146,31 +146,49 @@ class ExpandProjectionParser
     }
 
     /**
-     * Read the given select clause and apply selection to the
-     * 'Projection Tree', mark the entire tree as selected if this
-     * clause is null
-     * Note: _parseExpand should to be called before the invocation
-     * of this function so that basic 'Projection Tree' with expand
-     * information will be ready.
+     * Read expand or select clause.
      *
-     * @param string $select Value of $select clause
+     * @param string $value    expand or select clause to read
+     * @param bool   $isSelect true means $value is value of select clause
+     *                         else value of expand clause
      *
-     * @throws ODataException If any error occurs while reading expand clause
-     *                        or applying selection to projection tree
+     * @throws ODataException
+     * @return array<array>   An array of 'PathSegment's, each of which is array of 'SubPathSegment's
      */
-    private function parseSelect(?string $select): void
+    private function readExpandOrSelect(string $value, bool $isSelect): array
     {
-        if (null === $select) {
-            $this->rootProjectionNode->markSubtreeAsSelected();
-        } else {
-            $pathSegments = $this->readExpandOrSelect($select, true);
-            $this->applySelectionToProjectionTree($pathSegments);
-            $this->rootProjectionNode->setSelectionSpecified();
-            $this->rootProjectionNode->removeNonSelectedNodes();
-            $this->rootProjectionNode->removeNodesAlreadyIncludedImplicitly();
-            //TODO: Move sort to parseExpandAndSelectClause function
-            $this->rootProjectionNode->sortNodes();
+        $pathSegments = [];
+        $lexer        = new ExpressionLexer($value);
+        $i            = 0;
+        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
+            $lastSegment = false;
+            if ($isSelect
+                && $lexer->getCurrentToken()->getId() == ExpressionTokenId::STAR()
+            ) {
+                $lastSegment    = true;
+                $subPathSegment = $lexer->getCurrentToken()->Text;
+                $lexer->nextToken();
+            } else {
+                $subPathSegment = $lexer->readDottedIdentifier();
+            }
+
+            if (!array_key_exists($i, $pathSegments)) {
+                $pathSegments[$i] = [];
+            }
+
+            $pathSegments[$i][] = $subPathSegment;
+            $tokenId            = $lexer->getCurrentToken()->getId();
+            if ($tokenId != ExpressionTokenId::END()) {
+                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH()) {
+                    $lexer->validateToken(ExpressionTokenId::COMMA());
+                    ++$i;
+                }
+
+                $lexer->nextToken();
+            }
         }
+
+        return $pathSegments;
     }
 
     /**
@@ -178,9 +196,9 @@ class ExpandProjectionParser
      *
      * @param array<array> $expandPathSegments Collection of expand paths
      *
-     * @throws ODataException                           If any error occurs while processing the expand path segments
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ODataException            If any error occurs while processing the expand path segments
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      */
     private function buildProjectionTree(array $expandPathSegments): void
     {
@@ -275,6 +293,42 @@ class ExpandProjectionParser
     }
 
     /**
+     * @return ProvidersWrapper
+     */
+    public function getProviderWrapper(): ProvidersWrapper
+    {
+        return $this->providerWrapper;
+    }
+
+    /**
+     * Read the given select clause and apply selection to the
+     * 'Projection Tree', mark the entire tree as selected if this
+     * clause is null
+     * Note: _parseExpand should to be called before the invocation
+     * of this function so that basic 'Projection Tree' with expand
+     * information will be ready.
+     *
+     * @param string $select Value of $select clause
+     *
+     * @throws ODataException If any error occurs while reading expand clause
+     *                        or applying selection to projection tree
+     */
+    private function parseSelect(?string $select): void
+    {
+        if (null === $select) {
+            $this->rootProjectionNode->markSubtreeAsSelected();
+        } else {
+            $pathSegments = $this->readExpandOrSelect($select, true);
+            $this->applySelectionToProjectionTree($pathSegments);
+            $this->rootProjectionNode->setSelectionSpecified();
+            $this->rootProjectionNode->removeNonSelectedNodes();
+            $this->rootProjectionNode->removeNodesAlreadyIncludedImplicitly();
+            //TODO: Move sort to parseExpandAndSelectClause function
+            $this->rootProjectionNode->sortNodes();
+        }
+    }
+
+    /**
      * Modify the 'Projection Tree' to include selection details.
      *
      * @param array<array<string>> $selectPathSegments Collection of select
@@ -344,7 +398,7 @@ class ExpandProjectionParser
                             )
                         );
                     } elseif ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE()
-                              && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE()) {
+                        && $resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE()) {
                         throw ODataException::createInternalServerError(
                             Messages::expandProjectionParserUnexpectedPropertyType()
                         );
@@ -374,59 +428,5 @@ class ExpandProjectionParser
                 }
             }
         }
-    }
-
-    /**
-     * Read expand or select clause.
-     *
-     * @param string $value    expand or select clause to read
-     * @param bool   $isSelect true means $value is value of select clause
-     *                         else value of expand clause
-     *
-     * @throws ODataException
-     * @return array<array>   An array of 'PathSegment's, each of which is array of 'SubPathSegment's
-     */
-    private function readExpandOrSelect(string $value, bool $isSelect): array
-    {
-        $pathSegments = [];
-        $lexer        = new ExpressionLexer($value);
-        $i            = 0;
-        while ($lexer->getCurrentToken()->getId() != ExpressionTokenId::END()) {
-            $lastSegment = false;
-            if ($isSelect
-                && $lexer->getCurrentToken()->getId() == ExpressionTokenId::STAR()
-            ) {
-                $lastSegment    = true;
-                $subPathSegment = $lexer->getCurrentToken()->Text;
-                $lexer->nextToken();
-            } else {
-                $subPathSegment = $lexer->readDottedIdentifier();
-            }
-
-            if (!array_key_exists($i, $pathSegments)) {
-                $pathSegments[$i] = [];
-            }
-
-            $pathSegments[$i][] = $subPathSegment;
-            $tokenId            = $lexer->getCurrentToken()->getId();
-            if ($tokenId != ExpressionTokenId::END()) {
-                if ($lastSegment || $tokenId != ExpressionTokenId::SLASH()) {
-                    $lexer->validateToken(ExpressionTokenId::COMMA());
-                    ++$i;
-                }
-
-                $lexer->nextToken();
-            }
-        }
-
-        return $pathSegments;
-    }
-
-    /**
-     * @return ProvidersWrapper
-     */
-    public function getProviderWrapper(): ProvidersWrapper
-    {
-        return $this->providerWrapper;
     }
 }

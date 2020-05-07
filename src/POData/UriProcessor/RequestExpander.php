@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace POData\UriProcessor;
 
 use POData\Common\InvalidOperationException;
+use POData\Common\ODataException;
 use POData\IService;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use ReflectionException;
 
 /**
  * Class RequestExpander.
@@ -64,51 +67,11 @@ class RequestExpander
     }
 
     /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return RequestDescription
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return ProvidersWrapper
-     */
-    public function getProviders()
-    {
-        return $this->providers;
-    }
-
-    /**
-     * Gets the data service instance.
-     *
-     * @return IService
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
-
-    /**
-     * Gets the segment stack instance.
-     *
-     * @return SegmentStack
-     */
-    public function getStack()
-    {
-        return $this->stack;
-    }
-
-    /**
      * Perform expansion.
      *
+     * @throws ODataException
+     * @throws ReflectionException
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
      * @return void
      */
     public function handleExpansion()
@@ -125,12 +88,64 @@ class RequestExpander
     }
 
     /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Pushes a segment for the root of the tree
+     * Note: Calls to this method should be balanced with calls to popSegment.
+     *
+     * @throws InvalidOperationException
+     * @return bool                      true if the segment was pushed, false otherwise
+     */
+    private function pushSegmentForRoot()
+    {
+        $segmentName               = $this->getRequest()->getContainerName();
+        $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
+
+        return $this->pushSegment($segmentName, $segmentResourceSetWrapper);
+    }
+
+    /**
+     * Pushes information about the segment whose instance is going to be
+     * retrieved from the IDSQP implementation
+     * Note: Calls to this method should be balanced with calls to popSegment.
+     *
+     * @param string             $segmentName         Name of segment to push
+     * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
+     *                                                to push
+     *
+     * @throws InvalidOperationException
+     * @return bool                      true if the segment was push, false otherwise
+     */
+    private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
+    {
+        return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
+    }
+
+    /**
+     * Gets the segment stack instance.
+     *
+     * @return SegmentStack
+     */
+    public function getStack()
+    {
+        return $this->stack;
+    }
+
+    /**
      * Execute queries for expansion.
      *
-     * @param  array|mixed                   $result Resource(s) whose navigation properties needs to be expanded
+     * @param  array|mixed               $result Resource(s) whose navigation properties needs to be expanded
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @throws ODataException
+     * @throws ReflectionException
      */
     private function executeExpansion($result)
     {
@@ -148,7 +163,7 @@ class RequestExpander
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $resourceType = $expandedProjectionNode->getResourceType();
             $isCollection = ResourcePropertyKind::RESOURCESET_REFERENCE()
-                            == $expandedProjectionNode->getResourceProperty()->getKind();
+                == $expandedProjectionNode->getResourceProperty()->getKind();
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
 
             foreach ($result as $entry) {
@@ -175,79 +190,6 @@ class RequestExpander
                     );
                 }
             }
-        }
-    }
-
-    /**
-     * Resource set wrapper for the resource being retrieved.
-     *
-     * @return ResourceSetWrapper
-     */
-    private function getCurrentResourceSetWrapper()
-    {
-        $wraps = $this->getStack()->getSegmentWrappers();
-        $count = count($wraps);
-
-        return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $wraps[$count - 1];
-    }
-
-    /**
-     * Pushes a segment for the root of the tree
-     * Note: Calls to this method should be balanced with calls to popSegment.
-     *
-     * @throws InvalidOperationException
-     * @return bool                      true if the segment was pushed, false otherwise
-     */
-    private function pushSegmentForRoot()
-    {
-        $segmentName               = $this->getRequest()->getContainerName();
-        $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
-
-        return $this->pushSegment($segmentName, $segmentResourceSetWrapper);
-    }
-
-    /**
-     * Pushes a segment for the current navigation property being written out.
-     * Note: Refer 'ObjectModelSerializerNotes.txt' for more details about
-     * 'Segment Stack' and this method.
-     * Note: Calls to this method should be balanced with calls to popSegment.
-     *
-     * @param ResourceProperty &$resourceProperty Current navigation property
-     *                                            being written out
-     *
-     * @throws InvalidOperationException     If this function invoked with non-navigation property instance
-     * @throws \POData\Common\ODataException
-     *
-     * @return bool true if a segment was pushed, false otherwise
-     */
-    private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
-    {
-        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()) {
-            if (empty($this->getStack()->getSegmentNames())) {
-                throw new InvalidOperationException('!is_empty($this->getStack()->getSegmentNames())');
-            }
-            $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
-            $currentResourceType       = $currentResourceSetWrapper->getResourceType();
-            $currentResourceSetWrapper = $this->getService()
-                ->getProvidersWrapper()
-                ->getResourceSetWrapperForNavigationProperty(
-                    $currentResourceSetWrapper,
-                    $currentResourceType,
-                    $resourceProperty
-                );
-
-            if (null === $currentResourceSetWrapper) {
-                throw new InvalidOperationException('!null($currentResourceSetWrapper)');
-            }
-
-            return $this->pushSegment(
-                $resourceProperty->getName(),
-                $currentResourceSetWrapper
-            );
-        } else {
-            throw new InvalidOperationException(
-                'pushSegmentForNavigationProperty should not be called with non-entity type'
-            );
         }
     }
 
@@ -300,43 +242,10 @@ class RequestExpander
     }
 
     /**
-     * Pushes information about the segment whose instance is going to be
-     * retrieved from the IDSQP implementation
-     * Note: Calls to this method should be balanced with calls to popSegment.
-     *
-     * @param string             $segmentName         Name of segment to push
-     * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
-     *                                                to push
-     *
-     * @throws InvalidOperationException
-     * @return bool                      true if the segment was push, false otherwise
-     */
-    private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
-    {
-        return $this->getStack()->pushSegment($segmentName, $resourceSetWrapper);
-    }
-
-    /**
-     * Pops segment information from the 'Segment Stack'
-     * Note: Calls to this method should be balanced with previous calls
-     * to _pushSegment.
-     *
-     * @param bool $needPop Is a pop required. Only true if last push
-     *                      was successful
-     *
-     * @throws InvalidOperationException If found un-balanced call
-     *                                   with _pushSegment
-     */
-    private function popSegment($needPop)
-    {
-        $this->getStack()->popSegment($needPop);
-    }
-
-    /**
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      *
-     * @throws \POData\Common\ODataException
+     * @throws ODataException
      * @return object[]|null
      */
     private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
@@ -362,48 +271,38 @@ class RequestExpander
     }
 
     /**
-     * @param ExpandedProjectionNode $expandedProjectionNode
-     * @param $entry
-     * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string                                  $expandedPropertyName
+     * Resource set wrapper for the resource being retrieved.
      *
-     * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @return ResourceSetWrapper
      */
-    private function executeSingleExpansionGetRelated(
-        $expandedProjectionNode,
-        $entry,
-        $resourceType,
-        $expandedPropertyName
-    ) {
-        $currentResourceSet             = $this->getCurrentResourceSetWrapper()->getResourceSet();
-        $resourceSetOfProjectedProperty = $expandedProjectionNode
-            ->getResourceSetWrapper()
-            ->getResourceSet();
-        $projectedProperty = $expandedProjectionNode->getResourceProperty();
-        $result            = $this->getProviders()->getRelatedResourceReference(
-            $currentResourceSet,
-            $entry,
-            $resourceSetOfProjectedProperty,
-            $projectedProperty
-        );
-        $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
-        if (null !== $result) {
-            $this->pushPropertyToNavigation($result, $expandedProjectionNode);
-        }
+    private function getCurrentResourceSetWrapper()
+    {
+        $wraps = $this->getStack()->getSegmentWrappers();
+        $count = count($wraps);
+
+        return 0 == $count ? $this->getRequest()->getTargetResourceSetWrapper() : $wraps[$count - 1];
+    }
+
+    /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return ProvidersWrapper
+     */
+    public function getProviders()
+    {
+        return $this->providers;
     }
 
     /**
      * @param $entry
      * @param $result
-     * @param ExpandedProjectionNode                  $expandedProjectionNode
-     * @param \POData\Providers\Metadata\ResourceType $resourceType
-     * @param string                                  $expandedPropertyName
+     * @param ExpandedProjectionNode $expandedProjectionNode
+     * @param ResourceType           $resourceType
+     * @param string                 $expandedPropertyName
      *
      * @throws InvalidOperationException
-     * @throws \ReflectionException
-     * @throws \POData\Common\ODataException
+     * @throws ReflectionException
+     * @throws ODataException
      */
     private function executeCollectionExpansionProcessExpansion(
         $entry,
@@ -432,8 +331,8 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      *
      * @throws InvalidOperationException
-     * @throws \POData\Common\ODataException
-     * @throws \ReflectionException
+     * @throws ODataException
+     * @throws ReflectionException
      */
     private function pushPropertyToNavigation($result, $expandedProjectionNode)
     {
@@ -441,5 +340,108 @@ class RequestExpander
         $needPop           = $this->pushSegmentForNavigationProperty($projectedProperty);
         $this->executeExpansion($result);
         $this->popSegment(true === $needPop);
+    }
+
+    /**
+     * Pushes a segment for the current navigation property being written out.
+     * Note: Refer 'ObjectModelSerializerNotes.txt' for more details about
+     * 'Segment Stack' and this method.
+     * Note: Calls to this method should be balanced with calls to popSegment.
+     *
+     * @param ResourceProperty &$resourceProperty Current navigation property
+     *                                            being written out
+     *
+     * @throws ODataException
+     * @throws InvalidOperationException If this function invoked with non-navigation property instance
+     * @return bool                      true if a segment was pushed, false otherwise
+     */
+    private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+    {
+        if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY()) {
+            if (empty($this->getStack()->getSegmentNames())) {
+                throw new InvalidOperationException('!is_empty($this->getStack()->getSegmentNames())');
+            }
+            $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
+            $currentResourceType       = $currentResourceSetWrapper->getResourceType();
+            $currentResourceSetWrapper = $this->getService()
+                ->getProvidersWrapper()
+                ->getResourceSetWrapperForNavigationProperty(
+                    $currentResourceSetWrapper,
+                    $currentResourceType,
+                    $resourceProperty
+                );
+
+            if (null === $currentResourceSetWrapper) {
+                throw new InvalidOperationException('!null($currentResourceSetWrapper)');
+            }
+
+            return $this->pushSegment(
+                $resourceProperty->getName(),
+                $currentResourceSetWrapper
+            );
+        } else {
+            throw new InvalidOperationException(
+                'pushSegmentForNavigationProperty should not be called with non-entity type'
+            );
+        }
+    }
+
+    /**
+     * Gets the data service instance.
+     *
+     * @return IService
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * Pops segment information from the 'Segment Stack'
+     * Note: Calls to this method should be balanced with previous calls
+     * to _pushSegment.
+     *
+     * @param bool $needPop Is a pop required. Only true if last push
+     *                      was successful
+     *
+     * @throws InvalidOperationException If found un-balanced call
+     *                                   with _pushSegment
+     */
+    private function popSegment($needPop)
+    {
+        $this->getStack()->popSegment($needPop);
+    }
+
+    /**
+     * @param ExpandedProjectionNode $expandedProjectionNode
+     * @param $entry
+     * @param ResourceType $resourceType
+     * @param string       $expandedPropertyName
+     *
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws ReflectionException
+     */
+    private function executeSingleExpansionGetRelated(
+        $expandedProjectionNode,
+        $entry,
+        $resourceType,
+        $expandedPropertyName
+    ) {
+        $currentResourceSet             = $this->getCurrentResourceSetWrapper()->getResourceSet();
+        $resourceSetOfProjectedProperty = $expandedProjectionNode
+            ->getResourceSetWrapper()
+            ->getResourceSet();
+        $projectedProperty = $expandedProjectionNode->getResourceProperty();
+        $result            = $this->getProviders()->getRelatedResourceReference(
+            $currentResourceSet,
+            $entry,
+            $resourceSetOfProjectedProperty,
+            $projectedProperty
+        );
+        $resourceType->setPropertyValue($entry, $expandedPropertyName, $result);
+        if (null !== $result) {
+            $this->pushPropertyToNavigation($result, $expandedProjectionNode);
+        }
     }
 }

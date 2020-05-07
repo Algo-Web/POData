@@ -135,6 +135,26 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
+     * Sets if output should be well formatted for human review.
+     *
+     * @param bool $on True if output should be well formatted
+     */
+    public function setPrettyOutput(bool $on): void
+    {
+        $this->prettyPrint = $on;
+    }
+
+    /**
+     * Sets the characters that represent line endings.
+     *
+     * @param string $eol the characters that should be used for line endings
+     */
+    public function setLineEndings(string $eol): void
+    {
+        $this->eol = $eol;
+    }
+
+    /**
      * Gets maximum number of segments to be expanded allowed in a request.
      *
      * @return int
@@ -155,6 +175,26 @@ class ServiceConfiguration implements IServiceConfiguration
             $maxExpandCount,
             'setMaxExpandCount'
         );
+    }
+
+    /**
+     * Checks that the parameter to a function is numeric and is not negative.
+     *
+     * @param int    $value        The value of parameter to check
+     * @param string $functionName The name of the function that receives above value
+     *
+     * @throws InvalidArgumentException
+     * @return int
+     */
+    private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
+    {
+        if ($value < 0) {
+            throw new InvalidArgumentException(
+                Messages::commonArgumentShouldBeNonNegative($value, $functionName)
+            );
+        }
+
+        return $value;
     }
 
     /**
@@ -212,6 +252,16 @@ class ServiceConfiguration implements IServiceConfiguration
             $maxResultPerCollection,
             'setMaxResultsPerCollection'
         );
+    }
+
+    /**
+     * Whether size of a page has been defined for any entity set.
+     *
+     * @return bool
+     */
+    private function isPageSizeDefined()
+    {
+        return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
     }
 
     /**
@@ -408,16 +458,6 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Specify whether to validate the ETag or not.
-     *
-     * @param bool $validate True if ETag needs to validated, false otherwise
-     */
-    public function setValidateETagHeader(bool $validate): void
-    {
-        $this->validateETagHeader = $validate;
-    }
-
-    /**
      * Gets whether to validate the ETag or not.
      *
      * @return bool True if ETag needs to validated, false
@@ -432,34 +472,13 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Checks that the parameter to a function is numeric and is not negative.
+     * Specify whether to validate the ETag or not.
      *
-     * @param int    $value        The value of parameter to check
-     * @param string $functionName The name of the function that receives above value
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return int
+     * @param bool $validate True if ETag needs to validated, false otherwise
      */
-    private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
+    public function setValidateETagHeader(bool $validate): void
     {
-        if ($value < 0) {
-            throw new InvalidArgumentException(
-                Messages::commonArgumentShouldBeNonNegative($value, $functionName)
-            );
-        }
-
-        return $value;
-    }
-
-    /**
-     * Whether size of a page has been defined for any entity set.
-     *
-     * @return bool
-     */
-    private function isPageSizeDefined()
-    {
-        return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
+        $this->validateETagHeader = $validate;
     }
 
     /**
@@ -480,25 +499,5 @@ class ServiceConfiguration implements IServiceConfiguration
     public function getPrettyOutput(): bool
     {
         return $this->prettyPrint;
-    }
-
-    /**
-     * Sets the characters that represent line endings.
-     *
-     * @param string $eol the characters that should be used for line endings
-     */
-    public function setLineEndings(string $eol): void
-    {
-        $this->eol = $eol;
-    }
-
-    /**
-     * Sets if output should be well formatted for human review.
-     *
-     * @param bool $on True if output should be well formatted
-     */
-    public function setPrettyOutput(bool $on): void
-    {
-        $this->prettyPrint = $on;
     }
 }

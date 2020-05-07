@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Writers;
 
+use Exception;
 use POData\Common\HttpStatus;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
@@ -25,7 +26,7 @@ class ResponseWriter
      * @param mixed              $entityModel         OData model instance
      * @param string             $responseContentType Content type of the response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function write(
         IService $service,
@@ -44,17 +45,17 @@ class ResponseWriter
                 $responseContentType
             );
             if (null === $writer) {
-                throw new \Exception(Messages::noWriterToHandleRequest());
+                throw new Exception(Messages::noWriterToHandleRequest());
             }
             $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
         } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
-                  && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
+            && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = mb_convert_encoding($request->getTargetResult(), 'UTF-8');
         } elseif (MimeTypes::MIME_APPLICATION_OCTETSTREAM == $responseContentType
-                  || TargetKind::MEDIA_RESOURCE() == $targetKind
+            || TargetKind::MEDIA_RESOURCE() == $targetKind
         ) {
             // Binary property or media resource
             if (TargetKind::MEDIA_RESOURCE() == $request->getTargetKind()) {
@@ -80,13 +81,13 @@ class ResponseWriter
                 $responseContentType
             );
             if (null === $writer) {
-                throw new \Exception(Messages::noWriterToHandleRequest());
+                throw new Exception(Messages::noWriterToHandleRequest());
             }
             $segments = $request->getSegments();
             $numSeg   = count($segments);
             if (1 < $numSeg && '$links' == $segments[$numSeg - 2]->getIdentifier()) {
                 if (null !== $entityModel) {
-                    throw new \Exception(Messages::modelPayloadOnLinkModification());
+                    throw new Exception(Messages::modelPayloadOnLinkModification());
                 }
             } else {
                 assert(null !== $entityModel, 'EntityModel must not be null when not manipulating links');

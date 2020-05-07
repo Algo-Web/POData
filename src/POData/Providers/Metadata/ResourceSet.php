@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
-use POData\Common\Messages;
+use InvalidArgumentException;
 
 /**
  * Class ResourceSet Represents entity set.
@@ -34,7 +34,7 @@ class ResourceSet
      * @param ResourceEntityType $resourceType Type ResourceType describing the resource
      *                                         this entity set holds
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($name, ResourceEntityType $resourceType)
     {

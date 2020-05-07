@@ -6,8 +6,6 @@ namespace POData\Providers\Stream;
 
 use POData\Common\ODataException;
 use POData\OperationContext\IOperationContext;
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class IStreamProvider.
@@ -99,9 +97,8 @@ interface IStreamProvider
      *                                                for the current operation
      *
      * @throws ODataException if a valid stream cannot be returned. Null should never be returned from this method
-     *
-     * @return mixed A valid default stream which is associated with the entity,  Null should never be returned
-     *               from this method
+     * @return mixed          A valid default stream which is associated with the entity,  Null should never be returned
+     *                        from this method
      */
     public function getReadStream($entity, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 
@@ -135,9 +132,8 @@ interface IStreamProvider
      *
      * @throws ODataException if a valid stream content type
      *                        associated with the entity specified could not be returned
-     *
-     * @return string Valid Content-Type string for the stream
-     *                associated with the entity
+     * @return string         Valid Content-Type string for the stream
+     *                        associated with the entity
      */
     public function getStreamContentType($entity, IOperationContext $operationContext);
 

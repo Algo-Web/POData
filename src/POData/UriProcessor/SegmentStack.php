@@ -75,6 +75,28 @@ class SegmentStack
     }
 
     /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        assert(null != $this->request, 'Request must not be null');
+
+        return $this->request;
+    }
+
+    /**
+     * Sets reference to the request submitted by client.
+     *
+     * @param RequestDescription $request
+     */
+    public function setRequest(RequestDescription $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
      * Pops segment information from the 'Segment Stack'
      * Note: Calls to this method should be balanced with previous calls
      * to _pushSegment.
@@ -119,27 +141,5 @@ class SegmentStack
     public function getSegmentWrappers()
     {
         return $this->segmentResourceSetWrappers;
-    }
-
-    /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return RequestDescription
-     */
-    public function getRequest()
-    {
-        assert(null != $this->request, 'Request must not be null');
-
-        return $this->request;
-    }
-
-    /**
-     * Sets reference to the request submitted by client.
-     *
-     * @param RequestDescription $request
-     */
-    public function setRequest(RequestDescription $request)
-    {
-        $this->request = $request;
     }
 }

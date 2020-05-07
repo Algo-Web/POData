@@ -55,17 +55,6 @@ class SByte implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.SByte';
-    }
-
-    /**
      * Converts the given string value to sbyte type.
      * Note: This function will not perform any conversion.
      *
@@ -101,5 +90,16 @@ class SByte implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.SByte';
     }
 }

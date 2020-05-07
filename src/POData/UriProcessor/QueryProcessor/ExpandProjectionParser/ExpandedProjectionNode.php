@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use InvalidArgumentException;
-use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
@@ -222,21 +220,6 @@ class ExpandedProjectionNode extends ProjectionNode
     }
 
     /**
-     * An expansion leads by this node results in a collection of entities,
-     * this is the resource type of these entities, This is usually the
-     * resource type of the 'ResourceSetWrapper' for this node, but it can
-     * also be a derived type of ResourceSetWrapper::ResourceType, this can
-     * happen if navigation property points to a resource set but uses a
-     * derived type.
-     *
-     * @return ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->resourceProperty->getResourceType();
-    }
-
-    /**
      * Gets array of child nodes.
      *
      * @return ProjectionNode[]|ExpandedProjectionNode[]
@@ -297,6 +280,16 @@ class ExpandedProjectionNode extends ProjectionNode
     }
 
     /**
+     * To check whether this node is selected or not.
+     *
+     * @return bool
+     */
+    public function isSelectionFound()
+    {
+        return $this->selectionFound;
+    }
+
+    /**
      * To set selection status of this node, When we have seen a $select
      * path segment that selects the expanded property represented by
      * this node then this function will be used to mark this node as selected.
@@ -308,16 +301,6 @@ class ExpandedProjectionNode extends ProjectionNode
     public function setSelectionFound($isSelectionFound = true)
     {
         $this->selectionFound = boolval($isSelectionFound);
-    }
-
-    /**
-     * To check whether this node is selected or not.
-     *
-     * @return bool
-     */
-    public function isSelectionFound()
-    {
-        return $this->selectionFound;
     }
 
     /**
@@ -511,5 +494,20 @@ class ExpandedProjectionNode extends ProjectionNode
                 }
             }
         }
+    }
+
+    /**
+     * An expansion leads by this node results in a collection of entities,
+     * this is the resource type of these entities, This is usually the
+     * resource type of the 'ResourceSetWrapper' for this node, but it can
+     * also be a derived type of ResourceSetWrapper::ResourceType, this can
+     * happen if navigation property points to a resource set but uses a
+     * derived type.
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceProperty->getResourceType();
     }
 }
