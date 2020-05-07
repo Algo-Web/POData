@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace POData\Readers;
 
 use POData\Common\Version;
-use POData\Writers\IODataWriter;
 
 /**
  * Class ODataReaderRegistry.

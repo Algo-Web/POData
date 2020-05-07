@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata\Type;
 
-use Mockery\Matcher\Not;
 use POData\Common\NotImplementedException;
 
 /**

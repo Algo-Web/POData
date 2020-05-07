@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace POData\Readers\Atom\Processors\Entry;
 
 use POData\Common\ODataConstants;
-use POData\ObjectModel\AtomObjectModel\AtomContent;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\Readers\Atom\Processors\BaseNodeHandler;

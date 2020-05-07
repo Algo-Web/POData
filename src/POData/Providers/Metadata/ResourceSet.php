@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
-use POData\Common\Messages;
-
 /**
  * Class ResourceSet Represents entity set.
  *

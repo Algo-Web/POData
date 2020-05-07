@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace POData\OperationContext;
 
-use POData\Common\Url;
-
 /**
  * Interface IHTTPRequest.
  * @package POData\OperationContext

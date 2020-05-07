@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
-use POData\Providers\Metadata\Type\TypeCode;
 
 /**
  * Class SimpleMetadataProvider.

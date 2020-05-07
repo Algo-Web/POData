@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpandProjectionParser;
 
-use InvalidArgumentException;
-use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;

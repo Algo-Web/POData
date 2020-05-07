@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
 /**

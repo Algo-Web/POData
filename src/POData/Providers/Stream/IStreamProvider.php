@@ -6,8 +6,6 @@ namespace POData\Providers\Stream;
 
 use POData\Common\ODataException;
 use POData\OperationContext\IOperationContext;
-use POData\Providers\Metadata\ResourceStreamInfo;
-use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class IStreamProvider.

@@ -9,8 +9,6 @@ declare(strict_types=1);
  */
 namespace POData\ObjectModel\AtomObjectModel;
 
-use POData\ObjectModel\ODataProperty;
-
 /**
  * Class AtomContent.
  * @package POData\ObjectModel\AtomObjectModel

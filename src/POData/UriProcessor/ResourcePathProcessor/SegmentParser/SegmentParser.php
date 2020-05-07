@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
-use Illuminate\Support\Str;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;

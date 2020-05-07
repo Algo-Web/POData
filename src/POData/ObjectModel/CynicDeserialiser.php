@@ -10,7 +10,6 @@ use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 /**
