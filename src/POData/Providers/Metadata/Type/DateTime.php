@@ -209,6 +209,12 @@ class DateTime implements IType
         return $date->format('s');
     }
 
+    /**
+     * gets a datetime object for now either internally or from a time provider
+     *
+     * @return \DateTime a date time object that represents "now"
+     * @throws \Exception
+     */
     public static function now(): \DateTime
     {
 
