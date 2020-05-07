@@ -391,7 +391,7 @@ class ResourceTypeTest extends TestCase
      */
     public function propertyTypeMatchProvider(): array
     {
-        $result = [];
+        $result   = [];
         $result[] = [2, 1, true];
         $result[] = [2, 2, false];
         $result[] = [2, 3, false];
@@ -422,8 +422,8 @@ class ResourceTypeTest extends TestCase
     /**
      * @dataProvider propertyTypeMatchProvider
      *
-     * @param int $propKind
-     * @param int $typeKind
+     * @param int  $propKind
+     * @param int  $typeKind
      * @param bool $expected
      */
     public function testisResourceKindValidForPropertyKind(int $propKind, int $typeKind, bool $expected)

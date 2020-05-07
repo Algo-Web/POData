@@ -322,7 +322,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $op   = new OperationContextAdapter($request);
         $host = new ServiceHost($op);
 
-        $meta  = NorthWindMetadata::Create();
+        $meta     = NorthWindMetadata::Create();
         $provider = m::mock(IExpressionProvider::class);
 
         $query = m::mock(IQueryProvider::class);

@@ -16,7 +16,7 @@ use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use POData\Readers\Atom\Processors\Entry\PropertyProcessor;
 
 /**
- * Class EntryProcessor
+ * Class EntryProcessor.
  * @package POData\Readers\Atom\Processors
  */
 class EntryProcessor extends BaseNodeHandler

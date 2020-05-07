@@ -9,7 +9,7 @@ use POData\Common\Version;
 use POData\Writers\IODataWriter;
 
 /**
- * Class ODataReaderRegistry
+ * Class ODataReaderRegistry.
  * @package POData\Readers
  */
 class ODataReaderRegistry

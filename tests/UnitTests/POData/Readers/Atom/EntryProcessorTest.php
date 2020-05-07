@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 14/03/20
- * Time: 11:56 PM
+ * Time: 11:56 PM.
  */
-
 namespace UnitTests\POData\Readers\Atom;
 
 use POData\Common\ODataConstants;
@@ -15,7 +16,7 @@ use POData\Readers\Atom\Processors\EntryProcessor;
 use UnitTests\POData\TestCase;
 
 /**
- * Class EntryProcessorTest
+ * Class EntryProcessorTest.
  * @package UnitTests\POData\Readers\Atom
  */
 class EntryProcessorTest extends TestCase
