@@ -30,9 +30,9 @@ class ResourceFunctionType
 
     /**
      * ResourceFunctionType constructor.
-     * @param string|array $functionName
+     * @param string|array                $functionName
      * @param FunctionImportAnonymousType $type
-     * @param ResourceType $resource
+     * @param ResourceType                $resource
      */
     public function __construct($functionName, FunctionImportAnonymousType $type, ResourceType $resource)
     {
@@ -49,7 +49,7 @@ class ResourceFunctionType
         $isArray = is_array($functionName);
         if ($isArray && 1 == count($functionName)) {
             $builtFunctionName = $functionName[0];
-            $isArray = false;
+            $isArray           = false;
         } else {
             $builtFunctionName = $functionName;
         }
@@ -74,7 +74,7 @@ class ResourceFunctionType
             }
             if (is_string($builtFunctionName[0])) {
                 $builtFunctionName[0] = trim($builtFunctionName[0]);
-                $func = $builtFunctionName[0];
+                $func                 = $builtFunctionName[0];
                 if ('' == $func) {
                     $msg = 'First element of FunctionName must not be empty';
                     throw new InvalidArgumentException($msg);
@@ -96,7 +96,7 @@ class ResourceFunctionType
         }
 
         $this->functionName = $builtFunctionName;
-        $this->baseType = $type;
+        $this->baseType     = $type;
         $this->resourceType = $resource;
     }
 
@@ -141,15 +141,15 @@ class ResourceFunctionType
     }
 
     /**
-     * @param array $parms
+     * @param  array $parms
      * @return mixed
      */
     public function get(array $parms = [])
     {
         // check inputs
-        $baseParms = $this->getParms();
+        $baseParms     = $this->getParms();
         $expectedParms = count($baseParms);
-        $actualParms = count($parms);
+        $actualParms   = count($parms);
         if ($expectedParms != $actualParms) {
             $msg = 'Was expecting ' . $expectedParms . ' arguments, received ' . $actualParms . ' instead';
             throw new InvalidArgumentException($msg);

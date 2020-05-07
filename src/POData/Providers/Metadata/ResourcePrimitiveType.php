@@ -22,13 +22,13 @@ class ResourcePrimitiveType extends ResourceType
     public function __construct(IType $primitive)
     {
         $resourceTypeKind = ResourceTypeKind::PRIMITIVE();
-        $bitz = explode('.', $primitive->getName());
-        $name = array_pop($bitz);
-        $namespaceName = null;
+        $bitz             = explode('.', $primitive->getName());
+        $name             = array_pop($bitz);
+        $namespaceName    = null;
         if (0 < count($bitz)) {
             $namespaceName = implode('.', $bitz);
         }
-        $baseType = null;
+        $baseType   = null;
         $isAbstract = false;
         parent::__construct($primitive, $resourceTypeKind, $name, $namespaceName, $baseType, $isAbstract);
     }

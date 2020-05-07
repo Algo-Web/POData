@@ -94,10 +94,9 @@ class ServiceHost
      * Gets the absolute request Uri as Url instance
      * Note: This method will be called first time from constructor.
      *
-     * @return Url
      * @throws UrlFormatException
-     *
      * @throws ODataException     if AbsoluteRequestUri is not a valid URI
+     * @return Url
      */
     public function getAbsoluteRequestUri(): Url
     {
@@ -121,7 +120,7 @@ class ServiceHost
 
             // We need the absolute uri only not associated components
             // (query, fragments etc..)
-            $this->absoluteRequestUri = new Url($this->absoluteRequestUriAsString);
+            $this->absoluteRequestUri         = new Url($this->absoluteRequestUriAsString);
             $this->absoluteRequestUriAsString = rtrim($this->absoluteRequestUriAsString, '/');
         }
 
@@ -157,9 +156,9 @@ class ServiceHost
                 throw ODataException::createInternalServerError(Messages::hostMalFormedBaseUriInConfig(false));
             }
 
-            $segments = $this->absoluteServiceUri->getSegments();
+            $segments    = $this->absoluteServiceUri->getSegments();
             $lastSegment = $segments[count($segments) - 1];
-            $sLen = strlen('.svc');
+            $sLen        = strlen('.svc');
             $endsWithSvc = (0 === substr_compare($lastSegment, '.svc', -$sLen, $sLen));
             if (!$endsWithSvc
                 || null !== $this->absoluteServiceUri->getQuery()
@@ -170,9 +169,9 @@ class ServiceHost
 
             if (!$isAbsoluteServiceUri) {
                 $requestUriSegments = $this->getAbsoluteRequestUri()->getSegments();
-                $requestUriScheme = $this->getAbsoluteRequestUri()->getScheme();
-                $requestUriPort = $this->getAbsoluteRequestUri()->getPort();
-                $i = count($requestUriSegments) - 1;
+                $requestUriScheme   = $this->getAbsoluteRequestUri()->getScheme();
+                $requestUriPort     = $this->getAbsoluteRequestUri()->getPort();
+                $i                  = count($requestUriSegments) - 1;
                 // Find index of segment in the request uri that end with .svc
                 // There will be always a .svc segment in the request uri otherwise
                 // uri redirection will not happen.
@@ -251,7 +250,7 @@ class ServiceHost
      * Translates the short $format forms into the full mime type forms.
      *
      * @param Version $responseVersion the version scheme to interpret the short form with
-     * @param string $format the short $format form
+     * @param string  $format          the short $format form
      *
      * @return string the full mime type corresponding to the short format form for the given version
      */
@@ -339,10 +338,10 @@ class ServiceHost
         reset($queryOptions);
         $namesFound = [];
         while ($queryOption = current($queryOptions)) {
-            $optionName = key($queryOption);
+            $optionName  = key($queryOption);
             $optionValue = current($queryOption);
             if (!is_string($optionValue)) {
-                $optionName = array_keys($optionValue)[0];
+                $optionName  = array_keys($optionValue)[0];
                 $optionValue = $optionValue[$optionName];
             }
             if (empty($optionName)) {
@@ -441,7 +440,7 @@ class ServiceHost
     }
 
     /**
-     * @param string $headerType
+     * @param  string      $headerType
      * @return null|string
      */
     private function getRequestHeader(string $headerType): ?string
@@ -540,7 +539,7 @@ class ServiceHost
     /**
      * Sets the HTTP MIME type of the output stream.
      *
-     * @param string $value The HTTP MIME type
+     * @param  string $value The HTTP MIME type
      * @return void
      */
     public function setResponseContentType($value): void
@@ -553,8 +552,8 @@ class ServiceHost
      *
      * @param string $value The content length
      *
-     * @return void
      * @throws ODataException
+     * @return void
      */
     public function setResponseContentLength($value): void
     {
@@ -663,7 +662,7 @@ class ServiceHost
     /**
      * Add a header to response header collection.
      *
-     * @param string $headerName The name of the header
+     * @param string $headerName  The name of the header
      * @param string $headerValue The value of the header
      */
     public function addResponseHeader(string $headerName, string $headerValue): void

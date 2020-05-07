@@ -39,12 +39,12 @@ class VoidType implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
-     * @return bool
      * @throws NotImplementedException
+     * @return bool
      */
     public function validate($value, &$outValue)
     {
@@ -57,8 +57,8 @@ class VoidType implements IType
      *
      * @param string $stringValue value to convert
      *
-     * @return void
      * @throws NotImplementedException
+     * @return void
      */
     public function convert($stringValue)
     {
@@ -70,8 +70,8 @@ class VoidType implements IType
      *
      * @param string $value value to convert to OData
      *
-     * @return void
      * @throws NotImplementedException
+     * @return void
      */
     public function convertToOData($value)
     {

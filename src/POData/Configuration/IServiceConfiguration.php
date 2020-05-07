@@ -25,7 +25,7 @@ interface IServiceConfiguration
     /**
      * Sets maximum number of segments to be expanded allowed in a request.
      *
-     * @param int $maxExpandCount Maximum number of segments to be expanded
+     * @param  int  $maxExpandCount Maximum number of segments to be expanded
      * @return void
      */
     public function setMaxExpandCount(int $maxExpandCount): void;
@@ -40,7 +40,7 @@ interface IServiceConfiguration
     /**
      * Sets the maximum number of segments in a single $expand path.
      *
-     * @param int $maxExpandDepth Maximum number of segments in a single $expand path
+     * @param  int  $maxExpandDepth Maximum number of segments in a single $expand path
      * @return void
      */
     public function setMaxExpandDepth(int $maxExpandDepth): void;
@@ -57,7 +57,7 @@ interface IServiceConfiguration
      * Sets maximum number of elements in each returned collection
      * (top-level or expanded).
      *
-     * @param int $maxResultPerCollection Maximum number of elements in returned collection
+     * @param  int  $maxResultPerCollection Maximum number of elements in returned collection
      * @return void
      */
     public function setMaxResultsPerCollection(int $maxResultPerCollection): void;
@@ -72,7 +72,7 @@ interface IServiceConfiguration
     /**
      * Sets whether verbose errors should be used by default.
      *
-     * @param bool $useVerboseError true to enable verbose error else false
+     * @param  bool $useVerboseError true to enable verbose error else false
      * @return void
      */
     public function setUseVerboseErrors(bool $useVerboseError): void;
@@ -89,11 +89,11 @@ interface IServiceConfiguration
     /**
      * sets the access rights on the specified resource set.
      *
-     * @param string $name Name of resource set to set; '*' to indicate all
+     * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
-     * @return void
      * @throws InvalidArgumentException when the entity set rights are not known or the resource set is not known
+     * @return void
      */
     public function setEntitySetAccessRule(string $name, EntitySetRights $rights): void;
 
@@ -109,14 +109,14 @@ interface IServiceConfiguration
     /**
      * Sets the maximum page size for an entity set resource.
      *
-     * @param string $name Name of entity set resource for which to set
+     * @param string $name     Name of entity set resource for which to set
      *                         the page size
-     * @param int $pageSize Page size for the entity set resource that is
+     * @param int    $pageSize Page size for the entity set resource that is
      *                         specified in name
      *
-     * @return void
      * @throws InvalidArgumentException
      * @throws InvalidOperationException
+     * @return void
      */
     public function setEntitySetPageSize(string $name, int $pageSize): void;
 
@@ -132,7 +132,7 @@ interface IServiceConfiguration
      * Sets whether requests with the $count path segment or the $inlinecount
      * query options are accepted.
      *
-     * @param bool $acceptCountRequest true to accept count request, false to not
+     * @param  bool $acceptCountRequest true to accept count request, false to not
      * @return void
      */
     public function setAcceptCountRequests(bool $acceptCountRequest): void;
@@ -147,7 +147,7 @@ interface IServiceConfiguration
     /**
      * Sets whether projection requests ($select) should be accepted.
      *
-     * @param bool $acceptProjectionRequest true to accept projection request, false to not
+     * @param  bool $acceptProjectionRequest true to accept projection request, false to not
      * @return void
      */
     public function setAcceptProjectionRequests(bool $acceptProjectionRequest): void;
@@ -162,7 +162,7 @@ interface IServiceConfiguration
     /**
      * Sets Maximum version of the response sent by server.
      *
-     * @param ProtocolVersion $version The version to set
+     * @param  ProtocolVersion $version The version to set
      * @return void
      */
     public function setMaxDataServiceVersion(ProtocolVersion $version);
@@ -170,7 +170,7 @@ interface IServiceConfiguration
     /**
      * Specify whether to validate the ETag or not.
      *
-     * @param bool $validate True if ETag needs to validated, false otherwise
+     * @param  bool $validate True if ETag needs to validated, false otherwise
      * @return void
      */
     public function setValidateETagHeader(bool $validate): void;

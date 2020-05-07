@@ -34,7 +34,7 @@ abstract class BaseNodeHandler
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
-        $method = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
+        $method     = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
         if (!method_exists($this, $method)) {
             $this->onParseError($methodType, 'Start', $tagName);
         }
@@ -81,7 +81,7 @@ abstract class BaseNodeHandler
      */
     final public function popCharData()
     {
-        $data = $this->charData;
+        $data           = $this->charData;
         $this->charData = '';
         return $data;
     }
@@ -145,7 +145,7 @@ abstract class BaseNodeHandler
     }
 
     /**
-     * @param Closure $closure
+     * @param  Closure $closure
      * @return Closure
      */
     protected function bindHere(Closure $closure)

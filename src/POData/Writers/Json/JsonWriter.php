@@ -36,9 +36,9 @@ class JsonWriter
     /**
      * Creates a new instance of Json writer.
      *
-     * @param string $writer writer to which text needs to be written
-     * @param string $eol the line terminator character
-     * @param bool $prettyPrint if output should be well formatted
+     * @param string $writer      writer to which text needs to be written
+     * @param string $eol         the line terminator character
+     * @param bool   $prettyPrint if output should be well formatted
      */
     public function __construct($writer, string $eol, bool $prettyPrint)
     {
@@ -142,8 +142,8 @@ class JsonWriter
     /**
      * Write the string value with/without quotes.
      *
-     * @param string $text value to be written
-     * @param bool $quotes put quotes around the value if this value is true
+     * @param string $text   value to be written
+     * @param bool   $quotes put quotes around the value if this value is true
      */
     private function writeCore($text, $quotes)
     {
@@ -171,11 +171,11 @@ class JsonWriter
     /**
      * JSON write a basic data type (string, number, boolean, null).
      *
-     * @param mixed $value value to be written
-     * @param string|null $type data type of the value
+     * @param mixed       $value value to be written
+     * @param string|null $type  data type of the value
      *
-     * @return JsonWriter
      * @throws Exception
+     * @return JsonWriter
      */
     public function writeValue($value, $type = null)
     {
@@ -206,7 +206,7 @@ class JsonWriter
                 break;
 
             case 'Edm.DateTime':
-                $dateTime = new DateTime($value, new DateTimeZone('UTC'));
+                $dateTime          = new DateTime($value, new DateTimeZone('UTC'));
                 $formattedDateTime = $dateTime->format('U') * 1000;
                 $this->writeCore('/Date(' . $formattedDateTime . ')/', /* quotes */ true);
                 break;
@@ -246,8 +246,8 @@ class JsonWriter
     private function quoteJScriptString($string)
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
-        $search = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
-        $replace = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
+        $search          = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
+        $replace         = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
         $processedString = str_replace($search, $replace, $string);
         // Escape some ASCII characters - namely, 0x08 and 0x0c
         $processedString = str_replace([chr(0x08), chr(0x0C)], ['\b', '\f'], $processedString);

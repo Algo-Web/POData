@@ -38,7 +38,7 @@ class IlluminateOperationContext implements IOperationContext
      */
     public function __construct(Request $request)
     {
-        $this->incomingRequest = new IncomingIlluminateRequest($request);
+        $this->incomingRequest  = new IncomingIlluminateRequest($request);
         $this->outgoingResponse = new OutgoingResponse();
     }
 

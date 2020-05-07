@@ -15,7 +15,7 @@ trait request
      * lower than the version required to intercept the response.
      *
      * @param string $requestedVersion The client requested version
-     * @param string $requiredVersion The minimum version required to
+     * @param string $requiredVersion  The minimum version required to
      *                                 intercept the response
      *
      * @return string The formatted message
@@ -30,7 +30,7 @@ trait request
      * Format a message to show error when version required to intercept
      * the response is greater than the configured maximum protocol version.
      *
-     * @param string $requiredVersion Required version
+     * @param string $requiredVersion   Required version
      * @param string $configuredVersion Configured version
      *
      * @return string The formatted message
@@ -46,7 +46,7 @@ trait request
      * MaxDataServiceVersion is invalid.
      *
      * @param string $versionAsString String value of the version
-     * @param string $headerName Header name
+     * @param string $headerName      Header name
      *
      * @return string The formatted message
      */
@@ -60,7 +60,7 @@ trait request
      * MaxDataServiceVersion is invalid.
      *
      * @param string $requestHeaderName Name of the request header
-     * @param string $requestedVersion Requested version
+     * @param string $requestedVersion  Requested version
      * @param string $availableVersions Available versions
      *
      * @return string The formatted message
@@ -69,8 +69,7 @@ trait request
         $requestHeaderName,
         $requestedVersion,
         $availableVersions
-    )
-    {
+    ) {
         return 'The version value ' . $requestedVersion . ' in the header ' . $requestHeaderName . ' is not'
             . ' supported, available versions are ' . $availableVersions;
     }

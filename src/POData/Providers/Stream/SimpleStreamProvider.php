@@ -15,11 +15,11 @@ use POData\Providers\Metadata\ResourceType;
 class SimpleStreamProvider implements IStreamProvider2
 {
     /**
-     * @param object $entity
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param string $eTag
-     * @param bool $checkETagForEquality
-     * @param IOperationContext $operationContext
+     * @param  object                  $entity
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  string                  $eTag
+     * @param  bool                    $checkETagForEquality
+     * @param  IOperationContext       $operationContext
      * @return string
      */
     public function getReadStream2(
@@ -28,8 +28,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $eTag,
         $checkETagForEquality,
         IOperationContext $operationContext
-    )
-    {
+    ) {
         if (null == $resourceStreamInfo) {
             return 'stream for ' . get_class($entity);
         }
@@ -39,10 +38,10 @@ class SimpleStreamProvider implements IStreamProvider2
 
     /**
      * @param $entity
-     * @param ResourceType $resourceType
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
-     * @param null $relativeUri
+     * @param  ResourceType            $resourceType
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
+     * @param  null                    $relativeUri
      * @return string
      */
     public function getDefaultStreamEditMediaUri(
@@ -51,8 +50,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
         $relativeUri = null
-    )
-    {
+    ) {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
         }
@@ -60,17 +58,16 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param object $entity
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
+     * @param  object                  $entity
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
      * @return string
      */
     public function getStreamContentType2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    )
-    {
+    ) {
         if (null == $resourceStreamInfo) {
             return '*/*';
         }
@@ -78,17 +75,16 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param object $entity
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
+     * @param  object                  $entity
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
      * @return string
      */
     public function getStreamETag2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    )
-    {
+    ) {
         if (null == $resourceStreamInfo) {
             return spl_object_hash($entity);
         }
@@ -98,10 +94,10 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param object $entity
-     * @param ResourceStreamInfo|null $resourceStreamInfo
-     * @param IOperationContext $operationContext
-     * @param null $relativeUri
+     * @param  object                  $entity
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  IOperationContext       $operationContext
+     * @param  null                    $relativeUri
      * @return string
      */
     public function getReadStreamUri2(
@@ -109,8 +105,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
         $relativeUri = null
-    )
-    {
+    ) {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
         }

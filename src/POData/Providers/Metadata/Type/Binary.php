@@ -55,7 +55,7 @@ class Binary implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -63,7 +63,7 @@ class Binary implements IType
      */
     public function validate($value, &$outValue)
     {
-        $length = strlen($value);
+        $length  = strlen($value);
         $trimVal = $value;
         if ((0 === strpos($trimVal, 'binary\'')) && (7 < $length)) {
             $trimVal = substr($trimVal, 7, $length - 7);
@@ -94,7 +94,7 @@ class Binary implements IType
     /**
      * Checks a value is binary.
      *
-     * @param string $value value to check in base64 form
+     * @param string $value     value to check in base64 form
      * @param string &$outValue Processed value
      *
      * @return bool
@@ -112,9 +112,9 @@ class Binary implements IType
             return false;
         }
 
-        $outValue = [];
+        $outValue    = [];
         $outValIndex = 0;
-        $valueIndex = 0;
+        $valueIndex  = 0;
         while ($valueIndex < $length) {
             $ch0 = $value[$valueIndex];
             $ch1 = $value[$valueIndex + 1];

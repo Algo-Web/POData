@@ -31,7 +31,7 @@ trait metadataAssociationType
      *
      * @param string $resourceSet1Name Name of the first association set
      * @param string $resourceSet2Name Name of the second association set
-     * @param string $entitySetName Name of the entity set
+     * @param string $entitySetName    Name of the entity set
      *
      * @return string The formatted message
      */
@@ -39,8 +39,7 @@ trait metadataAssociationType
         $resourceSet1Name,
         $resourceSet2Name,
         $entitySetName
-    )
-    {
+    ) {
         return 'ResourceAssociationSets \'' . $resourceSet1Name . '\' and \'' . $resourceSet2Name . '\' have a'
             . ' ResourceAssociationSetEnd referring to the EntitySet \'' . $entitySetName . '\' through the same'
             . ' AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType,'

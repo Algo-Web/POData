@@ -65,23 +65,22 @@ class InternalSkipTokenInfo
     /**
      * Creates a new instance of InternalSkipTokenInfo.
      *
-     * @param InternalOrderByInfo &$internalOrderByInfo Reference to an instance of InternalOrderByInfo which holds
+     * @param InternalOrderByInfo &$internalOrderByInfo     Reference to an instance of InternalOrderByInfo which holds
      *                                                      sorter function(s) generated from orderby clause
      * @param array<array<IType>> $orderByValuesInSkipToken Collection of values in the skiptoken corresponds to the
      *                                                      orderby path segments
-     * @param ResourceType        &$resourceType Reference to the resource type pointed to by the request uri
+     * @param ResourceType        &$resourceType            Reference to the resource type pointed to by the request uri
      */
     public function __construct(
         InternalOrderByInfo &$internalOrderByInfo,
         $orderByValuesInSkipToken,
         ResourceType &$resourceType
-    )
-    {
-        $this->internalOrderByInfo = $internalOrderByInfo;
+    ) {
+        $this->internalOrderByInfo      = $internalOrderByInfo;
         $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;
-        $this->resourceType = $resourceType;
-        $this->skipTokenInfo = null;
-        $this->keyObject = null;
+        $this->resourceType             = $resourceType;
+        $this->skipTokenInfo            = null;
+        $this->keyObject                = null;
     }
 
     /**
@@ -94,7 +93,7 @@ class InternalSkipTokenInfo
     public function getSkipTokenInfo()
     {
         if (null === $this->skipTokenInfo) {
-            $orderbyInfo = $this->getInternalOrderByInfo()->getOrderByInfo();
+            $orderbyInfo         = $this->getInternalOrderByInfo()->getOrderByInfo();
             $this->skipTokenInfo = new SkipTokenInfo(
                 $orderbyInfo,
                 $this->orderByValuesInSkipToken
@@ -120,15 +119,14 @@ class InternalSkipTokenInfo
      *
      * @param array &$searchArray The sorted array to search
      *
-     * @return int (1) If the array is empty then return -1,
-     *             (2) If the key object found then return index of first record
-     *             in the next page,
-     *             (3) If partial matching found (means found matching for first
-     *             m keys where m < n, where n is total number of positional
-     *             keys, then return the index of the object which has most matching
      * @throws ODataException
-     *
      * @throws InvalidArgumentException
+     * @return int                      (1) If the array is empty then return -1,
+     *                                  (2) If the key object found then return index of first record
+     *                                  in the next page,
+     *                                  (3) If partial matching found (means found matching for first
+     *                                  m keys where m < n, where n is total number of positional
+     *                                  keys, then return the index of the object which has most matching
      */
     public function getIndexOfFirstEntryInTheNextPage(array &$searchArray): int
     {
@@ -138,12 +136,12 @@ class InternalSkipTokenInfo
 
         $comparer = $this->getInternalOrderByInfo()->getSorterFunction();
         //Gets the key object initialized from skiptoken
-        $keyObject = $this->getKeyObject();
-        $low = 0;
+        $keyObject       = $this->getKeyObject();
+        $low             = 0;
         $searchArraySize = count($searchArray) - 1;
-        $high = $searchArraySize;
+        $high            = $searchArraySize;
         do {
-            $mid = intval($low + round(($high - $low) / 2));
+            $mid    = intval($low + round(($high - $low) / 2));
             $result = $comparer($keyObject, $searchArray[$mid]);
             if ($result > 0) {
                 $low = $mid + 1;
@@ -176,20 +174,19 @@ class InternalSkipTokenInfo
      * Gets the key object for searching, if the object is not initialized,
      * then do it from skiptoken positional values.
      *
-     * @return mixed
      * @throws ODataException If reflection exception occurs while accessing or setting property
-     *
+     * @return mixed
      */
     public function getKeyObject()
     {
         if (null === $this->keyObject) {
             $this->keyObject = $this->getInternalOrderByInfo()->getDummyObject();
-            $i = 0;
+            $i               = 0;
             foreach ($this->getInternalOrderByInfo()->getOrderByPathSegments() as $orderByPathSegment) {
-                $index = 0;
-                $currentObject = $this->keyObject;
+                $index           = 0;
+                $currentObject   = $this->keyObject;
                 $subPathSegments = $orderByPathSegment->getSubPathSegments();
-                $subPathCount = count($subPathSegments);
+                $subPathCount    = count($subPathSegments);
                 foreach ($subPathSegments as &$subPathSegment) {
                     $isLastSegment = ($index == $subPathCount - 1);
                     try {
@@ -210,8 +207,8 @@ class InternalSkipTokenInfo
                                 // required type i.e. int, float, double etc..
                                 $value
                                     = $this->orderByValuesInSkipToken[$i][1]->convert(
-                                    $this->orderByValuesInSkipToken[$i][0]
-                                );
+                                        $this->orderByValuesInSkipToken[$i][0]
+                                    );
                                 $this->resourceType->setPropertyValue($currentObject, $subSegName, $value);
                             }
                         }
@@ -239,19 +236,18 @@ class InternalSkipTokenInfo
      *
      * @param mixed $lastObject Entity instance to build next page link from
      *
-     * @return string
      * @throws ODataException If reflection exception occurs while accessing
      *                        property
-     *
+     * @return string
      */
     public function buildNextPageLink($lastObject)
     {
         $nextPageLink = null;
         foreach ($this->getInternalOrderByInfo()->getOrderByPathSegments() as $orderByPathSegment) {
-            $index = 0;
-            $currentObject = $lastObject;
+            $index           = 0;
+            $currentObject   = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
-            $subPathCount = count($subPathSegments);
+            $subPathCount    = count($subPathSegments);
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
                 try {

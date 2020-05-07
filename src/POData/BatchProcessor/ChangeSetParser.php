@@ -34,7 +34,7 @@ class ChangeSetParser implements IBatchParser
     public function __construct(BaseService $service, $body)
     {
         $this->service = $service;
-        $this->data = trim($body);
+        $this->data    = trim($body);
     }
 
     /**
@@ -58,7 +58,7 @@ class ChangeSetParser implements IBatchParser
                 if (0 > $lookupID) {
                     continue;
                 }
-                $workingObject->Content = str_replace('$' . $lookupID, $location, $workingObject->Content);
+                $workingObject->Content    = str_replace('$' . $lookupID, $location, $workingObject->Content);
                 $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
@@ -90,7 +90,7 @@ class ChangeSetParser implements IBatchParser
     protected function processSubRequest(&$workingObject)
     {
         $newContext = new WebOperationContext($workingObject->Request);
-        $newHost = new ServiceHost($newContext);
+        $newHost    = new ServiceHost($newContext);
 
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();
@@ -160,10 +160,10 @@ class ChangeSetParser implements IBatchParser
     {
         $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
 
-        $firstLine = trim(strtok($this->getData(), $ODataEOL));// with trim matches both crlf and lf
+        $firstLine               = trim(strtok($this->getData(), $ODataEOL));// with trim matches both crlf and lf
         $this->changeSetBoundary = substr($firstLine, 40);
 
-        $prefix = 'HTTP_';
+        $prefix  = 'HTTP_';
         $matches = explode('--' . $this->changeSetBoundary, $this->getData());
         array_shift($matches);
         $contentIDinit = -1;
@@ -172,15 +172,15 @@ class ChangeSetParser implements IBatchParser
                 continue;
             }
 
-            $stage = 0;
+            $stage               = 0;
             $gotRequestPathParts = false;
-            $match = trim($match);
-            $lines = explode($ODataEOL, $match);
+            $match               = trim($match);
+            $lines               = explode($ODataEOL, $match);
 
             $requestPathParts = [];
-            $serverParts = [];
-            $contentID = $contentIDinit;
-            $content = '';
+            $serverParts      = [];
+            $contentID        = $contentIDinit;
+            $content          = '';
 
             foreach ($lines as $line) {
                 if ('' == $line) {
@@ -202,7 +202,7 @@ class ChangeSetParser implements IBatchParser
                         break;
                     case 1:
                         if (!$gotRequestPathParts) {
-                            $requestPathParts = explode(' ', $line);
+                            $requestPathParts    = explode(' ', $line);
                             $gotRequestPathParts = true;
                             continue 2;
                         }
@@ -215,8 +215,8 @@ class ChangeSetParser implements IBatchParser
                             continue 2;
                         }
 
-                        $name = trim($headerSides[0]);
-                        $name = strtr(strtoupper($name), '-', '_');
+                        $name  = trim($headerSides[0]);
+                        $name  = strtr(strtoupper($name), '-', '_');
                         $value = trim($headerSides[1]);
                         if (!Str::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
                             $name = $prefix . $name;

@@ -18,8 +18,8 @@ class ErrorHandler
     /**
      * Common function to handle exceptions in the data service.
      *
-     * @param Exception $exception exception
-     * @param IService $service service
+     * @param  Exception      $exception exception
+     * @param  IService       $service   service
      * @throws ODataException
      * @throws Exception
      */

@@ -22,8 +22,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the year from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function year($dateTime)
     {
@@ -37,8 +37,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the month from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function month($dateTime)
     {
@@ -52,8 +52,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the day from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function day($dateTime)
     {
@@ -67,8 +67,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the hour from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function hour($dateTime)
     {
@@ -82,8 +82,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the minute from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function minute($dateTime)
     {
@@ -97,8 +97,8 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the second from
      *
-     * @return string
      * @throws Exception
+     * @return string
      */
     public static function second($dateTime)
     {
@@ -110,8 +110,8 @@ class DateTime implements IType
     /**
      * gets a datetime object for now either internally or from a time provider.
      *
-     * @return \DateTime  a date time object that represents "now"
      * @throws Exception
+     * @return \DateTime a date time object that represents "now"
      */
     public static function now(): \DateTime
     {
@@ -127,12 +127,12 @@ class DateTime implements IType
      * @param string $dateTime1 First date
      * @param string $dateTime2 Second date
      *
-     * @return int
      * @throws Exception
+     * @return int
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
-        $firstStamp = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
+        $firstStamp  = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
         $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
 
         if ($firstStamp == $secondStamp) {
@@ -144,8 +144,8 @@ class DateTime implements IType
     /**
      * @param $dateTime
      * @param $msg
-     * @return false|int
      * @throws Exception
+     * @return false|int
      */
     protected static function dateTimeCmpCheckInput($dateTime, $msg)
     {
@@ -193,7 +193,7 @@ class DateTime implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -212,8 +212,8 @@ class DateTime implements IType
         }
 
         //strip off prefix, and quotes from both ends
-        $value = trim($value, 'datetime\'');
-        $valLen = strlen($value) - 6;
+        $value      = trim($value, 'datetime\'');
+        $valLen     = strlen($value) - 6;
         $offsetChek = $value[$valLen];
         if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
             $value = substr($value, 0, $valLen);

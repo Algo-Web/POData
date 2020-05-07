@@ -70,17 +70,17 @@ interface IStreamProvider
      *  this method should set the response
      *  status code on the $operationContext.
      *
-     * @param object $entity The stream returned should be
+     * @param object            $entity               The stream returned should be
      *                                                the default stream associated
      *                                                with this entity instance
-     * @param string $eTag The etag value sent by the
+     * @param string            $eTag                 The etag value sent by the
      *                                                client (as the value of an
      *                                                If[-None-]Match header)
      *                                                as part of the HTTP request,
      *                                                This parameter will be
      *                                                null if no If[-None-]Match
      *                                                header was present
-     * @param bool $checkETagForEquality True if an value of the etag
+     * @param bool              $checkETagForEquality True if an value of the etag
      *                                                parameter was sent
      *                                                to the server as the value
      *                                                of an If-Match HTTP
@@ -93,13 +93,12 @@ interface IStreamProvider
      *                                                the HTTP request for the
      *                                                stream was not a
      *                                                conditional request
-     * @param IOperationContext $operationContext A reference to the context
+     * @param IOperationContext $operationContext     A reference to the context
      *                                                for the current operation
      *
-     * @return mixed A valid default stream which is associated with the entity,  Null should never be returned
-     *               from this method
      * @throws ODataException if a valid stream cannot be returned. Null should never be returned from this method
-     *
+     * @return mixed          A valid default stream which is associated with the entity,  Null should never be returned
+     *                        from this method
      */
     public function getReadStream($entity, $eTag, $checkETagForEquality, IOperationContext $operationContext);
 
@@ -124,18 +123,17 @@ interface IStreamProvider
      * Altering properties on the $operationContext parameter may
      * corrupt the response from the data service.
      *
-     * @param object $entity The entity instance associated
+     * @param object            $entity           The entity instance associated
      *                                            with the stream for which
      *                                            the content type is to
      *                                            be obtained
      * @param IOperationContext $operationContext A reference to the context
      *                                            for the current operation
      *
-     * @return string Valid Content-Type string for the stream
-     *                associated with the entity
      * @throws ODataException if a valid stream content type
      *                        associated with the entity specified could not be returned
-     *
+     * @return string         Valid Content-Type string for the stream
+     *                        associated with the entity
      */
     public function getStreamContentType($entity, IOperationContext $operationContext);
 
@@ -158,7 +156,7 @@ interface IStreamProvider
      * corrupt the response
      * from the data service.
      *
-     * @param object $entity The entity instance
+     * @param object            $entity           The entity instance
      *                                            associated with the
      *                                            stream for which an
      *                                            etag is to be obtained
@@ -203,7 +201,7 @@ interface IStreamProvider
      * by the runtime will equal the canonical URI for the associated Media Link
      * Entry followed by a $value path segment.
      *
-     * @param object $entity The entity instance
+     * @param object            $entity           The entity instance
      *                                            associated with the
      *                                            stream for which a read
      *                                            stream URI is to

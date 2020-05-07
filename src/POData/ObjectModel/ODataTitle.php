@@ -34,6 +34,6 @@ class ODataTitle
     public function __construct($title, $type = 'text')
     {
         $this->title = $title;
-        $this->type = $type;
+        $this->type  = $type;
     }
 }

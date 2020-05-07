@@ -23,7 +23,7 @@ class SimpleOperativeContext implements IOperationContext
      */
     public function __construct($request)
     {
-        $this->request = new SimpleRequestAdapter($request);
+        $this->request  = new SimpleRequestAdapter($request);
         $this->response = new OutgoingResponse();
     }
 

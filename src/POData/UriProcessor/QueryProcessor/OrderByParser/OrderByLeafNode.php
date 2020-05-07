@@ -34,14 +34,14 @@ class OrderByLeafNode extends OrderByBaseNode
     /**
      * Constructs new instance of OrderByLeafNode.
      *
-     * @param string $propertyName Name of the property
+     * @param string           $propertyName     Name of the property
      *                                           corresponds to the
      *                                           sub path segment represented
      *                                           by this node
      * @param ResourceProperty $resourceProperty Resource property corresponds
      *                                           to the sub path
      *                                           segment represented by this node
-     * @param bool $isAscending The order of sorting to be
+     * @param bool             $isAscending      The order of sorting to be
      *                                           performed, true for
      *                                           ascending order and false
      *                                           for descending order
@@ -50,8 +50,7 @@ class OrderByLeafNode extends OrderByBaseNode
         $propertyName,
         ResourceProperty $resourceProperty,
         $isAscending
-    )
-    {
+    ) {
         parent::__construct($propertyName, $resourceProperty);
         $this->isAscending = $isAscending;
     }
@@ -74,7 +73,6 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
-     *
      */
     public function getResourceType()
     {
@@ -110,8 +108,8 @@ class OrderByLeafNode extends OrderByBaseNode
         $retVal = function ($object1, $object2) use ($ancestors, $ascend) {
             $accessor1 = $object1;
             $accessor2 = $object2;
-            $flag1 = null === $accessor1;
-            $flag2 = null === $accessor2;
+            $flag1     = null === $accessor1;
+            $flag2     = null === $accessor2;
             foreach ($ancestors as $i => $ancestor) {
                 if ($i == 0) {
                     continue;
@@ -122,7 +120,7 @@ class OrderByLeafNode extends OrderByBaseNode
                 $flag2 |= null === $accessor2;
             }
             $propertyName = $this->propertyName;
-            $getter = 'get' . ucfirst($propertyName);
+            $getter       = 'get' . ucfirst($propertyName);
             if (null !== $accessor1) {
                 $accessor1 = method_exists($accessor1, $getter) ? $accessor1->{$getter}() : $accessor1->{$propertyName};
             }
@@ -148,7 +146,7 @@ class OrderByLeafNode extends OrderByBaseNode
             } elseif ($type instanceof Guid) {
                 $result = strcmp($accessor1, $accessor2);
             } else {
-                $delta = $accessor1 - $accessor2;
+                $delta  = $accessor1 - $accessor2;
                 $result = (0 == $delta) ? 0 : $delta / abs($delta);
             }
 
