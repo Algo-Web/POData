@@ -77,7 +77,6 @@ class NorthWindService extends BaseService
     // so we are using getHost() below.
     /**
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\InvalidOperationException
      * @throws \POData\Common\NotImplementedException
      * @throws \POData\Common\UrlFormatException

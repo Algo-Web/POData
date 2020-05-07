@@ -85,7 +85,6 @@ class UriProcessorNew implements IUriProcessor
      * @param  IService                                         $service Reference to the data service instance
      * @throws InvalidOperationException
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\UrlFormatException
      * @throws \ReflectionException
      */
@@ -114,7 +113,6 @@ class UriProcessorNew implements IUriProcessor
      *
      * @throws InvalidOperationException
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\NotImplementedException
      * @throws \ReflectionException
      * @throws \POData\Common\UrlFormatException

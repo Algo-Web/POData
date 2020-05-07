@@ -34,7 +34,6 @@
     "ext-xmlwriter": "*"
   },
   "require-dev": {
-    "doctrine/annotations": "^v1.4.0",
     "pcov/clobber": "dev-master",
     "php-coveralls/php-coveralls": ">=v2.1",
     "phpunit/phpunit": "^7.0",

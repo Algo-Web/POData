@@ -26,7 +26,6 @@ class RequestDescriptionMockeryTest extends TestCase
 {
     /**
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testProcessDataStandaloneRequest()
     {

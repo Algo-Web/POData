@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Common;
 
-use Doctrine\Common\Annotations\Annotation\Target;
 use Mockery as m;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
