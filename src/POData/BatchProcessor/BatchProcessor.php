@@ -56,7 +56,7 @@ class BatchProcessor
             if ('' === $match || '--' === $match) {
                 continue;
             }
-            $header                      = explode($ODataEOL, $match)[0];
+            $header                      = explode($ODataEOL . $ODataEOL, $match)[0];
             $isChangeset                 = false === strpos($header, 'Content-Type: application/http');
             $this->changeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
         }
