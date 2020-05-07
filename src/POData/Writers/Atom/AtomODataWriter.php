@@ -43,7 +43,7 @@ class AtomODataWriter implements IODataWriter
 
     /*
      * Update time to insert into ODataEntry/ODataFeed fields
-     * @var DateTime;
+     * @var \DateTime;
      */
     private $updated;
 
