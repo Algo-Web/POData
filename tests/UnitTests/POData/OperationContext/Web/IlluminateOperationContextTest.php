@@ -8,7 +8,7 @@
 
 namespace UnitTests\POData\OperationContext\Web;
 
-use AlgoWeb\ODataMetadata\Tests\TestCase;
+use UnitTests\POData\TestCase;
 use Illuminate\Http\Request;
 use Mockery as m;
 use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
