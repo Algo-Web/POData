@@ -75,43 +75,45 @@ class ChangeSetParser implements IBatchParser
      */
     public function getResponse()
     {
+        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
+
         $response = '';
         $splitter = false === $this->changeSetBoundary ?
             '' :
-            '--' . $this->changeSetBoundary . $this->getService()->getConfiguration()->getLineEndings();
+            '--' . $this->changeSetBoundary . $ODataEOL;
         $raw      = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
             $headers = $workingObject->Response->getHeaders();
             $response .= $splitter;
 
-            $response .= 'Content-Type: application/http' . $this->getService()->getConfiguration()->getLineEndings();
-            $response .= 'Content-Transfer-Encoding: binary' . $this->getService()->getConfiguration()->getLineEndings();
-            $response .= $this->getService()->getConfiguration()->getLineEndings();
-            $response .= 'HTTP/1.1 ' . $headers['Status'] . $this->getService()->getConfiguration()->getLineEndings();
-            $response .= 'Content-ID: ' . $contentID . $this->getService()->getConfiguration()->getLineEndings();
+            $response .= 'Content-Type: application/http' . $ODataEOL;
+            $response .= 'Content-Transfer-Encoding: binary' . $ODataEOL;
+            $response .= $ODataEOL;
+            $response .= 'HTTP/1.1 ' . $headers['Status'] . $ODataEOL;
+            $response .= 'Content-ID: ' . $contentID . $ODataEOL;
 
             foreach ($headers as $headerName => $headerValue) {
                 if (null !== $headerValue) {
-                    $response .= $headerName . ': ' . $headerValue . $this->getService()->getConfiguration()->getLineEndings();
+                    $response .= $headerName . ': ' . $headerValue . $ODataEOL;
                 }
             }
-            $response .= $this->getService()->getConfiguration()->getLineEndings();
+            $response .= $ODataEOL;
             $response .= $workingObject->Response->getStream();
         }
         $response .= trim($splitter);
         $response .= false === $this->changeSetBoundary ?
-            $this->getService()->getConfiguration()->getLineEndings() :
-            '--' . $this->getService()->getConfiguration()->getLineEndings();
+            $ODataEOL :
+            '--' . $ODataEOL;
         $response = 'Content-Length: ' .
             strlen($response) .
-            $this->getService()->getConfiguration()->getLineEndings() .
-            $this->getService()->getConfiguration()->getLineEndings() .
+            $ODataEOL .
+            $ODataEOL .
             $response;
         $response = false === $this->changeSetBoundary ?
             $response :
             'Content-Type: multipart/mixed; boundary=' .
             $this->changeSetBoundary .
-            $this->getService()->getConfiguration()->getLineEndings() .
+            $ODataEOL .
             $response;
         return $response;
     }
@@ -121,7 +123,9 @@ class ChangeSetParser implements IBatchParser
      */
     public function handleData()
     {
-        $firstLine               = trim(strtok($this->getData(), $this->getService()->getConfiguration()->getLineEndings()));// with trim matches both crlf and lf
+        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
+
+        $firstLine               = trim(strtok($this->getData(), $ODataEOL));// with trim matches both crlf and lf
         $this->changeSetBoundary = substr($firstLine, 40);
 
         $prefix  = 'HTTP_';
@@ -136,7 +140,7 @@ class ChangeSetParser implements IBatchParser
             $stage               = 0;
             $gotRequestPathParts = false;
             $match               = trim($match);
-            $lines               = explode($this->getService()->getConfiguration()->getLineEndings(), $match);
+            $lines               = explode($ODataEOL, $match);
 
             $requestPathParts = [];
             $serverParts      = [];

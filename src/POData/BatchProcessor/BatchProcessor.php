@@ -45,9 +45,9 @@ class BatchProcessor
         if (is_array($rawData)) {
             $rawData = $rawData[0];
         }
-
+        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
         $this->data          = trim($rawData);
-        $this->data          = preg_replace('~\r\n?~', $this->getService()->getConfiguration()->getLineEndings(), $this->data);
+        $this->data          = preg_replace('~\r\n?~', $ODataEOL, $this->data);
         $this->batchBoundary = substr($contentType, 26);
 
         $matches = explode('--' . $this->batchBoundary, $this->data);
@@ -56,7 +56,7 @@ class BatchProcessor
             if ('' === $match || '--' === $match) {
                 continue;
             }
-            $header                      = explode($this->getService()->getConfiguration()->getLineEndings(), $match)[0];
+            $header                      = explode($ODataEOL, $match)[0];
             $isChangeset                 = false === strpos($header, 'Content-Type: application/http');
             $this->changeSetProcessors[] = $this->getParser($this->getService(), $match, $isChangeset);
         }
@@ -72,14 +72,16 @@ class BatchProcessor
      */
     public function getResponse()
     {
+        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
+
         $response = '';
-        $splitter =  '--' . $this->batchBoundary . $this->getService()->getConfiguration()->getLineEndings();
+        $splitter =  '--' . $this->batchBoundary . $ODataEOL;
         $raw      = $this->changeSetProcessors;
         foreach ($raw as $contentID => &$workingObject) {
             $response .= $splitter;
-            $response .= $workingObject->getResponse() . $this->getService()->getConfiguration()->getLineEndings();
+            $response .= $workingObject->getResponse() . $ODataEOL;
         }
-        $response .= trim($splitter) . '--' . $this->getService()->getConfiguration()->getLineEndings();
+        $response .= trim($splitter) . '--' . $ODataEOL;
         return $response;
     }
 
