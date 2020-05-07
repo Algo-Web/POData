@@ -8,6 +8,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
+use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -52,7 +53,7 @@ class AtomODataWriter implements IODataWriter
      *
      * @param string $absoluteServiceUri The absolute service Uri
      */
-    public function __construct($absoluteServiceUri)
+    public function __construct(string $eol, bool $prettyPrint, $absoluteServiceUri = '')
     {
         $final = substr($absoluteServiceUri, -1);
         if ('/' != $final) {
@@ -64,8 +65,8 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
-        $this->xmlWriter->setIndent(true);
-        $this->xmlWriter->setIndentString('    ');
+        $this->xmlWriter->setIndent($prettyPrint);
+        $this->xmlWriter->setIndentString($prettyPrint ? '    ' : '');
     }
 
     /**
@@ -656,13 +657,13 @@ class AtomODataWriter implements IODataWriter
      *
      * @return string
      */
-    public static function serializeException(ODataException $exception)
+    public static function serializeException(ODataException $exception, ServiceConfiguration $config)
     {
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
         $xmlWriter->startDocument('1.0', 'UTF-8', 'yes');
-        $xmlWriter->setIndent(true);
-        $xmlWriter->setIndentString('    ');
+        $xmlWriter->setIndent($config->getPrettyOutput());
+        $xmlWriter->setIndentString($config->getPrettyOutput() ? '    ' : '');
 
         $xmlWriter->startElement(ODataConstants::XML_ERROR_ELEMENT_NAME);
         //$xmlWriter->writeAttributeNs(

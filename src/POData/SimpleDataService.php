@@ -34,15 +34,15 @@ class SimpleDataService extends BaseService implements IService
      * @var IStreamProvider2;
      */
     protected $streamProvider;
-    public $maxPageSize = 400;
 
     /**
      * SimpleDataService constructor.
      * @param $db
-     * @param  SimpleMetadataProvider $metaProvider
-     * @param  ServiceHost            $host
-     * @param  IObjectSerialiser|null $serialiser
-     * @param  IStreamProvider2|null  $streamProvider
+     * @param  SimpleMetadataProvider     $metaProvider
+     * @param  ServiceHost                $host
+     * @param  IObjectSerialiser|null     $serialiser
+     * @param  IStreamProvider2|null      $streamProvider
+     * @param  IServiceConfiguration|null $config
      * @throws ODataException
      */
     public function __construct(
@@ -50,7 +50,8 @@ class SimpleDataService extends BaseService implements IService
         SimpleMetadataProvider $metaProvider,
         ServiceHost $host,
         IObjectSerialiser $serialiser = null,
-        IStreamProvider2 $streamProvider = null
+        IStreamProvider2 $streamProvider = null,
+        IServiceConfiguration $config = null
     ) {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
@@ -64,19 +65,24 @@ class SimpleDataService extends BaseService implements IService
         $this->setStreamProvider($streamProvider);
 
         $this->setHost($host);
-        parent::__construct($serialiser);
+        parent::__construct($serialiser, $metaProvider, $config);
     }
 
     /**
      * {@inheritdoc}
      * @throws Common\InvalidOperationException
      */
-    public function initialize(IServiceConfiguration $config)
+    public function initializeDefaultConfig(IServiceConfiguration $config)
     {
-        $config->setEntitySetPageSize('*', $this->maxPageSize);
+        $config->setEntitySetPageSize('*', 400);
         $config->setEntitySetAccessRule('*', EntitySetRights::ALL());
         $config->setAcceptCountRequests(true);
         $config->setAcceptProjectionRequests(true);
+        return $config;
+    }
+
+    public function initialize(IServiceConfiguration $config)
+    {
     }
 
     /**

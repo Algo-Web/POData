@@ -11,7 +11,7 @@ class IndentedTextWriterTest extends TestCase
 {
     public function testWriteLine()
     {
-        $writer = new IndentedTextWriter('');
+        $writer = new IndentedTextWriter('', PHP_EOL, true);
 
         $result = $writer->writeLine();
         $this->assertSame($writer, $result);
@@ -20,7 +20,7 @@ class IndentedTextWriterTest extends TestCase
 
     public function testWrite()
     {
-        $writer = new IndentedTextWriter('');
+        $writer = new IndentedTextWriter('', PHP_EOL, true);
 
         $result = $writer->writeValue(' doggy ');
 
@@ -30,7 +30,7 @@ class IndentedTextWriterTest extends TestCase
 
     public function testWriteTrimmed()
     {
-        $writer = new IndentedTextWriter('');
+        $writer = new IndentedTextWriter('', PHP_EOL, true);
 
         $result = $writer->writeTrimmed(' doggy ');
 
@@ -40,7 +40,7 @@ class IndentedTextWriterTest extends TestCase
 
     public function testWriteIndents()
     {
-        $writer = new IndentedTextWriter('');
+        $writer = new IndentedTextWriter('', PHP_EOL, true);
 
         $result = $writer->increaseIndent();
         $this->assertSame($writer, $result);

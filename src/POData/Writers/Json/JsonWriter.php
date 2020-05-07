@@ -32,11 +32,13 @@ class JsonWriter
     /**
      * Creates a new instance of Json writer.
      *
-     * @param string $writer writer to which text needs to be written
+     * @param string $writer      writer to which text needs to be written
+     * @param string $eol         the line terminator character
+     * @param bool   $prettyPrint if output should be well formatted
      */
-    public function __construct($writer)
+    public function __construct($writer, string $eol, bool $prettyPrint)
     {
-        $this->writer = new IndentedTextWriter($writer);
+        $this->writer = new IndentedTextWriter($writer, $eol, $prettyPrint);
     }
 
     /**

@@ -12,7 +12,7 @@ class JsonWriterTest extends TestCase
 {
     public function testWriteValueNoType()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         $result = $writer->writeValue('car');
         $this->assertSame($result, $writer);
@@ -22,7 +22,7 @@ class JsonWriterTest extends TestCase
 
     public function testWriteValueUnknownType()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         $result = $writer->writeValue('car', 'afdaseefae');
         $this->assertSame($result, $writer);
@@ -40,26 +40,26 @@ class JsonWriterTest extends TestCase
         return $processedString;
         */
         //$string = "\\  \n  \t  \r  \b  \f " . chr(0x08) . "  " . chr(0x0C);
-        //$writer = new JsonWriter("");
+        //$writer = new JsonWriter("", PHP_EOL, true );
         //$writer->writeValue($string, "afdaseefae");
         //$this->assertEquals('"car"', $writer->getJsonOutput());
     }
 
     public function testWriteValueEdmBoolean()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         //TODO: should this really work this way?
         $result = $writer->writeValue('car', 'Edm.Boolean');
         $this->assertSame($result, $writer);
         $this->assertEquals('car', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(false, 'Edm.Boolean');
         $this->assertSame($result, $writer);
         $this->assertEquals('', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(true, 'Edm.Boolean');
         $this->assertSame($result, $writer);
         $this->assertEquals('1', $writer->getJsonOutput());
@@ -67,24 +67,24 @@ class JsonWriterTest extends TestCase
 
     public function testWriteValueEdmInt16()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         //TODO: should this really work this way?
         $result = $writer->writeValue('car', 'Edm.Int16');
         $this->assertSame($result, $writer);
         $this->assertEquals('car', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0, 'Edm.Int16');
         $this->assertSame($result, $writer);
         $this->assertEquals('0', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100, 'Edm.Int16');
         $this->assertSame($result, $writer);
         $this->assertEquals('100', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100, 'Edm.Int16');
         $this->assertSame($result, $writer);
         $this->assertEquals('-100', $writer->getJsonOutput());
@@ -92,24 +92,24 @@ class JsonWriterTest extends TestCase
 
     public function testWriteValueEdmInt32()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         //TODO: should this really work this way?
         $result = $writer->writeValue('car', 'Edm.Int32');
         $this->assertSame($result, $writer);
         $this->assertEquals('car', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0, 'Edm.Int32');
         $this->assertSame($result, $writer);
         $this->assertEquals('0', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100, 'Edm.Int32');
         $this->assertSame($result, $writer);
         $this->assertEquals('100', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100, 'Edm.Int32');
         $this->assertSame($result, $writer);
         $this->assertEquals('-100', $writer->getJsonOutput());
@@ -120,24 +120,24 @@ class JsonWriterTest extends TestCase
 
         //apparently 64 bit means put it in quotes?
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
 
         //TODO: should this really work this way?
         $result = $writer->writeValue('car', 'Edm.Int64');
         $this->assertSame($result, $writer);
         $this->assertEquals('"car"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0, 'Edm.Int64');
         $this->assertSame($result, $writer);
         $this->assertEquals('"0"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100, 'Edm.Int64');
         $this->assertSame($result, $writer);
         $this->assertEquals('"100"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100, 'Edm.Int64');
         $this->assertSame($result, $writer);
         $this->assertEquals('"-100"', $writer->getJsonOutput());
@@ -147,28 +147,28 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: the fact that this is null is surprising
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(log(0), 'Edm.Single');
         $this->assertSame($result, $writer);
         $this->assertEquals('null', $writer->getJsonOutput(), 'is_infinite comes out as null');
 
         //TODO: the fact that this is null is surprising
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(acos(1.01), 'Edm.Single');
         $this->assertSame($result, $writer);
         $this->assertEquals('null', $writer->getJsonOutput(), 'nan comes out as null');
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0.345, 'Edm.Single');
         $this->assertSame($result, $writer);
         $this->assertEquals(0.345, $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100, 'Edm.Single');
         $this->assertSame($result, $writer);
         $this->assertEquals(100, $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100, 'Edm.Single');
         $this->assertSame($result, $writer);
         $this->assertEquals(-100, $writer->getJsonOutput());
@@ -178,28 +178,28 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: the fact that this is null is surprising
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(log(0), 'Edm.Double');
         $this->assertSame($result, $writer);
         $this->assertEquals('null', $writer->getJsonOutput(), 'is_infinite comes out as null');
 
         //TODO: the fact that this is null is surprising
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(acos(1.01), 'Edm.Double');
         $this->assertSame($result, $writer);
         $this->assertEquals('null', $writer->getJsonOutput(), 'nan comes out as null');
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0.345, 'Edm.Double');
         $this->assertSame($result, $writer);
         $this->assertEquals(0.345, $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100, 'Edm.Double');
         $this->assertSame($result, $writer);
         $this->assertEquals(100, $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100, 'Edm.Double');
         $this->assertSame($result, $writer);
         $this->assertEquals(-100, $writer->getJsonOutput());
@@ -207,7 +207,7 @@ class JsonWriterTest extends TestCase
 
     public function testWriteValueEdmGuid()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $g      = uniqid();
         $result = $writer->writeValue($g, 'Edm.Guid');
         $this->assertSame($result, $writer);
@@ -216,17 +216,17 @@ class JsonWriterTest extends TestCase
 
     public function testWriteValueEdmDecimal()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(0.345, 'Edm.Decimal');
         $this->assertSame($result, $writer);
         $this->assertEquals('"0.345"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(100.00155, 'Edm.Decimal');
         $this->assertSame($result, $writer);
         $this->assertEquals('"100.00155"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(-100.00155, 'Edm.Decimal');
         $this->assertSame($result, $writer);
         $this->assertEquals('"-100.00155"', $writer->getJsonOutput());
@@ -235,7 +235,7 @@ class JsonWriterTest extends TestCase
     public function testWriteValueEdmDateTime()
     {
         //TODO: add tests for other timezones
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue('Mar 3, 2012 11:14:32 AM', 'Edm.DateTime');
         $this->assertSame($result, $writer);
         $this->assertEquals('"/Date(1330773272000)/"', $writer->getJsonOutput());
@@ -245,7 +245,7 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: need to ensure we're doing this all right #59
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue('01010101', 'Edm.Byte');
         $this->assertSame($result, $writer);
         $this->assertEquals('01010101', $writer->getJsonOutput());
@@ -255,7 +255,7 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: need to ensure we're doing this all right #59
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue('01010101', 'Edm.SByte');
         $this->assertSame($result, $writer);
         $this->assertEquals('01010101', $writer->getJsonOutput());
@@ -265,7 +265,7 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: need to ensure we're doing this all right #59
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue('01010101', 'Edm.Binary');
         $this->assertSame($result, $writer);
         $this->assertEquals('"01010101"', $writer->getJsonOutput());
@@ -275,17 +275,17 @@ class JsonWriterTest extends TestCase
     {
 
         //TODO: need to ensure we're doing this all right #59
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue(null, 'Edm.String');
         $this->assertSame($result, $writer);
         $this->assertEquals('null', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->writeValue('null', 'Edm.String');
         $this->assertSame($result, $writer);
         $this->assertEquals('"null"', $writer->getJsonOutput());
 
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $val    = 'http://yahoo.com/some/path';
         $result = $writer->writeValue($val, 'Edm.String');
         $this->assertSame($result, $writer);
@@ -294,7 +294,7 @@ class JsonWriterTest extends TestCase
 
     public function testStartArrayScope()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->startArrayScope();
         $this->assertSame($result, $writer);
         $writer->writeValue('1', 'Edm.String');
@@ -312,7 +312,7 @@ class JsonWriterTest extends TestCase
 
     public function testStartObjectScope()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $result = $writer->startObjectScope();
         $this->assertSame($result, $writer);
         $writer->writeName('1');
@@ -330,7 +330,7 @@ class JsonWriterTest extends TestCase
 
     public function testComplexObject()
     {
-        $writer = new JsonWriter('');
+        $writer = new JsonWriter('', PHP_EOL, true);
         $writer->startObjectScope();
         $writer->writeName('1');
         $writer->writeValue(2, 'Edm.Int16');

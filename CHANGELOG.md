@@ -8,6 +8,7 @@ Unreleased
         - ... interesting ... ways that XMLWriter was being used.
    * Drop external dependency on JMS serialiser in favour of a more performant functional equivalent (see [#227] (https://github.com/Algo-Web/POData/pull/227))
    * Encapsulate enum constants where possible (see [#235] (https://github.com/Algo-Web/POData/pull/235))
+   * Make line endings configurable (see [#244] (https://github.com/Algo-Web/POData/pull/244))
    * Preparation work to clean up operation context use and ultimately, illuminate/http removal (see [#246] (https://github.com/Algo-Web/POData/pull/246))
    * Remove obsolete dependencies (see [#247] (https://github.com/Algo-Web/POData/pull/247))
    * Use the right base test case for Illuminate-related bits (see [#250] (https://github.com/Algo-Web/POData/pull/250))

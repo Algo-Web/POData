@@ -9,6 +9,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
+use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
@@ -35,7 +36,7 @@ class JsonODataV1WriterTest extends TestCase
     {
         $oDataUrl      = new ODataURL();
         $oDataUrl->url = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
-        $writer        = new JsonODataV1Writer();
+        $writer        = new JsonODataV1Writer(PHP_EOL, true);
         $result        = $writer->write($oDataUrl);
         $this->assertSame($writer, $result);
 
@@ -61,7 +62,7 @@ class JsonODataV1WriterTest extends TestCase
             $oDataUrl3,
         ];
         $oDataUrlCollection->count = 3;
-        $writer                    = new JsonODataV1Writer();
+        $writer                    = new JsonODataV1Writer(PHP_EOL, true);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);
 
@@ -171,7 +172,7 @@ class JsonODataV1WriterTest extends TestCase
         //entry 1 end
         $oDataFeed->entries = [$entry1];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
 
@@ -394,7 +395,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $oDataFeed->entries = [$entry1, $entry2];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
 
@@ -492,7 +493,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $entry->links = [$link];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -564,7 +565,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $propContent->properties = [$prop1];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($propContent);
         $this->assertSame($writer, $result);
 
@@ -684,7 +685,7 @@ class JsonODataV1WriterTest extends TestCase
 
         $entry->propertyContent = $entryPropContent;
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -739,7 +740,7 @@ class JsonODataV1WriterTest extends TestCase
         $content             = new ODataPropertyContent();
         $content->properties = [$property];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($content);
         $this->assertSame($writer, $result);
 
@@ -874,7 +875,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->expandedResult = $expandedEntry;
         $entry->links               = [$expandLink];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -967,7 +968,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->expandedResult = null; //<--key part
         $entry->links               = [$expandLink];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -1183,7 +1184,7 @@ class JsonODataV1WriterTest extends TestCase
         $expandLink->expandedResult = $expandedFeed;
         $entry->links               = [$expandLink];
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($entry);
         $this->assertSame($writer, $result);
 
@@ -1250,7 +1251,7 @@ class JsonODataV1WriterTest extends TestCase
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn([]);
         $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n\n        ]\n    }\n}";
@@ -1275,7 +1276,7 @@ class JsonODataV1WriterTest extends TestCase
         $this->mockProvider->shouldReceive('getResourceSets')->andReturn($fakeResourceSets);
         $this->mockProvider->shouldReceive('getSingletons')->andReturn([]);
 
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
         $actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
         $expected = "{\n    \"d\":{\n        \"EntitySet\":[\n            \"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n        ]\n    }\n}";
@@ -1303,7 +1304,7 @@ class JsonODataV1WriterTest extends TestCase
         $wrapper->shouldReceive('getResourceSets')->andReturn([$set]);
         $wrapper->shouldReceive('getSingletons')->andReturn([$single]);
 
-        $foo = new JsonODataV1Writer('http://localhost/odata.svc');
+        $foo = new JsonODataV1Writer(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeServiceDocument($wrapper);
 
         $actual   = $foo->getOutput();
@@ -1321,7 +1322,7 @@ class JsonODataV1WriterTest extends TestCase
      */
     public function testCanHandle($id, $version, $contentType, $expected)
     {
-        $writer = new JsonODataV1Writer();
+        $writer = new JsonODataV1Writer(PHP_EOL, true);
 
         $actual = $writer->canHandle($version, $contentType);
 
@@ -1366,7 +1367,7 @@ class JsonODataV1WriterTest extends TestCase
         $expected = '{' . PHP_EOL . '    "error":{' . PHP_EOL . '        "code":"500","message":{' . PHP_EOL;
         $expected .= '            "lang":"en-US","value":"BORK BORK BORK!"' . PHP_EOL;
         $expected .= '        }' . PHP_EOL . '    }' . PHP_EOL . '}';
-        $actual   = JsonODataV1Writer::serializeException($exception);
+        $actual   = JsonODataV1Writer::serializeException($exception, new ServiceConfiguration(null));
         $expected = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $expected);
         $actual   = preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $actual);
         $this->assertEquals($expected, $actual);
@@ -1386,7 +1387,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry->mediaLinks       = [$media];
         $entry->type             = 'Entry';
 
-        $foo = new JsonODataV1Writer();
+        $foo = new JsonODataV1Writer(PHP_EOL, true);
 
         $foo->write($entry);
 
@@ -1416,7 +1417,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry->mediaLinks       = [$media];
         $entry->type             = null;
 
-        $foo = new JsonODataV1Writer();
+        $foo = new JsonODataV1Writer(PHP_EOL, true);
 
         $foo->write($entry);
 
@@ -1437,7 +1438,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry                  = new ODataEntry();
         $entry->resourceSetName = 'Foobars';
 
-        $foo = new JsonODataV1Writer('http://localhost/odata.svc');
+        $foo = new JsonODataV1Writer(PHP_EOL, true, 'http://localhost/odata.svc');
 
         $actual   = $foo->write($entry)->getOutput();
         $expected = '"__metadata":{' . PHP_EOL . PHP_EOL . '        }';
@@ -1454,7 +1455,7 @@ class JsonODataV1WriterTest extends TestCase
         $feed->selfLink->title = 'Feed Title';
         $feed->selfLink->url   = 'feedID';
 
-        $foo      = new JsonODataV1Writer('http://localhost/odata.svc');
+        $foo      = new JsonODataV1Writer(PHP_EOL, true, 'http://localhost/odata.svc');
         $expected = '"d":[' . PHP_EOL . PHP_EOL . '    ]';
         $actual   = $foo->write($feed)->getOutput();
         $this->assertTrue(false !== strpos($actual, $expected));

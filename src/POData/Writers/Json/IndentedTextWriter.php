@@ -37,15 +37,20 @@ class IndentedTextWriter
      */
     private $tabString;
 
+
+    private $eol;
+    private $prettyPrint;
     /**
      * Creates a new instance of IndentedTextWriter.
      *
      * @param string $writer writer which IndentedTextWriter wraps
      */
-    public function __construct($writer)
+    public function __construct($writer, string $eol, bool $prettyPrint)
     {
-        $this->result    = $writer;
-        $this->tabString = '    ';
+        $this->result      = $writer;
+        $this->eol         = $prettyPrint ? $eol : '';
+        $this->prettyPrint = $prettyPrint;
+        $this->tabString   = $prettyPrint ? '    ' : '';
     }
 
     /**
@@ -70,7 +75,7 @@ class IndentedTextWriter
      */
     public function writeLine()
     {
-        $this->write("\n");
+        $this->write($this->eol);
         $this->tabsPending = true;
 
         return $this;
@@ -122,7 +127,7 @@ class IndentedTextWriter
      */
     public function getResult()
     {
-        return str_replace("\n", PHP_EOL, $this->result);
+        return $this->result;
     }
 
     /**

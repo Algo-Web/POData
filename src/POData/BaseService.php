@@ -6,14 +6,15 @@ namespace POData;
 
 use POData\BatchProcessor\BatchProcessor;
 use POData\Common\ErrorHandler;
+use POData\Common\HttpHeaderFailure;
 use POData\Common\HttpStatus;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
-use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\ReflectionHandler;
+use POData\Common\UrlFormatException;
 use POData\Common\Version;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ServiceConfiguration;
@@ -116,15 +117,22 @@ abstract class BaseService implements IRequestHandler, IService
 
     /**
      * BaseService constructor.
-     * @param IObjectSerialiser|null $serialiser
+     * @param  IObjectSerialiser|null     $serialiser
+     * @param  IMetadataProvider|null     $metaProvider
+     * @param  IServiceConfiguration|null $config
+     * @throws \Exception
      */
-    protected function __construct(IObjectSerialiser $serialiser = null)
-    {
+    protected function __construct(
+        IObjectSerialiser $serialiser = null,
+        IMetadataProvider $metaProvider = null,
+        IServiceConfiguration $config = null
+    ) {
         if (null != $serialiser) {
             $serialiser->setService($this);
         } else {
             $serialiser = new ObjectModelSerializer($this, null);
         }
+        $this->config           = $config ?? $this->initializeDefaultConfig(new ServiceConfiguration($metaProvider));
         $this->objectSerialiser = $serialiser;
     }
 
@@ -364,7 +372,6 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
         }
 
-        $this->config           = new ServiceConfiguration($metadataProvider);
         $this->providersWrapper = new ProvidersWrapper(
             $metadataProvider,
             $queryProvider,
@@ -392,17 +399,54 @@ abstract class BaseService implements IRequestHandler, IService
         $serviceURI     = $this->getHost()->getAbsoluteServiceUri()->getUrlAsString();
 
         //We always register the v1 stuff
-        $registry->register(new JsonODataV1Writer());
-        $registry->register(new AtomODataWriter($serviceURI));
+        $registry->register(
+            new JsonODataV1Writer(
+                $this->getConfiguration()->getLineEndings(),
+                $this->getConfiguration()->getPrettyOutput()
+            )
+        );
+        $registry->register(
+            new AtomODataWriter(
+                $this->getConfiguration()->getLineEndings(),
+                $this->getConfiguration()->getPrettyOutput(),
+                $serviceURI
+            )
+        );
 
         if (-1 < $serviceVersion->compare(Version::v2())) {
-            $registry->register(new JsonODataV2Writer());
+            $registry->register(
+                new JsonODataV2Writer(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput()
+                )
+            );
         }
 
         if (-1 < $serviceVersion->compare(Version::v3())) {
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::NONE(), $serviceURI));
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL(), $serviceURI));
-            $registry->register(new JsonLightODataWriter(JsonLightMetadataLevel::FULL(), $serviceURI));
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::NONE(),
+                    $serviceURI
+                )
+            );
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::MINIMAL(),
+                    $serviceURI
+                )
+            );
+            $registry->register(
+                new JsonLightODataWriter(
+                    $this->getConfiguration()->getLineEndings(),
+                    $this->getConfiguration()->getPrettyOutput(),
+                    JsonLightMetadataLevel::FULL(),
+                    $serviceURI
+                )
+            );
         }
     }
 
@@ -517,7 +561,7 @@ abstract class BaseService implements IRequestHandler, IService
                         $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                     }
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
-                          || TargetKind::SINGLETON() == $requestTargetKind) {
+                    || TargetKind::SINGLETON() == $requestTargetKind) {
                     if (null !== $this->getHost()->getRequestIfMatch()
                         && null !== $this->getHost()->getRequestIfNoneMatch()
                     ) {
@@ -904,5 +948,10 @@ abstract class BaseService implements IRequestHandler, IService
             return rtrim($eTag, ',');
         }
         return null;
+    }
+
+    protected function initializeDefaultConfig(IServiceConfiguration $config)
+    {
+        return $config;
     }
 }
