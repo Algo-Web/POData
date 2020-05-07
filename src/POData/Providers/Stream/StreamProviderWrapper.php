@@ -12,7 +12,6 @@ use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\Version;
 use POData\IService;
-use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceStreamInfo;
 
 /**

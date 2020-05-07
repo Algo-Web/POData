@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace POData\ObjectModel;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
-use Illuminate\Support\Str;
 use POData\Common\ODataConstants;
 
 /**

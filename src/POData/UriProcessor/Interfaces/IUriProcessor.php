@@ -9,7 +9,6 @@ use POData\IService;
 use POData\Providers\ProvidersWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestExpander;
-use POData\UriProcessor\UriProcessor;
 
 /**
  * Class UriProcessor.

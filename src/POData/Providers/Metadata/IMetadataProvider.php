@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
-use AlgoWeb\ODataMetadata\IsOK;
-
 /**
  * Class IMetadataProvider.
  *

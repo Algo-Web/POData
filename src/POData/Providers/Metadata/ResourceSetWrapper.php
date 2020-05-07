@@ -7,7 +7,6 @@ namespace POData\Providers\Metadata;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
-use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
 
 /**

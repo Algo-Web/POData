@@ -17,7 +17,6 @@ use POData\ObjectModel\ODataURL;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
