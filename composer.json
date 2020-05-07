@@ -27,7 +27,7 @@
     "myclabs/php-enum": "^1.7",
     "cruxinator/php-bitmask": "^0.1",
     "php": "^7.1",
-    "illuminate/http": ">=5.1|^6.0",
+    "illuminate/http": ">=5.1",
     "algo-web/o-data-metadata": "0.1.*|dev-master",
     "ext-xml": "*",
     "ext-xmlwriter": "*"
