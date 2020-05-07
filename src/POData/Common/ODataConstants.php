@@ -208,11 +208,11 @@ class ODataConstants
     //type element name in json payload.
     const JSON_TYPE_STRING = 'type';
 
-    const JSON_LIGHT_METADATA_TYPE_STRING = 'odata.type';
-    const JSON_LIGHT_METADATA_ID_STRING = 'odata.id';
-    const JSON_LIGHT_METADATA_ETAG_STRING = 'odata.etag';
-    const JSON_LIGHT_METADATA_EDIT_LINK_STRING = 'odata.editLink';
-    const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING = '@odata.type';
+    const JSON_LIGHT_METADATA_TYPE_STRING                   = 'odata.type';
+    const JSON_LIGHT_METADATA_ID_STRING                     = 'odata.id';
+    const JSON_LIGHT_METADATA_ETAG_STRING                   = 'odata.etag';
+    const JSON_LIGHT_METADATA_EDIT_LINK_STRING              = 'odata.editLink';
+    const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING   = '@odata.type';
     const JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING = '@odata.navigationLinkUrl';
 
     //edit_media element name in json payload.
@@ -784,66 +784,66 @@ class ODataConstants
     //'D': Suffix for double (Real) type's representation
     const XML_DOUBLE_LITERAL_SUFFIX = 'D';
 
-    const STRFUN_COMPARE = 'strcmp';
-    const STRFUN_ENDSWITH = 'endswith';
-    const STRFUN_INDEXOF = 'indexof';
-    const STRFUN_REPLACE = 'replace';
-    const STRFUN_STARTSWITH = 'startswith';
-    const STRFUN_TOLOWER = 'tolower';
-    const STRFUN_TOUPPER = 'toupper';
-    const STRFUN_TRIM = 'trim';
-    const STRFUN_SUBSTRING = 'substring';
+    const STRFUN_COMPARE     = 'strcmp';
+    const STRFUN_ENDSWITH    = 'endswith';
+    const STRFUN_INDEXOF     = 'indexof';
+    const STRFUN_REPLACE     = 'replace';
+    const STRFUN_STARTSWITH  = 'startswith';
+    const STRFUN_TOLOWER     = 'tolower';
+    const STRFUN_TOUPPER     = 'toupper';
+    const STRFUN_TRIM        = 'trim';
+    const STRFUN_SUBSTRING   = 'substring';
     const STRFUN_SUBSTRINGOF = 'substringof';
-    const STRFUN_CONCAT = 'concat';
-    const STRFUN_LENGTH = 'length';
-    const GUIDFUN_EQUAL = 'guidEqual';
-    const DATETIME_COMPARE = 'dateTimeCmp';
-    const DATETIME_YEAR = 'year';
-    const DATETIME_MONTH = 'month';
-    const DATETIME_DAY = 'day';
-    const DATETIME_HOUR = 'hour';
-    const DATETIME_MINUTE = 'minute';
-    const DATETIME_SECOND = 'second';
-    const MATHFUN_ROUND = 'round';
-    const MATHFUN_CEILING = 'ceiling';
-    const MATHFUN_FLOOR = 'floor';
-    const BINFUL_EQUAL = 'binaryEqual';
+    const STRFUN_CONCAT      = 'concat';
+    const STRFUN_LENGTH      = 'length';
+    const GUIDFUN_EQUAL      = 'guidEqual';
+    const DATETIME_COMPARE   = 'dateTimeCmp';
+    const DATETIME_YEAR      = 'year';
+    const DATETIME_MONTH     = 'month';
+    const DATETIME_DAY       = 'day';
+    const DATETIME_HOUR      = 'hour';
+    const DATETIME_MINUTE    = 'minute';
+    const DATETIME_SECOND    = 'second';
+    const MATHFUN_ROUND      = 'round';
+    const MATHFUN_CEILING    = 'ceiling';
+    const MATHFUN_FLOOR      = 'floor';
+    const BINFUL_EQUAL       = 'binaryEqual';
 
     // Headers for HTTPRequest
     // We need to use these constant with $_SERVER to get the value of the headers
-    const HTTPREQUEST_PROTOCOL = 'SERVER_PROTOCOL';
-    const HTTPREQUEST_PROTOCOL_HTTP = 'http';
+    const HTTPREQUEST_PROTOCOL       = 'SERVER_PROTOCOL';
+    const HTTPREQUEST_PROTOCOL_HTTP  = 'http';
     const HTTPREQUEST_PROTOCOL_HTTPS = 'https';
-    const HTTPREQUEST_PORT = 'SERVER_PORT';
-    const HTTPREQUEST_URI = 'REQUEST_URI';
-    const HTTPREQUEST_QUERY_STRING = 'QUERY_STRING';
-    const HTTPREQUEST_METHOD = 'REQUEST_METHOD';
+    const HTTPREQUEST_PORT           = 'SERVER_PORT';
+    const HTTPREQUEST_URI            = 'REQUEST_URI';
+    const HTTPREQUEST_QUERY_STRING   = 'QUERY_STRING';
+    const HTTPREQUEST_METHOD         = 'REQUEST_METHOD';
     const HTTPREQUEST_CONTENT_LENGTH = 'CONTENT_LENGTH';
-    const HTTPREQUEST_CONTENT_TYPE = 'CONTENT_TYPE';
+    const HTTPREQUEST_CONTENT_TYPE   = 'CONTENT_TYPE';
 
-    const HTTPREQUEST_HEADER_ACCEPT = 'ACCEPT';
+    const HTTPREQUEST_HEADER_ACCEPT         = 'ACCEPT';
     const HTTPREQUEST_HEADER_ACCEPT_CHARSET = 'ACCEPT_CHARSET';
-    const HTTPREQUEST_HEADER_USER_AGENT = 'USER_AGENT';
-    const HTTPREQUEST_HEADER_HOST = 'HOST';
-    const HTTPREQUEST_HEADER_IF_MATCH = 'IF_MATCH';
-    const HTTPREQUEST_HEADER_IF_MODIFIED = 'IF_MODIFIED_SINCE';
-    const HTTPREQUEST_HEADER_IF_NONE = 'IF_NONE_MATCH';
-    const HTTPREQUEST_HEADER_IF_UNMODIFIED = 'IF_UNMODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_USER_AGENT     = 'USER_AGENT';
+    const HTTPREQUEST_HEADER_HOST           = 'HOST';
+    const HTTPREQUEST_HEADER_IF_MATCH       = 'IF_MATCH';
+    const HTTPREQUEST_HEADER_IF_MODIFIED    = 'IF_MODIFIED_SINCE';
+    const HTTPREQUEST_HEADER_IF_NONE        = 'IF_NONE_MATCH';
+    const HTTPREQUEST_HEADER_IF_UNMODIFIED  = 'IF_UNMODIFIED_SINCE';
 
-    const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION = 'DATASERVICEVERSION';
+    const HTTPREQUEST_HEADER_DATA_SERVICE_VERSION     = 'DATASERVICEVERSION';
     const HTTPREQUEST_HEADER_MAX_DATA_SERVICE_VERSION = 'MAXDATASERVICEVERSION';
 
     // Headers for HTTPResponse
     // We need to use these string with header() for setting-up these headers
     const HTTPRESPONSE_HEADER_CONTENTLENGTH = 'Content-Length';
-    const HTTPRESPONSE_HEADER_CONTENTTYPE = 'Content-Type';
-    const HTTPRESPONSE_HEADER_CACHECONTROL = 'Cache-Control';
-    const HTTPRESPONSE_HEADER_ETAG = 'ETag';
-    const HTTPRESPONSE_HEADER_LASTMODIFIED = 'Last-Modified';
-    const HTTPRESPONSE_HEADER_LOCATION = 'Location';
-    const HTTPRESPONSE_HEADER_STATUS = 'Status';
-    const HTTPRESPONSE_HEADER_STATUS_CODE = 'StatusCode';
-    const HTTPRESPONSE_HEADER_STATUS_DESC = 'StatusDesc';
+    const HTTPRESPONSE_HEADER_CONTENTTYPE   = 'Content-Type';
+    const HTTPRESPONSE_HEADER_CACHECONTROL  = 'Cache-Control';
+    const HTTPRESPONSE_HEADER_ETAG          = 'ETag';
+    const HTTPRESPONSE_HEADER_LASTMODIFIED  = 'Last-Modified';
+    const HTTPRESPONSE_HEADER_LOCATION      = 'Location';
+    const HTTPRESPONSE_HEADER_STATUS        = 'Status';
+    const HTTPRESPONSE_HEADER_STATUS_CODE   = 'StatusCode';
+    const HTTPRESPONSE_HEADER_STATUS_DESC   = 'StatusDesc';
 
     const HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE = 'no-cache';
 }

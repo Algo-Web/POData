@@ -48,14 +48,14 @@ class FunctionDescription
     /**
      * Create new instance of FunctionDescription.
      *
-     * @param string $name Name of the function
-     * @param IType $returnType Return type
+     * @param string  $name          Name of the function
+     * @param IType   $returnType    Return type
      * @param IType[] $argumentTypes Parameter type
      */
     public function __construct($name, $returnType, $argumentTypes)
     {
-        $this->name = $name;
-        $this->returnType = $returnType;
+        $this->name          = $name;
+        $this->returnType    = $returnType;
         $this->argumentTypes = $argumentTypes;
     }
 
@@ -183,24 +183,23 @@ class FunctionDescription
     /**
      * Validate operands of an arithmetic operation and promote if required.
      *
-     * @param ExpressionToken $expressionToken The expression token
-     * @param AbstractExpression $leftArgument The left expression
-     * @param AbstractExpression $rightArgument The right expression
+     * @param ExpressionToken    $expressionToken The expression token
+     * @param AbstractExpression $leftArgument    The left expression
+     * @param AbstractExpression $rightArgument   The right expression
      *
-     * @return IType
      * @throws ODataException
+     * @return IType
      */
     public static function verifyAndPromoteArithmeticOpArguments(
         $expressionToken,
         $leftArgument,
         $rightArgument
-    )
-    {
+    ) {
         $function
             = self::findFunctionWithPromotion(
-            self::arithmeticOperationFunctions(),
-            [$leftArgument, $rightArgument]
-        );
+                self::arithmeticOperationFunctions(),
+                [$leftArgument, $rightArgument]
+            );
         if ($function == null) {
             self::incompatibleError(
                 $expressionToken,
@@ -216,8 +215,8 @@ class FunctionDescription
      * with types of expressions.
      *
      * @param FunctionDescription[] $functionDescriptions List of functions
-     * @param AbstractExpression[] $argExpressions Function argument expressions
-     * @param bool $promoteArguments Function argument
+     * @param AbstractExpression[]  $argExpressions       Function argument expressions
+     * @param bool                  $promoteArguments     Function argument
      *
      * @return FunctionDescription|null Reference to the matching function if found else NULL
      */
@@ -225,9 +224,8 @@ class FunctionDescription
         $functionDescriptions,
         $argExpressions,
         $promoteArguments = true
-    )
-    {
-        $argCount = count($argExpressions);
+    ) {
+        $argCount            = count($argExpressions);
         $applicableFunctions = [];
         foreach ($functionDescriptions as $functionDescription) {
             if (count($functionDescription->argumentTypes) == $argCount) {
@@ -257,7 +255,7 @@ class FunctionDescription
 
         //Check match with promotion
         foreach ($applicableFunctions as $function) {
-            $i = 0;
+            $i             = 0;
             $promotedTypes = [];
             /** @var IType $argumentType */
             foreach ($function->argumentTypes as $argumentType) {
@@ -287,8 +285,8 @@ class FunctionDescription
     /**
      * To throw ODataException for incompatible types.
      *
-     * @param ExpressionToken $expressionToken Expression token
-     * @param AbstractExpression[] $argExpressions Array of argument expression
+     * @param ExpressionToken      $expressionToken Expression token
+     * @param AbstractExpression[] $argExpressions  Array of argument expression
      *
      * @throws ODataException
      */
@@ -300,7 +298,7 @@ class FunctionDescription
         }
 
         $string = rtrim($string, ', ');
-        $pos = strrpos($string, ', ');
+        $pos    = strrpos($string, ', ');
         if ($pos !== false) {
             $string = substr_replace($string, ' and ', strrpos($string, ', '), 2);
         }
@@ -317,9 +315,9 @@ class FunctionDescription
     /**
      * Validate operands of an logical operation.
      *
-     * @param ExpressionToken $expressionToken The expression token
-     * @param AbstractExpression $leftArgument The left expression
-     * @param AbstractExpression $rightArgument The right expression
+     * @param ExpressionToken    $expressionToken The expression token
+     * @param AbstractExpression $leftArgument    The left expression
+     * @param AbstractExpression $rightArgument   The right expression
      *
      * @throws ODataException
      */
@@ -327,8 +325,7 @@ class FunctionDescription
         $expressionToken,
         $leftArgument,
         $rightArgument
-    )
-    {
+    ) {
         $function = self::findFunctionWithPromotion(
             self::logicalOperationFunctions(),
             [$leftArgument, $rightArgument],
@@ -361,9 +358,9 @@ class FunctionDescription
     /**
      * Validate operands of an relational operation.
      *
-     * @param ExpressionToken $expressionToken The expression token
-     * @param AbstractExpression $leftArgument The left argument expression
-     * @param AbstractExpression $rightArgument The right argument expression
+     * @param ExpressionToken    $expressionToken The expression token
+     * @param AbstractExpression $leftArgument    The left argument expression
+     * @param AbstractExpression $rightArgument   The right argument expression
      *
      * @throws ODataException
      */
@@ -371,8 +368,7 @@ class FunctionDescription
         $expressionToken,
         $leftArgument,
         $rightArgument
-    )
-    {
+    ) {
         //for null operands only equality operators are allowed
         $null = new Null1();
         if ($leftArgument->typeIs($null) || $rightArgument->typeIs($null)) {
@@ -497,8 +493,8 @@ class FunctionDescription
     /**
      * Validate operands of a unary  operation.
      *
-     * @param ExpressionToken $expressionToken The expression token
-     * @param AbstractExpression $argExpression Argument expression
+     * @param ExpressionToken    $expressionToken The expression token
+     * @param AbstractExpression $argExpression   Argument expression
      *
      * @throws ODataException
      */
@@ -563,9 +559,8 @@ class FunctionDescription
      *
      * @param ExpressionToken $expressionToken The expression token
      *
-     * @return FunctionDescription[] Array of matching functions
      * @throws ODataException
-     *
+     * @return FunctionDescription[] Array of matching functions
      */
     public static function verifyFunctionExists($expressionToken)
     {
@@ -765,20 +760,18 @@ class FunctionDescription
      * Validate operands (arguments) of a function call operation and return
      * matching function.
      *
-     * @param FunctionDescription[] $functions List of functions to be checked
-     * @param AbstractExpression[] $argExpressions Function argument expressions
-     * @param ExpressionToken $expressionToken Expression token
+     * @param FunctionDescription[] $functions       List of functions to be checked
+     * @param AbstractExpression[]  $argExpressions  Function argument expressions
+     * @param ExpressionToken       $expressionToken Expression token
      *
-     * @return FunctionDescription
      * @throws ODataException
-     *
+     * @return FunctionDescription
      */
     public static function verifyFunctionCallOpArguments(
         $functions,
         $argExpressions,
         $expressionToken
-    )
-    {
+    ) {
         $function
             = self::findFunctionWithPromotion($functions, $argExpressions, false);
         if ($function == null) {

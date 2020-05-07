@@ -38,7 +38,7 @@ class OrderByPathSegment
      *
      * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderBy sub path segments for this
      *                                                        path segment
-     * @param bool $isAscending sort order,
+     * @param bool                    $isAscending            sort order,
      *                                                        True for ascending and false for descending
      */
     public function __construct(array $orderBySubPathSegments, bool $isAscending = true)
@@ -50,7 +50,7 @@ class OrderByPathSegment
         }
 
         $this->orderBySubPathSegments = $orderBySubPathSegments;
-        $this->isAscending = $isAscending;
+        $this->isAscending            = $isAscending;
     }
 
     /**

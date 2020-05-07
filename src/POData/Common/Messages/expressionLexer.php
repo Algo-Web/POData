@@ -13,7 +13,7 @@ trait expressionLexer
     /**
      * Format message for unterminated string literal error.
      *
-     * @param int $pos Position of unterminated string literal in the text
+     * @param int    $pos  Position of unterminated string literal in the text
      * @param string $text The text with unterminated string literal
      *
      * @return string The formatted message
@@ -50,8 +50,8 @@ trait expressionLexer
     /**
      * Format message for invalid character error.
      *
-     * @param string $ch The invalid character found
-     * @param int $pos Position at which invalid character found
+     * @param string $ch  The invalid character found
+     * @param int    $pos Position at which invalid character found
      *
      * @return string The formatted message
      */
@@ -64,8 +64,8 @@ trait expressionLexer
      * Format message for not applicable function error.
      *
      * @param string $functionName The name of the function called
-     * @param string $protoTypes Prototype of the functions considered
-     * @param int $position Position at which function-call found
+     * @param string $protoTypes   Prototype of the functions considered
+     * @param int    $position     Position at which function-call found
      *
      * @return string The formatted message
      */
@@ -73,8 +73,7 @@ trait expressionLexer
         $functionName,
         $protoTypes,
         $position
-    )
-    {
+    ) {
         return 'No applicable function found for \'' . $functionName . '\' at position ' . $position .
             ' with the specified arguments. The functions considered are: ' . $protoTypes;
     }
@@ -83,8 +82,8 @@ trait expressionLexer
      * Format message for property not found error.
      *
      * @param string $property The name of the property
-     * @param string $type The parent type in which property searched for
-     * @param int $position Position at which property mentioned
+     * @param string $type     The parent type in which property searched for
+     * @param int    $position Position at which property mentioned
      *
      * @return string The formatted message
      */

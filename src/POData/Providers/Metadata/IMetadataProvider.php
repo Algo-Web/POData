@@ -82,11 +82,11 @@ interface IMetadataProvider
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet $resourceSet Resource set of the source
+     * @param ResourceSet        $resourceSet      Resource set of the source
      *                                             association end
-     * @param ResourceEntityType $resourceType Resource type of the source
+     * @param ResourceEntityType $resourceType     Resource type of the source
      *                                             association end
-     * @param ResourceProperty $resourceProperty Resource property of the source
+     * @param ResourceProperty   $resourceProperty Resource property of the source
      *                                             association end
      *
      * @return ResourceAssociationSet
@@ -100,8 +100,8 @@ interface IMetadataProvider
     /**
      * Generate singleton wrapper.
      *
-     * @param string $name Name of singleton
-     * @param ResourceType $returnType Return type wrapper
+     * @param string       $name         Name of singleton
+     * @param ResourceType $returnType   Return type wrapper
      * @param string|array $functionName Function call to be wrapped
      *
      * @return mixed
@@ -125,8 +125,8 @@ interface IMetadataProvider
     public function callSingleton($name);
 
     /**
-     * @return string|null
      * @throws Exception
+     * @return string|null
      */
     public function getXML();
 }

@@ -16,27 +16,26 @@ class HttpProcessUtility
     /**
      * Gets the appropriate MIME type for the request, throwing if there is none.
      *
-     * @param string $acceptTypesText Text as it appears in an HTTP
+     * @param string   $acceptTypesText    Text as it appears in an HTTP
      *                                     Accepts header
-     * @param string[] $exactContentTypes Preferred content type to match if an exact media type is given - this is in
+     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in
      *                                     descending order of preference
-     * @param string $inexactContentType Preferred fallback content type for inexact matches
+     * @param string   $inexactContentType Preferred fallback content type for inexact matches
      *
-     * @return string|null       One of exactContentType or inexactContentType
      * @throws HttpHeaderFailure
+     * @return string|null       One of exactContentType or inexactContentType
      */
     public static function selectRequiredMimeType(
         ?string $acceptTypesText,
         array $exactContentTypes,
         $inexactContentType
-    ): ?string
-    {
-        $selectedContentType = null;
+    ): ?string {
+        $selectedContentType   = null;
         $selectedMatchingParts = -1;
-        $selectedQualityValue = 0;
-        $acceptable = false;
-        $acceptTypesEmpty = true;
-        $foundExactMatch = false;
+        $selectedQualityValue  = 0;
+        $acceptable            = false;
+        $acceptTypesEmpty      = true;
+        $foundExactMatch       = false;
 
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
@@ -47,10 +46,10 @@ class HttpProcessUtility
             $acceptTypesEmpty = false;
             foreach ($exactContentTypes as $exactContentType) {
                 if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
-                    $selectedContentType = $exactContentType;
+                    $selectedContentType  = $exactContentType;
                     $selectedQualityValue = $acceptType->getQualityValue();
-                    $acceptable = 0 != $selectedQualityValue;
-                    $foundExactMatch = true;
+                    $acceptable           = 0 != $selectedQualityValue;
+                    $foundExactMatch      = true;
                     break;
                 }
             }
@@ -67,16 +66,16 @@ class HttpProcessUtility
             $candidateQualityValue = $acceptType->getQualityValue();
             if ($matchingParts > $selectedMatchingParts) {
                 // A more specific type wins.
-                $selectedContentType = $inexactContentType;
+                $selectedContentType   = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue = $candidateQualityValue;
-                $acceptable = 0 != $selectedQualityValue;
+                $selectedQualityValue  = $candidateQualityValue;
+                $acceptable            = 0 != $selectedQualityValue;
             } elseif ($matchingParts == $selectedMatchingParts) {
                 // A type with a higher q-value wins.
                 if ($candidateQualityValue > $selectedQualityValue) {
-                    $selectedContentType = $inexactContentType;
+                    $selectedContentType  = $inexactContentType;
                     $selectedQualityValue = $candidateQualityValue;
-                    $acceptable = 0 != $selectedQualityValue;
+                    $acceptable           = 0 != $selectedQualityValue;
                 }
             }
         }
@@ -97,16 +96,15 @@ class HttpProcessUtility
      *
      * @param string $text Text as it appears on an HTTP Accepts header
      *
-     * @return MediaType[] Array of media (MIME) type description
      * @throws HttpHeaderFailure If found any syntax error in the given text
-     *
+     * @return MediaType[]       Array of media (MIME) type description
      */
     public static function mimeTypesFromAcceptHeaders(string $text): array
     {
         $mediaTypes = [];
-        $textIndex = 0;
+        $textIndex  = 0;
         while (!self::skipWhiteSpace($text, $textIndex)) {
-            $type = null;
+            $type    = null;
             $subType = null;
             self::readMediaTypeAndSubtype($text, $textIndex, $type, $subType);
 
@@ -142,7 +140,7 @@ class HttpProcessUtility
      * Skips whitespace in the specified text by advancing an index to
      * the next non-whitespace character.
      *
-     * @param string $text Text to scan
+     * @param string $text       Text to scan
      * @param int    &$textIndex Index to begin scanning from
      *
      * @return bool true if the end of the string was reached, false otherwise
@@ -160,10 +158,10 @@ class HttpProcessUtility
     /**
      * Reads the type and subtype specifications for a MIME type.
      *
-     * @param string $text Text in which specification exists
+     * @param string $text       Text in which specification exists
      * @param int    &$textIndex Pointer into text
-     * @param string &$type Type of media found
-     * @param string &$subType Subtype of media found
+     * @param string &$type      Type of media found
+     * @param string &$subType   Subtype of media found
      *
      * @throws HttpHeaderFailure If failed to read type and sub-type
      */
@@ -172,8 +170,7 @@ class HttpProcessUtility
         int &$textIndex,
         &$type,
         &$subType
-    ): void
-    {
+    ): void {
         $textStart = $textIndex;
         if (self::readToken($text, $textIndex)) {
             throw new HttpHeaderFailure(
@@ -207,7 +204,7 @@ class HttpProcessUtility
     /**
      * Reads a token on the specified text by advancing an index on it.
      *
-     * @param string $text Text to read token from
+     * @param string $text       Text to read token from
      * @param int    &$textIndex Index for the position being scanned on text
      *
      * @return bool true if the end of the text was reached; false otherwise
@@ -257,8 +254,8 @@ class HttpProcessUtility
     /**
      * Read a parameter for a media type/range.
      *
-     * @param string $text Text to read from
-     * @param int    &$textIndex Pointer in text
+     * @param string $text        Text to read from
+     * @param int    &$textIndex  Pointer in text
      * @param array  &$parameters Array with parameters
      *
      * @throws HttpHeaderFailure If found parameter value missing
@@ -283,7 +280,7 @@ class HttpProcessUtility
 
         ++$textIndex;
         $parameterValue
-            = self::readQuotedParameterValue($parameterName, $text, $textIndex);
+                      = self::readQuotedParameterValue($parameterName, $text, $textIndex);
         $parameters[] = [$parameterName => $parameterValue];
     }
 
@@ -292,22 +289,20 @@ class HttpProcessUtility
      * Content-Type/Accept headers.
      *
      * @param string $parameterName Name of parameter
-     * @param string $text Header text
-     * @param int    &$textIndex Parsing index in $text
+     * @param string $text          Header text
+     * @param int    &$textIndex    Parsing index in $text
      *
-     * @return string String representing the value of the $parameterName parameter
      * @throws HttpHeaderFailure
-     *
+     * @return string            String representing the value of the $parameterName parameter
      */
     public static function readQuotedParameterValue(
         string $parameterName,
         string $text,
         int &$textIndex
-    ): ?string
-    {
+    ): ?string {
         $parameterValue = [];
-        $textLen = strlen($text);
-        $valueIsQuoted = false;
+        $textLen        = strlen($text);
+        $valueIsQuoted  = false;
         if ($textIndex < $textLen) {
             if ('"' == $text[$textIndex]) {
                 ++$textIndex;
@@ -366,29 +361,28 @@ class HttpProcessUtility
     /**
      * Selects an acceptable MIME type that satisfies the Accepts header.
      *
-     * @param string $acceptTypesText Text for Accepts header
-     * @param string[] $availableTypes Types that the server is willing to return, in descending order of preference
+     * @param string   $acceptTypesText Text for Accepts header
+     * @param string[] $availableTypes  Types that the server is willing to return, in descending order of preference
      *
-     * @return string|null The best MIME type for the client
      * @throws HttpHeaderFailure
-     *
+     * @return string|null       The best MIME type for the client
      */
     public static function selectMimeType(string $acceptTypesText, array $availableTypes): ?string
     {
-        $selectedContentType = null;
-        $selectedMatchingParts = -1;
-        $selectedQualityValue = 0;
+        $selectedContentType     = null;
+        $selectedMatchingParts   = -1;
+        $selectedQualityValue    = 0;
         $selectedPreferenceIndex = PHP_INT_MAX;
-        $acceptable = false;
-        $acceptTypesEmpty = true;
+        $acceptable              = false;
+        $acceptTypesEmpty        = true;
 
-        $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        $acceptTypes  = self::mimeTypesFromAcceptHeaders($acceptTypesText);
         $numAvailable = count($availableTypes);
         foreach ($acceptTypes as $acceptType) {
             $acceptTypesEmpty = false;
             for ($i = 0; $i < $numAvailable; ++$i) {
                 $availableType = $availableTypes[$i];
-                $matchRating = $acceptType->getMatchingRating($availableType);
+                $matchRating   = $acceptType->getMatchingRating($availableType);
                 if (0 > $matchRating) {
                     continue;
                 }
@@ -396,22 +390,22 @@ class HttpProcessUtility
                 $candidateQualityValue = $acceptType->getQualityValue();
                 if ($matchRating > $selectedMatchingParts) {
                     // A more specific type wins.
-                    $selectedContentType = $availableType;
-                    $selectedMatchingParts = $matchRating;
-                    $selectedQualityValue = $candidateQualityValue;
+                    $selectedContentType     = $availableType;
+                    $selectedMatchingParts   = $matchRating;
+                    $selectedQualityValue    = $candidateQualityValue;
                     $selectedPreferenceIndex = $i;
-                    $acceptable = 0 != $selectedQualityValue;
+                    $acceptable              = 0 != $selectedQualityValue;
                 } elseif ($matchRating == $selectedMatchingParts) {
                     // A type with a higher q-value wins.
                     if ($candidateQualityValue > $selectedQualityValue) {
-                        $selectedContentType = $availableType;
-                        $selectedQualityValue = $candidateQualityValue;
+                        $selectedContentType     = $availableType;
+                        $selectedQualityValue    = $candidateQualityValue;
                         $selectedPreferenceIndex = $i;
-                        $acceptable = 0 != $selectedQualityValue;
+                        $acceptable              = 0 != $selectedQualityValue;
                     } elseif ($candidateQualityValue == $selectedQualityValue) {
                         // A type that is earlier in the availableTypes array wins.
                         if ($i < $selectedPreferenceIndex) {
-                            $selectedContentType = $availableType;
+                            $selectedContentType     = $availableType;
                             $selectedPreferenceIndex = $i;
                         }
                     }
@@ -432,13 +426,12 @@ class HttpProcessUtility
      * Reads the numeric part of a quality value substring, normalizing it to 0-1000.
      * rather than the standard 0.000-1.000 ranges.
      *
-     * @param string $text Text to read qvalue from
+     * @param string $text       Text to read qvalue from
      * @param int    &$textIndex Index into text where the qvalue starts
      *
-     * @return int The normalised qvalue
      * @throws HttpHeaderFailure If any error occurred while reading and processing
      *                           the quality factor
-     *
+     * @return int               The normalised qvalue
      */
     public static function readQualityValue(string $text, int &$textIndex): int
     {
@@ -460,7 +453,7 @@ class HttpProcessUtility
 
             $adjustFactor = 1000;
             while (1 < $adjustFactor && $textIndex < $textLen) {
-                $c = $text[$textIndex];
+                $c         = $text[$textIndex];
                 $charValue = self::digitToInt32($c);
                 if (0 <= $charValue) {
                     ++$textIndex;
@@ -492,9 +485,8 @@ class HttpProcessUtility
      *
      * @param string $c Character to convert
      *
-     * @return int The Int32 value for $c, or -1 if it is an element separator
      * @throws HttpHeaderFailure If $c is not ASCII value for digit or element separator
-     *
+     * @return int               The Int32 value for $c, or -1 if it is an element separator
      */
     public static function digitToInt32(string $c): int
     {
@@ -529,7 +521,7 @@ class HttpProcessUtility
     /**
      * Get server key by header.
      *
-     * @param string $headerName Name of header
+     * @param  string $headerName Name of header
      * @return string
      */
     public static function headerToServerKey(string $headerName): string

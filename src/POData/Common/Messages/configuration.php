@@ -39,7 +39,7 @@ trait configuration
      * Format a message to show error when a function argument expected to
      * EntitySetRights enum value but it is not.
      *
-     * @param string $argument The argument name
+     * @param string $argument     The argument name
      * @param string $functionName The function name
      *
      * @return string The formatted message

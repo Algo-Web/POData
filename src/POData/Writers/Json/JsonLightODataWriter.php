@@ -38,7 +38,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
 
     /**
      * @param JsonLightMetadataLevel $metadataLevel
-     * @param string $absoluteServiceUri
+     * @param string                 $absoluteServiceUri
      *
      * @throws Exception
      */
@@ -49,10 +49,10 @@ class JsonLightODataWriter extends JsonODataV2Writer
         }
         $this->baseUri = $absoluteServiceUri;
 
-        $this->writer = new JsonWriter('');
-        $this->urlKey = ODataConstants::JSON_URL_STRING;
+        $this->writer        = new JsonWriter('');
+        $this->urlKey        = ODataConstants::JSON_URL_STRING;
         $this->dataArrayName = ODataConstants::JSON_LIGHT_VALUE_NAME;
-        $this->rowCountName = ODataConstants::JSON_LIGHT_ROWCOUNT_STRING;
+        $this->rowCountName  = ODataConstants::JSON_LIGHT_ROWCOUNT_STRING;
         $this->metadataLevel = $metadataLevel;
     }
 
@@ -60,7 +60,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      * Determines if the given writer is capable of writing the response or not.
      *
      * @param Version $responseVersion the OData version of the response
-     * @param string $contentType the Content Type of the response
+     * @param string  $contentType     the Content Type of the response
      *
      * @return bool true if the writer can handle the response, false otherwise
      */
@@ -81,8 +81,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @return JsonLightODataWriter
      * @throws Exception
+     * @return JsonLightODataWriter
      */
     public function write($model)
     {
@@ -117,7 +117,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     }
 
     /**
-     * @param string $fragment
+     * @param  string    $fragment
      * @throws Exception
      */
     protected function writeTopLevelMeta($fragment)
@@ -134,8 +134,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
     /**
      * @param ODataProperty $property
      *
-     * @return JsonLightODataWriter
      * @throws Exception
+     * @return JsonLightODataWriter
      */
     protected function writeTopLevelProperty(ODataProperty $property)
     {
@@ -160,9 +160,9 @@ class JsonLightODataWriter extends JsonODataV2Writer
     }
 
     /**
-     * @param ODataProperty $property
-     * @return $this|JsonODataV2Writer
+     * @param  ODataProperty           $property
      * @throws Exception
+     * @return $this|JsonODataV2Writer
      */
     protected function writePropertyMeta(ODataProperty $property)
     {
@@ -191,9 +191,9 @@ class JsonLightODataWriter extends JsonODataV2Writer
     }
 
     /**
-     * @param ODataProperty $property
-     * @return $this
+     * @param  ODataProperty $property
      * @throws Exception
+     * @return $this
      */
     protected function writeComplexPropertyMeta(ODataProperty $property)
     {
@@ -207,9 +207,9 @@ class JsonLightODataWriter extends JsonODataV2Writer
     }
 
     /**
-     * @param ODataBagContent $bag
-     * @return $this|JsonODataV1Writer
+     * @param  ODataBagContent         $bag
      * @throws Exception
+     * @return $this|JsonODataV1Writer
      */
     protected function writeBagContent(ODataBagContent $bag)
     {
@@ -235,8 +235,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
     /**
      * @param ODataEntry $entry Entry to write metadata for
      *
-     * @return JsonLightODataWriter
      * @throws Exception
+     * @return JsonLightODataWriter
      */
     protected function writeEntryMetadata(ODataEntry $entry)
     {
@@ -264,8 +264,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
     /**
      * @param ODataLink $link Link to write
      *
-     * @return JsonLightODataWriter
      * @throws Exception
+     * @return JsonLightODataWriter
      */
     protected function writeLink(ODataLink $link)
     {
@@ -290,7 +290,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     }
 
     /**
-     * @param ODataLink $link
+     * @param  ODataLink $link
      * @throws Exception
      */
     protected function writeExpandedLink(ODataLink $link)
@@ -323,8 +323,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
      *
      * @param ODataProperty $property property to write
      *
-     * @return JsonLightODataWriter
      * @throws Exception
+     * @return JsonLightODataWriter
      */
     protected function writeComplexProperty(ODataProperty $property)
     {

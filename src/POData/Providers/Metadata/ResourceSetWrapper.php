@@ -43,13 +43,13 @@ class ResourceSetWrapper extends ResourceSet
     /**
      * Constructs a new instance of ResourceSetWrapper.
      *
-     * @param ResourceSet $resourceSet The resource set to wrap
+     * @param ResourceSet           $resourceSet   The resource set to wrap
      * @param IServiceConfiguration $configuration Configuration to take settings specific to wrapped resource set
      */
     public function __construct(ResourceSet $resourceSet, IServiceConfiguration $configuration)
     {
-        $this->resourceSet = $resourceSet;
-        $this->resourceSetRights = $configuration->getEntitySetAccessRule($resourceSet);
+        $this->resourceSet         = $resourceSet;
+        $this->resourceSetRights   = $configuration->getEntitySetAccessRule($resourceSet);
         $this->resourceSetPageSize = $configuration->getEntitySetPageSize($resourceSet);
     }
 
@@ -119,9 +119,9 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @param ProvidersWrapper $provider
      *
-     * @return bool
      * @throws ODataException
      * @throws InvalidOperationException
+     * @return bool
      */
     public function hasNamedStreams(ProvidersWrapper $provider)
     {
@@ -147,14 +147,14 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @param ProvidersWrapper $provider Metadata query provider wrapper
      *
-     * @return bool
      * @throws ODataException
      * @throws InvalidOperationException
+     * @return bool
      */
     public function hasBagProperty(ProvidersWrapper $provider)
     {
         $arrayToDetectLoop = [];
-        $hasBagProperty = $this->resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
+        $hasBagProperty    = $this->resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
         unset($arrayToDetectLoop);
         // This will check only the resource type associated with
         // the resource set, we need to check presence of bag property

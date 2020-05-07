@@ -146,7 +146,7 @@ class ExpandedProjectionNode extends ProjectionNode
     /**
      * Constructs a new instance of node representing expanded navigation property.
      *
-     * @param string|null $propertyName The name of the property
+     * @param string|null           $propertyName        The name of the property
      *                                                   to expand. If this node
      *                                                   represents an expanded
      *                                                   navigation property then
@@ -155,27 +155,27 @@ class ExpandedProjectionNode extends ProjectionNode
      *                                                   node represents root of the
      *                                                   projection tree then this
      *                                                   will be null
-     * @param ResourceSetWrapper $resourceSetWrapper The resource set to which
+     * @param ResourceSetWrapper    $resourceSetWrapper  The resource set to which
      *                                                   the expansion leads, see the
      *                                                   comment of _resourceSetWrapper
      *                                                   field
-     * @param InternalOrderByInfo $internalOrderByInfo The sort information
+     * @param InternalOrderByInfo   $internalOrderByInfo The sort information
      *                                                   associated with this node,
      *                                                   see the comments of
      *                                                   $_internalOrderByInfo field
-     * @param int|null $skipCount The number of results to
+     * @param int|null              $skipCount           The number of results to
      *                                                   skip, null means no
      *                                                   result to skip, see the
      *                                                   comments of _skipCount
      *                                                   field
-     * @param int $takeCount The maximum number of results
+     * @param int                   $takeCount           The maximum number of results
      *                                                   to return, null means return
      *                                                   all available result, see the
      *                                                   comments of _takeCount field
-     * @param int $maxResultCount The maximum number of
+     * @param int                   $maxResultCount      The maximum number of
      *                                                   expected results,see comment
      *                                                   of _maxResultCount field
-     * @param ResourceProperty|null $resourceProperty The resource property for
+     * @param ResourceProperty|null $resourceProperty    The resource property for
      *                                                   the property to expand.
      *                                                   If this node represents an
      *                                                   expanded navigation property
@@ -194,13 +194,12 @@ class ExpandedProjectionNode extends ProjectionNode
         $takeCount,
         $maxResultCount,
         ResourceProperty $resourceProperty = null
-    )
-    {
-        $this->resourceSetWrapper = $resourceSetWrapper;
+    ) {
+        $this->resourceSetWrapper  = $resourceSetWrapper;
         $this->internalOrderByInfo = $internalOrderByInfo;
-        $this->skipCount = $skipCount;
-        $this->takeCount = $takeCount;
-        $this->maxResultCount = $maxResultCount;
+        $this->skipCount           = $skipCount;
+        $this->takeCount           = $takeCount;
+        $this->maxResultCount      = $maxResultCount;
         parent::__construct($propertyName, $resourceProperty);
     }
 
@@ -295,7 +294,7 @@ class ExpandedProjectionNode extends ProjectionNode
      * path segment that selects the expanded property represented by
      * this node then this function will be used to mark this node as selected.
      *
-     * @param bool $isSelectionFound True if selection found in this node
+     * @param  bool $isSelectionFound True if selection found in this node
      *                                False otherwise
      * @return void
      */
@@ -310,15 +309,14 @@ class ExpandedProjectionNode extends ProjectionNode
      * $select path segment, then this function will be used to set the flag
      * for immediate properties inclusion.
      *
-     * @param bool $selectAllImmediateProperties True if all immediate
+     * @param  bool $selectAllImmediateProperties True if all immediate
      *                                            properties to be included
      *                                            False otherwise
      * @return void
      */
     public function setSelectAllImmediateProperties(
         $selectAllImmediateProperties = true
-    )
-    {
+    ) {
         $this->selectAllImmediateProperties = $selectAllImmediateProperties;
     }
 
@@ -389,7 +387,7 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function markSubtreeAsSelected()
     {
-        $this->selectSubtree = true;
+        $this->selectSubtree                = true;
         $this->selectAllImmediateProperties = false;
         foreach ($this->childNodes as $node) {
             if ($node instanceof self) {
@@ -486,7 +484,7 @@ class ExpandedProjectionNode extends ProjectionNode
             //We are applying sorting in bottom-up fashion, do it only we have
             // more than 1 child
             if (count($this->childNodes) > 1) {
-                $existingNodes = $this->childNodes;
+                $existingNodes    = $this->childNodes;
                 $this->childNodes = [];
                 foreach ($this->getResourceType()->getAllProperties() as $resourceProperty) {
                     $propertyName = $resourceProperty->getName();

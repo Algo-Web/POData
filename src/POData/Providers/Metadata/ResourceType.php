@@ -174,17 +174,17 @@ abstract class ResourceType
     /**
      * Create new instance of ResourceType.
      *
-     * @param ReflectionClass|IType $instanceType Instance type for the resource,
-     *                                                 for entity and
-     *                                                 complex this will
-     *                                                 be 'ReflectionClass' and for
-     *                                                 primitive type this
-     *                                                 will be IType
-     * @param ResourceTypeKind $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
-     * @param string $name Name of the resource
-     * @param string|null $namespaceName Namespace of the resource
-     * @param ResourceType|null $baseType Base type of the resource, if exists
-     * @param bool $isAbstract Whether resource is abstract
+     * @param ReflectionClass|IType $instanceType     Instance type for the resource,
+     *                                                for entity and
+     *                                                complex this will
+     *                                                be 'ReflectionClass' and for
+     *                                                primitive type this
+     *                                                will be IType
+     * @param ResourceTypeKind      $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
+     * @param string                $name             Name of the resource
+     * @param string|null           $namespaceName    Namespace of the resource
+     * @param ResourceType|null     $baseType         Base type of the resource, if exists
+     * @param bool                  $isAbstract       Whether resource is abstract
      *
      * @throws InvalidArgumentException
      */
@@ -195,17 +195,16 @@ abstract class ResourceType
         $namespaceName = null,
         ResourceType $baseType = null,
         $isAbstract = false
-    )
-    {
-        $this->type = $instanceType;
-        $this->resourceTypeKind = $resourceTypeKind;
-        $this->name = $name;
-        $this->baseType = $baseType;
-        $this->namespaceName = $namespaceName;
-        $this->fullName = null === $namespaceName ? $name : $namespaceName . '.' . $name;
-        $this->abstractType = $isAbstract;
-        $this->isMediaLinkEntry = false;
-        $this->customState = null;
+    ) {
+        $this->type                          = $instanceType;
+        $this->resourceTypeKind              = $resourceTypeKind;
+        $this->name                          = $name;
+        $this->baseType                      = $baseType;
+        $this->namespaceName                 = $namespaceName;
+        $this->fullName                      = null === $namespaceName ? $name : $namespaceName . '.' . $name;
+        $this->abstractType                  = $isAbstract;
+        $this->isMediaLinkEntry              = false;
+        $this->customState                   = null;
         $this->arrayToDetectLoopInComplexBag = [];
         //TODO: Set MLE if base type has MLE Set
     }
@@ -215,9 +214,8 @@ abstract class ResourceType
      *
      * @param EdmPrimitiveType $typeCode Type code of primitive type
      *
-     * @return ResourcePrimitiveType
      * @throws InvalidArgumentException
-     *
+     * @return ResourcePrimitiveType
      */
     public static function getPrimitiveResourceType(EdmPrimitiveType $typeCode)
     {
@@ -303,8 +301,8 @@ abstract class ResourceType
      * then this function returns reference to ReflectionClass instance for the type.
      * If resource type describes a primitive type, then this function returns ITYpe.
      *
-     * @return ReflectionClass|IType
      * @throws ReflectionException
+     * @return ReflectionClass|IType
      */
     public function getInstanceType()
     {
@@ -394,7 +392,7 @@ abstract class ResourceType
      * Add a property belongs to this resource type instance.
      *
      * @param ResourceProperty $property Property to add
-     * @param bool $throw Throw exception on name collision?
+     * @param bool             $throw    Throw exception on name collision?
      *
      * @throws InvalidOperationException
      */
@@ -428,7 +426,7 @@ abstract class ResourceType
                 );
             }
 
-            $base = $this->baseType;
+            $base        = $this->baseType;
             $derivedGood = null === $base || ($base instanceof ResourceEntityType && $base->isAbstract());
 
             if (!$derivedGood) {
@@ -659,9 +657,9 @@ abstract class ResourceType
 
             $this->allNamedStreams
                 = array_merge(
-                $this->allNamedStreams,
-                $this->namedStreamsDeclaredOnThisType
-            );
+                    $this->allNamedStreams,
+                    $this->namedStreamsDeclaredOnThisType
+                );
         }
 
         return $this->allNamedStreams;
@@ -743,7 +741,7 @@ abstract class ResourceType
                     //are same, this is a loop, we need to detect
                     //this and avoid infinite recursive loop.
 
-                    $count = count($arrayToDetectLoopInComplexType);
+                    $count     = count($arrayToDetectLoopInComplexType);
                     $foundLoop = false;
                     for ($i = 0; $i < $count; ++$i) {
                         if ($arrayToDetectLoopInComplexType[$i] === $resourceProperty->getResourceType()) {
@@ -754,7 +752,7 @@ abstract class ResourceType
 
                     if (!$foundLoop) {
                         $arrayToDetectLoopInComplexType[$count] = $resourceProperty->getResourceType();
-                        $hasBagInComplex = $resourceProperty
+                        $hasBagInComplex                        = $resourceProperty
                             ->getResourceType()
                             ->hasBagProperty($arrayToDetectLoopInComplexType);
                         unset($arrayToDetectLoopInComplexType[$count]);
@@ -851,11 +849,11 @@ abstract class ResourceType
 
     /**
      * @param string $property
-     * @param mixed $entity
-     * @param mixed $value
+     * @param mixed  $entity
+     * @param mixed  $value
      *
-     * @return ResourceType
      * @throws ReflectionException
+     * @return ResourceType
      */
     public function setPropertyValue($entity, $property, $value)
     {
@@ -880,8 +878,8 @@ abstract class ResourceType
     /**
      * @param $entity
      * @param $property
-     * @return mixed
      * @throws ReflectionException
+     * @return mixed
      */
     public function getPropertyValue($entity, $property)
     {

@@ -26,9 +26,8 @@ interface IUriProcessor
      *
      * @param IService $service Reference to the data service instance
      *
-     * @return IUriProcessor
      * @throws ODataException
-     *
+     * @return IUriProcessor
      */
     public static function process(IService $service);
 

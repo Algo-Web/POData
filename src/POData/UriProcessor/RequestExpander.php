@@ -55,24 +55,24 @@ class RequestExpander
     /**
      * RequestExpander constructor.
      * @param RequestDescription $request
-     * @param IService $service
-     * @param ProvidersWrapper $wrapper
+     * @param IService           $service
+     * @param ProvidersWrapper   $wrapper
      */
     public function __construct(RequestDescription $request, IService $service, ProvidersWrapper $wrapper)
     {
-        $this->request = $request;
-        $this->service = $service;
+        $this->request   = $request;
+        $this->service   = $service;
         $this->providers = $wrapper;
-        $this->stack = new SegmentStack($request);
+        $this->stack     = new SegmentStack($request);
     }
 
     /**
      * Perform expansion.
      *
-     * @return void
      * @throws ODataException
      * @throws ReflectionException
      * @throws InvalidOperationException
+     * @return void
      */
     public function handleExpansion()
     {
@@ -101,12 +101,12 @@ class RequestExpander
      * Pushes a segment for the root of the tree
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @return bool                      true if the segment was pushed, false otherwise
      * @throws InvalidOperationException
+     * @return bool                      true if the segment was pushed, false otherwise
      */
     private function pushSegmentForRoot()
     {
-        $segmentName = $this->getRequest()->getContainerName();
+        $segmentName               = $this->getRequest()->getContainerName();
         $segmentResourceSetWrapper = $this->getRequest()->getTargetResourceSetWrapper();
 
         return $this->pushSegment($segmentName, $segmentResourceSetWrapper);
@@ -117,12 +117,12 @@ class RequestExpander
      * retrieved from the IDSQP implementation
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @param string $segmentName Name of segment to push
+     * @param string             $segmentName         Name of segment to push
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
      *                                                to push
      *
-     * @return bool                      true if the segment was push, false otherwise
      * @throws InvalidOperationException
+     * @return bool                      true if the segment was push, false otherwise
      */
     private function pushSegment($segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
@@ -142,7 +142,7 @@ class RequestExpander
     /**
      * Execute queries for expansion.
      *
-     * @param array|mixed $result Resource(s) whose navigation properties needs to be expanded
+     * @param  array|mixed               $result Resource(s) whose navigation properties needs to be expanded
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws ReflectionException
@@ -196,12 +196,12 @@ class RequestExpander
     /**
      * Gets collection of expanded projection nodes under the current node.
      *
-     * @return ExpandedProjectionNode[]  List of nodes describing expansions for the current segment
      * @throws InvalidOperationException
+     * @return ExpandedProjectionNode[]  List of nodes describing expansions for the current segment
      */
     protected function getExpandedProjectionNodes()
     {
-        $expandedProjectionNode = $this->getCurrentExpandedProjectionNode();
+        $expandedProjectionNode  = $this->getCurrentExpandedProjectionNode();
         $expandedProjectionNodes = [];
         if (null !== $expandedProjectionNode) {
             foreach ($expandedProjectionNode->getChildNodes() as $node) {
@@ -218,8 +218,8 @@ class RequestExpander
      * Find a 'ExpandedProjectionNode' instance in the projection tree
      * which describes the current segment.
      *
-     * @return ExpandedProjectionNode|null
      * @throws InvalidOperationException
+     * @return ExpandedProjectionNode|null
      */
     private function getCurrentExpandedProjectionNode()
     {
@@ -245,17 +245,17 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      *
-     * @return object[]|null
      * @throws ODataException
+     * @return object[]|null
      */
     private function executeCollectionExpansionGetRelated($expandedProjectionNode, $entry)
     {
-        $currentResourceSet = $this->getCurrentResourceSetWrapper()->getResourceSet();
+        $currentResourceSet             = $this->getCurrentResourceSetWrapper()->getResourceSet();
         $resourceSetOfProjectedProperty = $expandedProjectionNode
             ->getResourceSetWrapper()
             ->getResourceSet();
         $projectedProperty = $expandedProjectionNode->getResourceProperty();
-        $result = $this->getProviders()->getRelatedResourceSet(
+        $result            = $this->getProviders()->getRelatedResourceSet(
             QueryType::ENTITIES(), //it's always entities for an expansion
             $currentResourceSet,
             $entry,
@@ -297,8 +297,8 @@ class RequestExpander
      * @param $entry
      * @param $result
      * @param ExpandedProjectionNode $expandedProjectionNode
-     * @param ResourceType $resourceType
-     * @param string $expandedPropertyName
+     * @param ResourceType           $resourceType
+     * @param string                 $expandedPropertyName
      *
      * @throws InvalidOperationException
      * @throws ReflectionException
@@ -310,8 +310,7 @@ class RequestExpander
         $expandedProjectionNode,
         $resourceType,
         $expandedPropertyName
-    )
-    {
+    ) {
         $internalOrderByInfo = $expandedProjectionNode->getInternalOrderByInfo();
         if (null !== $internalOrderByInfo) {
             $orderByFunction = $internalOrderByInfo->getSorterFunction();
@@ -338,7 +337,7 @@ class RequestExpander
     private function pushPropertyToNavigation($result, $expandedProjectionNode)
     {
         $projectedProperty = $expandedProjectionNode->getResourceProperty();
-        $needPop = $this->pushSegmentForNavigationProperty($projectedProperty);
+        $needPop           = $this->pushSegmentForNavigationProperty($projectedProperty);
         $this->executeExpansion($result);
         $this->popSegment(true === $needPop);
     }
@@ -352,10 +351,9 @@ class RequestExpander
      * @param ResourceProperty &$resourceProperty Current navigation property
      *                                            being written out
      *
-     * @return bool true if a segment was pushed, false otherwise
      * @throws ODataException
-     *
-     * @throws InvalidOperationException     If this function invoked with non-navigation property instance
+     * @throws InvalidOperationException If this function invoked with non-navigation property instance
+     * @return bool                      true if a segment was pushed, false otherwise
      */
     private function pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
     {
@@ -364,7 +362,7 @@ class RequestExpander
                 throw new InvalidOperationException('!is_empty($this->getStack()->getSegmentNames())');
             }
             $currentResourceSetWrapper = $this->getCurrentResourceSetWrapper();
-            $currentResourceType = $currentResourceSetWrapper->getResourceType();
+            $currentResourceType       = $currentResourceSetWrapper->getResourceType();
             $currentResourceSetWrapper = $this->getService()
                 ->getProvidersWrapper()
                 ->getResourceSetWrapperForNavigationProperty(
@@ -418,7 +416,7 @@ class RequestExpander
      * @param ExpandedProjectionNode $expandedProjectionNode
      * @param $entry
      * @param ResourceType $resourceType
-     * @param string $expandedPropertyName
+     * @param string       $expandedPropertyName
      *
      * @throws InvalidOperationException
      * @throws ODataException
@@ -429,14 +427,13 @@ class RequestExpander
         $entry,
         $resourceType,
         $expandedPropertyName
-    )
-    {
-        $currentResourceSet = $this->getCurrentResourceSetWrapper()->getResourceSet();
+    ) {
+        $currentResourceSet             = $this->getCurrentResourceSetWrapper()->getResourceSet();
         $resourceSetOfProjectedProperty = $expandedProjectionNode
             ->getResourceSetWrapper()
             ->getResourceSet();
         $projectedProperty = $expandedProjectionNode->getResourceProperty();
-        $result = $this->getProviders()->getRelatedResourceReference(
+        $result            = $this->getProviders()->getRelatedResourceReference(
             $currentResourceSet,
             $entry,
             $resourceSetOfProjectedProperty,

@@ -74,7 +74,7 @@ class Navigation implements INavigationType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -96,8 +96,8 @@ class Navigation implements INavigationType
      *
      * @param string $stringValue value to convert
      *
-     * @return bool
      * @throws NotImplementedException
+     * @return bool
      */
     public function convert($stringValue)
     {
@@ -109,8 +109,8 @@ class Navigation implements INavigationType
      *
      * @param mixed $value value to convert
      *
-     * @return bool
      * @throws NotImplementedException
+     * @return bool
      */
     public function convertToOData($value)
     {

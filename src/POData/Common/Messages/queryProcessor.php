@@ -107,7 +107,7 @@ trait queryProcessor
      * Format a message to show error when query processor found invalid
      * value for a query option.
      *
-     * @param string $argName The name of the argument
+     * @param string $argName  The name of the argument
      * @param string $argValue The value of the argument
      *
      * @return string The formatted message

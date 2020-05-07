@@ -103,16 +103,16 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function __construct(IMetadataProvider $metadataProvider)
     {
-        $this->maxExpandCount = PHP_INT_MAX;
-        $this->maxExpandDepth = PHP_INT_MAX;
+        $this->maxExpandCount          = PHP_INT_MAX;
+        $this->maxExpandDepth          = PHP_INT_MAX;
         $this->maxResultsPerCollection = PHP_INT_MAX;
-        $this->provider = $metadataProvider;
+        $this->provider                = $metadataProvider;
         $this->defaultResourceSetRight = EntitySetRights::NONE();
-        $this->defaultPageSize = 0;
-        $this->resourceRights = [];
-        $this->pageSizes = [];
-        $this->useVerboseErrors = false;
-        $this->acceptCountRequest = false;
+        $this->defaultPageSize         = 0;
+        $this->resourceRights          = [];
+        $this->pageSizes               = [];
+        $this->useVerboseErrors        = false;
+        $this->acceptCountRequest      = false;
         $this->acceptProjectionRequest = false;
 
         $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version
@@ -146,12 +146,11 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Checks that the parameter to a function is numeric and is not negative.
      *
-     * @param int $value The value of parameter to check
+     * @param int    $value        The value of parameter to check
      * @param string $functionName The name of the function that receives above value
      *
-     * @return int
      * @throws InvalidArgumentException
-     *
+     * @return int
      */
     private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
     {
@@ -271,7 +270,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * sets the access rights on the specified resource set.
      *
-     * @param string $name Name of resource set to set; '*' to indicate all
+     * @param string          $name   Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
      * @throws InvalidArgumentException when the entity set rights are not known or the resource set is not known
@@ -315,8 +314,8 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Sets the maximum page size for an entity set resource.
      *
-     * @param string $name Name of entity set resource for which to set the page size
-     * @param int $pageSize Page size for the entity set resource specified in name
+     * @param string $name     Name of entity set resource for which to set the page size
+     * @param int    $pageSize Page size for the entity set resource specified in name
      *
      * @throws InvalidOperationException
      * @throws InvalidArgumentException

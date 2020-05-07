@@ -81,14 +81,14 @@ class ExpressionLexer
     /**
      * Initialize a new instance of ExpressionLexer.
      *
-     * @param string $expression Expression to parse
+     * @param  string         $expression Expression to parse
      * @throws ODataException
      */
     public function __construct($expression)
     {
-        $this->text = $expression;
+        $this->text    = $expression;
         $this->textLen = strlen($this->text);
-        $this->token = new ExpressionToken();
+        $this->token   = new ExpressionToken();
         $this->setTextPos(0);
         $this->nextToken();
     }
@@ -101,7 +101,7 @@ class ExpressionLexer
     private function setTextPos($pos)
     {
         $this->textPos = $pos;
-        $nextChar = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
+        $nextChar      = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
         assert(2 >= strlen($nextChar));
         $this->ch = $nextChar;
     }
@@ -116,7 +116,7 @@ class ExpressionLexer
             $this->nextChar();
         }
 
-        $t = null;
+        $t        = null;
         $tokenPos = $this->textPos;
         switch ($this->ch) {
             case '(':
@@ -225,7 +225,7 @@ class ExpressionLexer
         }
 
         $this->token->setId($t);
-        $this->token->Text = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
+        $this->token->Text     = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
         $this->token->Position = $tokenPos;
 
         // Handle type-prefixed literals such as binary, datetime or guid.
@@ -264,8 +264,8 @@ class ExpressionLexer
     /**
      * Parses a token that starts with a digit.
      *
-     * @return ExpressionTokenId The kind of token recognized
      * @throws ODataException
+     * @return ExpressionTokenId The kind of token recognized
      */
     private function parseFromDigit()
     {
@@ -540,22 +540,22 @@ class ExpressionLexer
     /**
      * Returns the next token without advancing the lexer to next token.
      *
-     * @return ExpressionToken
      * @throws ODataException
+     * @return ExpressionToken
      */
     public function peekNextToken()
     {
         $savedTextPos = $this->textPos;
         assert(2 >= strlen($this->ch));
-        $savedChar = $this->ch;
+        $savedChar  = $this->ch;
         $savedToken = clone $this->token;
         $this->nextToken();
-        $result = clone $this->token;
+        $result        = clone $this->token;
         $this->textPos = $savedTextPos;
-        $this->ch = $savedChar;
+        $this->ch      = $savedChar;
         $this->token->setId($savedToken->getId());
         $this->token->Position = $savedToken->Position;
-        $this->token->Text = $savedToken->Text;
+        $this->token->Text     = $savedToken->Text;
 
         return $result;
     }
@@ -564,8 +564,8 @@ class ExpressionLexer
      * Starting from an identifier, reads alternate sequence of dots and identifiers
      * and returns the text for it.
      *
-     * @return string         The dotted identifier starting at the current identifier
      * @throws ODataException
+     * @return string         The dotted identifier starting at the current identifier
      */
     public function readDottedIdentifier()
     {

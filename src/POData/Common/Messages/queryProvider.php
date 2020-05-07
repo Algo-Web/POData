@@ -23,7 +23,7 @@ trait queryProvider
     }
 
     /**
-     * @param string $methodName method name
+     * @param string    $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message
@@ -35,7 +35,7 @@ trait queryProvider
     }
 
     /**
-     * @param string $methodName method name
+     * @param string    $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message

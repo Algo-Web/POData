@@ -50,8 +50,8 @@ class PropertyProcessor extends BaseNodeHandler
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE ||
             $tagNamespace === ODataConstants::ODATA_METADATA_NAMESPACE);
 
-        $property = new ODataProperty();
-        $property->name = $tagName;
+        $property           = new ODataProperty();
+        $property->name     = $tagName;
         $property->typeName = $this->arrayKeyOrDefault(
             $attributes,
             ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
@@ -73,8 +73,8 @@ class PropertyProcessor extends BaseNodeHandler
             return;
         }
         // Pops a complex object off the stack
-        $prop = $this->properties->pop();
-        $propContent = $this->propertyContent->pop();
+        $prop                                                  = $this->properties->pop();
+        $propContent                                           = $this->propertyContent->pop();
         $this->propertyContent->top()->properties[$prop->name] = $prop;
 
         if (count($propContent->properties) == 0) {

@@ -11,18 +11,18 @@ use POData\Common\NotImplementedException;
  */
 class Char implements IType
 {
-    const A = 65;
-    const Z = 90;
-    const SMALL_A = 97;
-    const SMALL_Z = 122;
-    const F = 70;
-    const SMALL_F = 102;
-    const ZERO = 48;
-    const NINE = 57;
-    const TAB = 9;
-    const NEWLINE = 10;
+    const A               = 65;
+    const Z               = 90;
+    const SMALL_A         = 97;
+    const SMALL_Z         = 122;
+    const F               = 70;
+    const SMALL_F         = 102;
+    const ZERO            = 48;
+    const NINE            = 57;
+    const TAB             = 9;
+    const NEWLINE         = 10;
     const CARRIAGE_RETURN = 13;
-    const SPACE = 32;
+    const SPACE           = 32;
 
     /**
      * Checks a character is whitespace.
@@ -116,12 +116,12 @@ class Char implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value The value to validate
+     * @param string $value     The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
-     * @return bool
      * @throws NotImplementedException
+     * @return bool
      */
     public function validate($value, &$outValue)
     {

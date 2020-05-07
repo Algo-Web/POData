@@ -31,7 +31,7 @@ class EntryProcessor extends BaseNodeHandler
     /** @noinspection PhpUnusedParameterInspection */
     public function __construct()
     {
-        $this->oDataEntry = new ODataEntry();
+        $this->oDataEntry                   = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
     }
 
@@ -159,7 +159,7 @@ class EntryProcessor extends BaseNodeHandler
     private function handleODataMediaLink(ODataMediaLink $link)
     {
         if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {
-            $this->oDataEntry->mediaLink = $link;
+            $this->oDataEntry->mediaLink        = $link;
             $this->oDataEntry->isMediaLinkEntry = true;
         } else {
             $this->oDataEntry->mediaLinks[] = $link;
@@ -201,7 +201,7 @@ class EntryProcessor extends BaseNodeHandler
     protected function handleStartAtomContent($attributes)
     {
         $this->subProcessor = new PropertyProcessor();
-        $atomContent = new AtomContent(
+        $atomContent        = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
         $this->enqueueEnd(function () use ($atomContent) {

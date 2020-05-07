@@ -29,11 +29,11 @@ class ModelDeserialiser
      * Filter supplied ODataEntry into $data array for use in resource create/update.
      *
      * @param ResourceEntityType $entityType Entity type to deserialise to
-     * @param ODataEntry $payload Raw data to deserialise
+     * @param ODataEntry         $payload    Raw data to deserialise
      *
-     * @return mixed[]
      * @throws Exception
      * @throws InvalidArgumentException
+     * @return mixed[]
      */
     public function bulkDeserialise(ResourceEntityType $entityType, ODataEntry $payload)
     {
@@ -43,9 +43,9 @@ class ModelDeserialiser
         }
 
         $payloadType = $payload->type->term;
-        $pay = explode('.', $payloadType);
+        $pay         = explode('.', $payloadType);
         $payloadType = $pay[count($pay) - 1];
-        $actualType = $entityType->getName();
+        $actualType  = $entityType->getName();
 
         if ($payloadType !== $actualType) {
             $msg = 'Payload resource type does not match supplied resource type.';
@@ -53,9 +53,9 @@ class ModelDeserialiser
         }
 
         if (!isset(self::$nonKeyPropertiesCache[$actualType])) {
-            $rawProp = $entityType->getAllProperties();
-            $keyProp = $entityType->getKeyProperties();
-            $keyNames = array_keys($keyProp);
+            $rawProp    = $entityType->getAllProperties();
+            $keyProp    = $entityType->getKeyProperties();
+            $keyNames   = array_keys($keyProp);
             $nonRelProp = [];
             foreach ($rawProp as $prop) {
                 $propName = $prop->getName();
@@ -75,23 +75,23 @@ class ModelDeserialiser
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
                 /** @var string $rawVal */
                 $rawVal = $propSpec->value;
-                $value = null;
+                $value  = null;
                 switch ($propSpec->typeName) {
                     case 'Edm.Boolean':
                         $rawVal = trim(strtolower(strval($rawVal)));
-                        $value = 'true' == $rawVal;
+                        $value  = 'true' == $rawVal;
                         break;
                     case 'Edm.DateTime':
                         $rawVal = trim(strval($rawVal));
                         if (1 < strlen($rawVal)) {
-                            $valLen = strlen($rawVal) - 6;
+                            $valLen     = strlen($rawVal) - 6;
                             $offsetChek = $rawVal[$valLen];
-                            $timezone = new DateTimeZone('UTC');
+                            $timezone   = new DateTimeZone('UTC');
                             if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
-                                $rawTz = substr($rawVal, $valLen);
-                                $rawVal = substr($rawVal, 0, $valLen);
-                                $rawBitz = explode('.', $rawVal);
-                                $rawVal = $rawBitz[0];
+                                $rawTz    = substr($rawVal, $valLen);
+                                $rawVal   = substr($rawVal, 0, $valLen);
+                                $rawBitz  = explode('.', $rawVal);
+                                $rawVal   = $rawBitz[0];
                                 $timezone = new DateTimeZone($rawTz);
                             }
                             $newValue = new Carbon($rawVal, $timezone);

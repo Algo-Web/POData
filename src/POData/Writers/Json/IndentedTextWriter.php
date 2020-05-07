@@ -44,7 +44,7 @@ class IndentedTextWriter
      */
     public function __construct($writer)
     {
-        $this->result = $writer;
+        $this->result    = $writer;
         $this->tabString = '    ';
     }
 
