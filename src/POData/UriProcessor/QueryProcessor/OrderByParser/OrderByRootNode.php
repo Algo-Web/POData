@@ -29,13 +29,14 @@ class OrderByRootNode extends OrderByNode
      *
      * @param ResourceSetWrapper $resourceSetWrapper The resource set pointed by
      *                                               the request resource path uri
-     * @param ResourceType       $baseResourceType   The resource type resource set
+     * @param ResourceType $baseResourceType The resource type resource set
      *                                               pointed to by the request resource path uri
      */
     public function __construct(
         ResourceSetWrapper $resourceSetWrapper,
         ResourceType $baseResourceType
-    ) {
+    )
+    {
         parent::__construct(null, null, $resourceSetWrapper);
         $this->baseResourceType = $baseResourceType;
     }
@@ -43,9 +44,9 @@ class OrderByRootNode extends OrderByNode
     /**
      * (non-PHPdoc).
      *
+     * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByNode::getResourceType()
      *
-     * @return ResourceType
      */
     public function getResourceType()
     {

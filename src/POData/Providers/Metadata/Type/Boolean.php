@@ -37,7 +37,7 @@ class Boolean implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
+     * @param string $value The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -73,17 +73,6 @@ class Boolean implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.Boolean';
-    }
-
-    /**
      * Converts the given string value to boolean type.
      *
      * @param string $stringValue String value to convert
@@ -108,5 +97,16 @@ class Boolean implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Boolean';
     }
 }

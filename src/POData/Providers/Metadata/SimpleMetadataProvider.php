@@ -7,26 +7,32 @@ namespace POData\Providers\Metadata;
 use AlgoWeb\ODataMetadata\MetadataManager;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
+use ErrorException;
+use Exception;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
+use ReflectionClass;
+use ReflectionException;
+use stdClass;
 
 /**
  * Class SimpleMetadataProvider.
  */
 class SimpleMetadataProvider implements IMetadataProvider
 {
-    public $oDataEntityMap     = [];
-    protected $resourceSets    = [];
-    protected $resourceTypes   = [];
+    public $oDataEntityMap = [];
+    protected $resourceSets = [];
+    protected $resourceTypes = [];
     protected $associationSets = [];
     protected $containerName;
     protected $namespaceName;
+    protected $singletons = [];
     private $metadataManager;
     private $typeSetMapping = [];
-    protected $singletons   = [];
-    private $baseTypes      = [];
+    private $baseTypes = [];
 
     /**
      * @param string $containerName container name for the data source
@@ -34,16 +40,16 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function __construct($containerName, $namespaceName)
     {
-        $this->containerName   = $containerName;
-        $this->namespaceName   = $namespaceName;
+        $this->containerName = $containerName;
+        $this->namespaceName = $namespaceName;
         $this->metadataManager = new MetadataManager($namespaceName, $containerName);
     }
 
     //Begin Implementation of IMetadataProvider
 
     /**
-     * @throws \Exception
      * @return string|null
+     * @throws Exception
      */
     public function getXML()
     {
@@ -83,8 +89,8 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @param null|mixed $params
      *
-     * @throws \ErrorException
      * @return ResourceSet[]
+     * @throws ErrorException
      */
     public function getResourceSets($params = null)
     {
@@ -92,7 +98,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         if (is_string($params)) {
             $parameters[] = $params;
         } elseif (isset($params) && !is_array($params)) {
-            throw new \ErrorException('Input parameter must be absent, null, string or array');
+            throw new ErrorException('Input parameter must be absent, null, string or array');
         } else {
             $parameters = $params;
         }
@@ -100,7 +106,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             return array_values($this->resourceSets);
         }
         assert(is_array($parameters));
-        $return  = [];
+        $return = [];
         $counter = 0;
         foreach ($this->resourceSets as $resource) {
             $resName = $resource->getName();
@@ -233,18 +239,19 @@ class SimpleMetadataProvider implements IMetadataProvider
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet        $sourceResourceSet      Resource set of the source association end
-     * @param ResourceEntityType $sourceResourceType     Resource type of the source association end
-     * @param ResourceProperty   $targetResourceProperty Resource property of the target association end
+     * @param ResourceSet $sourceResourceSet Resource set of the source association end
+     * @param ResourceEntityType $sourceResourceType Resource type of the source association end
+     * @param ResourceProperty $targetResourceProperty Resource property of the target association end
      *
-     * @throws InvalidOperationException
      * @return ResourceAssociationSet|null
+     * @throws InvalidOperationException
      */
     public function getResourceAssociationSet(
         ResourceSet $sourceResourceSet,
         ResourceEntityType $sourceResourceType,
         ResourceProperty $targetResourceProperty
-    ) {
+    )
+    {
         //e.g.
         //ResourceSet => Representing 'Customers' entity set
         //ResourceType => Representing'Customer' entity type
@@ -284,22 +291,23 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add an entity type.
      *
-     * @param  \ReflectionClass          $refClass   reflection class of the entity
-     * @param  string                    $name       name of the entity
-     * @param  null|string               $pluralName Optional custom resource set name
-     * @param  mixed                     $isAbstract
-     * @param  null|mixed                $baseType
-     * @throws InvalidOperationException when the name is already in use
+     * @param ReflectionClass $refClass reflection class of the entity
+     * @param string $name name of the entity
+     * @param null|string $pluralName Optional custom resource set name
+     * @param mixed $isAbstract
+     * @param null|mixed $baseType
      * @return ResourceEntityType        when the name is already in use
+     * @throws InvalidOperationException when the name is already in use
      * @internal param string $namespace namespace of the data source
      */
     public function addEntityType(
-        \ReflectionClass $refClass,
+        ReflectionClass $refClass,
         $name,
         $pluralName = null,
         $isAbstract = false,
         $baseType = null
-    ) {
+    )
+    {
         $result = $this->createResourceType(
             $refClass,
             $name,
@@ -313,30 +321,31 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param \ReflectionClass $refClass
-     * @param string           $name
+     * @param ReflectionClass $refClass
+     * @param string $name
      * @param $typeKind
-     * @param  mixed                                  $isAbstract
-     * @param  null|mixed                             $baseType
-     * @param  null|mixed                             $pluralName
-     * @throws InvalidOperationException
+     * @param mixed $isAbstract
+     * @param null|mixed $baseType
+     * @param null|mixed $pluralName
      * @return ResourceEntityType|ResourceComplexType
+     * @throws InvalidOperationException
      * @internal param null|string $namespace
      * @internal param null|ResourceType $baseResourceType
      */
     private function createResourceType(
-        \ReflectionClass $refClass,
+        ReflectionClass $refClass,
         $name,
         $typeKind,
         $isAbstract = false,
         $baseType = null,
         $pluralName = null
-    ) {
+    )
+    {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
         if (null !== $baseType) {
-            $baseTEntityType   = $this->oDataEntityMap[$baseType->getFullName()];
+            $baseTEntityType = $this->oDataEntityMap[$baseType->getFullName()];
             $this->baseTypes[] = $baseType;
         } else {
             $baseTEntityType = null;
@@ -347,12 +356,12 @@ class SimpleMetadataProvider implements IMetadataProvider
             list($oet, $entitySet) = $this->getMetadataManager()
                 ->addEntityType($name, $baseTEntityType, $isAbstract, 'Public', null, null, $pluralName);
             assert($oet instanceof TEntityTypeType, 'Entity type ' . $name . ' not successfully added');
-            $type                              = new ResourceEntityType($refClass, $oet, $this);
-            $typeName                          = $type->getFullName();
-            $returnName                        = MetadataManager::getResourceSetNameFromResourceType($typeName);
-            $this->oDataEntityMap[$typeName]   = $oet;
-            $this->typeSetMapping[$name]       = $entitySet;
-            $this->typeSetMapping[$typeName]   = $entitySet;
+            $type = new ResourceEntityType($refClass, $oet, $this);
+            $typeName = $type->getFullName();
+            $returnName = MetadataManager::getResourceSetNameFromResourceType($typeName);
+            $this->oDataEntityMap[$typeName] = $oet;
+            $this->typeSetMapping[$name] = $entitySet;
+            $this->typeSetMapping[$typeName] = $entitySet;
             $this->typeSetMapping[$returnName] = $entitySet;
         } elseif ($typeKind == ResourceTypeKind::COMPLEX()) {
             $complex = new TComplexTypeType();
@@ -370,15 +379,15 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * Add a complex type.
      *
-     * @param  \ReflectionClass          $refClass reflection class of the complex entity type
-     * @param  string                    $name     name of the entity
-     * @throws InvalidOperationException when the name is already in use
+     * @param ReflectionClass $refClass reflection class of the complex entity type
+     * @param string $name name of the entity
      * @return ResourceComplexType
      *
+     * @throws InvalidOperationException when the name is already in use
      * @internal param string $namespace namespace of the data source
      * @internal param ResourceType $baseResourceType base resource type
      */
-    public function addComplexType(\ReflectionClass $refClass, $name)
+    public function addComplexType(ReflectionClass $refClass, $name)
     {
         $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX());
         assert($result instanceof ResourceComplexType);
@@ -386,23 +395,23 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string             $name         name of the resource set (now taken from resource type)
+     * @param string $name name of the resource set (now taken from resource type)
      * @param ResourceEntityType $resourceType resource type
      *
+     * @return ResourceSet
      * @throws InvalidOperationException
      *
-     * @return ResourceSet
      */
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
-        $typeName   = $resourceType->getFullName();
+        $typeName = $resourceType->getFullName();
         $pluralName = Str::plural($typeName);
         if (null == $name) {
             $returnName = $pluralName;
         } else {
             // handle case where $name is a fully-qualified PHP class name
             $nameBits = explode('\\', $name);
-            $numBits  = count($nameBits);
+            $numBits = count($nameBits);
 
             if ($typeName == $nameBits[$numBits - 1]) {
                 $returnName = $pluralName;
@@ -429,12 +438,12 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a Key-primitive property to a resource (Complex/Entity).
      *
-     * @param  ResourceType              $resourceType resource type to which key property
+     * @param ResourceType $resourceType resource type to which key property
      *                                                 is to be added
-     * @param  string                    $name         name of the key property
-     * @param  EdmPrimitiveType          $typeCode     type of the key property
+     * @param string $name name of the key property
+     * @param EdmPrimitiveType $typeCode type of the key property
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addKeyProperty($resourceType, $name, EdmPrimitiveType $typeCode)
     {
@@ -444,17 +453,17 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a Key/NonKey-primitive property to a resource (complex/entity).
      *
-     * @param ResourceType     $resourceType   Resource type
-     * @param string           $name           name of the property
-     * @param EdmPrimitiveType $typeCode       type of property
-     * @param bool             $isKey          property is key or not
-     * @param bool             $isBag          property is bag or not
-     * @param bool             $isETagProperty property is etag or not
-     * @param null|mixed       $defaultValue
-     * @param mixed            $nullable
+     * @param ResourceType $resourceType Resource type
+     * @param string $name name of the property
+     * @param EdmPrimitiveType $typeCode type of property
+     * @param bool $isKey property is key or not
+     * @param bool $isBag property is bag or not
+     * @param bool $isETagProperty property is etag or not
+     * @param null|mixed $defaultValue
+     * @param mixed $nullable
      *
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function addPrimitivePropertyInternal(
         $resourceType,
@@ -465,7 +474,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $isETagProperty = false,
         $defaultValue = null,
         $nullable = false
-    ) {
+    )
+    {
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException(
                 'Only primitive property can be etag property, bag property cannot be etag property.'
@@ -514,26 +524,26 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string       $name
+     * @param string $name
      * @param ResourceType $resourceType
      *
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function checkInstanceProperty($name, ResourceType $resourceType)
     {
-        $instance       = $resourceType->getInstanceType();
+        $instance = $resourceType->getInstanceType();
         $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
-        if ($instance instanceof \ReflectionClass) {
-            $hasMagicGetter |= $instance->isInstance(new \stdClass());
+        if ($instance instanceof ReflectionClass) {
+            $hasMagicGetter |= $instance->isInstance(new stdClass());
         }
 
         if (!$hasMagicGetter) {
             try {
-                if ($instance instanceof \ReflectionClass) {
+                if ($instance instanceof ReflectionClass) {
                     $instance->getProperty($name);
                 }
-            } catch (\ReflectionException $exception) {
+            } catch (ReflectionException $exception) {
                 throw new InvalidOperationException(
                     'Can\'t add a property which does not exist on the instance type.'
                 );
@@ -544,15 +554,15 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a NonKey-primitive property (Complex/Entity).
      *
-     * @param  ResourceType              $resourceType resource type to which key property
+     * @param ResourceType $resourceType resource type to which key property
      *                                                 is to be added
-     * @param  string                    $name         name of the key property
-     * @param  EdmPrimitiveType          $typeCode     type of the key property
-     * @param  bool                      $isBag        property is bag or not
-     * @param  null|mixed                $defaultValue
-     * @param  mixed                     $nullable
+     * @param string $name name of the key property
+     * @param EdmPrimitiveType $typeCode type of the key property
+     * @param bool $isBag property is bag or not
+     * @param null|mixed $defaultValue
+     * @param mixed $nullable
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addPrimitiveProperty(
         $resourceType,
@@ -561,7 +571,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $isBag = false,
         $defaultValue = null,
         $nullable = false
-    ) {
+    )
+    {
         $this->addPrimitivePropertyInternal(
             $resourceType,
             $name,
@@ -577,14 +588,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a non-key etag property.
      *
-     * @param  ResourceType              $resourceType resource type to which key property
+     * @param ResourceType $resourceType resource type to which key property
      *                                                 is to be added
-     * @param  string                    $name         name of the property
-     * @param  EdmPrimitiveType          $typeCode     type of the etag property
-     * @param  null|mixed                $defaultValue
-     * @param  mixed                     $nullable
+     * @param string $name name of the property
+     * @param EdmPrimitiveType $typeCode type of the etag property
+     * @param null|mixed $defaultValue
+     * @param mixed $nullable
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addETagProperty(
         $resourceType,
@@ -592,7 +603,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         EdmPrimitiveType $typeCode,
         $defaultValue = null,
         $nullable = false
-    ) {
+    )
+    {
         $this->addPrimitivePropertyInternal(
             $resourceType,
             $name,
@@ -608,16 +620,16 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource reference property.
      *
-     * @param  ResourceEntityType        $resourceType      The resource type to add the resource
+     * @param ResourceEntityType $resourceType The resource type to add the resource
      *                                                      reference property to
-     * @param  string                    $name              The name of the property to add
-     * @param  ResourceSet               $targetResourceSet The resource set the resource reference
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the resource reference
      *                                                      property points to
-     * @param  mixed                     $flip
-     * @param  mixed                     $many
-     * @param  ResourceEntityType|null   $concreteType      Underlying concrete resource reference type, if set
+     * @param mixed $flip
+     * @param mixed $many
+     * @param ResourceEntityType|null $concreteType Underlying concrete resource reference type, if set
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
@@ -626,7 +638,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         $flip = false,
         $many = false,
         ResourceEntityType $concreteType = null
-    ) {
+    )
+    {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
@@ -638,62 +651,21 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * To add a 1:N resource reference property.
-     *
-     * @param  ResourceEntityType        $sourceResourceType The resource type to add the resource
-     *                                                       reference property from
-     * @param  ResourceEntityType        $targetResourceType The resource type to add the resource
-     *                                                       reference property to
-     * @param  string                    $sourceProperty     The name of the property to add, on source type
-     * @param  string                    $targetProperty     The name of the property to add, on target type
-     * @param  bool                      $nullable           Is singleton side of relation nullable?
-     * @throws InvalidOperationException
-     * @throws \ReflectionException
-     */
-    public function addResourceReferencePropertyBidirectional(
-        ResourceEntityType $sourceResourceType,
-        ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty,
-        $nullable = false
-    ) {
-        $this->addReferencePropertyInternalBidirectional(
-            $sourceResourceType,
-            $targetResourceType,
-            $sourceProperty,
-            $targetProperty,
-            '*',
-            true === $nullable ? '0..1' : '1'
-        );
-        // verify resource property types are what we expect them to be
-        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
-        assert(
-            ResourcePropertyKind::RESOURCE_REFERENCE() == $sourceResourceKind,
-            '1 side of 1:N relationship not pointing to resource reference'
-        );
-        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
-        assert(
-            ResourcePropertyKind::RESOURCESET_REFERENCE() == $targetResourceKind,
-            'N side of 1:N relationship not pointing to resource set reference'
-        );
-    }
-
-    /**
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
      * @param ResourceEntityType $sourceResourceType The resource type to add the resource reference
      *                                               or resource reference set property to
-     * @param string             $name               The name of the property to add
-     * @param ResourceSet        $targetResourceSet  The resource set the
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the
      *                                               resource reference or reference
      *                                               set property points to
-     * @param string             $resourceMult       The multiplicity of relation being added
-     * @param mixed              $many
+     * @param string $resourceMult The multiplicity of relation being added
+     * @param mixed $many
      *
-     * @param  ResourceEntityType|null   $concreteType
+     * @param ResourceEntityType|null $concreteType
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function addReferencePropertyInternal(
         ResourceEntityType $sourceResourceType,
@@ -702,9 +674,10 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $resourceMult,
         $many = false,
         ResourceEntityType $concreteType = null
-    ) {
-        $allowedMult   = ['*', '1', '0..1'];
-        $backMultArray = [ '*' => '*', '1' => '0..1', '0..1' => '1'];
+    )
+    {
+        $allowedMult = ['*', '1', '0..1'];
+        $backMultArray = ['*' => '*', '1' => '0..1', '0..1' => '1'];
         $this->checkInstanceProperty($name, $sourceResourceType);
 
         // check that property and resource name don't up and collide - would violate OData spec
@@ -718,7 +691,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $resourcePropertyKind = ('*' == $resourceMult)
             ? ResourcePropertyKind::RESOURCESET_REFERENCE()
             : ResourcePropertyKind::RESOURCE_REFERENCE();
-        $targetResourceType     = $targetResourceSet->getResourceType();
+        $targetResourceType = $targetResourceSet->getResourceType();
         $sourceResourceProperty = new ResourceProperty($name, null, $resourcePropertyKind, $targetResourceType);
         $sourceResourceType->addProperty($sourceResourceProperty);
 
@@ -744,7 +717,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             ),
             new ResourceAssociationSetEnd($targetResourceSet, $targetResourceType, null, $concreteType)
         );
-        $mult     = $resourceMult;
+        $mult = $resourceMult;
         $backMult = $many ? '*' : $backMultArray[$resourceMult];
         if (false === $many && '*' == $backMult && '*' == $resourceMult) {
             $backMult = '1';
@@ -760,6 +733,48 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
+     * To add a 1:N resource reference property.
+     *
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource
+     *                                                       reference property from
+     * @param ResourceEntityType $targetResourceType The resource type to add the resource
+     *                                                       reference property to
+     * @param string $sourceProperty The name of the property to add, on source type
+     * @param string $targetProperty The name of the property to add, on target type
+     * @param bool $nullable Is singleton side of relation nullable?
+     * @throws InvalidOperationException
+     * @throws ReflectionException
+     */
+    public function addResourceReferencePropertyBidirectional(
+        ResourceEntityType $sourceResourceType,
+        ResourceEntityType $targetResourceType,
+        $sourceProperty,
+        $targetProperty,
+        $nullable = false
+    )
+    {
+        $this->addReferencePropertyInternalBidirectional(
+            $sourceResourceType,
+            $targetResourceType,
+            $sourceProperty,
+            $targetProperty,
+            '*',
+            true === $nullable ? '0..1' : '1'
+        );
+        // verify resource property types are what we expect them to be
+        $sourceResourceKind = $sourceResourceType->resolveProperty($sourceProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCE_REFERENCE() == $sourceResourceKind,
+            '1 side of 1:N relationship not pointing to resource reference'
+        );
+        $targetResourceKind = $targetResourceType->resolveProperty($targetProperty)->getKind();
+        assert(
+            ResourcePropertyKind::RESOURCESET_REFERENCE() == $targetResourceKind,
+            'N side of 1:N relationship not pointing to resource set reference'
+        );
+    }
+
+    /**
      * To add a navigation property (resource set or resource reference)
      * to a resource type.
      *
@@ -769,15 +784,15 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param ResourceEntityType $targetResourceType The target resource type to add
      *                                               the resource reference
      *                                               or resource reference set property to
-     * @param string             $sourceProperty     The name of the
+     * @param string $sourceProperty The name of the
      *                                               property to add to source type
-     * @param string             $targetProperty     The name of the
+     * @param string $targetProperty The name of the
      *                                               property to add to target type
-     * @param string             $sourceMultiplicity The multiplicity at the source end of relation
-     * @param string             $targetMultiplicity The multiplicity at the target end of relation
+     * @param string $sourceMultiplicity The multiplicity at the source end of relation
+     * @param string $targetMultiplicity The multiplicity at the target end of relation
      *
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function addReferencePropertyInternalBidirectional(
         ResourceEntityType $sourceResourceType,
@@ -786,7 +801,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $targetProperty,
         string $sourceMultiplicity,
         string $targetMultiplicity
-    ) {
+    )
+    {
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
         $this->checkInstanceProperty($targetProperty, $targetResourceType);
 
@@ -872,15 +888,15 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a resource set reference property.
      *
-     * @param  ResourceEntityType        $resourceType      The resource type to add the
+     * @param ResourceEntityType $resourceType The resource type to add the
      *                                                      resource reference set property to
-     * @param  string                    $name              The name of the property to add
-     * @param  ResourceSet               $targetResourceSet The resource set the resource
+     * @param string $name The name of the property to add
+     * @param ResourceSet $targetResourceSet The resource set the resource
      *                                                      reference set property points to
-     * @param  ResourceEntityType|null   $concreteType      Underlying concrete resource type, if set
-     * @param  mixed                     $single
+     * @param ResourceEntityType|null $concreteType Underlying concrete resource type, if set
+     * @param mixed $single
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addResourceSetReferenceProperty(
         ResourceEntityType $resourceType,
@@ -888,7 +904,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceSet $targetResourceSet,
         ResourceEntityType $concreteType = null,
         $single = false
-    ) {
+    )
+    {
         $this->addReferencePropertyInternal(
             $resourceType,
             $name,
@@ -902,21 +919,22 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a M:N resource reference property.
      *
-     * @param  ResourceEntityType        $sourceResourceType The resource type to add the resource
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource
      *                                                       reference property from
-     * @param  ResourceEntityType        $targetResourceType The resource type to add the resource
+     * @param ResourceEntityType $targetResourceType The resource type to add the resource
      *                                                       reference property to
-     * @param  string                    $sourceProperty     The name of the property to add, on source type
-     * @param  string                    $targetProperty     The name of the property to add, on target type
+     * @param string $sourceProperty The name of the property to add, on source type
+     * @param string $targetProperty The name of the property to add, on target type
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addResourceSetReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
         $sourceProperty,
         $targetProperty
-    ) {
+    )
+    {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
             $targetResourceType,
@@ -941,21 +959,22 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a 1-1 resource reference.
      *
-     * @param  ResourceEntityType        $sourceResourceType The resource type to add the resource
+     * @param ResourceEntityType $sourceResourceType The resource type to add the resource
      *                                                       reference property from
-     * @param  ResourceEntityType        $targetResourceType The resource type to add the resource
+     * @param ResourceEntityType $targetResourceType The resource type to add the resource
      *                                                       reference property to
-     * @param  string                    $sourceProperty     The name of the property to add, on source type
-     * @param  string                    $targetProperty     The name of the property to add, on target type
+     * @param string $sourceProperty The name of the property to add, on source type
+     * @param string $targetProperty The name of the property to add, on target type
      * @throws InvalidOperationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addResourceReferenceSinglePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
         $sourceProperty,
         $targetProperty
-    ) {
+    )
+    {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
             $targetResourceType,
@@ -980,21 +999,22 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * To add a complex property to entity or complex type.
      *
-     * @param ResourceType        $targetResourceType  The resource type to which the complex property needs to add
-     * @param string              $name                name of the complex property
+     * @param ResourceType $targetResourceType The resource type to which the complex property needs to add
+     * @param string $name name of the complex property
      * @param ResourceComplexType $complexResourceType complex resource type
-     * @param bool                $isBag               complex type is bag or not
+     * @param bool $isBag complex type is bag or not
      *
-     * @throws InvalidOperationException
-     * @throws \ReflectionException
      * @return ResourceProperty
+     * @throws ReflectionException
+     * @throws InvalidOperationException
      */
     public function addComplexProperty(
         ResourceType $targetResourceType,
         $name,
         ResourceComplexType $complexResourceType,
         $isBag = false
-    ) {
+    )
+    {
         if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()
             && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX()
         ) {
@@ -1029,9 +1049,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param  string       $name
-     * @param  ResourceType $returnType
-     * @param  array|string $functionName
+     * @param string $name
+     * @param ResourceType $returnType
+     * @param array|string $functionName
      * @return mixed|void
      */
     public function createSingleton($name, ResourceType $returnType, $functionName)
@@ -1039,20 +1059,20 @@ class SimpleMetadataProvider implements IMetadataProvider
         $msg = null;
         if (array_key_exists($name, $this->singletons)) {
             $msg = 'Singleton name already exists';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         if (array_key_exists($name, $this->resourceSets)) {
             $msg = 'Resource set with same name, ' . $name . ', exists';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $typeName = $returnType->getFullName();
         if (!array_key_exists($typeName, $this->oDataEntityMap)) {
             $msg = 'Mapping not defined for ' . $typeName;
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
-        $metaReturn   = $this->oDataEntityMap[$typeName];
+        $metaReturn = $this->oDataEntityMap[$typeName];
         $anonymousSet = $this->typeSetMapping[$typeName];
-        $singleton    = $this->getMetadataManager()->createSingleton($name, $metaReturn, $anonymousSet);
+        $singleton = $this->getMetadataManager()->createSingleton($name, $metaReturn, $anonymousSet);
         assert($singleton->isOK($msg), $msg);
         $type = new ResourceFunctionType($functionName, $singleton, $returnType);
         // Since singletons should take no args, enforce it here
@@ -1069,14 +1089,14 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param  string $name
+     * @param string $name
      * @return mixed
      */
     public function callSingleton($name)
     {
         if (!array_key_exists($name, $this->singletons)) {
             $msg = 'Requested singleton does not exist';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         return $this->singletons[$name]->get();

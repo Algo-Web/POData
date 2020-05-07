@@ -9,6 +9,7 @@ use POData\Common\ODataException;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Query\QueryResult;
+use ReflectionException;
 
 /**
  * Class InternalOrderByInfo.
@@ -54,16 +55,16 @@ class InternalOrderByInfo
     /**
      * Creates new instance of InternalOrderByInfo.
      *
-     * @param OrderByInfo  $orderByInfo        The structure holds information about the
+     * @param OrderByInfo $orderByInfo The structure holds information about the
      *                                         navigation properties used in the orderby clause
      *                                         (if any) and orderby path if IDSQP implementation wants to perform
      *                                         sorting
-     * @param callable[]   $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path
+     * @param callable[] $subSorterFunctions Collection of sub sorter functions corresponding to each orderby path
      *                                         segment
-     * @param callable     $sorterFunction     The top level anonymous sorter function
-     * @param mixed        $dummyObject        A dummy object of type of the resource set
+     * @param callable $sorterFunction The top level anonymous sorter function
+     * @param mixed $dummyObject A dummy object of type of the resource set
      *                                         identified by the request uri
-     * @param ResourceType $resourceType       The ResourceType for the resource targeted by resource path
+     * @param ResourceType $resourceType The ResourceType for the resource targeted by resource path
      */
     public function __construct(
         OrderByInfo $orderByInfo,
@@ -71,12 +72,13 @@ class InternalOrderByInfo
         callable $sorterFunction,
         $dummyObject,
         ResourceType $resourceType
-    ) {
-        $this->orderByInfo        = $orderByInfo;
-        $this->sorterFunction     = $sorterFunction;
+    )
+    {
+        $this->orderByInfo = $orderByInfo;
+        $this->sorterFunction = $sorterFunction;
         $this->subSorterFunctions = $subSorterFunctions;
-        $this->dummyObject        = $dummyObject;
-        $this->resourceType       = $resourceType;
+        $this->dummyObject = $dummyObject;
+        $this->resourceType = $resourceType;
     }
 
     /**
@@ -87,16 +89,6 @@ class InternalOrderByInfo
     public function getOrderByInfo()
     {
         return $this->orderByInfo;
-    }
-
-    /**
-     * Get reference to the orderby path segment information.
-     *
-     * @return OrderByPathSegment[]
-     */
-    public function getOrderByPathSegments()
-    {
-        return $this->orderByInfo->getOrderByPathSegments();
     }
 
     /**
@@ -130,36 +122,26 @@ class InternalOrderByInfo
     }
 
     /**
-     * Get resource type this InternalOrderByInfo object points to.
-     *
-     * @return ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->resourceType;
-    }
-
-    /**
      * Build value of $skiptoken from the given object which will be the
      * last object in the page.
      *
      * @param mixed $lastObject entity instance from which skiptoken needs to be built
      *
+     * @return string
      * @throws ODataException If reflection exception occurs while accessing property
      *
-     * @return string
      */
     public function buildSkipTokenValue($lastObject)
     {
         $nextPageLink = null;
         foreach ($this->getOrderByPathSegments() as $orderByPathSegment) {
-            $index           = 0;
-            $currentObject   = $lastObject;
+            $index = 0;
+            $currentObject = $lastObject;
             $subPathSegments = $orderByPathSegment->getSubPathSegments();
-            $subPathCount    = count($subPathSegments);
+            $subPathCount = count($subPathSegments);
             foreach ($subPathSegments as &$subPathSegment) {
                 $isLastSegment = ($index == $subPathCount - 1);
-                $segName       = $subPathSegment->getName();
+                $segName = $subPathSegment->getName();
                 try {
                     if ($currentObject instanceof QueryResult) {
                         $currentObject = $currentObject->results;
@@ -192,7 +174,7 @@ class InternalOrderByInfo
                         $value = $type->convertToOData($currentObject);
                         $nextPageLink .= $value . ', ';
                     }
-                } catch (\ReflectionException $reflectionException) {
+                } catch (ReflectionException $reflectionException) {
                     $msg = Messages::internalSkipTokenInfoFailedToAccessOrInitializeProperty($segName);
                     throw ODataException::createInternalServerError($msg);
                 }
@@ -202,5 +184,25 @@ class InternalOrderByInfo
         }
 
         return rtrim(strval($nextPageLink), ', ');
+    }
+
+    /**
+     * Get reference to the orderby path segment information.
+     *
+     * @return OrderByPathSegment[]
+     */
+    public function getOrderByPathSegments()
+    {
+        return $this->orderByInfo->getOrderByPathSegments();
+    }
+
+    /**
+     * Get resource type this InternalOrderByInfo object points to.
+     *
+     * @return ResourceType
+     */
+    public function getResourceType()
+    {
+        return $this->resourceType;
     }
 }

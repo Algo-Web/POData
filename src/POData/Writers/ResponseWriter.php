@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Writers;
 
+use Exception;
 use POData\Common\HttpStatus;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
@@ -20,19 +21,20 @@ class ResponseWriter
     /**
      * Write in specific format.
      *
-     * @param IService           $service
-     * @param RequestDescription $request             the OData request
-     * @param mixed              $entityModel         OData model instance
-     * @param string             $responseContentType Content type of the response
+     * @param IService $service
+     * @param RequestDescription $request the OData request
+     * @param mixed $entityModel OData model instance
+     * @param string $responseContentType Content type of the response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function write(
         IService $service,
         RequestDescription $request,
         $entityModel,
         $responseContentType
-    ) {
+    )
+    {
         $targetKind = $request->getTargetKind();
 
         if (TargetKind::METADATA() == $targetKind) {
@@ -44,24 +46,24 @@ class ResponseWriter
                 $responseContentType
             );
             if (null === $writer) {
-                throw new \Exception(Messages::noWriterToHandleRequest());
+                throw new Exception(Messages::noWriterToHandleRequest());
             }
             $responseBody = $writer->writeServiceDocument($service->getProvidersWrapper())->getOutput();
         } elseif (TargetKind::PRIMITIVE_VALUE() == $targetKind
-                  && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
+            && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
             $responseBody = mb_convert_encoding($request->getTargetResult(), 'UTF-8');
         } elseif (MimeTypes::MIME_APPLICATION_OCTETSTREAM == $responseContentType
-                  || TargetKind::MEDIA_RESOURCE() == $targetKind
+            || TargetKind::MEDIA_RESOURCE() == $targetKind
         ) {
             // Binary property or media resource
             if (TargetKind::MEDIA_RESOURCE() == $request->getTargetKind()) {
-                $result     = $request->getTargetResult();
+                $result = $request->getTargetResult();
                 $streamInfo = $request->getResourceStreamInfo();
-                $provider   = $service->getStreamProviderWrapper();
-                $eTag       = $provider->getStreamETag($result, $streamInfo);
+                $provider = $service->getStreamProviderWrapper();
+                $eTag = $provider->getStreamETag($result, $streamInfo);
                 $service->getHost()->setResponseETag($eTag);
                 $responseBody = $provider->getReadStream($result, $streamInfo);
             } else {
@@ -72,7 +74,7 @@ class ResponseWriter
                 $responseContentType = MimeTypes::MIME_APPLICATION_OCTETSTREAM;
             }
         } else {
-            $responsePieces      = explode(';', $responseContentType);
+            $responsePieces = explode(';', $responseContentType);
             $responseContentType = $responsePieces[0];
 
             $writer = $service->getODataWriterRegistry()->getWriter(
@@ -80,13 +82,13 @@ class ResponseWriter
                 $responseContentType
             );
             if (null === $writer) {
-                throw new \Exception(Messages::noWriterToHandleRequest());
+                throw new Exception(Messages::noWriterToHandleRequest());
             }
             $segments = $request->getSegments();
-            $numSeg   = count($segments);
+            $numSeg = count($segments);
             if (1 < $numSeg && '$links' == $segments[$numSeg - 2]->getIdentifier()) {
                 if (null !== $entityModel) {
-                    throw new \Exception(Messages::modelPayloadOnLinkModification());
+                    throw new Exception(Messages::modelPayloadOnLinkModification());
                 }
             } else {
                 assert(null !== $entityModel, 'EntityModel must not be null when not manipulating links');

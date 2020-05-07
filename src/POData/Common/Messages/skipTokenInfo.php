@@ -14,7 +14,7 @@ trait skipTokenInfo
      * Format a message to show error when one of the argument orderByPaths or
      * orderByValues is set and not both.
      *
-     * @param string $orderByPathsVarName  Name of the argument
+     * @param string $orderByPathsVarName Name of the argument
      *                                     holding orderByPathSegment
      * @param string $orderByValuesVarName Name of the argument holding
      *                                     skip token values corresponding
@@ -25,9 +25,10 @@ trait skipTokenInfo
     public static function skipTokenInfoBothOrderByPathAndOrderByValuesShouldBeSetOrNotSet(
         $orderByPathsVarName,
         $orderByValuesVarName
-    ) {
+    )
+    {
         return 'Either both the arguments ' . $orderByPathsVarName . ' and ' . $orderByValuesVarName . ' should be'
-                . ' null or not-null';
+            . ' null or not-null';
     }
 
     /**

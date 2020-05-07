@@ -14,6 +14,7 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\ProvidersWrapper;
+use ReflectionException;
 
 /**
  * Class SegmentParser.
@@ -61,14 +62,14 @@ class SegmentParser
     /**
      * Parse the given Uri segments.
      *
-     * @param string[]         $segments        Array of segments in the request Uri
+     * @param string[] $segments Array of segments in the request Uri
      * @param ProvidersWrapper $providerWrapper Reference to metadata and query provider wrapper
-     * @param bool             $checkForRights  Whether to check for rights on the resource sets in the segments
-     *
-     * @throws ODataException       If any error occurs while processing segment
-     * @throws \ReflectionException
+     * @param bool $checkForRights Whether to check for rights on the resource sets in the segments
      *
      * @return SegmentDescriptor[]
+     * @throws ReflectionException
+     *
+     * @throws ODataException       If any error occurs while processing segment
      */
     public static function parseRequestUriSegments($segments, ProvidersWrapper $providerWrapper, $checkForRights = true)
     {
@@ -79,28 +80,68 @@ class SegmentParser
     }
 
     /**
-     * @return ProvidersWrapper
+     * Process a collection of OData URI segment strings and turn them into segment descriptors.
+     *
+     * @param string[] $segments array of segments strings to parse
+     * @param bool $checkRights Whether to check for rights or not
+     *
+     * @return mixed
+     * @throws ReflectionException
+     * @throws ODataException       Exception in case of any error found while precessing segments
      */
-    public function getProviderWrapper()
+    private function createSegmentDescriptors($segments, $checkRights)
     {
-        return $this->providerWrapper;
+        if (empty($segments)) {
+            //If there's no segments, then it's the service root
+            $descriptor = new SegmentDescriptor();
+            $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
+            $this->segmentDescriptors[] = $descriptor;
+
+            return;
+        }
+
+        $segmentCount = count($segments);
+        $keyPredicate = null;
+        $identifier = $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $keyPredicate);
+        $previous = $this->createFirstSegmentDescriptor(
+            $identifier,
+            $keyPredicate,
+            $checkRights
+        );
+        assert($previous instanceof SegmentDescriptor, get_class($previous));
+        $this->segmentDescriptors[0] = $previous;
+
+        for ($i = 1; $i < $segmentCount; ++$i) {
+            $thisSegment = $segments[$i];
+            $current = $this->createNextSegment($previous, $thisSegment, $checkRights);
+
+            $current->setPrevious($previous);
+            $previous->setNext($current);
+            $this->segmentDescriptors[] = $current;
+            $previous = $current;
+        }
+
+        //At this point $previous is the final segment..which cannot be a $link
+        if ($previous->getTargetKind() == TargetKind::LINK()) {
+            throw ODataException::createBadRequestError(Messages::segmentParserMissingSegmentAfterLink());
+        }
     }
 
     /**
      * Extract identifier and key predicate from a segment.
      *
-     * @param string $segment      The segment from which identifier and key
+     * @param string $segment The segment from which identifier and key
      * @param string $keyPredicate On return, this parameter will contain key predicate part of the segment,
      *                             null if predicate is absent
      *
-     * @throws ODataException If any error occurs while processing segment
      * @return string         The identifier part of the segment
+     * @throws ODataException If any error occurs while processing segment
      */
     private function extractSegmentIdentifierAndKeyPredicate($segment, &$keyPredicate): string
     {
         $predicateStart = strpos($segment, '(');
         if ($predicateStart === false) {
-            $identifier   = $segment;
+            $identifier = $segment;
             $keyPredicate = null;
 
             return $identifier;
@@ -120,67 +161,180 @@ class SegmentParser
     }
 
     /**
-     * Process a collection of OData URI segment strings and turn them into segment descriptors.
+     * Create SegmentDescriptor for the first segment.
      *
-     * @param string[] $segments    array of segments strings to parse
-     * @param bool     $checkRights Whether to check for rights or not
+     * @param string $segmentIdentifier The identifier part of the first segment
+     * @param string $keyPredicate The predicate part of the first segment if any else NULL
+     * @param bool $checkRights Whether to check the rights on this segment
      *
-     * @throws ODataException       Exception in case of any error found while precessing segments
-     * @throws \ReflectionException
-     * @return mixed
+     * @return SegmentDescriptor Descriptor for the first segment
+     * @throws ReflectionException
+     *
+     * @throws ODataException       Exception if any validation fails
      */
-    private function createSegmentDescriptors($segments, $checkRights)
+    private function createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
     {
-        if (empty($segments)) {
-            //If there's no segments, then it's the service root
-            $descriptor = new SegmentDescriptor();
-            $descriptor->setTargetKind(TargetKind::SERVICE_DIRECTORY());
-            $this->segmentDescriptors[] = $descriptor;
+        $descriptor = new SegmentDescriptor();
+        $descriptor->setIdentifier($segmentIdentifier);
 
-            return;
+        if ($segmentIdentifier === ODataConstants::URI_METADATA_SEGMENT) {
+            $this->assertion(null === $keyPredicate);
+            $descriptor->setTargetKind(TargetKind::METADATA());
+
+            return $descriptor;
         }
 
-        $segmentCount = count($segments);
-        $keyPredicate = null;
-        $identifier   = $this->extractSegmentIdentifierAndKeyPredicate($segments[0], $keyPredicate);
-        $previous     = $this->createFirstSegmentDescriptor(
-            $identifier,
-            $keyPredicate,
-            $checkRights
-        );
-        assert($previous instanceof SegmentDescriptor, get_class($previous));
-        $this->segmentDescriptors[0] = $previous;
+        if ($segmentIdentifier === ODataConstants::URI_BATCH_SEGMENT) {
+            $this->assertion(null === $keyPredicate);
+            $descriptor->setTargetKind(TargetKind::BATCH());
 
-        for ($i = 1; $i < $segmentCount; ++$i) {
-            $thisSegment = $segments[$i];
-            $current     = $this->createNextSegment($previous, $thisSegment, $checkRights);
-
-            $current->setPrevious($previous);
-            $previous->setNext($current);
-            $this->segmentDescriptors[] = $current;
-            $previous                   = $current;
+            return $descriptor;
         }
 
-        //At this point $previous is the final segment..which cannot be a $link
-        if ($previous->getTargetKind() == TargetKind::LINK()) {
-            throw ODataException::createBadRequestError(Messages::segmentParserMissingSegmentAfterLink());
+        if ($segmentIdentifier === ODataConstants::URI_COUNT_SEGMENT) {
+            throw ODataException::createBadRequestError(
+                Messages::segmentParserSegmentNotAllowedOnRoot(
+                    ODataConstants::URI_COUNT_SEGMENT
+                )
+            );
+        }
+
+        if ($segmentIdentifier === ODataConstants::URI_LINK_SEGMENT) {
+            throw ODataException::createBadRequestError(
+                Messages::segmentParserSegmentNotAllowedOnRoot(
+                    ODataConstants::URI_LINK_SEGMENT
+                )
+            );
+        }
+
+        $singleton = $this->getProviderWrapper()->resolveSingleton($segmentIdentifier);
+        if (null !== $singleton) {
+            $this->assertion(null === $keyPredicate);
+            /** @var ResourceType $resourceType */
+            $resourceType = $singleton->getResourceType();
+            $resourceSet = $resourceType->getCustomState();
+            assert($resourceSet instanceof ResourceSet, get_class($resourceSet));
+            $typeName = $resourceSet->getName();
+            $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
+            assert($resourceSet instanceof ResourceSetWrapper);
+            $descriptor->setTargetKind(TargetKind::SINGLETON());
+            $descriptor->setTargetSource(TargetSource::ENTITY_SET());
+            $descriptor->setTargetResourceType($resourceType);
+            $descriptor->setTargetResourceSetWrapper($resourceSet);
+            $descriptor->setSingleResult(true);
+
+            return $descriptor;
+        }
+
+        $resourceSetWrapper = $this->getProviderWrapper()->resolveResourceSet($segmentIdentifier);
+        if (null === $resourceSetWrapper) {
+            throw ODataException::createResourceNotFoundError($segmentIdentifier);
+        }
+
+        $descriptor->setTargetResourceSetWrapper($resourceSetWrapper);
+        $descriptor->setTargetResourceType($resourceSetWrapper->getResourceType());
+        $descriptor->setTargetSource(TargetSource::ENTITY_SET());
+        $descriptor->setTargetKind(TargetKind::RESOURCE());
+        if (null !== $keyPredicate) {
+            $keyDescriptor = $this->createKeyDescriptor(
+                $segmentIdentifier . '(' . $keyPredicate . ')',
+                $resourceSetWrapper->getResourceType(),
+                $keyPredicate
+            );
+            $descriptor->setKeyDescriptor($keyDescriptor);
+            if (!$keyDescriptor->isEmpty()) {
+                $descriptor->setSingleResult(true);
+            }
+        }
+
+        if ($checkRights) {
+            $resourceSetWrapper->checkResourceSetRightsForRead(
+                $descriptor->isSingleResult()
+            );
+        }
+        return $descriptor;
+    }
+
+    /**
+     * Assert that the given condition is true, if false throw
+     * ODataException for syntax error.
+     *
+     * @param bool $condition The condition to assert
+     *
+     * @throws ODataException
+     */
+    private function assertion($condition)
+    {
+        if (!$condition) {
+            throw ODataException::createSyntaxError(Messages::syntaxError());
         }
     }
 
     /**
-     * @param SegmentDescriptor $previous
-     * @param string            $segment
-     * @param bool              $checkRights
+     * @return ProvidersWrapper
+     */
+    public function getProviderWrapper()
+    {
+        return $this->providerWrapper;
+    }
+
+    /**
+     * Creates an instance of KeyDescriptor by parsing a key predicate, also
+     * validates the KeyDescriptor.
      *
-     * @throws ODataException
-     * @throws \ReflectionException
+     * @param string $segment The uri segment in the form identifier
+     *                                   (keyPredicate)
+     * @param ResourceType $resourceType The Resource type whose keys need to
+     *                                   be parsed
+     * @param string $keyPredicate The key predicate to parse and generate
+     *                                   KeyDescriptor for
+     *
+     * @return KeyDescriptor|null Describes the key values in the $keyPredicate
+     * @throws ReflectionException
+     *
+     * @throws ODataException       Exception if any error occurs while parsing and
+     *                              validating the key predicate
+     */
+    private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
+    {
+        /**
+         * @var KeyDescriptor|null $keyDescriptor
+         */
+        $keyDescriptor = null;
+        if (!KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor)) {
+            throw ODataException::createSyntaxError(Messages::syntaxError());
+        }
+
+        // Note: Currently WCF Data Service does not support multiple
+        // 'Positional values' so Order_Details(10248, 11) is not valid
+        if (!$keyDescriptor->isEmpty()
+            && !$keyDescriptor->areNamedValues()
+            && $keyDescriptor->valueCount() > 1
+        ) {
+            throw ODataException::createSyntaxError(
+                Messages::segmentParserKeysMustBeNamed($segment)
+            );
+        }
+        $keyDescriptor->validate($segment, $resourceType);
+
+        return $keyDescriptor;
+    }
+
+    /**
+     * @param SegmentDescriptor $previous
+     * @param string $segment
+     * @param bool $checkRights
+     *
      * @return SegmentDescriptor
+     * @throws ReflectionException
+     * @throws ODataException
      */
     private function createNextSegment(
         SegmentDescriptor $previous,
         string $segment,
         bool $checkRights
-    ): SegmentDescriptor {
+    ): SegmentDescriptor
+    {
         $previousKind = $previous->getTargetKind();
         if ($previousKind == TargetKind::METADATA()
             || $previousKind == TargetKind::BATCH()
@@ -195,7 +349,7 @@ class SegmentParser
         }
 
         $keyPredicate = null;
-        $identifier   = $this->extractSegmentIdentifierAndKeyPredicate($segment, $keyPredicate);
+        $identifier = $this->extractSegmentIdentifierAndKeyPredicate($segment, $keyPredicate);
         $hasPredicate = null !== $keyPredicate;
 
         $singleton = $this->providerWrapper->resolveSingleton($identifier);
@@ -219,8 +373,8 @@ class SegmentParser
             $current->setTargetKind(TargetKind::PRIMITIVE_VALUE());
             $current->setSingleResult(true);
         } elseif (null !== $previous->getPrevious()
-                  && $previous->getPrevious()->getIdentifier() === ODataConstants::URI_LINK_SEGMENT
-                  && $identifier !== ODataConstants::URI_COUNT_SEGMENT) {
+            && $previous->getPrevious()->getIdentifier() === ODataConstants::URI_LINK_SEGMENT
+            && $identifier !== ODataConstants::URI_COUNT_SEGMENT) {
             throw ODataException::createBadRequestError(
                 Messages::segmentParserNoSegmentAllowedAfterPostLinkSegment($identifier)
             );
@@ -252,7 +406,7 @@ class SegmentParser
             $current = new SegmentDescriptor();
             $current->setIdentifier($identifier);
             $current->setTargetSource(TargetSource::PROPERTY());
-            $previousType      = $previous->getTargetResourceType();
+            $previousType = $previous->getTargetResourceType();
             $projectedProperty = $previousType->resolveProperty($identifier);
             $current->setProjectedProperty($projectedProperty);
 
@@ -369,157 +523,5 @@ class SegmentParser
         }
 
         return $current;
-    }
-
-    /**
-     * Create SegmentDescriptor for the first segment.
-     *
-     * @param string $segmentIdentifier The identifier part of the first segment
-     * @param string $keyPredicate      The predicate part of the first segment if any else NULL
-     * @param bool   $checkRights       Whether to check the rights on this segment
-     *
-     * @throws ODataException       Exception if any validation fails
-     * @throws \ReflectionException
-     *
-     * @return SegmentDescriptor Descriptor for the first segment
-     */
-    private function createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights)
-    {
-        $descriptor = new SegmentDescriptor();
-        $descriptor->setIdentifier($segmentIdentifier);
-
-        if ($segmentIdentifier === ODataConstants::URI_METADATA_SEGMENT) {
-            $this->assertion(null === $keyPredicate);
-            $descriptor->setTargetKind(TargetKind::METADATA());
-
-            return $descriptor;
-        }
-
-        if ($segmentIdentifier === ODataConstants::URI_BATCH_SEGMENT) {
-            $this->assertion(null === $keyPredicate);
-            $descriptor->setTargetKind(TargetKind::BATCH());
-
-            return $descriptor;
-        }
-
-        if ($segmentIdentifier === ODataConstants::URI_COUNT_SEGMENT) {
-            throw ODataException::createBadRequestError(
-                Messages::segmentParserSegmentNotAllowedOnRoot(
-                    ODataConstants::URI_COUNT_SEGMENT
-                )
-            );
-        }
-
-        if ($segmentIdentifier === ODataConstants::URI_LINK_SEGMENT) {
-            throw ODataException::createBadRequestError(
-                Messages::segmentParserSegmentNotAllowedOnRoot(
-                    ODataConstants::URI_LINK_SEGMENT
-                )
-            );
-        }
-
-        $singleton = $this->getProviderWrapper()->resolveSingleton($segmentIdentifier);
-        if (null !== $singleton) {
-            $this->assertion(null === $keyPredicate);
-            /** @var ResourceType $resourceType */
-            $resourceType = $singleton->getResourceType();
-            $resourceSet  = $resourceType->getCustomState();
-            assert($resourceSet instanceof ResourceSet, get_class($resourceSet));
-            $typeName    = $resourceSet->getName();
-            $resourceSet = $this->providerWrapper->resolveResourceSet($typeName);
-            assert($resourceSet instanceof ResourceSetWrapper);
-            $descriptor->setTargetKind(TargetKind::SINGLETON());
-            $descriptor->setTargetSource(TargetSource::ENTITY_SET());
-            $descriptor->setTargetResourceType($resourceType);
-            $descriptor->setTargetResourceSetWrapper($resourceSet);
-            $descriptor->setSingleResult(true);
-
-            return $descriptor;
-        }
-
-        $resourceSetWrapper = $this->getProviderWrapper()->resolveResourceSet($segmentIdentifier);
-        if (null === $resourceSetWrapper) {
-            throw ODataException::createResourceNotFoundError($segmentIdentifier);
-        }
-
-        $descriptor->setTargetResourceSetWrapper($resourceSetWrapper);
-        $descriptor->setTargetResourceType($resourceSetWrapper->getResourceType());
-        $descriptor->setTargetSource(TargetSource::ENTITY_SET());
-        $descriptor->setTargetKind(TargetKind::RESOURCE());
-        if (null !== $keyPredicate) {
-            $keyDescriptor = $this->createKeyDescriptor(
-                $segmentIdentifier . '(' . $keyPredicate . ')',
-                $resourceSetWrapper->getResourceType(),
-                $keyPredicate
-            );
-            $descriptor->setKeyDescriptor($keyDescriptor);
-            if (!$keyDescriptor->isEmpty()) {
-                $descriptor->setSingleResult(true);
-            }
-        }
-
-        if ($checkRights) {
-            $resourceSetWrapper->checkResourceSetRightsForRead(
-                $descriptor->isSingleResult()
-            );
-        }
-        return $descriptor;
-    }
-
-    /**
-     * Creates an instance of KeyDescriptor by parsing a key predicate, also
-     * validates the KeyDescriptor.
-     *
-     * @param string       $segment      The uri segment in the form identifier
-     *                                   (keyPredicate)
-     * @param ResourceType $resourceType The Resource type whose keys need to
-     *                                   be parsed
-     * @param string       $keyPredicate The key predicate to parse and generate
-     *                                   KeyDescriptor for
-     *
-     * @throws ODataException       Exception if any error occurs while parsing and
-     *                              validating the key predicate
-     * @throws \ReflectionException
-     *
-     * @return KeyDescriptor|null Describes the key values in the $keyPredicate
-     */
-    private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate)
-    {
-        /**
-         * @var KeyDescriptor|null $keyDescriptor
-         */
-        $keyDescriptor = null;
-        if (!KeyDescriptor::tryParseKeysFromKeyPredicate($keyPredicate, $keyDescriptor)) {
-            throw ODataException::createSyntaxError(Messages::syntaxError());
-        }
-
-        // Note: Currently WCF Data Service does not support multiple
-        // 'Positional values' so Order_Details(10248, 11) is not valid
-        if (!$keyDescriptor->isEmpty()
-            && !$keyDescriptor->areNamedValues()
-            && $keyDescriptor->valueCount() > 1
-        ) {
-            throw ODataException::createSyntaxError(
-                Messages::segmentParserKeysMustBeNamed($segment)
-            );
-        }
-        $keyDescriptor->validate($segment, $resourceType);
-
-        return $keyDescriptor;
-    }
-
-    /**
-     * Assert that the given condition is true, if false throw
-     * ODataException for syntax error.
-     *
-     * @param bool $condition The condition to assert
-     *
-     * @throws ODataException
-     */
-    private function assertion($condition)
-    {
-        if (!$condition) {
-            throw ODataException::createSyntaxError(Messages::syntaxError());
-        }
     }
 }

@@ -69,7 +69,7 @@ class ExpressionProcessor
         }
 
         if (null !== $funcName) {
-            $left  = $this->processExpressionNode($expression->getLeft());
+            $left = $this->processExpressionNode($expression->getLeft());
             $right = $this->processExpressionNode($expression->getRight());
 
             return $this->expressionProvider->{$funcName}(

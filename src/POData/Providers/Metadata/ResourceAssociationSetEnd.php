@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 
 /**
@@ -47,8 +48,8 @@ class ResourceAssociationSetEnd
      * base resource of this entity, on which the navigation property
      * represented by $resourceProperty is defined.
      *
-     * @param ResourceSet           $resourceSet      Resource set for the association end
-     * @param ResourceEntityType    $resourceType     Resource type for the association end
+     * @param ResourceSet $resourceSet Resource set for the association end
+     * @param ResourceEntityType $resourceType Resource type for the association end
      * @param ResourceProperty|null $resourceProperty Resource property for the association end
      *
      * @param ResourceEntityType|null $concreteType
@@ -58,13 +59,14 @@ class ResourceAssociationSetEnd
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty = null,
         ResourceEntityType $concreteType = null
-    ) {
+    )
+    {
         if (null !== $resourceProperty
             && (null === $resourceType->resolveProperty($resourceProperty->getName())
                 || (($resourceProperty->getKind() != ResourcePropertyKind::RESOURCE_REFERENCE())
                     && ($resourceProperty->getKind() != ResourcePropertyKind::RESOURCESET_REFERENCE())))
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetEndPropertyMustBeNavigationProperty(
                     $resourceProperty->getName(),
                     $resourceType->getFullName()
@@ -75,7 +77,7 @@ class ResourceAssociationSetEnd
         if (!$resourceSet->getResourceType()->isAssignableFrom($resourceType)
             && !$resourceType->isAssignableFrom($resourceSet->getResourceType())
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetEndResourceTypeMustBeAssignableToResourceSet(
                     $resourceType->getFullName(),
                     $resourceSet->getName()
@@ -85,26 +87,26 @@ class ResourceAssociationSetEnd
         if (null !== $concreteType) {
             if ($concreteType->isAbstract()) {
                 $msg = 'Concrete type must not be abstract if explicitly supplied';
-                throw new \InvalidArgumentException($msg);
+                throw new InvalidArgumentException($msg);
             }
             $concType = $concreteType;
         } else {
             $concType = $resourceType;
         }
 
-        $this->resourceSet      = $resourceSet;
-        $this->resourceType     = $resourceType;
+        $this->resourceSet = $resourceSet;
+        $this->resourceType = $resourceType;
         $this->resourceProperty = $resourceProperty;
-        $this->concreteType     = $concType;
+        $this->concreteType = $concType;
     }
 
     /**
      * To check this relationship belongs to a specific resource set, type
      * and property.
      *
-     * @param ResourceSet      $resourceSet      Resource set for the association
+     * @param ResourceSet $resourceSet Resource set for the association
      *                                           end
-     * @param ResourceType     $resourceType     Resource type for the association
+     * @param ResourceType $resourceType Resource type for the association
      *                                           end
      * @param ResourceProperty $resourceProperty Resource property for the
      *                                           association end
@@ -115,7 +117,8 @@ class ResourceAssociationSetEnd
         ResourceSet $resourceSet,
         ResourceType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    )
+    {
         return strcmp($resourceSet->getName(), $this->resourceSet->getName()) == 0
             && $this->resourceType->isAssignableFrom($resourceType)
             && ((null === $resourceProperty && null === $this->resourceProperty)

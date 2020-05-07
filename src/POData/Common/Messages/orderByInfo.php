@@ -48,7 +48,7 @@ trait orderByInfo
      * property in orderby path.
      *
      * @param string $resourceTypeName The name of resource type
-     * @param string $propertyName     Sub path segment, that comes after the
+     * @param string $propertyName Sub path segment, that comes after the
      *                                 segment of type  $resourceTypeName
      *
      * @return string The formatted message
@@ -56,7 +56,7 @@ trait orderByInfo
     public static function orderByParserPropertyNotFound($resourceTypeName, $propertyName)
     {
         return 'Error in the \'orderby\' clause. Type ' . $resourceTypeName
-               . ' does not have a property named \'' . $propertyName . '\'.';
+            . ' does not have a property named \'' . $propertyName . '\'.';
     }
 
     /**
@@ -70,7 +70,7 @@ trait orderByInfo
     public static function orderByParserBagPropertyNotAllowed($bagPropertyName)
     {
         return 'orderby clause does not support Bag property in the path, the property \'' . $bagPropertyName
-                . '\' is a bag property';
+            . '\' is a bag property';
     }
 
     /**
@@ -84,7 +84,7 @@ trait orderByInfo
     public static function orderByParserPrimitiveAsIntermediateSegment($propertyName)
     {
         return 'The primitive property \'' . $propertyName . '\' cannot be used as intermediate segment, it should'
-                . ' be last segment';
+            . ' be last segment';
     }
 
     /**
@@ -104,14 +104,14 @@ trait orderByInfo
      * property in the orderby clause.
      *
      * @param string $propertyName The name of resource set reference property
-     * @param string $definedType  Defined type
+     * @param string $definedType Defined type
      *
      * @return string The formatted message
      */
     public static function orderByParserResourceSetReferenceNotAllowed($propertyName, $definedType)
     {
         return 'Navigation property points to a collection cannot be used in orderby clause, The property \''
-                . $propertyName . '\' defined on type \'' . $definedType . '\' is such a property';
+            . $propertyName . '\' defined on type \'' . $definedType . '\' is such a property';
     }
 
     /**
@@ -138,7 +138,7 @@ trait orderByInfo
     public static function orderByParserSortByComplexPropertyIsNotAllowed($complexPropertyName)
     {
         return 'Complex property cannot be used as sort key, the property \'' . $complexPropertyName
-                . '\' is a complex property';
+            . '\' is a complex property';
     }
 
     /**
@@ -177,7 +177,7 @@ trait orderByInfo
      * Format a message to show error when orderby parser failed to
      * access some of the properties of dummy object.
      *
-     * @param string $propertyName     Property name
+     * @param string $propertyName Property name
      * @param string $parentObjectName Parent object name
      *
      * @return string The formatted message
@@ -185,6 +185,6 @@ trait orderByInfo
     public static function orderByParserFailedToAccessOrInitializeProperty($propertyName, $parentObjectName)
     {
         return 'OrderBy parser failed to access or initialize the property ' . $propertyName .
-               ' of ' . $parentObjectName;
+            ' of ' . $parentObjectName;
     }
 }

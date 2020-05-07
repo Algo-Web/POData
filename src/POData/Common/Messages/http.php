@@ -23,7 +23,7 @@ trait http
     {
         if ($notEndWithSvcOrHasQuery) {
             return 'Malformed base service uri in the configuration file (should end with .svc, there should not' .
-                    ' be query or fragment in the base service uri)';
+                ' be query or fragment in the base service uri)';
         }
 
         return 'Malformed base service uri in the configuration file';
@@ -33,7 +33,7 @@ trait http
      * Format a message to show error when request uri is not
      * based on configured relative uri.
      *
-     * @param string $requestUri  The request uri
+     * @param string $requestUri The request uri
      * @param string $relativeUri The relative uri in service.config.xml
      *
      * @return string The formatted message
@@ -41,7 +41,7 @@ trait http
     public static function hostRequestUriIsNotBasedOnRelativeUriInConfig($requestUri, $relativeUri)
     {
         return 'The request uri ' . $requestUri . ' is not valid as it is not based on the configured relative uri '
-                . $relativeUri;
+            . $relativeUri;
     }
 
     /**
@@ -60,7 +60,7 @@ trait http
     /**
      * Format a message to show error when the uri for verb is wrong.
      *
-     * @param string $uri  Url pointing to resource
+     * @param string $uri Url pointing to resource
      * @param string $verb GET/POST/PUT/DELETE/PATCH/MERGE
      *
      * @return string The formatted message
@@ -93,7 +93,7 @@ trait http
     public static function badRequestInvalidUriForMediaResource($uri)
     {
         return 'The URI \'' . $uri . '\' is not valid. The segment before \'$value\' must be a Media Link Entry or'
-                . ' a primitive property.';
+            . ' a primitive property.';
     }
 
     /**
@@ -107,7 +107,7 @@ trait http
     public static function hostNonODataOptionBeginsWithSystemCharacter($optionName)
     {
         return 'The query parameter \'' . $optionName . '\' begins with a system-reserved \'$\' character but'
-                . ' is not recognized.';
+            . ' is not recognized.';
     }
 
     /**
@@ -145,6 +145,6 @@ trait http
     public static function bothIfMatchAndIfNoneMatchHeaderSpecified()
     {
         return 'Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify'
-                . ' either one of the headers or none of them.';
+            . ' either one of the headers or none of them.';
     }
 }

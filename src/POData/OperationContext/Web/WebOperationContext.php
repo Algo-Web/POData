@@ -37,12 +37,12 @@ class WebOperationContext implements IOperationContext
      * This function will perform the following tasks:
      *  (1) Retrieve the current HTTP method,headers and stream.
      *  (2) Populate $_incomingRequest using these.
-     * @param IHTTPRequest|null     $incomingRequest
+     * @param IHTTPRequest|null $incomingRequest
      * @param OutgoingResponse|null $outgoingResponse
      */
     public function __construct(IHTTPRequest $incomingRequest = null, OutgoingResponse $outgoingResponse = null)
     {
-        $this->incomingRequest  = $incomingRequest ?? new IncomingRequest();
+        $this->incomingRequest = $incomingRequest ?? new IncomingRequest();
         $this->outgoingResponse = $outgoingResponse ?? new OutgoingResponse();
     }
 

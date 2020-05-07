@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use Exception;
+
 /**
  * Class UrlFormatException.
  */
-class UrlFormatException extends \Exception
+class UrlFormatException extends Exception
 {
     /**
      * Construct a new instance of UrlFormatException.

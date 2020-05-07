@@ -23,7 +23,7 @@ interface IODataWriter
      * Determines if the given writer is capable of writing the response or not.
      *
      * @param Version $responseVersion the OData version of the response
-     * @param string  $contentType     the Content Type of the response
+     * @param string $contentType the Content Type of the response
      *
      * @return bool true if the writer can handle the response, false otherwise
      */

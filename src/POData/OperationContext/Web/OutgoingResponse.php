@@ -48,16 +48,16 @@ class OutgoingResponse
      */
     private function initializeResponseHeaders()
     {
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE]   = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTTYPE] = null;
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CONTENTLENGTH] = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG]          = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL]  = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED]  = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION]      = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS]        = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE]   = null;
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC]   = null;
-        $this->dataServiceVersion                                         = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_ETAG] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LASTMODIFIED] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_LOCATION] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = null;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_DESC] = null;
+        $this->dataServiceVersion = null;
     }
 
     /**
@@ -169,7 +169,7 @@ class OutgoingResponse
     {
         $rawCode = substr($value, 0, 3);
         assert(is_numeric($rawCode), 'Raw HTTP status code is not numeric - is ' . $rawCode);
-        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS]      = $value;
+        $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS] = $value;
         $this->headers[ODataConstants::HTTPRESPONSE_HEADER_STATUS_CODE] = intval($rawCode);
     }
 
@@ -216,7 +216,7 @@ class OutgoingResponse
     /**
      * Add a response header.
      *
-     * @param string $name  The header name
+     * @param string $name The header name
      * @param string $value The header value
      */
     public function addHeader(string $name, string $value): void

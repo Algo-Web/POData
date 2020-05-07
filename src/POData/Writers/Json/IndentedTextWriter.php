@@ -40,6 +40,7 @@ class IndentedTextWriter
 
     private $eol;
     private $prettyPrint;
+
     /**
      * Creates a new instance of IndentedTextWriter.
      *
@@ -47,10 +48,10 @@ class IndentedTextWriter
      */
     public function __construct($writer, string $eol, bool $prettyPrint)
     {
-        $this->result      = $writer;
-        $this->eol         = $prettyPrint ? $eol : '';
+        $this->result = $writer;
+        $this->eol = $prettyPrint ? $eol : '';
         $this->prettyPrint = $prettyPrint;
-        $this->tabString   = $prettyPrint ? '    ' : '';
+        $this->tabString = $prettyPrint ? '    ' : '';
     }
 
     /**
@@ -66,6 +67,27 @@ class IndentedTextWriter
         $this->write($value);
 
         return $this;
+    }
+
+    /**
+     * Writes the tabs depending on the indent level.
+     */
+    private function outputTabs()
+    {
+        if ($this->tabsPending) {
+            $this->write(str_repeat($this->tabString, $this->indentLevel));
+            $this->tabsPending = false;
+        }
+    }
+
+    /**
+     * Writes the value to the text stream.
+     *
+     * @param string $value value to be written
+     */
+    private function write($value)
+    {
+        $this->result .= $value;
     }
 
     /**
@@ -128,26 +150,5 @@ class IndentedTextWriter
     public function getResult()
     {
         return $this->result;
-    }
-
-    /**
-     * Writes the tabs depending on the indent level.
-     */
-    private function outputTabs()
-    {
-        if ($this->tabsPending) {
-            $this->write(str_repeat($this->tabString, $this->indentLevel));
-            $this->tabsPending = false;
-        }
-    }
-
-    /**
-     * Writes the value to the text stream.
-     *
-     * @param string $value value to be written
-     */
-    private function write($value)
-    {
-        $this->result .= $value;
     }
 }

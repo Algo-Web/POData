@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
 
@@ -46,27 +47,27 @@ class OrderByInfo
     /**
      * Constructs new instance of OrderByInfo.
      *
-     * @param OrderByPathSegment[]                 $orderByPathSegments  Order by path segments
+     * @param OrderByPathSegment[] $orderByPathSegments Order by path segments
      * @param array <array<ResourceProperty>>|null $navigationProperties navigation properties used in the
      *                                                                   order by clause
      */
     public function __construct(array $orderByPathSegments, array $navigationProperties = null)
     {
         if (empty($orderByPathSegments)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::orderByInfoPathSegmentsArgumentShouldBeNonEmptyArray()
             );
         }
 
         if (null !== $navigationProperties) {
             if (empty($navigationProperties)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     Messages::orderByInfoNaviUsedArgumentShouldBeNullOrNonEmptyArray()
                 );
             }
         }
 
-        $this->orderByPathSegments                        = $orderByPathSegments;
+        $this->orderByPathSegments = $orderByPathSegments;
         $this->navigationPropertiesUsedInTheOrderByClause = $navigationProperties;
     }
 

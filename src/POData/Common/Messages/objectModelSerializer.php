@@ -30,21 +30,21 @@ trait objectModelSerializer
      *
      * @param string $resourceTypeName The name of the resource type of the
      *                                 instance with null key
-     * @param string $keyName          Name of the key with null value
+     * @param string $keyName Name of the key with null value
      *
      * @return string The formatted message
      */
     public static function badQueryNullKeysAreNotSupported($resourceTypeName, $keyName)
     {
         return 'The serialized resource of type ' . $resourceTypeName . ' has a null value in key member \'' . $keyName
-                . '\'. Null values are not supported in key members.';
+            . '\'. Null values are not supported in key members.';
     }
 
     /**
      * Format a message to show error when object model serializer failed to
      * access some of the properties of a type instance.
      *
-     * @param string $propertyName     The name of the property in question
+     * @param string $propertyName The name of the property in question
      * @param string $parentObjectName The entity instance in question
      *
      * @return string The formatted message
@@ -52,7 +52,7 @@ trait objectModelSerializer
     public static function objectModelSerializerFailedToAccessProperty($propertyName, $parentObjectName)
     {
         return 'objectModelSerializer failed to access or initialize the property ' . $propertyName . ' of '
-                . $parentObjectName . ', Please contact provider.';
+            . $parentObjectName . ', Please contact provider.';
     }
 
     /**
@@ -66,6 +66,6 @@ trait objectModelSerializer
     public static function objectModelSerializerLoopsNotAllowedInComplexTypes($complexPropertyName)
     {
         return 'A circular loop was detected while serializing the property \'' . $complexPropertyName
-                . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
+            . '\'. You must make sure that loops are not present in properties that return a bag or complex type.';
     }
 }

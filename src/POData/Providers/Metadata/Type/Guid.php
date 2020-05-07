@@ -10,6 +10,24 @@ namespace POData\Providers\Metadata\Type;
 class Guid implements IType
 {
     /**
+     * Check the equality of two guids. This function will not validate the
+     * guids one should use validate or validateWithoutPrefix to validate the
+     * guids before using them with this function.
+     *
+     * @param string $guid1 First guid
+     * @param string $guid2 Second guid
+     *
+     * @return bool True if both guids are same else false
+     */
+    public static function guidEqual($guid1, $guid2)
+    {
+        $guid1 = str_replace(['{', '}', '(', ')', '-'], '', $guid1);
+        $guid2 = str_replace(['{', '}', '(', ')', '-'], '', $guid2);
+
+        return 0 === strcasecmp($guid1, $guid2);
+    }
+
+    /**
      * Gets the type code
      * Note: implementation of IType::getTypeCode.
      *
@@ -37,7 +55,7 @@ class Guid implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
+     * @param string $value The value to validate
      * @param string &$outValue The stripped form of $value that can be
      *                          used in PHP expressions
      *
@@ -71,14 +89,34 @@ class Guid implements IType
     }
 
     /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
+     * Validates guid.
      *
-     * @return string
+     * @param string $guid The guid to validate
+     * @param bool $withQuotes Whether the above guid have quote as delimiter
+     *
+     * @return bool
      */
-    public function getFullTypeName()
+    public static function validateWithoutPrefix($guid, $withQuotes = false)
     {
-        return 'Edm.Guid';
+        if ($withQuotes) {
+            $patt = ['/^(\'[0-9a-fA-F]{32}\')?$/',
+                '/^(\'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\')?$/',
+                '/^\'\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?\')?$/',
+                '/^\'\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?\')?$/',];
+        } else {
+            $patt = ['/^([0-9a-fA-F]{32})?$/',
+                '/^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?$/',
+                '/^\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?)?$/',
+                '/^\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?)?$/',];
+        }
+
+        foreach ($patt as $pattern) {
+            if (1 == preg_match($pattern, $guid)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -113,55 +151,6 @@ class Guid implements IType
     }
 
     /**
-     * Validates guid.
-     *
-     * @param string $guid       The guid to validate
-     * @param bool   $withQuotes Whether the above guid have quote as delimiter
-     *
-     * @return bool
-     */
-    public static function validateWithoutPrefix($guid, $withQuotes = false)
-    {
-        if ($withQuotes) {
-            $patt = ['/^(\'[0-9a-fA-F]{32}\')?$/',
-                '/^(\'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\')?$/',
-                '/^\'\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?\')?$/',
-                '/^\'\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?\')?$/', ];
-        } else {
-            $patt = ['/^([0-9a-fA-F]{32})?$/',
-                '/^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?$/',
-                '/^\{?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}?)?$/',
-                '/^\(?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\)?)?$/', ];
-        }
-
-        foreach ($patt as $pattern) {
-            if (1 == preg_match($pattern, $guid)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check the equality of two guids. This function will not validate the
-     * guids one should use validate or validateWithoutPrefix to validate the
-     * guids before using them with this function.
-     *
-     * @param string $guid1 First guid
-     * @param string $guid2 Second guid
-     *
-     * @return bool True if both guids are same else false
-     */
-    public static function guidEqual($guid1, $guid2)
-    {
-        $guid1 = str_replace(['{', '}', '(', ')', '-'], '', $guid1);
-        $guid2 = str_replace(['{', '}', '(', ')', '-'], '', $guid2);
-
-        return 0 === strcasecmp($guid1, $guid2);
-    }
-
-    /**
      * Gets full name of the type implementing this interface in EDM namespace
      * Note: implementation of IType::getFullTypeName.
      *
@@ -170,5 +159,16 @@ class Guid implements IType
     public function getName()
     {
         return $this->getFullTypeName();
+    }
+
+    /**
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
+     */
+    public function getFullTypeName()
+    {
+        return 'Edm.Guid';
     }
 }

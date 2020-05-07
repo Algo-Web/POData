@@ -23,7 +23,7 @@ trait queryProvider
     }
 
     /**
-     * @param string    $methodName method name
+     * @param string $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message
@@ -31,11 +31,11 @@ trait queryProvider
     public static function queryProviderResultCountMissing($methodName, QueryType $queryType)
     {
         return 'The implementation of the method ' . $methodName . ' must return a QueryResult instance with ' .
-               'a count for queries of type ' . $queryType . '.';
+            'a count for queries of type ' . $queryType . '.';
     }
 
     /**
-     * @param string    $methodName method name
+     * @param string $methodName method name
      * @param QueryType $queryType
      *
      * @return string The message
@@ -43,6 +43,6 @@ trait queryProvider
     public static function queryProviderResultsMissing($methodName, QueryType $queryType)
     {
         return 'The implementation of the method ' . $methodName . ' must return a QueryResult instance with an array'
-                . ' of results for queries of type ' . $queryType . '.';
+            . ' of results for queries of type ' . $queryType . '.';
     }
 }

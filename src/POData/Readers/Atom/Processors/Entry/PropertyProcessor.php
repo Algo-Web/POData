@@ -44,14 +44,14 @@ class PropertyProcessor extends BaseNodeHandler
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
-            return ;
+            return;
         }
         //TODO: this will need to be expanded with opengis namespaces as well when supported
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE ||
             $tagNamespace === ODataConstants::ODATA_METADATA_NAMESPACE);
 
-        $property           = new ODataProperty();
-        $property->name     = $tagName;
+        $property = new ODataProperty();
+        $property->name = $tagName;
         $property->typeName = $this->arrayKeyOrDefault(
             $attributes,
             ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
@@ -70,11 +70,11 @@ class PropertyProcessor extends BaseNodeHandler
         if (strtolower($tagNamespace) === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE) &&
             strtolower($tagName) === strtolower((ODataConstants::ATOM_PROPERTIES_ELEMENT_NAME))
         ) {
-            return ;
+            return;
         }
         // Pops a complex object off the stack
-        $prop                                                  = $this->properties->pop();
-        $propContent                                           = $this->propertyContent->pop();
+        $prop = $this->properties->pop();
+        $propContent = $this->propertyContent->pop();
         $this->propertyContent->top()->properties[$prop->name] = $prop;
 
         if (count($propContent->properties) == 0) {

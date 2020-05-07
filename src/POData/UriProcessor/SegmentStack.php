@@ -42,8 +42,8 @@ class SegmentStack
      */
     public function __construct(RequestDescription $request = null)
     {
-        $this->request                    = $request;
-        $this->segmentNames               = [];
+        $this->request = $request;
+        $this->segmentNames = [];
         $this->segmentResourceSetWrappers = [];
         assert(count($this->segmentNames) == count($this->segmentResourceSetWrappers), $this->mismatch);
     }
@@ -53,12 +53,12 @@ class SegmentStack
      * retrieved from the IDSQP implementation
      * Note: Calls to this method should be balanced with calls to popSegment.
      *
-     * @param string             $segmentName         Name of segment to push
+     * @param string $segmentName Name of segment to push
      * @param ResourceSetWrapper &$resourceSetWrapper The resource set wrapper
      *                                                to push
      *
-     * @throws InvalidOperationException
      * @return bool                      true if the segment was push, false otherwise
+     * @throws InvalidOperationException
      */
     public function pushSegment(string $segmentName, ResourceSetWrapper &$resourceSetWrapper)
     {
@@ -72,6 +72,28 @@ class SegmentStack
         }
 
         return false;
+    }
+
+    /**
+     * Gets reference to the request submitted by client.
+     *
+     * @return RequestDescription
+     */
+    public function getRequest()
+    {
+        assert(null != $this->request, 'Request must not be null');
+
+        return $this->request;
+    }
+
+    /**
+     * Sets reference to the request submitted by client.
+     *
+     * @param RequestDescription $request
+     */
+    public function setRequest(RequestDescription $request)
+    {
+        $this->request = $request;
     }
 
     /**
@@ -119,27 +141,5 @@ class SegmentStack
     public function getSegmentWrappers()
     {
         return $this->segmentResourceSetWrappers;
-    }
-
-    /**
-     * Gets reference to the request submitted by client.
-     *
-     * @return RequestDescription
-     */
-    public function getRequest()
-    {
-        assert(null != $this->request, 'Request must not be null');
-
-        return $this->request;
-    }
-
-    /**
-     * Sets reference to the request submitted by client.
-     *
-     * @param RequestDescription $request
-     */
-    public function setRequest(RequestDescription $request)
-    {
-        $this->request = $request;
     }
 }

@@ -7,6 +7,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\Type\IType;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class OrderBySubPathSegment.
@@ -63,8 +64,8 @@ class OrderBySubPathSegment
      * this sub path segment If this sub path segment is last segment then
      * this function returns 'IType', otherwise 'ReflectionClass'.
      *
-     * @throws \ReflectionException
      * @return ReflectionClass|IType
+     * @throws ReflectionException
      */
     public function getInstanceType()
     {

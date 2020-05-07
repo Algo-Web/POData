@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
+use POData\Providers\Metadata\Type\IType;
+
 /**
  * Class UnaryExpression.
  */
@@ -17,9 +19,9 @@ class UnaryExpression extends AbstractExpression
     /**
      * Construct a new instance of UnaryExpression.
      *
-     * @param AbstractExpression                    $child    Child expression
-     * @param ExpressionType                        $nodeType Expression node type
-     * @param \POData\Providers\Metadata\Type\IType $type     Expression type
+     * @param AbstractExpression $child Child expression
+     * @param ExpressionType $nodeType Expression node type
+     * @param IType $type Expression type
      */
     public function __construct($child, ExpressionType $nodeType, $type)
     {
@@ -27,7 +29,7 @@ class UnaryExpression extends AbstractExpression
         //allowed unary operator are 'not' (ExpressionType::NOT_LOGICAL)
         //and ExpressionType::NEGATE
         $this->nodeType = $nodeType;
-        $this->type     = $type;
+        $this->type = $type;
     }
 
     /**

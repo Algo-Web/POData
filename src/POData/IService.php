@@ -9,6 +9,7 @@ use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\ProvidersWrapper;
+use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\Readers\ODataReaderRegistry;
 use POData\Writers\ODataWriterRegistry;
@@ -22,7 +23,7 @@ interface IService
     /**
      * This method is called only once to initialize service-wide policies.
      *
-     * @param  IServiceConfiguration $config data service configuration
+     * @param IServiceConfiguration $config data service configuration
      * @return void
      */
     public function initialize(IServiceConfiguration $config);
@@ -51,14 +52,14 @@ interface IService
     public function getStreamProviderWrapper();
 
     /**
-     * @return \POData\Providers\Stream\IStreamProvider2
+     * @return IStreamProvider2
      */
     public function getStreamProviderX();
 
     /**
      * To set reference to the ServiceHost instance created by the dispatcher.
      *
-     * @param  ServiceHost $serviceHost data service host
+     * @param ServiceHost $serviceHost data service host
      * @return void
      */
     public function setHost(ServiceHost $serviceHost);

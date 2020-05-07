@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace POData\ObjectModel;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
+use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
+use POData\ObjectModel\AtomObjectModel\AtomAuthor;
+use POData\ObjectModel\AtomObjectModel\AtomContent;
 
 /**
  * Class ODataEntry.
@@ -107,15 +110,19 @@ class ODataEntry
      * @var AtomObjectModel\AtomContent
      */
     public $atomContent;
+    /**
+     * @var AtomObjectModel\AtomAuthor
+     */
+    public $atomAuthor;
 
     /**
-     * @return \POData\ObjectModel\AtomObjectModel\AtomContent
+     * @return AtomContent
      */
     public function getAtomContent()
     {
         if (!$this->isMediaLinkEntry) {
             return new AtomObjectModel\AtomContent(
-                \POData\Common\MimeTypes::MIME_APPLICATION_XML,
+                MimeTypes::MIME_APPLICATION_XML,
                 null,
                 $this->propertyContent
             );
@@ -124,7 +131,7 @@ class ODataEntry
     }
 
     /**
-     * @param \POData\ObjectModel\AtomObjectModel\AtomContent $atomContent
+     * @param AtomContent $atomContent
      */
     public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
     {
@@ -133,12 +140,7 @@ class ODataEntry
     }
 
     /**
-     * @var AtomObjectModel\AtomAuthor
-     */
-    public $atomAuthor;
-
-    /**
-     * @return \POData\ObjectModel\AtomObjectModel\AtomAuthor
+     * @return AtomAuthor
      */
     public function getAtomAuthor()
     {
@@ -146,7 +148,7 @@ class ODataEntry
     }
 
     /**
-     * @return null|\POData\ObjectModel\ODataPropertyContent
+     * @return null|ODataPropertyContent
      */
     public function getPropertyContent()
     {
@@ -157,7 +159,7 @@ class ODataEntry
     }
 
     /**
-     * @param \POData\ObjectModel\ODataPropertyContent|null $oDataPropertyContent
+     * @param ODataPropertyContent|null $oDataPropertyContent
      */
     public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null)
     {
@@ -165,25 +167,11 @@ class ODataEntry
     }
 
     /**
-     * @return \POData\ObjectModel\ODataLink
+     * @return ODataLink
      */
     public function getEditLink()
     {
         return $this->editLink;
-    }
-
-    /**
-     * @param ODataCategory|null $type
-     */
-    public function setType(ODataCategory $type = null)
-    {
-        $this->type = $type;
-        if (null !== $type) {
-            $rawTerm               = $type->term;
-            $termArray             = explode('.', $rawTerm);
-            $final                 = $termArray[count($termArray)-1];
-            $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
-        }
     }
 
     /**
@@ -195,7 +183,21 @@ class ODataEntry
     }
 
     /**
-     * @return \POData\ObjectModel\ODataLink[]
+     * @param ODataCategory|null $type
+     */
+    public function setType(ODataCategory $type = null)
+    {
+        $this->type = $type;
+        if (null !== $type) {
+            $rawTerm = $type->term;
+            $termArray = explode('.', $rawTerm);
+            $final = $termArray[count($termArray) - 1];
+            $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
+        }
+    }
+
+    /**
+     * @return ODataLink[]
      */
     public function getLinks()
     {
@@ -203,14 +205,14 @@ class ODataEntry
     }
 
     /**
-     * @param $links \POData\ObjectModel\ODataLink[]
+     * @param $links ODataLink[]
      */
     public function setLinks(array $links)
     {
         $this->links = [];
         foreach ($links as $link) {
             if ('edit' == $link->name) {
-                $this->editLink        = $link;
+                $this->editLink = $link;
                 $this->resourceSetName = explode('(', $link->url)[0];
                 continue;
             }
@@ -236,7 +238,7 @@ class ODataEntry
     public function setMediaLinks(array $mediaLinks)
     {
         $this->mediaLinks = [];
-        $editLink         = null;
+        $editLink = null;
         foreach ($mediaLinks as $mediaLink) {
             $this->handleMediaLinkEntry($mediaLink, $editLink);
         }
@@ -247,14 +249,14 @@ class ODataEntry
     }
 
     /**
-     * @param \POData\ObjectModel\ODataMediaLink      $mediaLink
-     * @param \POData\ObjectModel\ODataMediaLink|null $editLink
+     * @param ODataMediaLink $mediaLink
+     * @param ODataMediaLink|null $editLink
      */
     private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null)
     {
         if ('edit-media' == $mediaLink->rel) {
             $this->isMediaLinkEntry = true;
-            $this->mediaLink        = $mediaLink;
+            $this->mediaLink = $mediaLink;
         }
         if (ODataConstants::ATOM_MEDIA_RESOURCE_RELATION_ATTRIBUTE_VALUE == substr($mediaLink->rel, 0, 68)) {
             $this->mediaLinks[] = $mediaLink;
@@ -265,7 +267,7 @@ class ODataEntry
     }
 
     /**
-     * @param \POData\ObjectModel\ODataMediaLink|null $editLink
+     * @param ODataMediaLink|null $editLink
      */
     private function correctMediaLinkSrc(ODataMediaLink $editLink = null)
     {
@@ -278,7 +280,7 @@ class ODataEntry
     }
 
     /**
-     * @return \POData\ObjectModel\ODataMediaLink
+     * @return ODataMediaLink
      */
     public function getMediaLink()
     {
@@ -286,7 +288,7 @@ class ODataEntry
     }
 
     /**
-     * @param  string|null $msg
+     * @param string|null $msg
      * @return bool
      */
     public function isOk(&$msg = null)

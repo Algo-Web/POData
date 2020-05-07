@@ -17,7 +17,7 @@ class ODataURL
     public $url;
 
     /**
-     * @param  string|null $msg
+     * @param string|null $msg
      * @return bool
      */
     public function isOk(&$msg = null)

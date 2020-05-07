@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace POData\Common;
 
+use Exception;
+
 /**
  * Class ODataException.
  */
-class ODataException extends \Exception
+class ODataException extends Exception
 {
     /**
      * The error code.
@@ -26,41 +28,18 @@ class ODataException extends \Exception
     /**
      * Create new instance of ODataException.
      *
-     * @param string      $message    The error message
-     * @param int         $statusCode The HTTP status code
-     * @param string|null $errorCode  The error code
+     * @param string $message The error message
+     * @param int $statusCode The HTTP status code
+     * @param string|null $errorCode The error code
      */
     public function __construct($message, $statusCode, string $errorCode = null)
     {
         assert(is_int($statusCode) && 0 < $statusCode, 'Status code must be integer and positive');
         assert(is_string($message), 'Message must be a string');
         assert(null === $errorCode || is_string($errorCode), 'Error code must be null or a string');
-        $this->errorCode  = $errorCode;
+        $this->errorCode = $errorCode;
         $this->statusCode = $statusCode;
         parent::__construct($message, $statusCode);
-    }
-
-    /**
-     * Get the status code.
-     *
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Creates an instance of ODataException
-     * representing HTTP bad request error.
-     *
-     * @param string $message The error message
-     *
-     * @return ODataException
-     */
-    public static function createBadRequestError($message)
-    {
-        return new self($message, 400);
     }
 
     /**
@@ -74,6 +53,19 @@ class ODataException extends \Exception
     public static function createSyntaxError($message)
     {
         return self::createBadRequestError($message);
+    }
+
+    /**
+     * Creates an instance of ODataException
+     * representing HTTP bad request error.
+     *
+     * @param string $message The error message
+     *
+     * @return ODataException
+     */
+    public static function createBadRequestError($message)
+    {
+        return new self($message, 400);
     }
 
     /**
@@ -163,5 +155,15 @@ class ODataException extends \Exception
     public static function notAcceptableError($message)
     {
         return new self($message, 406);
+    }
+
+    /**
+     * Get the status code.
+     *
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 }

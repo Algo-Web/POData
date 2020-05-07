@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Writers\Json;
 
+use Exception;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
@@ -36,7 +37,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      * Determines if the given writer is capable of writing the response or not.
      *
      * @param Version $responseVersion the OData version of the response
-     * @param string  $contentType     the Content Type of the response
+     * @param string $contentType the Content Type of the response
      *
      * @return bool true if the writer can handle the response, false otherwise
      */
@@ -61,8 +62,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
      *
-     * @throws \Exception
      * @return JsonODataV2Writer
+     * @throws Exception
      */
     public function write($model)
     {
@@ -103,8 +104,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataURLCollection $urls url collection to write
      *
-     * @throws \Exception
      * @return JsonODataV2Writer
+     * @throws Exception
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
@@ -129,8 +130,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param int $count Row count value
      *
-     * @throws \Exception
      * @return JsonODataV2Writer
+     * @throws Exception
      */
     protected function writeRowCount($count)
     {
@@ -147,8 +148,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      *
      * @param ODataLink|null $nextPageLinkUri Uri for next page link
      *
-     * @throws \Exception
      * @return JsonODataV2Writer
+     * @throws Exception
      */
     protected function writeNextPageLink(ODataLink $nextPageLinkUri = null)
     {
@@ -165,8 +166,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
     /**
      * Writes the expanded link.
      *
-     * @param  ODataLink  $link
-     * @throws \Exception
+     * @param ODataLink $link
+     * @throws Exception
      */
     protected function writeExpandedLink(ODataLink $link)
     {
@@ -177,10 +178,10 @@ class JsonODataV2Writer extends JsonODataV1Writer
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
-            $this->writeFeed(/* @scrutinizer ignore-type */$link->expandedResult);
+            $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
             $this->writer->endScope();
         } else {
-            $this->writeEntry(/* @scrutinizer ignore-type */$link->expandedResult);
+            $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
         }
 
         $this->writer->endScope();

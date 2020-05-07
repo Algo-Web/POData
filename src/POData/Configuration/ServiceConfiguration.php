@@ -113,16 +113,16 @@ class ServiceConfiguration implements IServiceConfiguration
      */
     public function __construct(?IMetadataProvider $metadataProvider)
     {
-        $this->maxExpandCount          = PHP_INT_MAX;
-        $this->maxExpandDepth          = PHP_INT_MAX;
+        $this->maxExpandCount = PHP_INT_MAX;
+        $this->maxExpandDepth = PHP_INT_MAX;
         $this->maxResultsPerCollection = PHP_INT_MAX;
-        $this->provider                = $metadataProvider;
+        $this->provider = $metadataProvider;
         $this->defaultResourceSetRight = EntitySetRights::NONE();
-        $this->defaultPageSize         = 0;
-        $this->resourceRights          = [];
-        $this->pageSizes               = [];
-        $this->useVerboseErrors        = false;
-        $this->acceptCountRequest      = false;
+        $this->defaultPageSize = 0;
+        $this->resourceRights = [];
+        $this->pageSizes = [];
+        $this->useVerboseErrors = false;
+        $this->acceptCountRequest = false;
         $this->acceptProjectionRequest = false;
 
         $this->maxVersion = ProtocolVersion::V3(); //We default to the highest version
@@ -132,6 +132,26 @@ class ServiceConfiguration implements IServiceConfiguration
         // use that
         $this->setPrettyOutput(in_array(strtolower(ini_get('display_errors')), array('1', 'on', 'true')));
         $this->setLineEndings(PHP_EOL);
+    }
+
+    /**
+     * Sets if output should be well formatted for human review.
+     *
+     * @param bool $on True if output should be well formatted
+     */
+    public function setPrettyOutput(bool $on): void
+    {
+        $this->prettyPrint = $on;
+    }
+
+    /**
+     * Sets the characters that represent line endings.
+     *
+     * @param string $eol the characters that should be used for line endings
+     */
+    public function setLineEndings(string $eol): void
+    {
+        $this->eol = $eol;
     }
 
     /**
@@ -155,6 +175,27 @@ class ServiceConfiguration implements IServiceConfiguration
             $maxExpandCount,
             'setMaxExpandCount'
         );
+    }
+
+    /**
+     * Checks that the parameter to a function is numeric and is not negative.
+     *
+     * @param int $value The value of parameter to check
+     * @param string $functionName The name of the function that receives above value
+     *
+     * @return int
+     * @throws InvalidArgumentException
+     *
+     */
+    private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
+    {
+        if ($value < 0) {
+            throw new InvalidArgumentException(
+                Messages::commonArgumentShouldBeNonNegative($value, $functionName)
+            );
+        }
+
+        return $value;
     }
 
     /**
@@ -215,6 +256,16 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
+     * Whether size of a page has been defined for any entity set.
+     *
+     * @return bool
+     */
+    private function isPageSizeDefined()
+    {
+        return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
+    }
+
+    /**
      * Gets whether verbose errors should be used by default.
      *
      * @return bool
@@ -254,7 +305,7 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * sets the access rights on the specified resource set.
      *
-     * @param string          $name   Name of resource set to set; '*' to indicate all
+     * @param string $name Name of resource set to set; '*' to indicate all
      * @param EntitySetRights $rights Rights to be granted to this resource
      *
      * @throws InvalidArgumentException when the entity set rights are not known or the resource set is not known
@@ -298,8 +349,8 @@ class ServiceConfiguration implements IServiceConfiguration
     /**
      * Sets the maximum page size for an entity set resource.
      *
-     * @param string $name     Name of entity set resource for which to set the page size
-     * @param int    $pageSize Page size for the entity set resource specified in name
+     * @param string $name Name of entity set resource for which to set the page size
+     * @param int $pageSize Page size for the entity set resource specified in name
      *
      * @throws InvalidOperationException
      * @throws InvalidArgumentException
@@ -408,16 +459,6 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Specify whether to validate the ETag or not.
-     *
-     * @param bool $validate True if ETag needs to validated, false otherwise
-     */
-    public function setValidateETagHeader(bool $validate): void
-    {
-        $this->validateETagHeader = $validate;
-    }
-
-    /**
      * Gets whether to validate the ETag or not.
      *
      * @return bool True if ETag needs to validated, false
@@ -432,34 +473,13 @@ class ServiceConfiguration implements IServiceConfiguration
     }
 
     /**
-     * Checks that the parameter to a function is numeric and is not negative.
+     * Specify whether to validate the ETag or not.
      *
-     * @param int    $value        The value of parameter to check
-     * @param string $functionName The name of the function that receives above value
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return int
+     * @param bool $validate True if ETag needs to validated, false otherwise
      */
-    private function checkIntegerNonNegativeParameter(int $value, string $functionName): int
+    public function setValidateETagHeader(bool $validate): void
     {
-        if ($value < 0) {
-            throw new InvalidArgumentException(
-                Messages::commonArgumentShouldBeNonNegative($value, $functionName)
-            );
-        }
-
-        return $value;
-    }
-
-    /**
-     * Whether size of a page has been defined for any entity set.
-     *
-     * @return bool
-     */
-    private function isPageSizeDefined()
-    {
-        return count($this->pageSizes) > 0 || $this->defaultPageSize > 0;
+        $this->validateETagHeader = $validate;
     }
 
     /**
@@ -480,25 +500,5 @@ class ServiceConfiguration implements IServiceConfiguration
     public function getPrettyOutput(): bool
     {
         return $this->prettyPrint;
-    }
-
-    /**
-     * Sets the characters that represent line endings.
-     *
-     * @param string $eol the characters that should be used for line endings
-     */
-    public function setLineEndings(string $eol): void
-    {
-        $this->eol = $eol;
-    }
-
-    /**
-     * Sets if output should be well formatted for human review.
-     *
-     * @param bool $on True if output should be well formatted
-     */
-    public function setPrettyOutput(bool $on): void
-    {
-        $this->prettyPrint = $on;
     }
 }

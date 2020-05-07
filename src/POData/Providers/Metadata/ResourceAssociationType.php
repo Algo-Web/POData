@@ -40,22 +40,23 @@ class ResourceAssociationType
     /**
      * Construct new instance of ResourceAssociationType.
      *
-     * @param string                     $name          Name of the association
-     * @param string                     $namespaceName NamespaceName of the
+     * @param string $name Name of the association
+     * @param string $namespaceName NamespaceName of the
      *                                                  association
-     * @param ResourceAssociationTypeEnd $end1          First end of the association
-     * @param ResourceAssociationTypeEnd $end2          Second end of the association
+     * @param ResourceAssociationTypeEnd $end1 First end of the association
+     * @param ResourceAssociationTypeEnd $end2 Second end of the association
      */
     public function __construct(
         $name,
         $namespaceName,
         ResourceAssociationTypeEnd $end1,
         ResourceAssociationTypeEnd $end2
-    ) {
-        $this->name     = $name;
+    )
+    {
+        $this->name = $name;
         $this->fullName = null !== $namespaceName ? $namespaceName . '.' . $name : $name;
-        $this->end1     = $end1;
-        $this->end2     = $end2;
+        $this->end1 = $end1;
+        $this->end2 = $end2;
     }
 
     /**
@@ -101,15 +102,16 @@ class ResourceAssociationType
     /**
      * Retrieve the end for the given resource type and property.
      *
-     * @param ResourceEntityType $resourceType     Resource type for the source end
-     * @param ResourceProperty   $resourceProperty Resource property for the source end
+     * @param ResourceEntityType $resourceType Resource type for the source end
+     * @param ResourceProperty $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEnd|null Association type end for the given parameters
      */
     public function getResourceAssociationTypeEnd(
         ResourceEntityType $resourceType,
         $resourceProperty
-    ) {
+    )
+    {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end1;
         }
@@ -123,15 +125,16 @@ class ResourceAssociationType
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceEntityType $resourceType     Resource type for the source end
-     * @param ResourceProperty   $resourceProperty Resource property for the source end
+     * @param ResourceEntityType $resourceType Resource type for the source end
+     * @param ResourceProperty $resourceProperty Resource property for the source end
      *
      * @return ResourceAssociationTypeEnd|null Association type end for the given parameters
      */
     public function getRelatedResourceAssociationSetEnd(
         ResourceEntityType $resourceType,
         $resourceProperty
-    ) {
+    )
+    {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end2;
         }

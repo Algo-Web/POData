@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
 
@@ -49,13 +50,13 @@ class ResourceAssociationTypeEnd
     /**
      * Construct new instance of ResourceAssociationTypeEnd.
      *
-     * @param string                $name             name of the end
-     * @param ResourceEntityType    $resourceType     resource type that the end
+     * @param string $name name of the end
+     * @param ResourceEntityType $resourceType resource type that the end
      *                                                refers to
      * @param ResourceProperty|null $resourceProperty property of the end, can be
      *                                                NULL if relationship is
      *                                                uni-directional
-     * @param ResourceProperty|null $fromProperty     Property on the related end
+     * @param ResourceProperty|null $fromProperty Property on the related end
      *                                                that points to this end, can
      *                                                be NULL if relationship is
      *                                                uni-directional
@@ -65,23 +66,24 @@ class ResourceAssociationTypeEnd
         ResourceEntityType $resourceType,
         ?ResourceProperty $resourceProperty,
         ?ResourceProperty $fromProperty
-    ) {
+    )
+    {
         if (null === $resourceProperty && null === $fromProperty) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationTypeEndBothPropertyCannotBeNull()
             );
         }
 
-        $this->name             = $name;
-        $this->resourceType     = $resourceType;
+        $this->name = $name;
+        $this->resourceType = $resourceType;
         $this->resourceProperty = $resourceProperty;
-        $this->fromProperty     = $fromProperty;
+        $this->fromProperty = $fromProperty;
     }
 
     /**
      * To check this relationship belongs to a specific entity property.
      *
-     * @param ResourceEntityType    $resourceType     The type of the entity
+     * @param ResourceEntityType $resourceType The type of the entity
      * @param ResourceProperty|null $resourceProperty The property in the entity
      *
      * @return bool

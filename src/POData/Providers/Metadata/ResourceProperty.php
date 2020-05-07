@@ -7,6 +7,8 @@ namespace POData\Providers\Metadata;
 use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class ResourceProperty.
@@ -51,10 +53,10 @@ class ResourceProperty
     private $propertyResourceType;
 
     /**
-     * @param string               $name                 Name of the property
-     * @param string|null          $mimeType             Mime type of the property
-     * @param ResourcePropertyKind $kind                 The kind of property
-     * @param ResourceType         $propertyResourceType ResourceType of the property
+     * @param string $name Name of the property
+     * @param string|null $mimeType Mime type of the property
+     * @param ResourcePropertyKind $kind The kind of property
+     * @param ResourceType $propertyResourceType ResourceType of the property
      *
      * @throws InvalidArgumentException
      */
@@ -81,102 +83,10 @@ class ResourceProperty
             );
         }
 
-        $this->name                 = $name;
-        $this->mimeType             = $mimeType;
-        $this->kind                 = $kind;
+        $this->name = $name;
+        $this->mimeType = $mimeType;
+        $this->kind = $kind;
         $this->propertyResourceType = $propertyResourceType;
-    }
-
-    /**
-     * Check whether current property is of kind specified by the parameter.
-     *
-     * @param ResourcePropertyKind $kind kind to check
-     *
-     * @return bool
-     */
-    public function isKindOf(ResourcePropertyKind $kind): bool
-    {
-        return ($this->getKind()->getValue()
-                & $kind->getValue()) == $kind->getValue();
-    }
-
-    /**
-     * Get the property name.
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get property MIME type.
-     *
-     * @return string
-     */
-    public function getMIMEType(): string
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * Get property kind.
-     *
-     * @return ResourcePropertyKind
-     */
-    public function getKind(): ResourcePropertyKind
-    {
-        return $this->kind;
-    }
-
-    /**
-     * Get the resource type for this property.
-     *
-     * @return ResourceType
-     */
-    public function getResourceType(): ResourceType
-    {
-        return $this->propertyResourceType;
-    }
-
-    /**
-     * Get the kind of resource type.
-     *
-     * @return ResourceTypeKind
-     */
-    public function getTypeKind(): ResourceTypeKind
-    {
-        return $this->propertyResourceType->getResourceTypeKind();
-    }
-
-    /**
-     * Get the instance type. If the property is of kind 'Complex',
-     * 'ResourceReference' or 'ResourceSetReference' then this function returns
-     * reference to ReflectionClass instance for the type. If the property of
-     * kind 'Primitive' then this function returns ITYpe instance for the type.
-     *
-     * @throws \ReflectionException
-     * @return \ReflectionClass|IType
-     */
-    public function getInstanceType()
-    {
-        $type = $this->propertyResourceType->getInstanceType();
-        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE()));
-        return $type;
-    }
-
-    /**
-     * Check one kind is of another kind.
-     *
-     * @param ResourcePropertyKind $kind1 First kind
-     * @param ResourcePropertyKind $kind2 second kind
-     *
-     * @return bool
-     */
-    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2): bool
-    {
-        return ($kind1->getValue() & $kind2->getValue()) == $kind2->getValue();
     }
 
     /**
@@ -209,20 +119,20 @@ class ResourceProperty
     {
         return
             !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
-            $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
-            $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
-            ($kind->getValue() != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
-            $kind != ResourcePropertyKind::PRIMITIVE() &&
-            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
-            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
-            ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
+                $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
+                $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
+                ($kind->getValue() != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
+                $kind != ResourcePropertyKind::PRIMITIVE() &&
+                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
+                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
+                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
     }
 
     /**
      * Check the specified resource kind is valid resource kind for property kind.
      *
      * @param ResourcePropertyKind $pKind The kind of resource property
-     * @param ResourceTypeKind     $rKind The kind of resource type
+     * @param ResourceTypeKind $rKind The kind of resource type
      *
      * @return bool True if resource type kind and property kind matches
      *              otherwise false
@@ -230,7 +140,8 @@ class ResourceProperty
     public static function isResourceKindValidForPropertyKind(
         ResourcePropertyKind $pKind,
         ResourceTypeKind $rKind
-    ): bool {
+    ): bool
+    {
         if (self::sIsKindOf($pKind, ResourcePropertyKind::PRIMITIVE())
             && $rKind != ResourceTypeKind::PRIMITIVE()
         ) {
@@ -244,12 +155,104 @@ class ResourceProperty
         }
 
         if ((self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCE_REFERENCE())
-            || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE()))
+                || self::sIsKindOf($pKind, ResourcePropertyKind::RESOURCESET_REFERENCE()))
             && $rKind != ResourceTypeKind::ENTITY()
         ) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Check one kind is of another kind.
+     *
+     * @param ResourcePropertyKind $kind1 First kind
+     * @param ResourcePropertyKind $kind2 second kind
+     *
+     * @return bool
+     */
+    public static function sIsKindOf(ResourcePropertyKind $kind1, ResourcePropertyKind $kind2): bool
+    {
+        return ($kind1->getValue() & $kind2->getValue()) == $kind2->getValue();
+    }
+
+    /**
+     * Check whether current property is of kind specified by the parameter.
+     *
+     * @param ResourcePropertyKind $kind kind to check
+     *
+     * @return bool
+     */
+    public function isKindOf(ResourcePropertyKind $kind): bool
+    {
+        return ($this->getKind()->getValue()
+                & $kind->getValue()) == $kind->getValue();
+    }
+
+    /**
+     * Get property kind.
+     *
+     * @return ResourcePropertyKind
+     */
+    public function getKind(): ResourcePropertyKind
+    {
+        return $this->kind;
+    }
+
+    /**
+     * Get the property name.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get property MIME type.
+     *
+     * @return string
+     */
+    public function getMIMEType(): string
+    {
+        return $this->mimeType;
+    }
+
+    /**
+     * Get the resource type for this property.
+     *
+     * @return ResourceType
+     */
+    public function getResourceType(): ResourceType
+    {
+        return $this->propertyResourceType;
+    }
+
+    /**
+     * Get the kind of resource type.
+     *
+     * @return ResourceTypeKind
+     */
+    public function getTypeKind(): ResourceTypeKind
+    {
+        return $this->propertyResourceType->getResourceTypeKind();
+    }
+
+    /**
+     * Get the instance type. If the property is of kind 'Complex',
+     * 'ResourceReference' or 'ResourceSetReference' then this function returns
+     * reference to ReflectionClass instance for the type. If the property of
+     * kind 'Primitive' then this function returns ITYpe instance for the type.
+     *
+     * @return ReflectionClass|IType
+     * @throws ReflectionException
+     */
+    public function getInstanceType()
+    {
+        $type = $this->propertyResourceType->getInstanceType();
+        assert($type instanceof IType == static::sIsKindOf($this->getKind(), ResourcePropertyKind::PRIMITIVE()));
+        return $type;
     }
 }

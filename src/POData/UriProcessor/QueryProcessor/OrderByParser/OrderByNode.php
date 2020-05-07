@@ -7,6 +7,7 @@ namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 use InvalidArgumentException;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\ResourceType;
 
 /**
  * Class OrderByNode.
@@ -34,10 +35,10 @@ class OrderByNode extends OrderByBaseNode
     /**
      * Construct a new instance of OrderByNode.
      *
-     * @param string|null             $propertyName       Name of the property corresponds to the sub path
+     * @param string|null $propertyName Name of the property corresponds to the sub path
      *                                                    segment represented by this node, this parameter
      *                                                    will be null if this node is root
-     * @param ResourceProperty|null   $resourceProperty   Resource property corresponds to the sub path
+     * @param ResourceProperty|null $resourceProperty Resource property corresponds to the sub path
      *                                                    segment represented by this node, this parameter
      *                                                    will be null if  this node is root
      * @param ResourceSetWrapper|null $resourceSetWrapper The resource set wrapper associated with the sub path
@@ -66,8 +67,8 @@ class OrderByNode extends OrderByBaseNode
     /**
      * (non-PHPdoc).
      *
-     * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      * @return void
+     * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      */
     public function free()
     {
@@ -79,9 +80,9 @@ class OrderByNode extends OrderByBaseNode
     /**
      * (non-PHPdoc).
      *
+     * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
      *
-     * @return \POData\Providers\Metadata\ResourceType
      */
     public function getResourceType()
     {
@@ -119,8 +120,8 @@ class OrderByNode extends OrderByBaseNode
      *
      * @param OrderByBaseNode $node The child node
      *
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
      */
     public function addNode(OrderByBaseNode $node)
     {
