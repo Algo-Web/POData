@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata\Type;
 
-use Carbon\Carbon;
 
 /**
  * Class DateTime.
@@ -13,6 +12,8 @@ class DateTime implements IType
 {
     protected static $comboRegex =
         "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?\'$/";
+
+    protected static $timeProvider = null;
 
     /**
      * Gets the type code
@@ -42,7 +43,7 @@ class DateTime implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
+     * @param string $value The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -61,16 +62,16 @@ class DateTime implements IType
         }
 
         //strip off prefix, and quotes from both ends
-        $value      = trim($value, 'datetime\'');
-        $valLen     = strlen($value) - 6;
+        $value = trim($value, 'datetime\'');
+        $valLen = strlen($value) - 6;
         $offsetChek = $value[$valLen];
         if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
             $value = substr($value, 0, $valLen);
         }
 
-        //Validate the date using PHP Carbon class
+        //Validate the date using PHP DateTime class
         try {
-            new Carbon($value, new \DateTimeZone('UTC'));
+            new \DateTime($value, new \DateTimeZone('UTC'));
         } catch (\Exception $e) {
             return false;
         }
@@ -123,12 +124,12 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the year from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function year($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('Y');
     }
@@ -138,12 +139,12 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the month from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function month($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('m');
     }
@@ -153,12 +154,12 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the day from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function day($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('d');
     }
@@ -168,12 +169,12 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the hour from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function hour($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('H');
     }
@@ -183,12 +184,12 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the minute from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function minute($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('i');
     }
@@ -198,14 +199,20 @@ class DateTime implements IType
      *
      * @param string $dateTime datetime to get the second from
      *
-     * @throws \Exception
      * @return string
+     * @throws \Exception
      */
     public static function second($dateTime)
     {
-        $date = new Carbon($dateTime);
+        $date = new \DateTime($dateTime);
 
         return $date->format('s');
+    }
+
+    public static function now(): \DateTime
+    {
+
+        return null === self::$timeProvider ? new \DateTime() : call_user_func(self::$timeProvider);
     }
 
     /**
@@ -217,12 +224,12 @@ class DateTime implements IType
      * @param string $dateTime1 First date
      * @param string $dateTime2 Second date
      *
-     * @throws \Exception
      * @return int
+     * @throws \Exception
      */
     public static function dateTimeCmp($dateTime1, $dateTime2)
     {
-        $firstStamp  = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
+        $firstStamp = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
         $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
 
         if ($firstStamp == $secondStamp) {
@@ -245,8 +252,8 @@ class DateTime implements IType
     /**
      * @param $dateTime
      * @param $msg
-     * @throws \Exception
      * @return false|int
+     * @throws \Exception
      */
     protected static function dateTimeCmpCheckInput($dateTime, $msg)
     {
@@ -259,5 +266,10 @@ class DateTime implements IType
             return $firstStamp;
         }
         throw new \Exception($msg);
+    }
+
+    public static function setTimeProvider(?callable $timeProvider): void
+    {
+        self::$timeProvider = $timeProvider;
     }
 }

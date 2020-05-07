@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\Writers\Atom;
 
-use Carbon\Carbon as Carbon;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
@@ -19,6 +18,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
+use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\IODataWriter;
 
@@ -43,7 +43,7 @@ class AtomODataWriter implements IODataWriter
 
     /*
      * Update time to insert into ODataEntry/ODataFeed fields
-     * @var Carbon;
+     * @var DateTime;
      */
     private $updated;
 
@@ -59,7 +59,7 @@ class AtomODataWriter implements IODataWriter
             $absoluteServiceUri .= '/';
         }
         $this->baseUri = $absoluteServiceUri;
-        $this->updated = Carbon::now();
+        $this->updated = DateTime::now();
 
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
@@ -458,7 +458,7 @@ class AtomODataWriter implements IODataWriter
     {
         switch ($type) {
             case 'Edm.DateTime':
-                $dateTime = new Carbon($value, new \DateTimeZone('UTC'));
+                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
                 $result   = $dateTime->format('Y-m-d\TH:i:s');
                 break;
 
@@ -871,7 +871,7 @@ class AtomODataWriter implements IODataWriter
     /**
      * Get update timestamp.
      *
-     * @return Carbon
+     * @return \DateTime
      */
     public function getUpdated()
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-use Carbon\Carbon;
 use POData\ObjectModel\ODataEntry;
 use POData\Providers\Metadata\ResourceEntityType;
 
@@ -92,11 +91,11 @@ class ModelDeserialiser
                                 $rawVal   = $rawBitz[0];
                                 $timezone = new \DateTimeZone($rawTz);
                             }
-                            $newValue = new Carbon($rawVal, $timezone);
+                            $newValue = new \DateTime($rawVal, $timezone);
                             // clamp assignable times to:
                             // after 1752, since OData DateTime epoch is apparently midnight 1 Jan 1753
                             // before 10000, since OData has a Y10K problem
-                            if (1752 < $newValue->year && 10000 > $newValue->year) {
+                            if (1752 < $newValue->format('Y') && 10000 > $newValue->format('Y')) {
                                 $value = $newValue;
                             }
                         }
