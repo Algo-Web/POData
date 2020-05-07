@@ -28,12 +28,12 @@
     "cruxinator/php-bitmask": "^0.1",
     "php": "^7.1",
     "illuminate/http": ">=5.1|^6.0",
-    "nesbot/carbon": "^1.0|^2.0",
     "algo-web/o-data-metadata": "0.1.*|dev-master",
     "ext-xml": "*",
     "ext-xmlwriter": "*"
   },
   "require-dev": {
+    "nesbot/carbon": "^1.0|^2.0",
     "pcov/clobber": "dev-master",
     "php-coveralls/php-coveralls": ">=v2.1",
     "phpunit/phpunit": "^7.0",
