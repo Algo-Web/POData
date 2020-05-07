@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\OperationContext;
 
-use Illuminate\Http\Request;
 use POData\Common\HttpStatus;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
@@ -13,7 +12,6 @@ use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\Version;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 
 /**
  * Class ServiceHost.
@@ -80,23 +78,16 @@ class ServiceHost
     }
 
     /**
-     * @param IOperationContext|null $context the OperationContext implementation to use.
-     *                                        If null the IlluminateOperationContext will be used.  Default null.
+     * @param IOperationContext $context the OperationContext implementation to use.
      *
      * Currently we are forcing the input request to be of type
      * \Illuminate\Http\Request but in the future we could make this more flexible if needed
-     * @param Request $incomingRequest
-     *
      * @throws ODataException
      * @throws UrlFormatException
      */
-    public function __construct(IOperationContext $context = null, Request $incomingRequest)
+    public function __construct(IOperationContext $context)
     {
-        if (null === $context) {
-            $this->operationContext = new IlluminateOperationContext($incomingRequest);
-        } else {
-            $this->operationContext = $context;
-        }
+        $this->operationContext = $context;
 
         // getAbsoluteRequestUri can throw UrlFormatException
         // let Dispatcher handle it
@@ -428,7 +419,7 @@ class ServiceHost
     public function getRequestAccept(): ?string
     {
         $headerType = ODataConstants::HTTPREQUEST_HEADER_ACCEPT;
-        return $this->getRequestHeader($headerType);
+        return $this->getRequestHeader($headerType) ?? '*/*';
     }
 
     /**

@@ -87,4 +87,55 @@ class IncomingIlluminateRequestTest extends TestCase
         $foo = new IncomingIlluminateRequest($request);
         $this->assertNull($foo->getRequestHeader('header'));
     }
+
+    public function testRawUrl()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('fullUrl')->andReturn('/odata.svc/bork?bork=true');
+
+        $foo = new IncomingIlluminateRequest($request);
+        $expected = '/odata.svc/bork?bork=true';
+        $actual = $foo->getRawUrl();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetMethod()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+
+        $foo = new IncomingIlluminateRequest($request);
+        $expected = 'GET';
+        $actual = $foo->getMethod();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetAllInputFromAll()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('all')->andReturn('foo');
+        $request->shouldReceive('content')->never();
+
+        $foo = new IncomingIlluminateRequest($request);
+        $expected = 'foo';
+        $actual = $foo->getAllInput();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetAllInputFromContent()
+    {
+        $request = m::mock(Request::class);
+        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request->shouldReceive('all')->andReturn([]);
+        $request->shouldReceive('getContent')->andReturn('foo')->once();
+
+        $foo = new IncomingIlluminateRequest($request);
+        $expected = 'foo';
+        $actual = $foo->getAllInput();
+        $this->assertEquals($expected, $actual);
+    }
 }

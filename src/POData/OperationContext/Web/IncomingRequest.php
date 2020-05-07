@@ -21,12 +21,12 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array
      */
-    private $headers;
+    private $headers = [];
 
     /**
      * The incoming url in raw format.
      *
-     * @var string
+     * @var string|null
      */
     private $rawUrl = null;
 
@@ -42,24 +42,56 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array(string, string);
      */
-    private $queryOptions;
+    private $queryOptions = [];
 
     /**
      * A collection that represents mapping between query option and its count.
      *
      * @var array(string, int)
      */
-    private $queryOptionsCount;
+    private $queryOptionsCount = [];
 
     /**
-     * Initialize a new instance of IncomingWebRequestContext.
+     * The raw query string.
+     *
+     * @var string|null;
      */
-    public function __construct()
-    {
-        $this->method            = new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
-        $this->queryOptions      = [];
-        $this->queryOptionsCount = [];
-        $this->headers           = [];
+    private $queryString = null;
+
+    /**
+     * The raw input.
+     *
+     * @var string|null;
+     */
+    private $rawInput = null;
+
+    /**
+     * Initialize a new instance of IHTTPRequest.
+     *
+     * @param HttpRequestMethod|null $method
+     * @param array $queryOptions
+     * @param array $queryOptionsCount
+     * @param array $headers
+     * @param string|null $queryString
+     * @param string|null $rawInput
+     * @param string|null $rawUrl
+     */
+    public function __construct(
+        HTTPRequestMethod $method = null,
+        array $queryOptions = [],
+        array $queryOptionsCount = [],
+        array $headers = [],
+        string $queryString = null,
+        string $rawInput = null,
+        string $rawUrl = null
+    ) {
+        $this->method            = $method ?? new HTTPRequestMethod($_SERVER['REQUEST_METHOD']);
+        $this->queryOptions      = $queryOptions;
+        $this->queryOptionsCount = $queryOptionsCount;
+        $this->headers           = $headers;
+        $this->queryString       = $queryString;
+        $this->rawInput          = $rawInput;
+        $this->rawUrl            = $rawUrl;
     }
 
     /**
@@ -125,15 +157,17 @@ class IncomingRequest implements IHTTPRequest
     public function getRawUrl(): string
     {
         if (null === $this->rawUrl) {
-            if (false === stripos($_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL], 'HTTPS')) {
+            $rawProtocol = $_SERVER[ODataConstants::HTTPREQUEST_PROTOCOL] ?? '';
+            if (false === stripos($rawProtocol, 'HTTPS')) {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTP;
             } else {
                 $this->rawUrl = ODataConstants::HTTPREQUEST_PROTOCOL_HTTPS;
             }
 
-            $this->rawUrl .= '://' .
-                             $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
-            $this->rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
+            $rawHost = $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] ?? '';
+            $rawUri = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
+            $this->rawUrl .= '://' . $rawHost;
+            $this->rawUrl .= utf8_decode(urldecode($rawUri));
         }
 
         return $this->rawUrl;
@@ -168,11 +202,15 @@ class IncomingRequest implements IHTTPRequest
      */
     private function getQueryString(): string
     {
-        if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-            return utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
-        } else {
-            return '';
+        if (null === $this->queryString) {
+            if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
+                $rawString = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
+                $this->queryString = utf8_decode(trim($rawString));
+            } else {
+                $this->queryString = '';
+            }
         }
+        return $this->queryString;
     }
 
     /**
@@ -217,10 +255,13 @@ class IncomingRequest implements IHTTPRequest
     }
 
     /**
-     * @return false|mixed|string|null
+     * @return string|null
      */
-    public function getAllInput()
+    public function getAllInput(): ?string
     {
-        return file_get_contents('php://input');
+        if (null === $this->rawInput) {
+            $this->rawInput = file_get_contents('php://input');
+        }
+        return $this->rawInput;
     }
 }

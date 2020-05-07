@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Common;
 
-use Illuminate\Http\Request;
 use Mockery as m;
 use POData\BaseService;
 use POData\BatchProcessor\BatchProcessor;
@@ -16,8 +15,10 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
+use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
+use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\BatchProcessor\ChangeSetParserDummy;
@@ -100,6 +101,12 @@ Content-Length: ###
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
+        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
+        $this->assertTrue($result[-2]->Request instanceof IHTTPRequest);
+        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
+        // before proceeding to equality check
+        $result[-1]->Request = null;
+        $result[-2]->Request = null;
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[-2]);
     }
@@ -169,6 +176,12 @@ Content-ID: 2
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
+        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
+        $this->assertTrue($result[2]->Request instanceof IHTTPRequest);
+        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
+        // before proceeding to equality check
+        $result[-1]->Request = null;
+        $result[2]->Request = null;
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[2]);
     }
@@ -348,9 +361,9 @@ Stream II: ELECTRIC BOOGALOO--
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
         $body    = 'foo';
-        $request = m::mock(Request::class);
+        $request = m::mock(IncomingRequest::class);
         $request->shouldReceive('getMethod')->andReturn('POST');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/service.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/service.svc/Customers');
 
         $first = (object) [
             'RequestVerb' => 'POST',

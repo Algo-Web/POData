@@ -3,11 +3,12 @@
 declare(strict_types=1);
 namespace POData\BatchProcessor;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use POData\BaseService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
+use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\WebOperationContext;
 
 /**
  * Class ChangeSetParser.
@@ -57,15 +58,6 @@ class ChangeSetParser implements IBatchParser
                 $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
             }
 
-            $workingObject->Request = Request::create(
-                $workingObject->RequestURL,
-                $workingObject->RequestVerb,
-                [],
-                [],
-                [],
-                $workingObject->ServerParams,
-                $workingObject->Content
-            );
             $this->processSubRequest($workingObject);
             if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
@@ -193,12 +185,21 @@ class ChangeSetParser implements IBatchParser
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
             }
+
             $this->rawRequests[$contentID] = (object)[
                 'RequestVerb' => $requestPathParts[0],
                 'RequestURL' => $requestPathParts[1],
                 'ServerParams' => $serverParts,
                 'Content' => $content,
-                'Request' => null,
+                'Request' => new IncomingRequest(
+                    new HTTPRequestMethod($requestPathParts[0]),
+                    [],
+                    [],
+                    $serverParts,
+                    null,
+                    $content,
+                    $requestPathParts[1]
+                ),
                 'Response' => null
             ];
         }
@@ -235,8 +236,8 @@ class ChangeSetParser implements IBatchParser
      */
     protected function processSubRequest(&$workingObject)
     {
-        $newContext = new IlluminateOperationContext($workingObject->Request);
-        $newHost    = new ServiceHost($newContext, $workingObject->Request);
+        $newContext = new WebOperationContext($workingObject->Request);
+        $newHost    = new ServiceHost($newContext);
 
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();

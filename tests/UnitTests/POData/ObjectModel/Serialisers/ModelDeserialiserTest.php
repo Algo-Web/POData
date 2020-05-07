@@ -14,13 +14,15 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
+use POData\OperationContext\Web\WebOperationContext as OperationContextAdapter;
+use POData\OperationContext\Web\IncomingRequest;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Query\IQueryProvider;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Employee2;
@@ -77,7 +79,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
 
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
@@ -211,7 +213,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
     private function setUpDataServiceDeps($request)
     {
         $op   = new OperationContextAdapter($request);
-        $host = new ServiceHost($op, $request);
+        $host = new ServiceHost($op);
 
         $meta  = NorthWindMetadata::Create();
         $query = m::mock(IQueryProvider::class);

@@ -18,7 +18,8 @@ use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\ServiceHost;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext as OperationContextAdapter;
+use POData\OperationContext\Web\IncomingRequest;
+use POData\OperationContext\Web\WebOperationContext as OperationContextAdapter;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -51,10 +52,9 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -121,10 +121,9 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -204,10 +203,9 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -357,10 +355,9 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $known = Carbon::create(2017, 1, 1, 0, 0, 0, 'UTC');
         Carbon::setTestNow($known);
 
-        $request = $this->setUpRequest();
-        $request->setMethod('POST');
+        $request = $this->setUpRequest('POST');
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
-        $request->shouldReceive('fullUrl')->andReturn('http://localhost/odata.svc/Customers');
+        $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
 
         list($host, $meta, $prov) = $this->setUpDataServiceDeps($request);
 
@@ -485,7 +482,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
     private function setUpDataServiceDeps($request)
     {
         $op   = new OperationContextAdapter($request);
-        $host = new ServiceHost($op, $request);
+        $host = new ServiceHost($op);
 
         $meta  = NorthWindMetadata::Create();
         $query = m::mock(ProvidersWrapper::class);
