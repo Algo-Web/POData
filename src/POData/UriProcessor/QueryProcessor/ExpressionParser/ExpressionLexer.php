@@ -81,73 +81,29 @@ class ExpressionLexer
     /**
      * Initialize a new instance of ExpressionLexer.
      *
-     * @param  string         $expression Expression to parse
+     * @param string $expression Expression to parse
      * @throws ODataException
      */
     public function __construct($expression)
     {
-        $this->text    = $expression;
+        $this->text = $expression;
         $this->textLen = strlen($this->text);
-        $this->token   = new ExpressionToken();
+        $this->token = new ExpressionToken();
         $this->setTextPos(0);
         $this->nextToken();
     }
 
     /**
-     * To get the expression token being processed.
+     * Set the text position.
      *
-     * @return ExpressionToken
+     * @param int $pos Value to position
      */
-    public function getCurrentToken()
+    private function setTextPos($pos)
     {
-        return $this->token;
-    }
-
-    /**
-     * To set the token being processed.
-     *
-     * @param ExpressionToken $token The expression token to set as current
-     */
-    public function setCurrentToken(ExpressionToken $token)
-    {
-        $this->token = $token;
-    }
-
-    /**
-     * To get the text being parsed.
-     *
-     * @return string
-     */
-    public function getExpressionText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Position of the current token in the text being parsed.
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->token->Position;
-    }
-
-    /**
-     * Whether the specified token identifier is a numeric literal.
-     *
-     * @param ExpressionTokenId $id Token identifier to check
-     *
-     * @return bool true if it's a numeric literal; false otherwise
-     */
-    public static function isNumeric(ExpressionTokenId $id)
-    {
-        return
-            $id == ExpressionTokenId::INTEGER_LITERAL()
-            || $id == ExpressionTokenId::DECIMAL_LITERAL()
-            || $id == ExpressionTokenId::DOUBLE_LITERAL()
-            || $id == ExpressionTokenId::INT64_LITERAL()
-            || $id == ExpressionTokenId::SINGLE_LITERAL();
+        $this->textPos = $pos;
+        $nextChar = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->ch = $nextChar;
     }
 
     /**
@@ -160,7 +116,7 @@ class ExpressionLexer
             $this->nextChar();
         }
 
-        $t        = null;
+        $t = null;
         $tokenPos = $this->textPos;
         switch ($this->ch) {
             case '(':
@@ -269,7 +225,7 @@ class ExpressionLexer
         }
 
         $this->token->setId($t);
-        $this->token->Text     = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
+        $this->token->Text = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
         $this->token->Position = $tokenPos;
 
         // Handle type-prefixed literals such as binary, datetime or guid.
@@ -292,194 +248,24 @@ class ExpressionLexer
     }
 
     /**
-     * Returns the next token without advancing the lexer to next token.
-     *
-     * @throws ODataException
-     * @return ExpressionToken
+     * Advance to next character.
      */
-    public function peekNextToken()
+    private function nextChar()
     {
-        $savedTextPos = $this->textPos;
-        assert(2 >= strlen($this->ch));
-        $savedChar  = $this->ch;
-        $savedToken = clone $this->token;
-        $this->nextToken();
-        $result        = clone $this->token;
-        $this->textPos = $savedTextPos;
-        $this->ch      = $savedChar;
-        $this->token->setId($savedToken->getId());
-        $this->token->Position = $savedToken->Position;
-        $this->token->Text     = $savedToken->Text;
-
-        return $result;
-    }
-
-    /**
-     * Validates the current token is of the specified kind.
-     *
-     * @param ExpressionTokenId $tokenId Expected token kind
-     *
-     * @throws ODataException if current token is not of the
-     *                        specified kind
-     */
-    public function validateToken(ExpressionTokenId $tokenId)
-    {
-        if ($this->token->getId() != $tokenId) {
-            $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));
-        }
-    }
-
-    /**
-     * Starting from an identifier, reads alternate sequence of dots and identifiers
-     * and returns the text for it.
-     *
-     * @throws ODataException
-     * @return string         The dotted identifier starting at the current identifier
-     */
-    public function readDottedIdentifier()
-    {
-        $this->validateToken(ExpressionTokenId::IDENTIFIER());
-        $identifier = $this->token->Text;
-        $this->nextToken();
-        while ($this->token->getId() == ExpressionTokenId::DOT()) {
-            $this->nextToken();
-            $this->validateToken(ExpressionTokenId::IDENTIFIER());
-            $identifier = $identifier . '.' . $this->token->Text;
-            $this->nextToken();
+        if ($this->textPos < $this->textLen) {
+            ++$this->textPos;
         }
 
-        return $identifier;
-    }
-
-    /**
-     * Check if the parameter ($tokenText) is INF or NaN.
-     *
-     * @param string $tokenText Text to look in
-     *
-     * @return bool true if match found, false otherwise
-     */
-    private static function isInfinityOrNaNDouble($tokenText)
-    {
-        if (strlen($tokenText) == 3) {
-            if ($tokenText[0] == 'I') {
-                return self::isInfinityLiteralDouble($tokenText);
-            } elseif ($tokenText[0] == 'N') {
-                return strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if the parameter ($text) is INF.
-     *
-     * @param string $text Text to look in
-     *
-     * @return bool true if match found, false otherwise
-     */
-    private static function isInfinityLiteralDouble($text)
-    {
-        return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
-    }
-
-    /**
-     * Checks if the parameter ($tokenText) is INFf/INFF or NaNf/NaNF.
-     *
-     * @param string $tokenText Input token
-     *
-     * @return bool true if match found, false otherwise
-     */
-    private static function isInfinityOrNanSingle($tokenText)
-    {
-        if (strlen($tokenText) == 4) {
-            if ($tokenText[0] == 'I') {
-                return self::isInfinityLiteralSingle($tokenText);
-            } elseif ($tokenText[0] == 'N') {
-                return ($tokenText[3] == self::SINGLE_SUFFIX_LOWER
-                    || $tokenText[3] == self::SINGLE_SUFFIX_UPPER)
-                    && strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks whether parameter ($text) EQUALS to 'INFf' or 'INFF' at position.
-     *
-     * @param string $text Text to look in
-     *
-     * @return bool true if the substring is equal using an ordinal comparison;
-     *              false otherwise
-     */
-    private static function isInfinityLiteralSingle($text)
-    {
-        return strlen($text) == 4
-            && ($text[3] == self::SINGLE_SUFFIX_LOWER
-            || $text[3] == self::SINGLE_SUFFIX_UPPER)
-            && strncmp($text, ODataConstants::XML_INFINITY_LITERAL, 3) == 0;
-    }
-
-    /**
-     * Handles the literals that are prefixed by types.
-     * This method modified the token field as necessary.
-     *
-     *
-     * @throws ODataException
-     */
-    private function handleTypePrefixedLiterals()
-    {
-        $id = $this->token->getId();
-        if ($id != ExpressionTokenId::IDENTIFIER()) {
-            return;
-        }
-
-        $quoteFollows = $this->ch == '\'';
-        if (!$quoteFollows) {
-            return;
-        }
-
-        $tokenText = $this->token->Text;
-
-        if (strcasecmp('datetime', $tokenText) == 0) {
-            $id = ExpressionTokenId::DATETIME_LITERAL();
-        } elseif (strcasecmp('guid', $tokenText) == 0) {
-            $id = ExpressionTokenId::GUID_LITERAL();
-        } elseif (strcasecmp('binary', $tokenText) == 0
-            || strcasecmp('X', $tokenText) == 0
-            || strcasecmp('x', $tokenText) == 0
-        ) {
-            $id = ExpressionTokenId::BINARY_LITERAL();
-        } else {
-            return;
-        }
-
-        $tokenPos = $this->token->Position;
-        do {
-            $this->nextChar();
-        } while ($this->ch != '\0' && $this->ch != '\'');
-
-        if ($this->ch == '\0') {
-            $this->parseError(
-                Messages::expressionLexerUnterminatedStringLiteral(
-                    $this->textPos,
-                    $this->text
-                )
-            );
-        }
-
-        $this->nextChar();
-        $this->token->setId($id);
-        $this->token->Text
-            = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
+        $nextChar = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
+        assert(2 >= strlen($nextChar));
+        $this->ch = $nextChar;
     }
 
     /**
      * Parses a token that starts with a digit.
      *
-     * @throws ODataException
      * @return ExpressionTokenId The kind of token recognized
+     * @throws ODataException
      */
     private function parseFromDigit()
     {
@@ -538,43 +324,6 @@ class ExpressionLexer
     }
 
     /**
-     * Parses an identifier by advancing the current character.
-     */
-    private function parseIdentifier()
-    {
-        do {
-            $this->nextChar();
-        } while (Char::isLetterOrDigit($this->ch) || $this->ch == '_');
-    }
-
-    /**
-     * Advance to next character.
-     */
-    private function nextChar()
-    {
-        if ($this->textPos < $this->textLen) {
-            ++$this->textPos;
-        }
-
-        $nextChar = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
-        assert(2 >= strlen($nextChar));
-        $this->ch = $nextChar;
-    }
-
-    /**
-     * Set the text position.
-     *
-     * @param int $pos Value to position
-     */
-    private function setTextPos($pos)
-    {
-        $this->textPos = $pos;
-        $nextChar      = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
-        assert(2 >= strlen($nextChar));
-        $this->ch = $nextChar;
-    }
-
-    /**
      * Validate current character is a digit.
      * @throws ODataException
      */
@@ -595,5 +344,256 @@ class ExpressionLexer
     private function parseError($message)
     {
         throw ODataException::createSyntaxError($message);
+    }
+
+    /**
+     * Whether the specified token identifier is a numeric literal.
+     *
+     * @param ExpressionTokenId $id Token identifier to check
+     *
+     * @return bool true if it's a numeric literal; false otherwise
+     */
+    public static function isNumeric(ExpressionTokenId $id)
+    {
+        return
+            $id == ExpressionTokenId::INTEGER_LITERAL()
+            || $id == ExpressionTokenId::DECIMAL_LITERAL()
+            || $id == ExpressionTokenId::DOUBLE_LITERAL()
+            || $id == ExpressionTokenId::INT64_LITERAL()
+            || $id == ExpressionTokenId::SINGLE_LITERAL();
+    }
+
+    /**
+     * Parses an identifier by advancing the current character.
+     */
+    private function parseIdentifier()
+    {
+        do {
+            $this->nextChar();
+        } while (Char::isLetterOrDigit($this->ch) || $this->ch == '_');
+    }
+
+    /**
+     * Check if the parameter ($text) is INF.
+     *
+     * @param string $text Text to look in
+     *
+     * @return bool true if match found, false otherwise
+     */
+    private static function isInfinityLiteralDouble($text)
+    {
+        return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
+    }
+
+    /**
+     * Checks whether parameter ($text) EQUALS to 'INFf' or 'INFF' at position.
+     *
+     * @param string $text Text to look in
+     *
+     * @return bool true if the substring is equal using an ordinal comparison;
+     *              false otherwise
+     */
+    private static function isInfinityLiteralSingle($text)
+    {
+        return strlen($text) == 4
+            && ($text[3] == self::SINGLE_SUFFIX_LOWER
+                || $text[3] == self::SINGLE_SUFFIX_UPPER)
+            && strncmp($text, ODataConstants::XML_INFINITY_LITERAL, 3) == 0;
+    }
+
+    /**
+     * Handles the literals that are prefixed by types.
+     * This method modified the token field as necessary.
+     *
+     *
+     * @throws ODataException
+     */
+    private function handleTypePrefixedLiterals()
+    {
+        $id = $this->token->getId();
+        if ($id != ExpressionTokenId::IDENTIFIER()) {
+            return;
+        }
+
+        $quoteFollows = $this->ch == '\'';
+        if (!$quoteFollows) {
+            return;
+        }
+
+        $tokenText = $this->token->Text;
+
+        if (strcasecmp('datetime', $tokenText) == 0) {
+            $id = ExpressionTokenId::DATETIME_LITERAL();
+        } elseif (strcasecmp('guid', $tokenText) == 0) {
+            $id = ExpressionTokenId::GUID_LITERAL();
+        } elseif (strcasecmp('binary', $tokenText) == 0
+            || strcasecmp('X', $tokenText) == 0
+            || strcasecmp('x', $tokenText) == 0
+        ) {
+            $id = ExpressionTokenId::BINARY_LITERAL();
+        } else {
+            return;
+        }
+
+        $tokenPos = $this->token->Position;
+        do {
+            $this->nextChar();
+        } while ($this->ch != '\0' && $this->ch != '\'');
+
+        if ($this->ch == '\0') {
+            $this->parseError(
+                Messages::expressionLexerUnterminatedStringLiteral(
+                    $this->textPos,
+                    $this->text
+                )
+            );
+        }
+
+        $this->nextChar();
+        $this->token->setId($id);
+        $this->token->Text
+            = substr($this->text, $tokenPos, $this->textPos - $tokenPos);
+    }
+
+    /**
+     * Check if the parameter ($tokenText) is INF or NaN.
+     *
+     * @param string $tokenText Text to look in
+     *
+     * @return bool true if match found, false otherwise
+     */
+    private static function isInfinityOrNaNDouble($tokenText)
+    {
+        if (strlen($tokenText) == 3) {
+            if ($tokenText[0] == 'I') {
+                return self::isInfinityLiteralDouble($tokenText);
+            } elseif ($tokenText[0] == 'N') {
+                return strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the parameter ($tokenText) is INFf/INFF or NaNf/NaNF.
+     *
+     * @param string $tokenText Input token
+     *
+     * @return bool true if match found, false otherwise
+     */
+    private static function isInfinityOrNanSingle($tokenText)
+    {
+        if (strlen($tokenText) == 4) {
+            if ($tokenText[0] == 'I') {
+                return self::isInfinityLiteralSingle($tokenText);
+            } elseif ($tokenText[0] == 'N') {
+                return ($tokenText[3] == self::SINGLE_SUFFIX_LOWER
+                        || $tokenText[3] == self::SINGLE_SUFFIX_UPPER)
+                    && strncmp($tokenText, ODataConstants::XML_NAN_LITERAL, 3) == 0;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * To get the expression token being processed.
+     *
+     * @return ExpressionToken
+     */
+    public function getCurrentToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * To set the token being processed.
+     *
+     * @param ExpressionToken $token The expression token to set as current
+     */
+    public function setCurrentToken(ExpressionToken $token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+     * To get the text being parsed.
+     *
+     * @return string
+     */
+    public function getExpressionText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * Position of the current token in the text being parsed.
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->token->Position;
+    }
+
+    /**
+     * Returns the next token without advancing the lexer to next token.
+     *
+     * @return ExpressionToken
+     * @throws ODataException
+     */
+    public function peekNextToken()
+    {
+        $savedTextPos = $this->textPos;
+        assert(2 >= strlen($this->ch));
+        $savedChar = $this->ch;
+        $savedToken = clone $this->token;
+        $this->nextToken();
+        $result = clone $this->token;
+        $this->textPos = $savedTextPos;
+        $this->ch = $savedChar;
+        $this->token->setId($savedToken->getId());
+        $this->token->Position = $savedToken->Position;
+        $this->token->Text = $savedToken->Text;
+
+        return $result;
+    }
+
+    /**
+     * Starting from an identifier, reads alternate sequence of dots and identifiers
+     * and returns the text for it.
+     *
+     * @return string         The dotted identifier starting at the current identifier
+     * @throws ODataException
+     */
+    public function readDottedIdentifier()
+    {
+        $this->validateToken(ExpressionTokenId::IDENTIFIER());
+        $identifier = $this->token->Text;
+        $this->nextToken();
+        while ($this->token->getId() == ExpressionTokenId::DOT()) {
+            $this->nextToken();
+            $this->validateToken(ExpressionTokenId::IDENTIFIER());
+            $identifier = $identifier . '.' . $this->token->Text;
+            $this->nextToken();
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Validates the current token is of the specified kind.
+     *
+     * @param ExpressionTokenId $tokenId Expected token kind
+     *
+     * @throws ODataException if current token is not of the
+     *                        specified kind
+     */
+    public function validateToken(ExpressionTokenId $tokenId)
+    {
+        if ($this->token->getId() != $tokenId) {
+            $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));
+        }
     }
 }

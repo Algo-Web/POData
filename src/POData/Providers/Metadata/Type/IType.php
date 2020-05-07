@@ -30,7 +30,7 @@ interface IType
      * interface
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
+     * @param string $value The value to validate
      * @param string &$outValue The stripped form of $value that can be used in PHP
      *                          expressions
      *

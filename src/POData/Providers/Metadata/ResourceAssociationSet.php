@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 
 /**
@@ -12,19 +13,25 @@ use POData\Common\Messages;
 class ResourceAssociationSet
 {
     /**
+     * Note: This property will be populated by the library,
+     * so IDSMP implementor should not set this.
+     * The association type hold by this association set.
+     *
+     * @var ResourceAssociationType
+     */
+    public $resourceAssociationType;
+    /**
      * name of the association set.
      *
      * @var string
      */
     private $name;
-
     /**
      * End1 of association set.
      *
      * @var ResourceAssociationSetEnd
      */
     private $end1;
-
     /**
      * End2 of association set.
      *
@@ -33,34 +40,26 @@ class ResourceAssociationSet
     private $end2;
 
     /**
-     * Note: This property will be populated by the library,
-     * so IDSMP implementor should not set this.
-     * The association type hold by this association set.
-     *
-     * @var ResourceAssociationType
-     */
-    public $resourceAssociationType;
-
-    /**
      * Construct new instance of ResourceAssociationSet.
      *
-     * @param string                    $name Name of the association set
+     * @param string $name Name of the association set
      * @param ResourceAssociationSetEnd $end1 First end set participating
      *                                        in the association set
      * @param ResourceAssociationSetEnd $end2 Second end set participating
      *                                        in the association set
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         $name,
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
-    ) {
+    )
+    {
         if (null === $end1->getResourceProperty()
             && null === $end2->getResourceProperty()
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetResourcePropertyCannotBeBothNull()
             );
         }
@@ -68,7 +67,7 @@ class ResourceAssociationSet
         if ($end1->getResourceType() == $end2->getResourceType()
             && $end1->getResourceProperty() == $end2->getResourceProperty()
         ) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
             );
         }
@@ -79,11 +78,32 @@ class ResourceAssociationSet
     }
 
     /**
+     * @param ResourceEntityType $sourceType
+     * @param string $linkName
+     * @param ResourceSet $targetResourceSet
+     * @return string
+     */
+    public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
+    {
+        return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
+    }
+
+    /**
+     * @param ResourceEntityType $sourceType
+     * @param ResourceProperty $property
+     * @return string
+     */
+    public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
+    {
+        return $sourceType->getName() . '_' . $property->getName() . '_' . $property->getResourceType()->getName();
+    }
+
+    /**
      * Retrieve the end for the given resource set, type and property.
      *
-     * @param ResourceSet        $resourceSet      Resource set for the end
-     * @param ResourceEntityType $resourceType     Resource type for the end
-     * @param ResourceProperty   $resourceProperty Resource property for the end
+     * @param ResourceSet $resourceSet Resource set for the end
+     * @param ResourceEntityType $resourceType Resource type for the end
+     * @param ResourceProperty $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Resource association set end for the
      *                                        given parameters
@@ -92,7 +112,8 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    )
+    {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end1;
         }
@@ -106,9 +127,9 @@ class ResourceAssociationSet
     /**
      * Retrieve the related end for the given resource set, type and property.
      *
-     * @param ResourceSet        $resourceSet      Resource set for the end
-     * @param ResourceEntityType $resourceType     Resource type for the end
-     * @param ResourceProperty   $resourceProperty Resource property for the end
+     * @param ResourceSet $resourceSet Resource set for the end
+     * @param ResourceEntityType $resourceType Resource type for the end
+     * @param ResourceProperty $resourceProperty Resource property for the end
      *
      * @return ResourceAssociationSetEnd|null Related resource association set end
      *                                        for the given parameters
@@ -117,7 +138,8 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    )
+    {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end2;
         }
@@ -141,7 +163,7 @@ class ResourceAssociationSet
     /**
      * Get first end of the association set.
      *
-     *  @return ResourceAssociationSetEnd
+     * @return ResourceAssociationSetEnd
      */
     public function getEnd1()
     {
@@ -151,7 +173,7 @@ class ResourceAssociationSet
     /**
      * Get second end of the association set.
      *
-     *  @return ResourceAssociationSetEnd
+     * @return ResourceAssociationSetEnd
      */
     public function getEnd2()
     {
@@ -168,26 +190,5 @@ class ResourceAssociationSet
     {
         return null !== $this->end1->getResourceProperty()
             && null !== $this->end2->getResourceProperty();
-    }
-
-    /**
-     * @param  ResourceEntityType $sourceType
-     * @param  string             $linkName
-     * @param  ResourceSet        $targetResourceSet
-     * @return string
-     */
-    public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
-    {
-        return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
-    }
-
-    /**
-     * @param  ResourceEntityType $sourceType
-     * @param  ResourceProperty   $property
-     * @return string
-     */
-    public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
-    {
-        return $sourceType->getName() . '_' . $property->getName() . '_' . $property->getResourceType()->getName();
     }
 }

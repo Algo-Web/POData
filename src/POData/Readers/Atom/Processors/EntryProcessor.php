@@ -31,7 +31,7 @@ class EntryProcessor extends BaseNodeHandler
     /** @noinspection PhpUnusedParameterInspection */
     public function __construct()
     {
-        $this->oDataEntry                   = new ODataEntry();
+        $this->oDataEntry = new ODataEntry();
         $this->oDataEntry->isMediaLinkEntry = false;
     }
 
@@ -60,6 +60,35 @@ class EntryProcessor extends BaseNodeHandler
             return;
         }
         parent::handleEndNode($tagNamespace, $tagName);
+    }
+
+    /**
+     * @param $objectModel
+     * @return mixed
+     */
+    public function handleChildComplete($objectModel)
+    {
+        $this->subProcessor->handleChildComplete($objectModel);
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    public function getObjetModelObject()
+    {
+        return $this->oDataEntry;
+    }
+
+    /**
+     * @param $characters
+     */
+    public function handleCharacterData($characters)
+    {
+        if (null === $this->subProcessor) {
+            parent::handleCharacterData($characters);
+        } else {
+            $this->subProcessor->handleCharacterData($characters);
+        }
     }
 
     protected function handleStartAtomId()
@@ -110,6 +139,46 @@ class EntryProcessor extends BaseNodeHandler
     }
 
     /**
+     * @param ODataLink|ODataMediaLink $link
+     */
+    private function handleLink($link)
+    {
+        switch (true) {
+            case $link instanceof ODataMediaLink:
+                $this->handleODataMediaLink($link);
+                break;
+            case $link instanceof ODataLink:
+                $this->handleODataLink($link);
+                break;
+        }
+    }
+
+    /**
+     * @param ODataMediaLink $link
+     */
+    private function handleODataMediaLink(ODataMediaLink $link)
+    {
+        if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {
+            $this->oDataEntry->mediaLink = $link;
+            $this->oDataEntry->isMediaLinkEntry = true;
+        } else {
+            $this->oDataEntry->mediaLinks[] = $link;
+        }
+    }
+
+    /**
+     * @param ODataLink $link
+     */
+    private function handleODataLink(ODataLink $link)
+    {
+        if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
+            $this->oDataEntry->editLink = $link;
+        } else {
+            $this->oDataEntry->links[] = $link;
+        }
+    }
+
+    /**
      * @param $attributes
      */
     protected function handleStartAtomCategory($attributes)
@@ -131,8 +200,8 @@ class EntryProcessor extends BaseNodeHandler
      */
     protected function handleStartAtomContent($attributes)
     {
-        $this->subProcessor       = new PropertyProcessor();
-        $atomContent              = new AtomContent(
+        $this->subProcessor = new PropertyProcessor();
+        $atomContent = new AtomContent(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, 'application/xml')
         );
         $this->enqueueEnd(function () use ($atomContent) {
@@ -150,74 +219,5 @@ class EntryProcessor extends BaseNodeHandler
     protected function handleStartAtomAuthor()
     {
         $this->enqueueEnd($this->doNothing());
-    }
-
-    /**
-     * @param $objectModel
-     * @return mixed
-     */
-    public function handleChildComplete($objectModel)
-    {
-        $this->subProcessor->handleChildComplete($objectModel);
-    }
-
-    /**
-     * @return ODataEntry
-     */
-    public function getObjetModelObject()
-    {
-        return $this->oDataEntry;
-    }
-
-    /**
-     * @param $characters
-     */
-    public function handleCharacterData($characters)
-    {
-        if (null === $this->subProcessor) {
-            parent::handleCharacterData($characters);
-        } else {
-            $this->subProcessor->handleCharacterData($characters);
-        }
-    }
-
-    /**
-     * @param ODataLink|ODataMediaLink $link
-     */
-    private function handleLink($link)
-    {
-        switch (true) {
-            case $link instanceof ODataMediaLink:
-                $this->handleODataMediaLink($link);
-                break;
-            case $link instanceof ODataLink:
-                $this->handleODataLink($link);
-                break;
-        }
-    }
-
-    /**
-     * @param ODataLink $link
-     */
-    private function handleODataLink(ODataLink $link)
-    {
-        if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
-            $this->oDataEntry->editLink = $link;
-        } else {
-            $this->oDataEntry->links[] = $link;
-        }
-    }
-
-    /**
-     * @param ODataMediaLink $link
-     */
-    private function handleODataMediaLink(ODataMediaLink $link)
-    {
-        if ($link->name === ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE) {
-            $this->oDataEntry->mediaLink        = $link;
-            $this->oDataEntry->isMediaLinkEntry = true;
-        } else {
-            $this->oDataEntry->mediaLinks[] = $link;
-        }
     }
 }

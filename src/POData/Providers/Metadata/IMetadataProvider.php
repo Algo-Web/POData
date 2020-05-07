@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace POData\Providers\Metadata;
 
+use Exception;
+
 /**
  * Class IMetadataProvider.
  *
@@ -29,7 +31,7 @@ interface IMetadataProvider
     /**
      *  To get all entity set information.
      *
-     *  @return ResourceSet[]
+     * @return ResourceSet[]
      */
     public function getResourceSets();
 
@@ -80,11 +82,11 @@ interface IMetadataProvider
      * Gets the ResourceAssociationSet instance for the given source
      * association end.
      *
-     * @param ResourceSet        $resourceSet      Resource set of the source
+     * @param ResourceSet $resourceSet Resource set of the source
      *                                             association end
-     * @param ResourceEntityType $resourceType     Resource type of the source
+     * @param ResourceEntityType $resourceType Resource type of the source
      *                                             association end
-     * @param ResourceProperty   $resourceProperty Resource property of the source
+     * @param ResourceProperty $resourceProperty Resource property of the source
      *                                             association end
      *
      * @return ResourceAssociationSet
@@ -98,8 +100,8 @@ interface IMetadataProvider
     /**
      * Generate singleton wrapper.
      *
-     * @param string       $name         Name of singleton
-     * @param ResourceType $returnType   Return type wrapper
+     * @param string $name Name of singleton
+     * @param ResourceType $returnType Return type wrapper
      * @param string|array $functionName Function call to be wrapped
      *
      * @return mixed
@@ -123,8 +125,8 @@ interface IMetadataProvider
     public function callSingleton($name);
 
     /**
-     * @throws \Exception
      * @return string|null
+     * @throws Exception
      */
     public function getXML();
 }

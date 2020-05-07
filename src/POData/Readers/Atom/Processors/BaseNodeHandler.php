@@ -28,6 +28,21 @@ abstract class BaseNodeHandler
 
     /**
      * @param $tagNamespace
+     * @param $tagName
+     * @param $attributes
+     */
+    public function handleStartNode($tagNamespace, $tagName, $attributes)
+    {
+        $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
+        $method = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
+        if (!method_exists($this, $method)) {
+            $this->onParseError($methodType, 'Start', $tagName);
+        }
+        $this->{$method}($attributes);
+    }
+
+    /**
+     * @param $tagNamespace
      * @return mixed
      */
     private function resolveNamespaceToMethodTag($tagNamespace)
@@ -41,18 +56,13 @@ abstract class BaseNodeHandler
     }
 
     /**
-     * @param $tagNamespace
+     * @param $namespace
+     * @param $startEnd
      * @param $tagName
-     * @param $attributes
      */
-    public function handleStartNode($tagNamespace, $tagName, $attributes)
+    final protected function onParseError($namespace, $startEnd, $tagName)
     {
-        $methodType = $this->resolveNamespaceToMethodTag($tagNamespace);
-        $method     = 'handleStart' . $methodType . ucfirst(strtolower($tagName));
-        if (!method_exists($this, $method)) {
-            $this->onParseError($methodType, 'Start', $tagName);
-        }
-        $this->{$method}($attributes);
+        throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
     }
 
     /**
@@ -71,7 +81,7 @@ abstract class BaseNodeHandler
      */
     final public function popCharData()
     {
-        $data           = $this->charData;
+        $data = $this->charData;
         $this->charData = '';
         return $data;
     }
@@ -83,6 +93,17 @@ abstract class BaseNodeHandler
     abstract public function handleChildComplete($objectModel);
 
     abstract public function getObjetModelObject();
+
+    /**
+     * @param $tagNamespace
+     * @param $tagName
+     */
+    public function handleEndNode($tagNamespace, $tagName)
+    {
+        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
+        $endMethod = $this->tagEndQueue->pop();
+        $endMethod();
+    }
 
     /**
      * @param $array
@@ -104,31 +125,12 @@ abstract class BaseNodeHandler
     }
 
     /**
-     * @param $namespace
-     * @param $startEnd
-     * @param $tagName
-     */
-    final protected function onParseError($namespace, $startEnd, $tagName)
-    {
-        throw new ParseError(sprintf(self::$processExceptionMessage, $namespace, $startEnd, $tagName));
-    }
-
-    /**
      * @return Closure
      */
     protected function doNothing()
     {
         return function () {
         };
-    }
-
-    /**
-     * @param  Closure $closure
-     * @return Closure
-     */
-    protected function bindHere(Closure $closure)
-    {
-        return $closure->bindTo($this, get_class($this));
     }
 
     /**
@@ -143,13 +145,11 @@ abstract class BaseNodeHandler
     }
 
     /**
-     * @param $tagNamespace
-     * @param $tagName
+     * @param Closure $closure
+     * @return Closure
      */
-    public function handleEndNode($tagNamespace, $tagName)
+    protected function bindHere(Closure $closure)
     {
-        assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
-        $endMethod = $this->tagEndQueue->pop();
-        $endMethod();
+        return $closure->bindTo($this, get_class($this));
     }
 }

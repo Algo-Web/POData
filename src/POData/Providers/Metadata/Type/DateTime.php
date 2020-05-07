@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace POData\Providers\Metadata\Type;
 
 use Carbon\Carbon;
+use DateTimeZone;
+use Exception;
 
 /**
  * Class DateTime.
@@ -13,6 +15,138 @@ class DateTime implements IType
 {
     protected static $comboRegex =
         "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?\'$/";
+
+    /**
+     * Gets year from datetime.
+     *
+     * @param string $dateTime datetime to get the year from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function year($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('Y');
+    }
+
+    /**
+     * Gets month from datetime.
+     *
+     * @param string $dateTime datetime to get the month from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function month($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('m');
+    }
+
+    /**
+     * Gets day from datetime.
+     *
+     * @param string $dateTime datetime to get the day from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function day($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('d');
+    }
+
+    /**
+     * Gets hour from datetime.
+     *
+     * @param string $dateTime datetime to get the hour from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function hour($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('H');
+    }
+
+    /**
+     * Gets minute from datetime.
+     *
+     * @param string $dateTime datetime to get the minute from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function minute($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('i');
+    }
+
+    /**
+     * Gets second from datetime.
+     *
+     * @param string $dateTime datetime to get the second from
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function second($dateTime)
+    {
+        $date = new Carbon($dateTime);
+
+        return $date->format('s');
+    }
+
+    /**
+     * Compare two dates. Note that this function will not perform any
+     * validation on dates, one should use either validate or
+     * validateWithoutPrefix to validate the date before calling this
+     * function.
+     *
+     * @param string $dateTime1 First date
+     * @param string $dateTime2 Second date
+     *
+     * @return int
+     * @throws Exception
+     */
+    public static function dateTimeCmp($dateTime1, $dateTime2)
+    {
+        $firstStamp = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
+        $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
+
+        if ($firstStamp == $secondStamp) {
+            return 0;
+        }
+        return $firstStamp < $secondStamp ? -1 : 1;
+    }
+
+    /**
+     * @param $dateTime
+     * @param $msg
+     * @return false|int
+     * @throws Exception
+     */
+    protected static function dateTimeCmpCheckInput($dateTime, $msg)
+    {
+        if (is_object($dateTime) && $dateTime instanceof \DateTime) {
+            $firstStamp = $dateTime->getTimestamp();
+            return $firstStamp;
+        }
+        if (is_string($dateTime)) {
+            $firstStamp = strtotime($dateTime);
+            return $firstStamp;
+        }
+        throw new Exception($msg);
+    }
 
     /**
      * Gets the type code
@@ -42,7 +176,7 @@ class DateTime implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
+     * @param string $value The value to validate
      * @param string &$outValue The stripped form of $value that can
      *                          be used in PHP expressions
      *
@@ -61,8 +195,8 @@ class DateTime implements IType
         }
 
         //strip off prefix, and quotes from both ends
-        $value      = trim($value, 'datetime\'');
-        $valLen     = strlen($value) - 6;
+        $value = trim($value, 'datetime\'');
+        $valLen = strlen($value) - 6;
         $offsetChek = $value[$valLen];
         if (18 < $valLen && ('-' == $offsetChek || '+' == $offsetChek)) {
             $value = substr($value, 0, $valLen);
@@ -70,25 +204,14 @@ class DateTime implements IType
 
         //Validate the date using PHP Carbon class
         try {
-            new Carbon($value, new \DateTimeZone('UTC'));
-        } catch (\Exception $e) {
+            new Carbon($value, new DateTimeZone('UTC'));
+        } catch (Exception $e) {
             return false;
         }
 
         $outValue = "'" . $value . "'";
 
         return true;
-    }
-
-    /**
-     * Gets full name of this type in EDM namespace
-     * Note: implementation of IType::getFullTypeName.
-     *
-     * @return string
-     */
-    public function getFullTypeName()
-    {
-        return 'Edm.DateTime';
     }
 
     /**
@@ -119,119 +242,6 @@ class DateTime implements IType
     }
 
     /**
-     * Gets year from datetime.
-     *
-     * @param string $dateTime datetime to get the year from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function year($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('Y');
-    }
-
-    /**
-     * Gets month from datetime.
-     *
-     * @param string $dateTime datetime to get the month from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function month($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('m');
-    }
-
-    /**
-     * Gets day from datetime.
-     *
-     * @param string $dateTime datetime to get the day from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function day($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('d');
-    }
-
-    /**
-     * Gets hour from datetime.
-     *
-     * @param string $dateTime datetime to get the hour from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function hour($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('H');
-    }
-
-    /**
-     * Gets minute from datetime.
-     *
-     * @param string $dateTime datetime to get the minute from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function minute($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('i');
-    }
-
-    /**
-     * Gets second from datetime.
-     *
-     * @param string $dateTime datetime to get the second from
-     *
-     * @throws \Exception
-     * @return string
-     */
-    public static function second($dateTime)
-    {
-        $date = new Carbon($dateTime);
-
-        return $date->format('s');
-    }
-
-    /**
-     * Compare two dates. Note that this function will not perform any
-     * validation on dates, one should use either validate or
-     * validateWithoutPrefix to validate the date before calling this
-     * function.
-     *
-     * @param string $dateTime1 First date
-     * @param string $dateTime2 Second date
-     *
-     * @throws \Exception
-     * @return int
-     */
-    public static function dateTimeCmp($dateTime1, $dateTime2)
-    {
-        $firstStamp  = self::dateTimeCmpCheckInput($dateTime1, 'Invalid input - datetime1 must be DateTime or string');
-        $secondStamp = self::dateTimeCmpCheckInput($dateTime2, 'Invalid input - datetime2 must be DateTime or string');
-
-        if ($firstStamp == $secondStamp) {
-            return 0;
-        }
-        return $firstStamp < $secondStamp ? -1 : 1;
-    }
-
-    /**
      * Gets full name of the type implementing this interface in EDM namespace
      * Note: implementation of IType::getFullTypeName.
      *
@@ -243,21 +253,13 @@ class DateTime implements IType
     }
 
     /**
-     * @param $dateTime
-     * @param $msg
-     * @throws \Exception
-     * @return false|int
+     * Gets full name of this type in EDM namespace
+     * Note: implementation of IType::getFullTypeName.
+     *
+     * @return string
      */
-    protected static function dateTimeCmpCheckInput($dateTime, $msg)
+    public function getFullTypeName()
     {
-        if (is_object($dateTime) && $dateTime instanceof \DateTime) {
-            $firstStamp = $dateTime->getTimestamp();
-            return $firstStamp;
-        }
-        if (is_string($dateTime)) {
-            $firstStamp = strtotime($dateTime);
-            return $firstStamp;
-        }
-        throw new \Exception($msg);
+        return 'Edm.DateTime';
     }
 }

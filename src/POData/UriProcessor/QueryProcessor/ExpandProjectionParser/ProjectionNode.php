@@ -54,14 +54,14 @@ class ProjectionNode
     /**
      * Constructs a new instance of ProjectionNode.
      *
-     * @param string                $propertyName     Name of the property to
+     * @param string $propertyName Name of the property to
      *                                                be projected
      * @param ResourceProperty|null $resourceProperty The resource type of the
      *                                                property to be projected
      */
     public function __construct($propertyName, ResourceProperty $resourceProperty = null)
     {
-        $this->propertyName     = $propertyName;
+        $this->propertyName = $propertyName;
         $this->resourceProperty = $resourceProperty;
     }
 

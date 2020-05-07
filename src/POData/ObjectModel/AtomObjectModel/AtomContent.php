@@ -7,6 +7,7 @@ declare(strict_types=1);
  * Date: 16/08/2017
  * Time: 4:25 AM.
  */
+
 namespace POData\ObjectModel\AtomObjectModel;
 
 /**
@@ -33,14 +34,14 @@ class AtomContent
 
     /**
      * AtomContent constructor.
-     * @param string     $type
-     * @param string     $src
+     * @param string $type
+     * @param string $src
      * @param mixed|null $properties
      */
     public function __construct(string $type, string $src = null, $properties = null)
     {
-        $this->src        = $src;
-        $this->type       = $type;
+        $this->src = $src;
+        $this->type = $type;
         $this->properties = $properties;
     }
 }

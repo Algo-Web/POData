@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor;
 
+use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
+use POData\Common\NotImplementedException;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\IService;
@@ -18,6 +20,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
+use ReflectionException;
 
 /**
  * Class QueryProcessor.
@@ -64,7 +67,7 @@ class QueryProcessor
      * Creates new instance of QueryProcessor.
      *
      * @param RequestDescription $request Description of the request submitted by client
-     * @param IService           $service Reference to the service implementation
+     * @param IService $service Reference to the service implementation
      */
     private function __construct(RequestDescription $request, IService $service)
     {
@@ -84,10 +87,10 @@ class QueryProcessor
         //The request targets a resource collection
         //and the request isn't for a $count segment
         $this->pagingApplicable = $this->request->getTargetKind() == TargetKind::RESOURCE()
-                                   && !$isSingleResult
-                                   && ($request->queryType != QueryType::COUNT());
+            && !$isSingleResult
+            && ($request->queryType != QueryType::COUNT());
 
-        $targetResourceType       = $this->request->getTargetResourceType();
+        $targetResourceType = $this->request->getTargetResourceType();
         $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
 
         $this->expandSelectApplicable = null !== $targetResourceType
@@ -100,12 +103,12 @@ class QueryProcessor
      * Process the OData query options and update RequestDescription accordingly.
      *
      * @param RequestDescription $request Description of the request submitted by client
-     * @param IService           $service Reference to the data service
+     * @param IService $service Reference to the data service
      *
      * @throws ODataException
-     * @throws \POData\Common\NotImplementedException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws NotImplementedException
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      */
     public static function process(RequestDescription $request, IService $service)
     {
@@ -121,13 +124,51 @@ class QueryProcessor
     }
 
     /**
+     * Checks whether client request contains any odata query options.
+     *
+     *
+     * @throws ODataException Throws bad request error if client request
+     *                        includes any odata query option
+     */
+    private function checkForEmptyQueryArguments()
+    {
+        $serviceHost = $this->service->getHost();
+        $items = [
+            ODataConstants::HTTPQUERY_STRING_FILTER,
+            ODataConstants::HTTPQUERY_STRING_EXPAND,
+            ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
+            ODataConstants::HTTPQUERY_STRING_ORDERBY,
+            ODataConstants::HTTPQUERY_STRING_SELECT,
+            ODataConstants::HTTPQUERY_STRING_SKIP,
+            ODataConstants::HTTPQUERY_STRING_SKIPTOKEN,
+            ODataConstants::HTTPQUERY_STRING_TOP
+        ];
+
+        $allNull = true;
+        foreach ($items as $queryItem) {
+            $item = $serviceHost->getQueryStringItem($queryItem);
+            $currentNull = null === $item;
+            $allNull = ($currentNull && $allNull);
+            if (false === $allNull) {
+                break;
+            }
+        }
+
+        if (false === $allNull) {
+            throw ODataException::createBadRequestError(
+                Messages::queryProcessorNoQueryOptionsApplicable()
+            );
+        }
+    }
+
+    /**
      * Processes the odata query options in the request uri and update the request description
      * instance with processed details.
      *
      * @throws ODataException                           If any error occurred while processing the query options
-     * @throws \POData\Common\NotImplementedException
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws NotImplementedException
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      */
     private function processQuery()
     {
@@ -155,7 +196,7 @@ class QueryProcessor
             $this->request->setSkipCount($value);
         }
 
-        $pageSize         = 0;
+        $pageSize = 0;
         $isPagingRequired = $this->isSSPagingRequired();
         if ($isPagingRequired) {
             $pageSize = $this->request
@@ -187,6 +228,92 @@ class QueryProcessor
     }
 
     /**
+     * Read skip or top query option value which is expected to be positive
+     * integer.
+     *
+     * @param string $queryItem The name of the query item to read from request
+     *                          uri ($skip or $top)
+     * @param int    &$value On return, If the requested query item is
+     *                          present with a valid integer value then this
+     *                          argument will holds that integer value
+     *                          otherwise holds zero
+     *
+     * @return bool True     If the requested query item with valid integer
+     *              value is present in the request, false query
+     *              item is absent in the request uri
+     * @throws ODataException Throws syntax error if the requested argument
+     *                        is present and it is not an integer
+     *
+     */
+    private function readSkipOrTopOption($queryItem, &$value)
+    {
+        $value = $this->service->getHost()->getQueryStringItem($queryItem);
+        if (null !== $value) {
+            $int = new Int32();
+            if (!$int->validate($value, $outValue)) {
+                throw ODataException::createSyntaxError(
+                    Messages::queryProcessorIncorrectArgumentFormat(
+                        $queryItem,
+                        $value
+                    )
+                );
+            }
+
+            $value = intval($value);
+            if (0 > $value) {
+                throw ODataException::createSyntaxError(
+                    Messages::queryProcessorIncorrectArgumentFormat(
+                        $queryItem,
+                        $value
+                    )
+                );
+            }
+
+            return true;
+        }
+
+        $value = 0;
+
+        return false;
+    }
+
+    /**
+     * Is server side paging is configured, this function return true
+     * if the resource targeted by the resource path is applicable
+     * for paging and paging is enabled for the targeted resource set
+     * else false.
+     *
+     * @return bool
+     */
+    private function isSSPagingRequired()
+    {
+        if ($this->pagingApplicable) {
+            $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
+            //assert($targetResourceSetWrapper != NULL)
+            return 0 != $targetResourceSetWrapper->getResourceSetPageSize();
+        }
+
+        return false;
+    }
+
+    /**
+     * To check whether the the query options $orderby, $inlinecount, $skip
+     * or $top is applicable for the current requested resource.
+     *
+     *
+     * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount,
+     *                        $skip or $top cannot be applied to the requested resource
+     */
+    private function checkSetQueryApplicable()
+    {
+        if (!$this->setQueryApplicable) {
+            throw ODataException::createBadRequestError(
+                Messages::queryProcessorQuerySetOptionsNotApplicable()
+            );
+        }
+    }
+
+    /**
      * Process $orderby option, This function requires _processSkipAndTopOption
      * function to be already called as this function need to know whether
      * client has requested for skip, top or paging is enabled for the
@@ -195,8 +322,8 @@ class QueryProcessor
      *
      *
      * @throws ODataException                           If any error occurs while parsing orderby option
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      */
     private function processOrderBy()
     {
@@ -223,7 +350,7 @@ class QueryProcessor
          */
         if (null !== $this->request->getSkipCount() || null !== $this->request->getTopCount()) {
             $orderBy = null !== $orderBy ? $orderBy . ', ' : null;
-            $keys    = array_keys($targetResourceType->getKeyProperties());
+            $keys = array_keys($targetResourceType->getKeyProperties());
             //assert(!empty($keys))
             foreach ($keys as $key) {
                 $orderBy = $orderBy . $key . ', ';
@@ -260,8 +387,8 @@ class QueryProcessor
      *                                                to expression tree
      *                                                (3) If any error occurred while generating
      *                                                php expression from expression tree
-     * @throws \POData\Common\NotImplementedException
-     * @throws \ReflectionException
+     * @throws NotImplementedException
+     * @throws ReflectionException
      */
     private function processFilter()
     {
@@ -279,9 +406,9 @@ class QueryProcessor
                 Messages::queryProcessorQueryFilterOptionNotApplicable()
             );
         }
-        $resourceType       = $this->request->getTargetResourceType();
+        $resourceType = $this->request->getTargetResourceType();
         $expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
-        $filterInfo         = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
+        $filterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
         $this->request->setFilterInfo($filterInfo);
     }
 
@@ -347,7 +474,7 @@ class QueryProcessor
      *
      *
      * @throws ODataException       Throws bad request error in the following cases
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *                              (1) If $skiptoken cannot be applied to the
      *                              resource targeted by the request uri
      *                              (2) If paging is not enabled for the resource
@@ -369,9 +496,9 @@ class QueryProcessor
         }
 
         if (!$this->isSSPagingRequired()) {
-            $set     = $this->request->getTargetResourceSetWrapper();
+            $set = $this->request->getTargetResourceSetWrapper();
             $setName = (null != $set) ? $set->getName() : 'null';
-            $msg     = Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($setName);
+            $msg = Messages::queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($setName);
             throw ODataException::createBadRequestError($msg);
         }
 
@@ -395,8 +522,8 @@ class QueryProcessor
      *
      *
      * @throws ODataException                           Throws bad request error in the following cases
-     * @throws \POData\Common\InvalidOperationException
-     * @throws \ReflectionException
+     * @throws InvalidOperationException
+     * @throws ReflectionException
      *                                                  (1) If $expand or select cannot be applied to the
      *                                                  requested resource.
      *                                                  (2) If projection is disabled by the developer
@@ -442,130 +569,6 @@ class QueryProcessor
                 $this->request->raiseResponseVersion(2, 0);
             }
             $this->request->setRootProjectionNode($rootProjectionNode);
-        }
-    }
-
-    /**
-     * Is server side paging is configured, this function return true
-     * if the resource targeted by the resource path is applicable
-     * for paging and paging is enabled for the targeted resource set
-     * else false.
-     *
-     * @return bool
-     */
-    private function isSSPagingRequired()
-    {
-        if ($this->pagingApplicable) {
-            $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
-            //assert($targetResourceSetWrapper != NULL)
-            return 0 != $targetResourceSetWrapper->getResourceSetPageSize();
-        }
-
-        return false;
-    }
-
-    /**
-     * Read skip or top query option value which is expected to be positive
-     * integer.
-     *
-     * @param string $queryItem The name of the query item to read from request
-     *                          uri ($skip or $top)
-     * @param int    &$value    On return, If the requested query item is
-     *                          present with a valid integer value then this
-     *                          argument will holds that integer value
-     *                          otherwise holds zero
-     *
-     * @throws ODataException Throws syntax error if the requested argument
-     *                        is present and it is not an integer
-     *
-     * @return bool True     If the requested query item with valid integer
-     *              value is present in the request, false query
-     *              item is absent in the request uri
-     */
-    private function readSkipOrTopOption($queryItem, &$value)
-    {
-        $value = $this->service->getHost()->getQueryStringItem($queryItem);
-        if (null !== $value) {
-            $int = new Int32();
-            if (!$int->validate($value, $outValue)) {
-                throw ODataException::createSyntaxError(
-                    Messages::queryProcessorIncorrectArgumentFormat(
-                        $queryItem,
-                        $value
-                    )
-                );
-            }
-
-            $value = intval($value);
-            if (0 > $value) {
-                throw ODataException::createSyntaxError(
-                    Messages::queryProcessorIncorrectArgumentFormat(
-                        $queryItem,
-                        $value
-                    )
-                );
-            }
-
-            return true;
-        }
-
-        $value = 0;
-
-        return false;
-    }
-
-    /**
-     * Checks whether client request contains any odata query options.
-     *
-     *
-     * @throws ODataException Throws bad request error if client request
-     *                        includes any odata query option
-     */
-    private function checkForEmptyQueryArguments()
-    {
-        $serviceHost = $this->service->getHost();
-        $items       = [
-            ODataConstants::HTTPQUERY_STRING_FILTER,
-            ODataConstants::HTTPQUERY_STRING_EXPAND,
-            ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_ORDERBY,
-            ODataConstants::HTTPQUERY_STRING_SELECT,
-            ODataConstants::HTTPQUERY_STRING_SKIP,
-            ODataConstants::HTTPQUERY_STRING_SKIPTOKEN,
-            ODataConstants::HTTPQUERY_STRING_TOP
-        ];
-
-        $allNull = true;
-        foreach ($items as $queryItem) {
-            $item        = $serviceHost->getQueryStringItem($queryItem);
-            $currentNull = null === $item;
-            $allNull     = ($currentNull && $allNull);
-            if (false === $allNull) {
-                break;
-            }
-        }
-
-        if (false === $allNull) {
-            throw ODataException::createBadRequestError(
-                Messages::queryProcessorNoQueryOptionsApplicable()
-            );
-        }
-    }
-
-    /**
-     * To check whether the the query options $orderby, $inlinecount, $skip
-     * or $top is applicable for the current requested resource.
-     *
-     *
-     * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount,
-     *                        $skip or $top cannot be applied to the requested resource
-     */
-    private function checkSetQueryApplicable()
-    {
-        if (!$this->setQueryApplicable) {
-            throw ODataException::createBadRequestError(
-                Messages::queryProcessorQuerySetOptionsNotApplicable()
-            );
         }
     }
 

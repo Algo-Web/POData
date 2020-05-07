@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\OrderByParser;
 
+use InvalidArgumentException;
 use POData\Common\Messages;
 
 /**
@@ -37,19 +38,19 @@ class OrderByPathSegment
      *
      * @param OrderBySubPathSegment[] $orderBySubPathSegments Collection of orderBy sub path segments for this
      *                                                        path segment
-     * @param bool                    $isAscending            sort order,
+     * @param bool $isAscending sort order,
      *                                                        True for ascending and false for descending
      */
     public function __construct(array $orderBySubPathSegments, bool $isAscending = true)
     {
         if (empty($orderBySubPathSegments)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 Messages::orderByPathSegmentOrderBySubPathSegmentArgumentShouldBeNonEmptyArray()
             );
         }
 
         $this->orderBySubPathSegments = $orderBySubPathSegments;
-        $this->isAscending            = $isAscending;
+        $this->isAscending = $isAscending;
     }
 
     /**

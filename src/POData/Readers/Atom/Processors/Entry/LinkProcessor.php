@@ -33,7 +33,7 @@ class LinkProcessor extends BaseNodeHandler
         switch ($this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, null)) {
             case ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE:
             case ODataConstants::ODATA_RELATED_NAMESPACE .
-                 $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''):
+                $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''):
                 $object = ODataLink::class;
                 break;
             case ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE:
@@ -58,7 +58,7 @@ class LinkProcessor extends BaseNodeHandler
     public function handleStartNode($tagNamespace, $tagName, $attributes)
     {
         //The only sub notes that will exist will be the inline ones before we process the feed or entity.
-        assert($tagNamespace  === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE));
+        assert($tagNamespace === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE));
         assert($tagName === strtolower(ODataConstants::ATOM_INLINE_ELEMENT_NAME));
     }
 
@@ -69,7 +69,7 @@ class LinkProcessor extends BaseNodeHandler
     public function handleEndNode($tagNamespace, $tagName)
     {
         //The only sub notes that will exist will be the inline ones before we process the feed or entity.
-        assert($tagNamespace  === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE));
+        assert($tagNamespace === strtolower(ODataConstants::ODATA_METADATA_NAMESPACE));
         assert($tagName === strtolower(ODataConstants::ATOM_INLINE_ELEMENT_NAME));
     }
 

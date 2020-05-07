@@ -36,8 +36,8 @@ interface IExpressionProvider
      * Call-back for logical expression.
      *
      * @param ExpressionType $expressionType The type of logical expression
-     * @param string         $left           The left expression
-     * @param string         $right          The left expression
+     * @param string $left The left expression
+     * @param string $right The left expression
      *
      * @return string
      */
@@ -47,8 +47,8 @@ interface IExpressionProvider
      * Call-back for arithmetic expression.
      *
      * @param ExpressionType $expressionType The type of arithmetic expression
-     * @param string         $left           The left expression
-     * @param string         $right          The left expression
+     * @param string $left The left expression
+     * @param string $right The left expression
      *
      * @return string
      */
@@ -58,8 +58,8 @@ interface IExpressionProvider
      * Call-back for relational expression.
      *
      * @param ExpressionType $expressionType The type of relation expression
-     * @param string         $left           The left expression
-     * @param string         $right          The left expression
+     * @param string $left The left expression
+     * @param string $right The left expression
      *
      * @return string
      */
@@ -69,7 +69,7 @@ interface IExpressionProvider
      * Call-back for unary expression.
      *
      * @param ExpressionType $expressionType The type of unary expression
-     * @param string         $child          The child expression
+     * @param string $child The child expression
      *
      * @return string
      */
@@ -78,7 +78,7 @@ interface IExpressionProvider
     /**
      * Call-back for constant expression.
      *
-     * @param IType  $type  The type of constant
+     * @param IType $type The type of constant
      * @param string $value The value of the constant
      *
      * @return string
@@ -97,8 +97,8 @@ interface IExpressionProvider
     /**
      * Call-back for function call expression.
      *
-     * @param string        $functionDescription Description of the function
-     * @param array<string> $params              Arguments to the functions
+     * @param string $functionDescription Description of the function
+     * @param array<string> $params Arguments to the functions
      *
      * @return string
      */
