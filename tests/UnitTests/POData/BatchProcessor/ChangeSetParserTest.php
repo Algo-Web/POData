@@ -181,7 +181,7 @@ Content-ID: 2
         // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
         // before proceeding to equality check
         $result[-1]->Request = null;
-        $result[2]->Request = null;
+        $result[2]->Request  = null;
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[2]);
     }

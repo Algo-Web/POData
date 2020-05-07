@@ -13,7 +13,7 @@ use POData\ObjectModel\ODataProperty;
 use POData\Readers\Atom\AtomODataReader;
 
 /**
- * Class AtomODataReaderTest
+ * Class AtomODataReaderTest.
  * @package UnitTests\POData\Readers\Atom
  */
 class AtomODataReaderTest extends TestCase

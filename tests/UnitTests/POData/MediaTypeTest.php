@@ -9,7 +9,7 @@ use POData\MediaType;
 use UnitTests\POData\TestCase;
 
 /**
- * Class MediaTypeTest
+ * Class MediaTypeTest.
  * @package UnitTests\POData
  */
 class MediaTypeTest extends TestCase
@@ -25,7 +25,7 @@ class MediaTypeTest extends TestCase
         $foo = new MediaType('*', '*', []);
 
         $expected = 0;
-        $actual = $foo->getMatchingRating('application/json');
+        $actual   = $foo->getMatchingRating('application/json');
         $this->assertEquals($expected, $actual);
     }
 
@@ -34,7 +34,7 @@ class MediaTypeTest extends TestCase
         $foo = new MediaType('application', '*', []);
 
         $expected = 1;
-        $actual = $foo->getMatchingRating('application/json');
+        $actual   = $foo->getMatchingRating('application/json');
         $this->assertEquals($expected, $actual);
     }
 }

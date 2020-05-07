@@ -11,7 +11,7 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataTitle;
 
 /**
- * Class FeedProcessor
+ * Class FeedProcessor.
  * @package POData\Readers\Atom\Processors
  */
 class FeedProcessor extends BaseNodeHandler

@@ -13,7 +13,7 @@ use POData\Readers\Atom\Processors\BaseNodeHandler;
 use SplStack;
 
 /**
- * Class PropertyProcessor
+ * Class PropertyProcessor.
  * @package POData\Readers\Atom\Processors\Entry
  */
 class PropertyProcessor extends BaseNodeHandler

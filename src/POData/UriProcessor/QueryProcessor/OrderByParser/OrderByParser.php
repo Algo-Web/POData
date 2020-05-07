@@ -211,7 +211,7 @@ class OrderByParser
                     );
                 }
                 /** @var ResourcePropertyKind $rKind */
-                $rKind = $resourceProperty->getKind();
+                $rKind   = $resourceProperty->getKind();
                 $rawKind = ($rKind instanceof ResourcePropertyKind) ? $rKind->getValue() : $rKind;
 
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG())) {
@@ -493,8 +493,8 @@ class OrderByParser
     }
 
     /**
-     * @param ResourceProperty $resourceProperty
-     * @param ResourceType $resourceType
+     * @param  ResourceProperty $resourceProperty
+     * @param  ResourceType     $resourceType
      * @throws ODataException
      */
     private function throwBadAccessOrInitException(

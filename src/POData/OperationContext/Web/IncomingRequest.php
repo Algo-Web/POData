@@ -69,12 +69,12 @@ class IncomingRequest implements IHTTPRequest
      * Initialize a new instance of IHTTPRequest.
      *
      * @param HttpRequestMethod|null $method
-     * @param array $queryOptions
-     * @param array $queryOptionsCount
-     * @param array $headers
-     * @param string|null $queryString
-     * @param string|null $rawInput
-     * @param string|null $rawUrl
+     * @param array                  $queryOptions
+     * @param array                  $queryOptionsCount
+     * @param array                  $headers
+     * @param string|null            $queryString
+     * @param string|null            $rawInput
+     * @param string|null            $rawUrl
      */
     public function __construct(
         HTTPRequestMethod $method = null,
@@ -165,7 +165,7 @@ class IncomingRequest implements IHTTPRequest
             }
 
             $rawHost = $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)] ?? '';
-            $rawUri = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
+            $rawUri  = $_SERVER[ODataConstants::HTTPREQUEST_URI] ?? '';
             $this->rawUrl .= '://' . $rawHost;
             $this->rawUrl .= utf8_decode(urldecode($rawUri));
         }
@@ -204,7 +204,7 @@ class IncomingRequest implements IHTTPRequest
     {
         if (null === $this->queryString) {
             if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-                $rawString = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
+                $rawString         = $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING] ?? '';
                 $this->queryString = utf8_decode(trim($rawString));
             } else {
                 $this->queryString = '';

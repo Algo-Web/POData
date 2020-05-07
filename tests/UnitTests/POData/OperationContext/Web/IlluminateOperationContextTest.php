@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 7/05/20
- * Time: 9:32 PM
+ * Time: 9:32 PM.
  */
-
 namespace UnitTests\POData\OperationContext\Web;
 
 use AlgoWeb\ODataMetadata\Tests\TestCase;

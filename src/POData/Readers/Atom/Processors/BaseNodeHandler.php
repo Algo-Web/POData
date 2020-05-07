@@ -11,7 +11,7 @@ use POData\Common\ODataConstants;
 use SplStack;
 
 /**
- * Class BaseNodeHandler
+ * Class BaseNodeHandler.
  * @package POData\Readers\Atom\Processors
  */
 abstract class BaseNodeHandler
@@ -123,7 +123,7 @@ abstract class BaseNodeHandler
     }
 
     /**
-     * @param Closure $closure
+     * @param  Closure $closure
      * @return Closure
      */
     protected function bindHere(Closure $closure)

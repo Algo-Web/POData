@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 15/03/20
- * Time: 12:08 AM
+ * Time: 12:08 AM.
  */
-
 namespace UnitTests\POData\Readers\Atom;
 
 use POData\Common\ODataConstants;
@@ -15,7 +16,7 @@ use POData\Readers\Atom\Processors\Entry\LinkProcessor;
 use UnitTests\POData\TestCase;
 
 /**
- * Class LinkProcessorTest
+ * Class LinkProcessorTest.
  * @package UnitTests\POData\Readers\Atom
  */
 class LinkProcessorTest extends TestCase
@@ -39,7 +40,7 @@ class LinkProcessorTest extends TestCase
             [strtoupper(ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME) =>
                 ODataConstants::ATOM_EDIT_MEDIA_RELATION_ATTRIBUTE_VALUE];
 
-        $foo = new LinkProcessor($parms);
+        $foo    = new LinkProcessor($parms);
         $result = $foo->getObjetModelObject();
         $this->assertTrue($result instanceof ODataMediaLink);
     }

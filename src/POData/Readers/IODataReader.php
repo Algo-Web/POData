@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace POData\Readers;
 
 /**
- * Interface IODataReader
+ * Interface IODataReader.
  * @package POData\Readers
  */
 interface IODataReader

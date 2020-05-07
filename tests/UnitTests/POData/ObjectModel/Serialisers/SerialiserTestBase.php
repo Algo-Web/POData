@@ -19,15 +19,15 @@ use UnitTests\POData\TestCase;
 class SerialiserTestBase extends TestCase
 {
     /**
-     * @param string $method
-     * @return IncomingRequest
+     * @param  string              $method
      * @throws ReflectionException
+     * @return IncomingRequest
      */
     protected function setUpRequest(string $method = 'GET')
     {
         $verb = new HTTPRequestMethod($method);
 
-        $request = m::mock(IncomingRequest::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $request          = m::mock(IncomingRequest::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $request->headers = new HeaderBag(['CONTENT_TYPE' => 'application/atom+xml']);
         $request->shouldReceive('getMethod')->andReturn($verb);
         $request->shouldReceive('getBaseUrl')->andReturn('http://localhost/');

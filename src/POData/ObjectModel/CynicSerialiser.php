@@ -847,11 +847,11 @@ class CynicSerialiser implements IObjectSerialiser
     }
 
     /**
-     * @param QueryResult                $entryObject
-     * @param ResourceProperty           $prop
-     * @param ODataLink                  $nuLink
-     * @param ResourcePropertyKind       $propKind
-     * @param string                     $propName
+     * @param  QueryResult               $entryObject
+     * @param  ResourceProperty          $prop
+     * @param  ODataLink                 $nuLink
+     * @param  ResourcePropertyKind      $propKind
+     * @param  string                    $propName
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \ReflectionException
@@ -1100,7 +1100,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Is the supplied resourceKind representing a primitive value?
      *
-     * @param  int|ResourcePropertyKind  $resourceKind
+     * @param  int|ResourcePropertyKind $resourceKind
      * @return bool
      */
     public static function isMatchPrimitive($resourceKind): bool

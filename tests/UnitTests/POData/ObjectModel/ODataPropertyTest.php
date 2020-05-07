@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 14/03/20
- * Time: 8:34 PM
+ * Time: 8:34 PM.
  */
-
 namespace UnitTests\POData\ObjectModel;
 
 use POData\ObjectModel\ODataProperty;
@@ -22,7 +23,7 @@ class ODataPropertyTest extends TestCase
 
     public function testIsNotNull()
     {
-        $foo = new ODataProperty();
+        $foo        = new ODataProperty();
         $foo->value = 'var';
 
         $this->assertNull($foo->isNull());

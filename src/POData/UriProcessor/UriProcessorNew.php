@@ -82,7 +82,7 @@ class UriProcessorNew implements IUriProcessor
     /**
      * Constructs a new instance of UriProcessor.
      *
-     * @param  IService                                         $service Reference to the data service instance
+     * @param  IService                          $service Reference to the data service instance
      * @throws InvalidOperationException
      * @throws ODataException
      * @throws \POData\Common\UrlFormatException

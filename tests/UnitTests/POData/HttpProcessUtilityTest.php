@@ -570,9 +570,9 @@ class HttpProcessUtilityTest extends TestCase
 
     public function testNonHttpHeaderName()
     {
-        $input = 'name';
+        $input    = 'name';
         $expected = 'NAME';
-        $actual = HttpProcessUtility::headerToServerKey($input);
+        $actual   = HttpProcessUtility::headerToServerKey($input);
         $this->assertEquals($expected, $actual);
     }
 

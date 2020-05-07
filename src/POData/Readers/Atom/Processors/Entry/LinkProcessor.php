@@ -14,7 +14,7 @@ use POData\ObjectModel\ODataMediaLink;
 use POData\Readers\Atom\Processors\BaseNodeHandler;
 
 /**
- * Class LinkProcessor
+ * Class LinkProcessor.
  * @package POData\Readers\Atom\Processors\Entry
  */
 class LinkProcessor extends BaseNodeHandler
