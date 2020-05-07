@@ -26,7 +26,6 @@ class ResourcePathProcessor
      * @param IService $service Reference to the data service instance
      *
      * @throws ODataException                                   If any exception occurs while processing the segments
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \POData\Common\InvalidOperationException
      *                                                          or in case of any version incompatibility
      * @throws \POData\Common\UrlFormatException

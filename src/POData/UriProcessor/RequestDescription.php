@@ -234,7 +234,6 @@ class RequestDescription
      * @param  IHTTPRequest|null                                $payload
      * @param  ODataReaderRegistry                              $readerRegistry
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function __construct(
         array $segmentDescriptors,

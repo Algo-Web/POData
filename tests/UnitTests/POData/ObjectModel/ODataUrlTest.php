@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\ObjectModel;
 
-use Carbon\Carbon;
 use Mockery as m;
 use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataLink;

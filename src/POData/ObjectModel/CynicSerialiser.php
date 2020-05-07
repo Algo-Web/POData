@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
@@ -90,7 +89,7 @@ class CynicSerialiser implements IObjectSerialiser
 
     /*
      * Update time to insert into ODataEntry/ODataFeed fields
-     * @var Carbon;
+     * @var \DateTime;
      */
     private $updated;
 
@@ -112,7 +111,7 @@ class CynicSerialiser implements IObjectSerialiser
         $this->absoluteServiceUriWithSlash   = rtrim($this->absoluteServiceUri, '/') . '/';
         $this->stack                         = new SegmentStack($request);
         $this->complexTypeInstanceCollection = [];
-        $this->updated                       = Carbon::now();
+        $this->updated                       = DateTime::now();
     }
 
     /**
@@ -563,7 +562,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * Get update timestamp.
      *
-     * @return Carbon
+     * @return \DateTime
      */
     public function getUpdated()
     {
