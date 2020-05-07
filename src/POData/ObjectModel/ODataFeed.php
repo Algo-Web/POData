@@ -59,8 +59,9 @@ class ODataFeed
      * @var string
      */
     public $baseURI;
+
     /**
-     * @return \POData\ObjectModel\ODataLink
+     * @return ODataLink
      */
     public function getNextPageLink()
     {
@@ -68,7 +69,7 @@ class ODataFeed
     }
 
     /**
-     * @param \POData\ObjectModel\ODataLink $nextPageLink
+     * @param ODataLink $nextPageLink
      */
     public function setNextPageLink(ODataLink $nextPageLink)
     {
@@ -81,7 +82,7 @@ class ODataFeed
     }
 
     /**
-     * @return \POData\ObjectModel\ODataEntry[]
+     * @return ODataEntry[]
      */
     public function getEntries()
     {
@@ -89,7 +90,7 @@ class ODataFeed
     }
 
     /**
-     * @param \POData\ObjectModel\ODataEntry[] $entries
+     * @param ODataEntry[] $entries
      */
     public function setEntries(array $entries)
     {

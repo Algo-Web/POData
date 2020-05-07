@@ -38,14 +38,14 @@ class MediaType
     /**
      * Constructs a new instance of Media Type.
      *
-     * @param string $type       The type of media type
-     * @param string $subType    The sub type of media type
-     * @param array  $parameters The parameters associated with media type
+     * @param string $type The type of media type
+     * @param string $subType The sub type of media type
+     * @param array $parameters The parameters associated with media type
      */
     public function __construct($type, $subType, array $parameters)
     {
-        $this->type       = $type;
-        $this->subType    = $subType;
+        $this->type = $type;
+        $this->subType = $subType;
         $this->parameters = $parameters;
     }
 
@@ -84,12 +84,12 @@ class MediaType
      */
     public function getMatchingRating(?string $candidate): int
     {
-        $result    = -1;
+        $result = -1;
         $candidate = $candidate ?? '';
         if (strlen($candidate) > 0) {
             //get the odata parameter (if there is one)
             $candidateODataValue = null;
-            $candidateParts      = explode(';', $candidate);
+            $candidateParts = explode(';', $candidate);
             if (count($candidateParts) > 1) {
                 //is it safe to assume the mime type is always the first part?
                 $candidate = array_shift($candidateParts); //move off the first type matcher
@@ -152,9 +152,9 @@ class MediaType
     /**
      * Gets the quality factor associated with this media type.
      *
-     * @throws Common\HttpHeaderFailure
      * @return int                      The value associated with 'q' parameter (0-1000),
      *                                  if absent return 1000
+     * @throws Common\HttpHeaderFailure
      */
     public function getQualityValue()
     {
@@ -162,7 +162,7 @@ class MediaType
             foreach ($parameter as $key => $value) {
                 if (strcasecmp($key, 'q') === 0) {
                     $textIndex = 0;
-                    $result    = HttpProcessUtility::readQualityValue(
+                    $result = HttpProcessUtility::readQualityValue(
                         $value,
                         $textIndex
                     );

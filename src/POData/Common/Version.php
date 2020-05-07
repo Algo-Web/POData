@@ -9,13 +9,14 @@ namespace POData\Common;
  */
 class Version
 {
+    /** @var Version[] */
+    private static $fixedVersion = null;
     /**
      * The major component of the version.
      *
      * @var int
      */
     private $major;
-
     /**
      * The minor component of the version.
      *
@@ -33,6 +34,50 @@ class Version
     {
         $this->major = $major;
         $this->minor = $minor;
+    }
+
+    /**
+     * @return Version
+     */
+    public static function v1()
+    {
+        self::fillVersions();
+
+        return self::$fixedVersion[1];
+    }
+
+    private static function fillVersions()
+    {
+        if (null == self::$fixedVersion) {
+            self::$fixedVersion = [1 => new self(1, 0), 2 => new self(2, 0), 3 => new self(3, 0)];
+        }
+    }
+
+    /**
+     * @return Version
+     */
+    public static function v2()
+    {
+        self::fillVersions();
+
+        return self::$fixedVersion[2];
+    }
+
+    /**
+     * @return Version
+     */
+    public static function v3()
+    {
+        self::fillVersions();
+
+        return self::$fixedVersion[3];
+    }
+
+    //Is there a better way to do static const of complex type?
+
+    public static function reset()
+    {
+        self::$fixedVersion = null;
     }
 
     /**
@@ -115,52 +160,5 @@ class Version
     public function toString()
     {
         return $this->major . '.' . $this->minor;
-    }
-
-    //Is there a better way to do static const of complex type?
-
-    /** @var Version[] */
-    private static $fixedVersion = null;
-
-    private static function fillVersions()
-    {
-        if (null == self::$fixedVersion) {
-            self::$fixedVersion = [1 => new self(1, 0), 2 => new self(2, 0), 3 => new self(3, 0)];
-        }
-    }
-
-    /**
-     * @return Version
-     */
-    public static function v1()
-    {
-        self::fillVersions();
-
-        return self::$fixedVersion[1];
-    }
-
-    /**
-     * @return Version
-     */
-    public static function v2()
-    {
-        self::fillVersions();
-
-        return self::$fixedVersion[2];
-    }
-
-    /**
-     * @return Version
-     */
-    public static function v3()
-    {
-        self::fillVersions();
-
-        return self::$fixedVersion[3];
-    }
-
-    public static function reset()
-    {
-        self::$fixedVersion = null;
     }
 }

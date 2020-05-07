@@ -38,9 +38,9 @@ trait skipTokenParser
      * Format a message to show error when number of keys in the
      * skiptoken does not matches with the number of keys required for ordering.
      *
-     * @param int    $skipTokenValuesCount Number of keys in the skiptoken
-     * @param string $skipToken            The skiptoken as string
-     * @param int    $expectedCount        Expected number of skiptoken keys
+     * @param int $skipTokenValuesCount Number of keys in the skiptoken
+     * @param string $skipToken The skiptoken as string
+     * @param int $expectedCount Expected number of skiptoken keys
      *
      * @return string The formatted message
      */
@@ -48,9 +48,10 @@ trait skipTokenParser
         $skipTokenValuesCount,
         $skipToken,
         $expectedCount
-    ) {
+    )
+    {
         return 'The number of keys \'' . $skipTokenValuesCount . '\' in skip token with value \'' . $skipToken .
-               '\' did not match the number of ordering constraints \'' . $expectedCount . '\' for the resource type.';
+            '\' did not match the number of ordering constraints \'' . $expectedCount . '\' for the resource type.';
     }
 
     /**
@@ -71,9 +72,9 @@ trait skipTokenParser
      * skiptoken which is not compatible with the
      * type of corresponding orderby constraint.
      *
-     * @param string $skipToken                   Skip token
-     * @param string $expectedTypeName            Expected type name
-     * @param int    $position                    Position
+     * @param string $skipToken Skip token
+     * @param string $expectedTypeName Expected type name
+     * @param int $position Position
      * @param string $typeProvidedInSkipTokenName The type provided in
      *                                            skip token name
      *
@@ -84,9 +85,10 @@ trait skipTokenParser
         $expectedTypeName,
         $position,
         $typeProvidedInSkipTokenName
-    ) {
+    )
+    {
         return 'The skiptoken value \'' . $skipToken . '\' contains a value of type \'' . $typeProvidedInSkipTokenName
-                . '\' at position ' . $position . ' which is not compatible with the type \'' . $expectedTypeName
-                . '\' of corresponding orderby constraint.';
+            . '\' at position ' . $position . ' which is not compatible with the type \'' . $expectedTypeName
+            . '\' of corresponding orderby constraint.';
     }
 }

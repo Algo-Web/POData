@@ -26,7 +26,7 @@ trait metadataWriter
      * found for a navigation property.
      *
      * @param string $navigationPropertyName The name of the navigation property
-     * @param string $resourceTypeName       The resource type on which the
+     * @param string $resourceTypeName The resource type on which the
      *                                       navigation property is defined
      *
      * @return string The formatted message
@@ -34,9 +34,10 @@ trait metadataWriter
     public static function metadataWriterNoResourceAssociationSetForNavigationProperty(
         $navigationPropertyName,
         $resourceTypeName
-    ) {
+    )
+    {
         return 'No visible ResourceAssociationSet found for navigation property \'' . $navigationPropertyName .
-                '\' on type \'' . $resourceTypeName . '\'. There must be at least one ResourceAssociationSet for' .
-                ' each navigation property.';
+            '\' on type \'' . $resourceTypeName . '\'. There must be at least one ResourceAssociationSet for' .
+            ' each navigation property.';
     }
 }

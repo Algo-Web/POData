@@ -19,7 +19,7 @@ trait expandProjectionParser
     public static function expandedProjectionNodeArgumentTypeShouldBeProjection()
     {
         return 'The argument to ExpandedProjectionNode::addNode should be either ProjectionNode or'
-                . ' ExpandedProjectionNode';
+            . ' ExpandedProjectionNode';
     }
 
     /**
@@ -27,9 +27,9 @@ trait expandProjectionParser
      * resolve a property in select or expand path.
      *
      * @param string $resourceTypeName The name of resource type
-     * @param string $propertyName     Sub path segment, that comes after
+     * @param string $propertyName Sub path segment, that comes after
      *                                 the segment of type  $resourceTypeName
-     * @param bool   $isSelect         True if error found while parsing select
+     * @param bool $isSelect True if error found while parsing select
      *                                 clause, false for expand
      *
      * @return string The formatted message
@@ -39,7 +39,7 @@ trait expandProjectionParser
         $clause = $isSelect ? 'select' : 'expand';
 
         return 'Error in the ' . $clause . ' clause. Type \'' . $resourceTypeName . '\' does not have ' .
-               'a property named \'' . $propertyName . '\'.';
+            'a property named \'' . $propertyName . '\'.';
     }
 
     /**
@@ -47,21 +47,21 @@ trait expandProjectionParser
      * contain non-navigation property.
      *
      * @param string $resourceTypeName The resource type name
-     * @param string $propertyName     The property name
+     * @param string $propertyName The property name
      *
      * @return string The formatted message
      */
     public static function expandProjectionParserExpandCanOnlyAppliedToEntity($resourceTypeName, $propertyName)
     {
         return 'Error in the expand clause. Expand path can contain only navigation property, the property ' .
-                '\'' . $propertyName . '\' defined in \'' . $resourceTypeName . '\' is not a navigation property';
+            '\'' . $propertyName . '\' defined in \'' . $resourceTypeName . '\' is not a navigation property';
     }
 
     /**
      * Format a message to show error when a primitive property is used as
      * navigation property in select clause.
      *
-     * @param string $resourceTypeName      The resource type on which the primitive property defined
+     * @param string $resourceTypeName The resource type on which the primitive property defined
      * @param string $primitivePropertyName The primitive property used as navigation property
      *
      * @return string The formatted message
@@ -69,9 +69,10 @@ trait expandProjectionParser
     public static function expandProjectionParserPrimitivePropertyUsedAsNavigationProperty(
         $resourceTypeName,
         $primitivePropertyName
-    ) {
+    )
+    {
         return 'Property \'' . $primitivePropertyName . '\' on type \'' . $resourceTypeName
-                . '\' is of primitive type and cannot be used as a navigation property.';
+            . '\' is of primitive type and cannot be used as a navigation property.';
     }
 
     /**
@@ -80,16 +81,17 @@ trait expandProjectionParser
      *
      * @param string $resourceTypeName The name of the resource type on which
      *                                 complex property is defined
-     * @param string $complexTypeName  The name of complex type
+     * @param string $complexTypeName The name of complex type
      *
      * @return string The formatted message
      */
     public static function expandProjectionParserComplexPropertyAsInnerSelectSegment(
         $resourceTypeName,
         $complexTypeName
-    ) {
+    )
+    {
         return 'select doesn\'t support selection of properties of complex type. The property \'' . $complexTypeName
-                . '\' on type \'' . $resourceTypeName . '\' is a complex type.';
+            . '\' on type \'' . $resourceTypeName . '\' is a complex type.';
     }
 
     /**
@@ -98,14 +100,14 @@ trait expandProjectionParser
      *
      * @param string $resourceTypeName The name of the resource type on which
      *                                 bag property is defined
-     * @param string $bagPropertyName  The name of the bag property
+     * @param string $bagPropertyName The name of the bag property
      *
      * @return string The formatted message
      */
     public static function expandProjectionParserBagPropertyAsInnerSelectSegment($resourceTypeName, $bagPropertyName)
     {
         return 'The selection from property \'' . $bagPropertyName . '\' on type \'' . $resourceTypeName
-                . '\' is not valid. The select query option does not support selection items from a bag property.';
+            . '\' is not valid. The select query option does not support selection items from a bag property.';
     }
 
     /**
@@ -131,6 +133,6 @@ trait expandProjectionParser
     public static function expandProjectionParserPropertyWithoutMatchingExpand($propertyName)
     {
         return 'Only navigation properties specified in expand option can be traversed in select option.  In order to'
-                . ' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
+            . ' traverse the navigation property \'' . $propertyName . '\', it should be first expanded';
     }
 }

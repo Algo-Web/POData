@@ -26,7 +26,7 @@ class Scope
      */
     public function __construct($type)
     {
-        $this->type        = $type;
+        $this->type = $type;
         $this->objectCount = 0;
     }
 }

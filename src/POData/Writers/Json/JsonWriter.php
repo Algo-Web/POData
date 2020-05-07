@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace POData\Writers\Json;
 
 use Carbon\Carbon;
+use DateTimeZone;
+use Exception;
 
 /**
  * Class JsonWriter.
@@ -72,6 +74,34 @@ class JsonWriter
     }
 
     /**
+     * Start the scope given the scope type.
+     *
+     * @param int $type scope type
+     */
+    private function startScope($type)
+    {
+        if (0 != count($this->scopes)) {
+            $currentScope = end($this->scopes);
+            if (($currentScope->type == $this->scopeType['Array']) && (0 != $currentScope->objectCount)) {
+                $this->writer->writeTrimmed(', ');
+            }
+
+            ++$currentScope->objectCount;
+        }
+
+        $scope = new Scope($type);
+        array_push($this->scopes, $scope);
+
+        if ($type == $this->scopeType['Array']) {
+            $this->writer->writeValue('[');
+        } else {
+            $this->writer->writeValue('{');
+        }
+
+        $this->writer->increaseIndent()->writeLine();
+    }
+
+    /**
      * Start the object scope.
      *
      * @return JsonWriter
@@ -108,13 +138,42 @@ class JsonWriter
     }
 
     /**
+     * Write the string value with/without quotes.
+     *
+     * @param string $text value to be written
+     * @param bool $quotes put quotes around the value if this value is true
+     */
+    private function writeCore($text, $quotes)
+    {
+        if (0 != count($this->scopes)) {
+            $currentScope = end($this->scopes);
+            if ($currentScope->type == $this->scopeType['Array']) {
+                if (0 != $currentScope->objectCount) {
+                    $this->writer->writeTrimmed(', ');
+                }
+
+                ++$currentScope->objectCount;
+            }
+        }
+
+        if ($quotes && 'null' !== $text) {
+            $this->writer->writeValue('"');
+        }
+
+        $this->writer->writeValue($text);
+        if ($quotes && 'null' !== $text) {
+            $this->writer->writeValue('"');
+        }
+    }
+
+    /**
      * JSON write a basic data type (string, number, boolean, null).
      *
-     * @param mixed       $value value to be written
-     * @param string|null $type  data type of the value
+     * @param mixed $value value to be written
+     * @param string|null $type data type of the value
      *
-     * @throws \Exception
      * @return JsonWriter
+     * @throws Exception
      */
     public function writeValue($value, $type = null)
     {
@@ -145,8 +204,8 @@ class JsonWriter
                 break;
 
             case 'Edm.DateTime':
-                $dateTime          = new Carbon($value, new \DateTimeZone('UTC'));
-                $formattedDateTime = $dateTime->format('U')*1000;
+                $dateTime = new Carbon($value, new DateTimeZone('UTC'));
+                $formattedDateTime = $dateTime->format('U') * 1000;
                 $this->writeCore('/Date(' . $formattedDateTime . ')/', /* quotes */ true);
                 break;
 
@@ -185,70 +244,13 @@ class JsonWriter
     private function quoteJScriptString($string)
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
-        $search          = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
-        $replace         = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
+        $search = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
+        $replace = ['\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'];
         $processedString = str_replace($search, $replace, $string);
         // Escape some ASCII characters - namely, 0x08 and 0x0c
         $processedString = str_replace([chr(0x08), chr(0x0C)], ['\b', '\f'], $processedString);
 
         return $processedString;
-    }
-
-    /**
-     * Write the string value with/without quotes.
-     *
-     * @param string $text   value to be written
-     * @param bool   $quotes put quotes around the value if this value is true
-     */
-    private function writeCore($text, $quotes)
-    {
-        if (0 != count($this->scopes)) {
-            $currentScope = end($this->scopes);
-            if ($currentScope->type == $this->scopeType['Array']) {
-                if (0 != $currentScope->objectCount) {
-                    $this->writer->writeTrimmed(', ');
-                }
-
-                ++$currentScope->objectCount;
-            }
-        }
-
-        if ($quotes && 'null' !== $text) {
-            $this->writer->writeValue('"');
-        }
-
-        $this->writer->writeValue($text);
-        if ($quotes && 'null' !== $text) {
-            $this->writer->writeValue('"');
-        }
-    }
-
-    /**
-     * Start the scope given the scope type.
-     *
-     * @param int $type scope type
-     */
-    private function startScope($type)
-    {
-        if (0 != count($this->scopes)) {
-            $currentScope = end($this->scopes);
-            if (($currentScope->type == $this->scopeType['Array']) && (0 != $currentScope->objectCount)) {
-                $this->writer->writeTrimmed(', ');
-            }
-
-            ++$currentScope->objectCount;
-        }
-
-        $scope = new Scope($type);
-        array_push($this->scopes, $scope);
-
-        if ($type == $this->scopeType['Array']) {
-            $this->writer->writeValue('[');
-        } else {
-            $this->writer->writeValue('{');
-        }
-
-        $this->writer->increaseIndent()->writeLine();
     }
 
     /**

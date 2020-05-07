@@ -14,8 +14,8 @@ trait expressionParser
      * Format message for an operator's incompatible operands types.
      *
      * @param string $operator The operator
-     * @param string $str      The operand list separated by comma
-     * @param string $pos      Position at which operator with incompatible operands found
+     * @param string $str The operand list separated by comma
+     * @param string $pos Position at which operator with incompatible operands found
      *
      * @return string The formatted message
      */
@@ -28,50 +28,50 @@ trait expressionParser
      * Format message for an unsupported null operation.
      *
      * @param string $operator The operator
-     * @param int    $pos      Position at which operator with null operands found
+     * @param int $pos Position at which operator with null operands found
      *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportNull($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the \'null\''
-                . ' literal; only equality checks are supported';
+            . ' literal; only equality checks are supported';
     }
 
     /**
      * Format message for an unsupported guid operation.
      *
      * @param string $operator The operator
-     * @param int    $pos      Position at which operator with guid operands found
+     * @param int $pos Position at which operator with guid operands found
      *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportGuid($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Guid;'
-                . ' only equality checks are supported';
+            . ' only equality checks are supported';
     }
 
     /**
      * Format message for an unsupported binary operation.
      *
      * @param string $operator The operator
-     * @param int    $pos      Position at which operator with binary operands found
+     * @param int $pos Position at which operator with binary operands found
      *
      * @return string The formatted message
      */
     public static function expressionParserOperatorNotSupportBinary($operator, $pos)
     {
         return 'The operator \'' . $operator . '\' at position ' . $pos . ' is not supported for the Edm.Binary;'
-                . ' only equality checks are supported';
+            . ' only equality checks are supported';
     }
 
     /**
      * Format message for an unrecognized literal.
      *
-     * @param string $type    The expected literal type
+     * @param string $type The expected literal type
      * @param string $literal The malformed literal
-     * @param int    $pos     Position at which literal found
+     * @param int $pos Position at which literal found
      *
      * @return string The formatted message
      */
@@ -84,7 +84,7 @@ trait expressionParser
      * Format message for an unknown function-call.
      *
      * @param string $str The unknown function name
-     * @param int    $pos Position at which unknown function-call found
+     * @param int $pos Position at which unknown function-call found
      *
      * @return string The formatted message
      */
@@ -129,15 +129,15 @@ trait expressionParser
      * Format a message to show error when resourceset reference is
      * used in $filter query option.
      *
-     * @param string $property       The resourceset property used in query
+     * @param string $property The resourceset property used in query
      * @param string $parentProperty The parent resource of property
-     * @param int    $pos            Position at which resource set has been used
+     * @param int $pos Position at which resource set has been used
      *
      * @return string The formatted message
      */
     public static function expressionParserEntityCollectionNotAllowedInFilter($property, $parentProperty, $pos)
     {
         return 'The \'' . $property . '\' is an entity collection property of \'' . $parentProperty .
-               '\' (position: ' . $pos . '), which cannot be used in $filter query option';
+            '\' (position: ' . $pos . '), which cannot be used in $filter query option';
     }
 }

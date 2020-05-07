@@ -18,7 +18,7 @@ trait providersWrapper
     public static function providersWrapperNull()
     {
         return 'For custom providers, GetService should not return null for both IMetadataProvider and'
-                . ' IQueryProvider types.';
+            . ' IQueryProvider types.';
     }
 
     /**
@@ -41,7 +41,7 @@ trait providersWrapper
     public static function providersWrapperInvalidExpressionProviderInstance()
     {
         return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation'
-                . ' of IExpressionProvider';
+            . ' of IExpressionProvider';
     }
 
     /**
@@ -78,7 +78,7 @@ trait providersWrapper
     public static function providersWrapperEntitySetNameShouldBeUnique($entitySetName)
     {
         return 'More than one entity set with the name \'' . $entitySetName
-                . '\' was found. Entity set names must be unique';
+            . '\' was found. Entity set names must be unique';
     }
 
     /**
@@ -92,15 +92,15 @@ trait providersWrapper
     public static function providersWrapperEntityTypeNameShouldBeUnique($entityTypeName)
     {
         return 'More than one entity type with the name \'' . $entityTypeName
-                . '\' was found. Entity type names must be unique';
+            . '\' was found. Entity type names must be unique';
     }
 
     /**
      * Format a message to show error when IDSMP::getResourceSet
      * returns inconsistent instance of ResourceSet.
      *
-     * @param string $resourceSetName      Name of the resource set
-     * @param string $resourceTypeName     Name of the resource type
+     * @param string $resourceSetName Name of the resource set
+     * @param string $resourceTypeName Name of the resource type
      * @param string $resourcePropertyName Name of the navigation property
      *
      * @return string The formatted message
@@ -109,10 +109,11 @@ trait providersWrapper
         $resourceSetName,
         $resourceTypeName,
         $resourcePropertyName
-    ) {
+    )
+    {
         return 'IDSMP::GetResourceSet returns invalid instance of ResourceSet when invoked with params' .
-                ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
-                . ', ResourceProperty with name ' . $resourcePropertyName . '}.';
+            ' {ResourceSet with name ' . $resourceSetName . ', ResourceType with name ' . $resourceTypeName
+            . ', ResourceProperty with name ' . $resourcePropertyName . '}.';
     }
 
     /**
@@ -120,14 +121,14 @@ trait providersWrapper
      * returns an instance which is not an instance of expected entity instance.
      *
      * @param string $entityTypeName The name of expected entity type
-     * @param string $methodName     Method name
+     * @param string $methodName Method name
      *
      * @return string The formatted message
      */
     public static function providersWrapperIDSQPMethodReturnsUnExpectedType($entityTypeName, $methodName)
     {
         return 'The implementation of the method ' . $methodName . ' must return an instance of type described'
-                . ' by resource set\'s type(' . $entityTypeName . ') or null if resource does not exist.';
+            . ' by resource set\'s type(' . $entityTypeName . ') or null if resource does not exist.';
     }
 
     /**

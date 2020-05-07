@@ -44,7 +44,7 @@ class IndentedTextWriter
      */
     public function __construct($writer)
     {
-        $this->result    = $writer;
+        $this->result = $writer;
         $this->tabString = '    ';
     }
 
@@ -61,6 +61,27 @@ class IndentedTextWriter
         $this->write($value);
 
         return $this;
+    }
+
+    /**
+     * Writes the tabs depending on the indent level.
+     */
+    private function outputTabs()
+    {
+        if ($this->tabsPending) {
+            $this->write(str_repeat($this->tabString, $this->indentLevel));
+            $this->tabsPending = false;
+        }
+    }
+
+    /**
+     * Writes the value to the text stream.
+     *
+     * @param string $value value to be written
+     */
+    private function write($value)
+    {
+        $this->result .= $value;
     }
 
     /**
@@ -123,26 +144,5 @@ class IndentedTextWriter
     public function getResult()
     {
         return str_replace("\n", PHP_EOL, $this->result);
-    }
-
-    /**
-     * Writes the tabs depending on the indent level.
-     */
-    private function outputTabs()
-    {
-        if ($this->tabsPending) {
-            $this->write(str_repeat($this->tabString, $this->indentLevel));
-            $this->tabsPending = false;
-        }
-    }
-
-    /**
-     * Writes the value to the text stream.
-     *
-     * @param string $value value to be written
-     */
-    private function write($value)
-    {
-        $this->result .= $value;
     }
 }

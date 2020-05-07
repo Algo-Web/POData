@@ -31,7 +31,7 @@ trait queryProcessor
     public static function queryProcessorNoQueryOptionsApplicable()
     {
         return 'Query options $select, $expand, $filter, $orderby, $inlinecount, $skip, $skiptoken and $top are not' .
-               ' supported by this request method or cannot be applied to the requested resource.';
+            ' supported by this request method or cannot be applied to the requested resource.';
     }
 
     /**
@@ -107,7 +107,7 @@ trait queryProcessor
      * Format a message to show error when query processor found invalid
      * value for a query option.
      *
-     * @param string $argName  The name of the argument
+     * @param string $argName The name of the argument
      * @param string $argValue The value of the argument
      *
      * @return string The formatted message
@@ -128,7 +128,7 @@ trait queryProcessor
     public static function queryProcessorSkipTokenCannotBeAppliedForNonPagedResourceSet($resourceSetName)
     {
         return '$skiptoken cannot be applied to the resource set \'' . $resourceSetName
-               . '\', since paging is not enabled for this resource set';
+            . '\', since paging is not enabled for this resource set';
     }
 
     /**

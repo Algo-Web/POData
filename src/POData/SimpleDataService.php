@@ -21,6 +21,7 @@ use POData\Providers\Stream\SimpleStreamProvider;
  **/
 class SimpleDataService extends BaseService implements IService
 {
+    public $maxPageSize = 400;
     /**
      * @var IMetadataProvider
      */
@@ -29,20 +30,18 @@ class SimpleDataService extends BaseService implements IService
      * @var IQueryProvider
      */
     protected $queryProvider;
-
     /**
      * @var IStreamProvider2;
      */
     protected $streamProvider;
-    public $maxPageSize = 400;
 
     /**
      * SimpleDataService constructor.
      * @param $db
-     * @param  SimpleMetadataProvider $metaProvider
-     * @param  ServiceHost            $host
-     * @param  IObjectSerialiser|null $serialiser
-     * @param  IStreamProvider2|null  $streamProvider
+     * @param SimpleMetadataProvider $metaProvider
+     * @param ServiceHost $host
+     * @param IObjectSerialiser|null $serialiser
+     * @param IStreamProvider2|null $streamProvider
      * @throws ODataException
      */
     public function __construct(
@@ -51,13 +50,14 @@ class SimpleDataService extends BaseService implements IService
         ServiceHost $host,
         IObjectSerialiser $serialiser = null,
         IStreamProvider2 $streamProvider = null
-    ) {
+    )
+    {
         $this->metaProvider = $metaProvider;
         if ($db instanceof IQueryProvider) {
             $this->queryProvider = $db;
         } elseif (!empty($db->queryProviderClassName)) {
             $queryProviderClassName = $db->queryProviderClassName;
-            $this->queryProvider    = new $queryProviderClassName($db);
+            $this->queryProvider = new $queryProviderClassName($db);
         } else {
             throw new ODataException('Invalid query provider supplied', 500);
         }
@@ -65,6 +65,15 @@ class SimpleDataService extends BaseService implements IService
 
         $this->setHost($host);
         parent::__construct($serialiser);
+    }
+
+    /**
+     * @param IStreamProvider2|null $streamProvider
+     * @return void
+     */
+    public function setStreamProvider(IStreamProvider2 $streamProvider = null)
+    {
+        $this->streamProvider = (null == $streamProvider) ? new SimpleStreamProvider() : $streamProvider;
     }
 
     /**
@@ -95,14 +104,6 @@ class SimpleDataService extends BaseService implements IService
         return $this->metaProvider;
     }
 
-    /**
-     * @param  IStreamProvider2|null $streamProvider
-     * @return void
-     */
-    public function setStreamProvider(IStreamProvider2 $streamProvider = null)
-    {
-        $this->streamProvider = (null == $streamProvider) ? new SimpleStreamProvider() : $streamProvider;
-    }
     /**
      * @return IStreamProvider2
      */

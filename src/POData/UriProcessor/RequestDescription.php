@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use POData\Common\Messages;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
@@ -34,6 +35,18 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
 class RequestDescription
 {
     /**
+     * Collection of known data service versions.
+     *
+     * @var Version[]
+     */
+    private static $knownDataServiceVersions = null;
+    /**
+     * The count option specified in the request.
+     *
+     * @var QueryType
+     */
+    public $queryType;
+    /**
      * Holds the value of HTTP 'DataServiceVersion' header in the request,
      * DataServiceVersion header value states the version of the
      * Open Data Protocol used by the client to generate the request.
@@ -42,7 +55,6 @@ class RequestDescription
      * @var Version
      */
     private $requestVersion = null;
-
     /**
      * Holds the value of HTTP 'MaxDataServiceVersion' header in the request,
      * MaxDataServiceVersion header value specifies the maximum version number
@@ -52,7 +64,6 @@ class RequestDescription
      * @var Version
      */
     private $requestMaxVersion = null;
-
     /**
      * This is the value of 'DataServiceVersion' header to be output in the response. this header
      * value states the OData version the server used to generate the response.
@@ -66,7 +77,6 @@ class RequestDescription
      * @var Version
      */
     private $requiredMinResponseVersion;
-
     /**
      * The minimum client version requirement, This value keeps getting updated
      * during processing of query, this is compared against the
@@ -77,22 +87,12 @@ class RequestDescription
      * @var Version
      */
     private $requiredMinRequestVersion;
-
     /** @var Version */
     private $maxServiceVersion;
-
-    /**
-     * Collection of known data service versions.
-     *
-     * @var Version[]
-     */
-    private static $knownDataServiceVersions = null;
-
     /**
      * @var Url
      */
     private $requestUrl;
-
     /**
      * Collection of SegmentDescriptor containing information about
      * each segment in the resource path part of the request uri.
@@ -100,28 +100,18 @@ class RequestDescription
      * @var SegmentDescriptor[]
      */
     private $segments;
-
     /**
      * Holds reference to the last segment descriptor.
      *
      * @var SegmentDescriptor
      */
     private $lastSegment;
-
     /**
      * The name of the container for results.
      *
      * @var string|null
      */
     private $containerName;
-
-    /**
-     * The count option specified in the request.
-     *
-     * @var QueryType
-     */
-    public $queryType;
-
     /**
      * Number of segments.
      *
@@ -224,17 +214,17 @@ class RequestDescription
     private $readerRegistry;
 
     /**
-     * @param  SegmentDescriptor[]                              $segmentDescriptors Description of segments
+     * @param SegmentDescriptor[] $segmentDescriptors Description of segments
      *                                                                              in the resource path
-     * @param  Url                                              $requestUri
-     * @param  Version                                          $serviceMaxVersion
-     * @param  string|null                                      $requestVersion
-     * @param  string|null                                      $maxRequestVersion
-     * @param  string|null                                      $dataType
-     * @param  IHTTPRequest|null                                $payload
-     * @param  ODataReaderRegistry                              $readerRegistry
+     * @param Url $requestUri
+     * @param Version $serviceMaxVersion
+     * @param string|null $requestVersion
+     * @param string|null $maxRequestVersion
+     * @param string|null $dataType
+     * @param IHTTPRequest|null $payload
+     * @param ODataReaderRegistry $readerRegistry
      * @throws ODataException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws AnnotationException
      */
     public function __construct(
         array $segmentDescriptors,
@@ -245,13 +235,14 @@ class RequestDescription
         $dataType = null,
         IHTTPRequest $payload = null,
         ODataReaderRegistry $readerRegistry = null
-    ) {
+    )
+    {
         $this->readerRegistry = $readerRegistry;
-        $this->segments       = $segmentDescriptors;
-        $this->segmentCount   = count($this->segments);
-        $this->requestUrl     = $requestUri;
-        $this->lastSegment    = $segmentDescriptors[$this->segmentCount - 1];
-        $this->queryType      = QueryType::ENTITIES();
+        $this->segments = $segmentDescriptors;
+        $this->segmentCount = count($this->segments);
+        $this->requestUrl = $requestUri;
+        $this->lastSegment = $segmentDescriptors[$this->segmentCount - 1];
+        $this->queryType = QueryType::ENTITIES();
         //we use this for validation checks down in validateVersions...
         //but maybe we should check that outside of this object...
         $this->maxServiceVersion = $serviceMaxVersion;
@@ -259,7 +250,7 @@ class RequestDescription
         //Per OData 1 & 2 spec we must return the smallest size
         //We start at 1.0 and move it up as features are requested
         $this->requiredMinResponseVersion = clone Version::v1();
-        $this->requiredMinRequestVersion  = clone Version::v1();
+        $this->requiredMinRequestVersion = clone Version::v1();
 
         //see http://www.odata.org/documentation/odata-v2-documentation/overview/#ProtocolVersioning
         //if requestVersion isn't there, use Service Max Version
@@ -285,17 +276,17 @@ class RequestDescription
             $this->requiredMinResponseVersion = clone $this->requestMaxVersion;
         }
 
-        $this->containerName         = null;
-        $this->skipCount             = null;
-        $this->topCount              = null;
-        $this->topOptionCount        = null;
-        $this->internalOrderByInfo   = null;
+        $this->containerName = null;
+        $this->skipCount = null;
+        $this->topCount = null;
+        $this->topOptionCount = null;
+        $this->internalOrderByInfo = null;
         $this->internalSkipTokenInfo = null;
 
         $this->filterInfo = null;
         $this->countValue = null;
         $this->isExecuted = false;
-        $this->data       = isset($payload) ? $payload->getAllInput() : null;
+        $this->data = isset($payload) ? $payload->getAllInput() : null;
 
         // Define data from request body
         if (null !== $dataType) {
@@ -304,9 +295,106 @@ class RequestDescription
     }
 
     /**
+     * Validates the given version in string format and returns the version as instance of Version.
+     *
+     * @param string $versionHeader The DataServiceVersion or MaxDataServiceVersion header value
+     * @param string $headerName The name of the header
+     *
+     * @return Version
+     * @throws ODataException If the version is malformed or not supported
+     *
+     */
+    private static function parseVersionHeader($versionHeader, $headerName)
+    {
+        $versionHeader = trim($versionHeader);
+        $libNameIndex = strpos($versionHeader, ';');
+        if (false === $libNameIndex) {
+            $libNameIndex = strlen($versionHeader);
+        }
+
+        $dotIndex = -1;
+        $badVersionMsg = Messages::requestDescriptionInvalidVersionHeader(
+            $versionHeader,
+            $headerName
+        );
+        for ($i = 0; $i < $libNameIndex; ++$i) {
+            if ($versionHeader[$i] == '.') {
+                //Throw an exception if we find more than 1 dot
+                if ($dotIndex != -1) {
+                    throw ODataException::createBadRequestError($badVersionMsg);
+                }
+
+                $dotIndex = $i;
+            } elseif ($versionHeader[$i] < '0' || $versionHeader[$i] > '9') {
+                throw ODataException::createBadRequestError($badVersionMsg);
+            }
+        }
+
+        $major = intval(substr($versionHeader, 0, $dotIndex));
+        $minor = 0;
+
+        //Apparently the . is optional
+        if ($dotIndex != -1) {
+            if ($dotIndex == 0) {
+                //If it starts with a ., throw an exception
+                throw ODataException::createBadRequestError($badVersionMsg);
+            }
+            $minor = intval(substr($versionHeader, $dotIndex + 1, $libNameIndex));
+        }
+
+        $version = new Version($major, $minor);
+
+        //TODO: move this somewhere...
+        //$this->validateVersions();
+        $isSupportedVersion = false;
+        foreach (self::getKnownDataServiceVersions() as $version1) {
+            if ($version->compare($version1) == 0) {
+                $isSupportedVersion = true;
+                break;
+            }
+        }
+
+        if (!$isSupportedVersion) {
+            $availableVersions = null;
+            foreach (self::getKnownDataServiceVersions() as $version1) {
+                $availableVersions .= $version1->toString() . ', ';
+            }
+
+            $availableVersions = rtrim($availableVersions, ', ');
+            throw ODataException::createBadRequestError(
+                Messages::requestDescriptionUnSupportedVersion(
+                    $headerName,
+                    $versionHeader,
+                    $availableVersions
+                )
+            );
+        }
+
+        return $version;
+    }
+
+    /**
+     * Gets collection of known data service versions, currently 1.0, 2.0 and 3.0.
+     *
+     * @return Version[]
+     */
+    public static function getKnownDataServiceVersions()
+    {
+        if (null === self::$knownDataServiceVersions) {
+            self::$knownDataServiceVersions = [
+                new Version(1, 0),
+                new Version(2, 0),
+                new Version(3, 0),
+            ];
+        }
+
+        return self::$knownDataServiceVersions;
+    }
+
+    /**
      * Define request data from body.
      *
-     * @param  string $dataType
+     * @param string $dataType
      * @return void
      */
     private function readData($dataType)
@@ -316,7 +404,7 @@ class RequestDescription
         }
         $string = $this->data;
         if ($dataType === MimeTypes::MIME_APPLICATION_JSON) {
-            $data       = !is_array($string) ? json_decode($string, true) : $string;
+            $data = !is_array($string) ? json_decode($string, true) : $string;
             $this->data = $data;
             return;
         }
@@ -354,6 +442,59 @@ class RequestDescription
     {
         if ($this->requiredMinRequestVersion->raiseVersion($major, $minor)) {
             $this->validateVersions();
+        }
+    }
+
+    /**
+     * This function is used to perform following checking (validation)
+     * for capability negotiation.
+     *  (1) Check client request's 'DataServiceVersion' header value is
+     *      less than or equal to the minimum version required to intercept
+     *      the response
+     *  (2) Check client request's 'MaxDataServiceVersion' header value is
+     *      less than or equal to the version of protocol required to generate
+     *      the response
+     *  (3) Check the configured maximum protocol version is less than or equal
+     *      to the version of protocol required to generate the response
+     *  In addition to these checking, this function is also responsible for
+     *  initializing the properties representing 'DataServiceVersion' and
+     *  'MaxDataServiceVersion'.
+     *
+     *
+     * @throws ODataException If any of the above 3 check fails
+     */
+    public function validateVersions()
+    {
+
+        //If the request version is below the minimum version required by supplied request arguments..throw an exception
+        if ($this->requestVersion->compare($this->requiredMinRequestVersion) < 0) {
+            throw ODataException::createBadRequestError(
+                Messages::requestVersionTooLow(
+                    $this->requestVersion->toString(),
+                    $this->requiredMinRequestVersion->toString()
+                )
+            );
+        }
+
+        //If the requested max version is below the version required to fulfill the response...throw an exception
+        if ($this->requestMaxVersion->compare($this->requiredMinResponseVersion) < 0) {
+            throw ODataException::createBadRequestError(
+                Messages::requestVersionTooLow(
+                    $this->requestMaxVersion->toString(),
+                    $this->requiredMinResponseVersion->toString()
+                )
+            );
+        }
+
+        //If the max version supported by the service is below the version required to fulfill the response..
+        //throw an exception
+        if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
+            throw ODataException::createBadRequestError(
+                Messages::requestVersionIsBiggerThanProtocolVersion(
+                    $this->requiredMinResponseVersion->toString(),
+                    $this->maxServiceVersion->toString()
+                )
+            );
         }
     }
 
@@ -459,50 +600,6 @@ class RequestDescription
     }
 
     /**
-     * Gets reference to the ResourceType instance targeted by
-     * the resource path, ResourceType will present in the
-     * following cases:
-     * if the last segment descriptor describes
-     *      (a) resource set
-     *          http://server/NW.svc/Customers
-     *          http://server/NW.svc/Customers('ALFKI')
-     *          http://server/NW.svc/Customers('ALFKI')/Orders
-     *          http://server/NW.svc/Customers('ALFKI')/Orders(123)
-     *          http://server/NW.svc/Customers('ALFKI')/$links/Orders
-     *      (b) resource set reference
-     *          http://server/NW.svc/Orders(123)/Customer
-     *          http://server/NW.svc/Orders(123)/$links/Customer
-     *      (c) $count
-     *          http://server/NW.svc/Customers/$count
-     *      (d) Primitive
-     *          http://server/NW.svc/Customers('ALFKI')/Country
-     *      (e) $value on primitive type
-     *          http://server/NW.svc/Customers('ALFKI')/Country/$value
-     *      (f) Complex
-     *          http://server/NW.svc/Customers('ALFKI')/Address
-     *      (g) Bag
-     *          http://server/NW.svc/Employees(123)/Emails
-     *      (h) MLE
-     *          http://server/NW.svc/Employees(123)/$value
-     *      (i) Named Stream
-     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
-     * ResourceType will be absent (NULL) in the following cases:
-     * if the last segment descriptor describes
-     *      (a) metadata
-     *          http://server/NW.svc/$metadata
-     *      (b) service directory
-     *          http://server/NW.svc
-     *      (c) $bath
-     *          http://server/NW.svc/$batch.
-     *
-     * @return ResourceType|null
-     */
-    public function getTargetResourceType()
-    {
-        return $this->lastSegment->getTargetResourceType();
-    }
-
-    /**
      * Gets reference to the ResourceProperty instance targeted by
      * the resource path, ResourceProperty will present in the
      * following cases:
@@ -546,7 +643,7 @@ class RequestDescription
      */
     public function getProjectedProperty()
     {
-        return  $this->lastSegment->getProjectedProperty();
+        return $this->lastSegment->getProjectedProperty();
     }
 
     /**
@@ -701,7 +798,8 @@ class RequestDescription
      */
     public function setInternalSkipTokenInfo(
         InternalSkipTokenInfo &$internalSkipTokenInfo
-    ) {
+    )
+    {
         $this->internalSkipTokenInfo = $internalSkipTokenInfo;
     }
 
@@ -722,16 +820,6 @@ class RequestDescription
     }
 
     /**
-     * Sets $expand and $select information.
-     *
-     * @param RootProjectionNode &$rootProjectionNode Root of the projection tree
-     */
-    public function setRootProjectionNode(RootProjectionNode &$rootProjectionNode)
-    {
-        $this->rootProjectionNode = $rootProjectionNode;
-    }
-
-    /**
      * Gets the root of the tree describing expand and select options,.
      *
      * @return RootProjectionNode|null Returns parsed details of $expand
@@ -741,6 +829,16 @@ class RequestDescription
     public function getRootProjectionNode()
     {
         return $this->rootProjectionNode;
+    }
+
+    /**
+     * Sets $expand and $select information.
+     *
+     * @param RootProjectionNode &$rootProjectionNode Root of the projection tree
+     */
+    public function setRootProjectionNode(RootProjectionNode &$rootProjectionNode)
+    {
+        $this->rootProjectionNode = $rootProjectionNode;
     }
 
     /**
@@ -785,37 +883,6 @@ class RequestDescription
     }
 
     /**
-     * To check if the resource path is a request for link uri.
-     *
-     * @return bool True if request is for link uri else false
-     */
-    public function isLinkUri()
-    {
-        return ($this->segmentCount > 2)
-            && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
-    }
-
-    /**
-     * To check if the resource path is a request for media resource.
-     *
-     * @return bool True if request is for media resource else false
-     */
-    public function isMediaResource()
-    {
-        return $this->lastSegment->getTargetKind() == TargetKind::MEDIA_RESOURCE();
-    }
-
-    /**
-     * To check if the resource path is a request for named stream.
-     *
-     * @return bool True if request is for named stream else false
-     */
-    public function isNamedStream()
-    {
-        return $this->isMediaResource() && !($this->lastSegment->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
-    }
-
-    /**
      * Get ResourceStreamInfo for the media link entry or named stream request.
      *
      * @return ResourceStreamInfo|null Instance of ResourceStreamInfo if the
@@ -831,6 +898,70 @@ class RequestDescription
                 );
         }
         return null;
+    }
+
+    /**
+     * To check if the resource path is a request for named stream.
+     *
+     * @return bool True if request is for named stream else false
+     */
+    public function isNamedStream()
+    {
+        return $this->isMediaResource() && !($this->lastSegment->getIdentifier() === ODataConstants::URI_VALUE_SEGMENT);
+    }
+
+    /**
+     * To check if the resource path is a request for media resource.
+     *
+     * @return bool True if request is for media resource else false
+     */
+    public function isMediaResource()
+    {
+        return $this->lastSegment->getTargetKind() == TargetKind::MEDIA_RESOURCE();
+    }
+
+    /**
+     * Gets reference to the ResourceType instance targeted by
+     * the resource path, ResourceType will present in the
+     * following cases:
+     * if the last segment descriptor describes
+     *      (a) resource set
+     *          http://server/NW.svc/Customers
+     *          http://server/NW.svc/Customers('ALFKI')
+     *          http://server/NW.svc/Customers('ALFKI')/Orders
+     *          http://server/NW.svc/Customers('ALFKI')/Orders(123)
+     *          http://server/NW.svc/Customers('ALFKI')/$links/Orders
+     *      (b) resource set reference
+     *          http://server/NW.svc/Orders(123)/Customer
+     *          http://server/NW.svc/Orders(123)/$links/Customer
+     *      (c) $count
+     *          http://server/NW.svc/Customers/$count
+     *      (d) Primitive
+     *          http://server/NW.svc/Customers('ALFKI')/Country
+     *      (e) $value on primitive type
+     *          http://server/NW.svc/Customers('ALFKI')/Country/$value
+     *      (f) Complex
+     *          http://server/NW.svc/Customers('ALFKI')/Address
+     *      (g) Bag
+     *          http://server/NW.svc/Employees(123)/Emails
+     *      (h) MLE
+     *          http://server/NW.svc/Employees(123)/$value
+     *      (i) Named Stream
+     *          http://server/NW.svc/Employees(123)/Thumbnail48_48
+     * ResourceType will be absent (NULL) in the following cases:
+     * if the last segment descriptor describes
+     *      (a) metadata
+     *          http://server/NW.svc/$metadata
+     *      (b) service directory
+     *          http://server/NW.svc
+     *      (c) $bath
+     *          http://server/NW.svc/$batch.
+     *
+     * @return ResourceType|null
+     */
+    public function getTargetResourceType()
+    {
+        return $this->lastSegment->getTargetResourceType();
     }
 
     /**
@@ -872,153 +1003,14 @@ class RequestDescription
     }
 
     /**
-     * Gets collection of known data service versions, currently 1.0, 2.0 and 3.0.
+     * To check if the resource path is a request for link uri.
      *
-     * @return Version[]
+     * @return bool True if request is for link uri else false
      */
-    public static function getKnownDataServiceVersions()
+    public function isLinkUri()
     {
-        if (null === self::$knownDataServiceVersions) {
-            self::$knownDataServiceVersions = [
-                new Version(1, 0),
-                new Version(2, 0),
-                new Version(3, 0),
-            ];
-        }
-
-        return self::$knownDataServiceVersions;
-    }
-
-    /**
-     * This function is used to perform following checking (validation)
-     * for capability negotiation.
-     *  (1) Check client request's 'DataServiceVersion' header value is
-     *      less than or equal to the minimum version required to intercept
-     *      the response
-     *  (2) Check client request's 'MaxDataServiceVersion' header value is
-     *      less than or equal to the version of protocol required to generate
-     *      the response
-     *  (3) Check the configured maximum protocol version is less than or equal
-     *      to the version of protocol required to generate the response
-     *  In addition to these checking, this function is also responsible for
-     *  initializing the properties representing 'DataServiceVersion' and
-     *  'MaxDataServiceVersion'.
-     *
-     *
-     * @throws ODataException If any of the above 3 check fails
-     */
-    public function validateVersions()
-    {
-
-        //If the request version is below the minimum version required by supplied request arguments..throw an exception
-        if ($this->requestVersion->compare($this->requiredMinRequestVersion) < 0) {
-            throw ODataException::createBadRequestError(
-                Messages::requestVersionTooLow(
-                    $this->requestVersion->toString(),
-                    $this->requiredMinRequestVersion->toString()
-                )
-            );
-        }
-
-        //If the requested max version is below the version required to fulfill the response...throw an exception
-        if ($this->requestMaxVersion->compare($this->requiredMinResponseVersion) < 0) {
-            throw ODataException::createBadRequestError(
-                Messages::requestVersionTooLow(
-                    $this->requestMaxVersion->toString(),
-                    $this->requiredMinResponseVersion->toString()
-                )
-            );
-        }
-
-        //If the max version supported by the service is below the version required to fulfill the response..
-        //throw an exception
-        if ($this->maxServiceVersion->compare($this->requiredMinResponseVersion) < 0) {
-            throw ODataException::createBadRequestError(
-                Messages::requestVersionIsBiggerThanProtocolVersion(
-                    $this->requiredMinResponseVersion->toString(),
-                    $this->maxServiceVersion->toString()
-                )
-            );
-        }
-    }
-
-    /**
-     * Validates the given version in string format and returns the version as instance of Version.
-     *
-     * @param string $versionHeader The DataServiceVersion or MaxDataServiceVersion header value
-     * @param string $headerName    The name of the header
-     *
-     * @throws ODataException If the version is malformed or not supported
-     *
-     * @return Version
-     */
-    private static function parseVersionHeader($versionHeader, $headerName)
-    {
-        $versionHeader = trim($versionHeader);
-        $libNameIndex  = strpos($versionHeader, ';');
-        if (false === $libNameIndex) {
-            $libNameIndex = strlen($versionHeader);
-        }
-
-        $dotIndex      = -1;
-        $badVersionMsg = Messages::requestDescriptionInvalidVersionHeader(
-            $versionHeader,
-            $headerName
-        );
-        for ($i = 0; $i < $libNameIndex; ++$i) {
-            if ($versionHeader[$i] == '.') {
-                //Throw an exception if we find more than 1 dot
-                if ($dotIndex != -1) {
-                    throw ODataException::createBadRequestError($badVersionMsg);
-                }
-
-                $dotIndex = $i;
-            } elseif ($versionHeader[$i] < '0' || $versionHeader[$i] > '9') {
-                throw ODataException::createBadRequestError($badVersionMsg);
-            }
-        }
-
-        $major = intval(substr($versionHeader, 0, $dotIndex));
-        $minor = 0;
-
-        //Apparently the . is optional
-        if ($dotIndex != -1) {
-            if ($dotIndex == 0) {
-                //If it starts with a ., throw an exception
-                throw ODataException::createBadRequestError($badVersionMsg);
-            }
-            $minor = intval(substr($versionHeader, $dotIndex + 1, $libNameIndex));
-        }
-
-        $version = new Version($major, $minor);
-
-        //TODO: move this somewhere...
-        //$this->validateVersions();
-        $isSupportedVersion = false;
-        foreach (self::getKnownDataServiceVersions() as $version1) {
-            if ($version->compare($version1) == 0) {
-                $isSupportedVersion = true;
-                break;
-            }
-        }
-
-        if (!$isSupportedVersion) {
-            $availableVersions = null;
-            foreach (self::getKnownDataServiceVersions() as $version1) {
-                $availableVersions .= $version1->toString() . ', ';
-            }
-
-            $availableVersions = rtrim($availableVersions, ', ');
-            throw ODataException::createBadRequestError(
-                Messages::requestDescriptionUnSupportedVersion(
-                    $headerName,
-                    $versionHeader,
-                    $availableVersions
-                )
-            );
-        }
-
-        return $version;
+        return ($this->segmentCount > 2)
+            && ($this->segments[$this->segmentCount - 2]->getTargetKind() == TargetKind::LINK());
     }
 
     /**
