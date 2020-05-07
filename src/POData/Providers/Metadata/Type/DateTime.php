@@ -216,7 +216,6 @@ class DateTime implements IType
      */
     public static function now(): \DateTime
     {
-
         return null === self::$timeProvider ? new \DateTime() : call_user_func(self::$timeProvider);
     }
 
