@@ -8,6 +8,7 @@ Unreleased
         - ... interesting ... ways that XMLWriter was being used.
    * Drop external dependency on JMS serialiser in favour of a more performant functional equivalent (see [#227] (https://github.com/Algo-Web/POData/pull/227))
    * Encapsulate enum constants where possible (see [#235] (https://github.com/Algo-Web/POData/pull/235))
+   * Remove obsolete dependencies (see [#247] (https://github.com/Algo-Web/POData/pull/247))
 
 0.3.7 (2020-03-13)
 ------------------
