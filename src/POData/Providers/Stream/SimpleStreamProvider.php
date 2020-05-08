@@ -25,8 +25,8 @@ class SimpleStreamProvider implements IStreamProvider2
     public function getReadStream2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
-        $eTag,
-        $checkETagForEquality,
+        string $eTag,
+        bool $checkETagForEquality,
         IOperationContext $operationContext
     ) {
         if (null == $resourceStreamInfo) {
@@ -49,7 +49,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceType $resourceType,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        string $relativeUri = null
     ) {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
@@ -105,7 +105,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        string $relativeUri = null
     ):string {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';

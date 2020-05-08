@@ -56,8 +56,8 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getReadStream(
         $entity,
-        $eTag,
-        $checkETagForEquality,
+        string $eTag,
+        bool $checkETagForEquality,
         $operationContext
     ) {
         /*
@@ -224,9 +224,9 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getReadStream2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        $eTag,
-        $checkETagForEquality,
+        ResourceStreamInfo $resourceStreamInfo = null,
+        string $eTag,
+        bool $checkETagForEquality,
         IOperationContext $operationContext
     ) {
         /*
@@ -334,11 +334,11 @@ class NorthWindStreamProvider4 implements IStreamProvider2
 
     //End IStreamProvider2 methods implementation
     /**
-     * @param $entity
+     * @param  $entity
      * @param  ResourceType            $resourceType
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  string|null             $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(
@@ -346,7 +346,7 @@ class NorthWindStreamProvider4 implements IStreamProvider2
         ResourceType $resourceType,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        string $relativeUri = null
     ) {
         // TODO: Implement getDefaultStreamEditMediaUri() method.
     }

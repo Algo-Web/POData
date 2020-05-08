@@ -86,8 +86,8 @@ interface IStreamProvider2
     public function getReadStream2(
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
-        $eTag,
-        $checkETagForEquality,
+        string $eTag,
+        bool $checkETagForEquality,
         IOperationContext $operationContext
     );
 
@@ -205,6 +205,6 @@ interface IStreamProvider2
         ResourceType $resourceType,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        string $relativeUri = null
     );
 }
