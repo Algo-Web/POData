@@ -418,7 +418,7 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $result = $foo->getReadStream($data, $streamInfo);
-        $this->assertEquals('electric-rave', $result->getStreamContentType2(null, $streamInfo, $context));
+        $this->assertEquals('electric-rave', $result->getStreamContentType2(null, $context, $streamInfo));
     }
 
     public function testGetReadStreamNullStreamHasStreamInfoReturnNull()

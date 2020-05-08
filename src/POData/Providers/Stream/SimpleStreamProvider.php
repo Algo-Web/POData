@@ -16,18 +16,18 @@ class SimpleStreamProvider implements IStreamProvider2
 {
     /**
      * @param  object                  $entity
-     * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  string                  $eTag
      * @param  bool                    $checkETagForEquality
      * @param  IOperationContext       $operationContext
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @return string
      */
     public function getReadStream2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
         string $eTag,
         bool $checkETagForEquality,
-        IOperationContext $operationContext
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
     ) {
         if (null == $resourceStreamInfo) {
             return 'stream for ' . get_class($entity);
@@ -37,18 +37,18 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param $entity
+     * @param                          $entity
      * @param  ResourceType            $resourceType
-     * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  string|null             $relativeUri
      * @return string
      */
     public function getDefaultStreamEditMediaUri(
         $entity,
         ResourceType $resourceType,
-        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null,
         string $relativeUri = null
     ) {
         if (null == $resourceStreamInfo) {
@@ -58,15 +58,15 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param  object                  $entity
+     * @param  object $entity
+     * @param  IOperationContext $operationContext
      * @param  ResourceStreamInfo|null $resourceStreamInfo
-     * @param  IOperationContext       $operationContext
      * @return string
      */
     public function getStreamContentType2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
     ):string {
         if (null == $resourceStreamInfo) {
             return '*/*';
@@ -75,15 +75,15 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param  object                  $entity
+     * @param  object $entity
+     * @param  IOperationContext $operationContext
      * @param  ResourceStreamInfo|null $resourceStreamInfo
-     * @param  IOperationContext       $operationContext
      * @return string
      */
     public function getStreamETag2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
     ): string {
         if (null == $resourceStreamInfo) {
             return spl_object_hash($entity);
@@ -103,8 +103,8 @@ class SimpleStreamProvider implements IStreamProvider2
      */
     public function getReadStreamUri2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null,
         string $relativeUri = null
     ):string {
         if (null == $resourceStreamInfo) {

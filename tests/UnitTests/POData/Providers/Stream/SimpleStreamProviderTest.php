@@ -36,7 +36,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'stream for DateTime';
-        $actual   = $foo->getReadStream2($entity, $resourceStreamInfo, $eTag, $checkETag, $context);
+        $actual   = $foo->getReadStream2($entity, $eTag, $checkETag, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -53,7 +53,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'ELEVATION!';
-        $actual   = $foo->getReadStream2($entity, $resourceStreamInfo, $eTag, $checkETag, $context);
+        $actual   = $foo->getReadStream2($entity, $eTag, $checkETag, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -68,7 +68,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'all/your/base/$value';
-        $actual   = $foo->getDefaultStreamEditMediaUri($entity, $rType, $resourceStreamInfo, $context, $relativeUri);
+        $actual   = $foo->getDefaultStreamEditMediaUri($entity, $rType, $context, $resourceStreamInfo, $relativeUri);
         $this->assertEquals($expected, $actual);
     }
 
@@ -84,7 +84,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'all/your/base/TheStreamWithNoName';
-        $actual   = $foo->getDefaultStreamEditMediaUri($entity, $rType, $resourceStreamInfo, $context, $relativeUri);
+        $actual   = $foo->getDefaultStreamEditMediaUri($entity, $rType, $context, $resourceStreamInfo, $relativeUri);
         $this->assertEquals($expected, $actual);
     }
 
@@ -97,7 +97,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = '*/*';
-        $actual   = $foo->getStreamContentType2($entity, $resourceStreamInfo, $context);
+        $actual   = $foo->getStreamContentType2($entity, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -111,7 +111,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'application/octet-stream';
-        $actual   = $foo->getStreamContentType2($entity, $resourceStreamInfo, $context);
+        $actual   = $foo->getStreamContentType2($entity, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -125,7 +125,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = '65b1447e80fa8ab1dd3c5b31410390a68f42899b';
-        $actual   = $foo->getStreamETag2($entity, $resourceStreamInfo, $context);
+        $actual   = $foo->getStreamETag2($entity, $context, $resourceStreamInfo);
         $this->assertNotEquals($expected, $actual);
     }
 
@@ -140,7 +140,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = '65b1447e80fa8ab1dd3c5b31410390a68f42899b';
-        $actual   = $foo->getStreamETag2($entity, $resourceStreamInfo, $context);
+        $actual   = $foo->getStreamETag2($entity, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -155,7 +155,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
-        $actual   = $foo->getStreamETag2($entity, $resourceStreamInfo, $context);
+        $actual   = $foo->getStreamETag2($entity, $context, $resourceStreamInfo);
         $this->assertEquals($expected, $actual);
     }
 
@@ -170,7 +170,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'all/your/base/$value';
-        $actual   = $foo->getReadStreamUri2($entity, $resourceStreamInfo, $context, $relativeUri);
+        $actual   = $foo->getReadStreamUri2($entity, $context, $resourceStreamInfo, $relativeUri);
         $this->assertEquals($expected, $actual);
     }
 
@@ -186,7 +186,7 @@ class SimpleStreamProviderTest extends TestCase
         $foo = new SimpleStreamProvider();
 
         $expected = 'all/your/base/TheStreamWithNoName';
-        $actual   = $foo->getReadStreamUri2($entity, $resourceStreamInfo, $context, $relativeUri);
+        $actual   = $foo->getReadStreamUri2($entity, $context, $resourceStreamInfo, $relativeUri);
         $this->assertEquals($expected, $actual);
     }
 }

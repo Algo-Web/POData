@@ -88,19 +88,19 @@ class StreamProviderWrapper
                 $this->loadAndValidateStreamProvider();
                 $stream = $this->streamProvider->getReadStream2(
                     $entity,
-                    null,
                     $requestETag,
                     $checkETagForEquality,
-                    $opContext
+                    $opContext,
+                    null
                 );
             } else {
                 $this->loadAndValidateStreamProvider2();
                 $stream = $this->streamProvider->getReadStream2(
                     $entity,
-                    $resourceStreamInfo,
                     $requestETag,
                     $checkETagForEquality,
-                    $opContext
+                    $opContext,
+                    $resourceStreamInfo,
                 );
             }
 
@@ -289,11 +289,11 @@ class StreamProviderWrapper
         $opContext = $this->service->getOperationContext();
         if (null === $resourceStreamInfo) {
             $this->loadAndValidateStreamProvider();
-            $eTag = $this->streamProvider->getStreamETag2($entity, null, $opContext);
+            $eTag = $this->streamProvider->getStreamETag2($entity, $opContext, null);
         } else {
             $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
-            $eTag = $this->streamProvider->getStreamETag2($entity, $resourceStreamInfo, $opContext);
+            $eTag = $this->streamProvider->getStreamETag2($entity, $opContext, $resourceStreamInfo);
         }
 
         $this->verifyContentTypeOrETagModified('IDSSP::getStreamETag');
@@ -376,7 +376,7 @@ class StreamProviderWrapper
         $opContext = $this->service->getOperationContext();
         if (null === $resourceStreamInfo) {
             $this->loadAndValidateStreamProvider();
-            $contentType = $this->streamProvider->getStreamContentType2($entity, null, $opContext);
+            $contentType = $this->streamProvider->getStreamContentType2($entity, $opContext, null);
             if (empty($contentType)) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
@@ -385,7 +385,7 @@ class StreamProviderWrapper
         } else {
             $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
-            $contentType = $this->streamProvider->getStreamContentType2($entity, $resourceStreamInfo, $opContext);
+            $contentType = $this->streamProvider->getStreamContentType2($entity, $opContext, $resourceStreamInfo);
         }
 
         $this->verifyContentTypeOrETagModified('IDSSP::getStreamContentType');
@@ -425,11 +425,11 @@ class StreamProviderWrapper
         $opContext = $this->service->getOperationContext();
         if (null === $resourceStreamInfo) {
             $this->loadAndValidateStreamProvider();
-            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, null, $opContext);
+            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $opContext, null);
         } else {
             $this->loadAndValidateStreamProvider2();
             assert($this->streamProvider instanceof IStreamProvider2);
-            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $resourceStreamInfo, $opContext);
+            $readStreamUri = $this->streamProvider->getReadStreamUri2($entity, $opContext, $resourceStreamInfo);
         }
 
         $this->verifyContentTypeOrETagModified('IDSSP::getReadStreamUri');
