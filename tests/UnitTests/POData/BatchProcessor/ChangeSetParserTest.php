@@ -199,17 +199,20 @@ Content-ID: 2
         $response->shouldReceive('getStream')->andReturn('Stream II: ELECTRIC BOOGALOO');
         $response->shouldReceive('getHeaders')->andReturn($headers);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ),$response);
+
 
         $foo = m::mock(ChangeSetParser::class)->makePartial();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second])->once();
@@ -240,28 +243,31 @@ Stream II: ELECTRIC BOOGALOO--
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getHeaders')->andReturn(['Location' => 'Location Location'])->times(4);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ), $response);
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => $response];
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ), $response);
 
         $foo = m::mock(ChangeSetParser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second, 1 => $first])->once();
@@ -276,28 +282,32 @@ Stream II: ELECTRIC BOOGALOO--
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getHeaders')->andReturn(['Location' => null])->times(1);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ), $response);
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => $response];
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ), $response);
+
 
         $foo = m::mock(ChangeSetParser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second, 1 => $first])->once();
@@ -326,19 +336,35 @@ Stream II: ELECTRIC BOOGALOO--
         $request->shouldReceive('getMethod')->andReturn('POST');
         $request->shouldReceive('getRawUrl')->andReturn('http://localhost/service.svc/Customers');
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => $request,
-            'Response' => null];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ));
+
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ));
+
 
         $foo = new ChangeSetParserDummy($service, $body);
         $foo->processSubRequest($first);
-        $this->assertNotNull($first->Response);
+        $this->assertNotNull($first->outgoingResponse());
     }
 }
