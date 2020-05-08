@@ -13,6 +13,7 @@ Unreleased
    * Remove obsolete dependencies (see [#247] (https://github.com/Algo-Web/POData/pull/247))
    * Use the right base test case for Illuminate-related bits (see [#250] (https://github.com/Algo-Web/POData/pull/250))
        - Thanks to **kirill533** for spotting and fixing this.
+   * Null-guard stream-side etag generation (see [#256] (https://github.com/Algo-Web/POData/pull/250))
 
 0.3.7 (2020-03-13)
 ------------------

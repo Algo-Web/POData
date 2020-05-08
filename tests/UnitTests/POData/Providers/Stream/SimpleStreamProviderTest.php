@@ -144,6 +144,21 @@ class SimpleStreamProviderTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetStreamETag2WithNonNullResourceInfoAndNullPayload()
+    {
+        $entity                      = new \stdClass();
+        $entity->TheStreamWithNoName = null;
+        $resourceStreamInfo          = m::mock(ResourceStreamInfo::class);
+        $resourceStreamInfo->shouldReceive('getName')->andReturn('TheStreamWithNoName');
+        $context = m::mock(IOperationContext::class)->makePartial();
+
+        $foo = new SimpleStreamProvider();
+
+        $expected = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
+        $actual   = $foo->getStreamETag2($entity, $resourceStreamInfo, $context);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testGetReadStreamUri2WithNullResourceInfo()
     {
         $entity                      = new \stdClass();

@@ -41,7 +41,7 @@ class SimpleStreamProvider implements IStreamProvider2
      * @param  ResourceType            $resourceType
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  string|null             $relativeUri
      * @return string
      */
     public function getDefaultStreamEditMediaUri(
@@ -89,15 +89,16 @@ class SimpleStreamProvider implements IStreamProvider2
             return spl_object_hash($entity);
         }
         $name = $resourceStreamInfo->getName();
+        $raw  = $entity->{$name} ?? '';
 
-        return sha1($entity->{$name});
+        return sha1($raw);
     }
 
     /**
      * @param  object                  $entity
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  string|null             $relativeUri
      * @return string
      */
     public function getReadStreamUri2(
