@@ -99,14 +99,14 @@ class SimpleStreamProvider implements IStreamProvider2
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
      * @param  string|null             $relativeUri
-     * @return string
+     * @return string|null
      */
     public function getReadStreamUri2(
         $entity,
         IOperationContext $operationContext,
         ResourceStreamInfo $resourceStreamInfo = null,
         string $relativeUri = null
-    ):string {
+    ): ?string {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
         }

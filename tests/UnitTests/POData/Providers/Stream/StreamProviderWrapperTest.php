@@ -662,7 +662,7 @@ class StreamProviderWrapperTest extends TestCase
         $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
-        $streamProv->shouldReceive('getReadStreamUri2')->andReturn('https://www.example.org')->once();
+        $streamProv->shouldReceive('getReadStreamUri2')->andReturn(null)->once();
 
         $context = m::mock(IOperationContext::class);
 
@@ -680,7 +680,7 @@ class StreamProviderWrapperTest extends TestCase
         $service->shouldReceive('getStreamProviderX')->andReturn($streamProv)->once();
 
         $foo = m::mock(StreamProviderWrapper::class)->makePartial();
-        $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org');
+        $foo->shouldReceive('getDefaultStreamEditMediaUri')->andReturn('https://www.example.org')->once();
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
