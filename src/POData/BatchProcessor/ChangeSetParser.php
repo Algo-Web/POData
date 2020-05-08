@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace POData\BatchProcessor;
 
 use Exception;
-use Illuminate\Support\Str;
 use POData\BaseService;
 use POData\Common\ODataException;
 use POData\Common\UrlFormatException;

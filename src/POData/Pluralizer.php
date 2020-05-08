@@ -8,8 +8,8 @@
 
 namespace POData;
 
+use AlgoWeb\ODataMetadata\MetadataManager;
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
 
 /**
  * Class Pluralizer - hoisted from Laravel to support StringUtility
@@ -81,9 +81,7 @@ class Pluralizer
             return $value;
         }
 
-        $inflec = InflectorFactory::create()->build();
-
-        $plural = $inflec->pluralize($value);
+        $plural = MetadataManager::pluralize($value);
 
         return static::matchCase($plural, $value);
     }

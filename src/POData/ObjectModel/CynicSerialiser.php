@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-use Illuminate\Support\Collection;
 use POData\Common\InvalidOperationException;
 use POData\Common\Messages;
 use POData\Common\ODataConstants;
@@ -128,14 +127,11 @@ class CynicSerialiser implements IObjectSerialiser
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
         $res = $entryObjects->results;
-        if (!(is_array($res) || $res instanceof Collection)) {
+        if (!(is_array($res))) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
 
         if (is_array($res) && 0 == count($entryObjects->results)) {
-            $entryObjects->hasMore = false;
-        }
-        if ($res instanceof Collection && 0 == $res->count()) {
             $entryObjects->hasMore = false;
         }
 
