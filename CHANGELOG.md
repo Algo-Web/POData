@@ -1,7 +1,7 @@
 Unreleased
 ----------
    * Drop support for PHP 5.6 and 7.0 (see [#226] (https://github.com/Algo-Web/POData/pull/226))
-   * Reformat codebase to PSR-12 (see [#229] (https://github.com/Algo-Web/POData/pull/226)).
+   * Reformat codebase to PSR-12 (see [#229] (https://github.com/Algo-Web/POData/pull/229)).
         This exposed:
         - Long-b0rked OData-specific exception constructors,
         - EOL-handling mismatch between Linux and Windows,
@@ -13,7 +13,8 @@ Unreleased
    * Remove obsolete dependencies (see [#247] (https://github.com/Algo-Web/POData/pull/247))
    * Use the right base test case for Illuminate-related bits (see [#250] (https://github.com/Algo-Web/POData/pull/250))
        - Thanks to **kirill533** for spotting and fixing this.
-   * Null-guard stream-side etag generation (see [#256] (https://github.com/Algo-Web/POData/pull/250))
+   * Null-guard stream-side etag generation (see [#256] (https://github.com/Algo-Web/POData/pull/256))
+   * Type-hint IStreamProvider2 methods (see [#257] (https://github.com/Algo-Web/POData/pull/257))
 
 0.3.7 (2020-03-13)
 ------------------
