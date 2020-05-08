@@ -16,11 +16,13 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Configuration\ServiceConfiguration;
 use POData\IService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
+use POData\OperationContext\Web\WebOperationContext;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\BatchProcessor\ChangeSetParserDummy;
 use UnitTests\POData\TestCase;
@@ -76,28 +78,32 @@ Content-Length: ###
 --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621-- 
 
 ';
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => null];
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => null];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ));
+
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ));
+
 
 
         $foo = new ChangeSetParser($service, $body);
@@ -106,12 +112,7 @@ Content-Length: ###
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
-        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
-        $this->assertTrue($result[-2]->Request instanceof IHTTPRequest);
-        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
-        // before proceeding to equality check
-        $result[-1]->Request = null;
-        $result[-2]->Request = null;
+
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[-2]);
     }
@@ -153,29 +154,32 @@ Content-ID: 2
 
 ';
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => null];
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => null];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ));
 
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ));
 
         $foo = new ChangeSetParser($service, $body);
         $foo->handleData();
@@ -183,69 +187,9 @@ Content-ID: 2
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
-        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
-        $this->assertTrue($result[2]->Request instanceof IHTTPRequest);
-        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
-        // before proceeding to equality check
-        $result[-1]->Request = null;
-        $result[2]->Request  = null;
+
         $this->assertEquals($first, $result[-1]);
         $this->assertEquals($second, $result[2]);
-    }
-
-    public function testHandleDataWithMalformedHeaderLine()
-    {
-        $service = m::mock(BaseService::class);
-        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
-
-        $body    = ' 
-Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
-Content-Length: ###       
-
---changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
-Content-Type: application/http 
-Content-Transfer-Encoding: binary
-
-POST /service/Customers HTTP/1.1 
-Host: host  
-Content-Type: application/atom+xml:type=entry 
-Content-Length: ### 
-
-<AtomPub representation of a new Customer> 
-
---changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621-- 
-
-';
-
-        $expected = 'Malformed header line: Content-Type: application/atom+xml:type=entry ';
-        $actual   = null;
-
-        $foo = new ChangeSetParser($service, $body);
-        try {
-            $foo->handleData();
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testHandleDataWithTooManySegments()
-    {
-        $bigPayload = '--.--' . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . '.--.--.--.';
-
-        $foo = m::mock(ChangeSetParser::class)->makePartial();
-        $foo->shouldReceive('getData')->andReturn('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.', $bigPayload);
-        $service = m::mock(BaseService::class);
-        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
-        $foo->shouldReceive('getService')->andReturn($service);
-        $expected = 'how did we end up with more than 3 stages??';
-        $actual   = null;
-        try {
-            $foo->handleData();
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
     }
 
     public function testGetResponse()

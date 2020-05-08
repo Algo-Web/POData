@@ -22,6 +22,9 @@ class ChangeSetParser implements IBatchParser
 {
     protected $data;
     protected $changeSetBoundary;
+    /**
+     * @var WebOperationContext[]
+     */
     protected $rawRequests = [];
     protected $service;
     protected $contentIDToLocationLookup = [];
@@ -34,7 +37,7 @@ class ChangeSetParser implements IBatchParser
     public function __construct(BaseService $service, $body)
     {
         $this->service = $service;
-        $this->data    = trim($body);
+        $this->data               = trim(str_replace("\r", '', $body)); // removes windows specific character
     }
 
     /**
@@ -58,19 +61,18 @@ class ChangeSetParser implements IBatchParser
                 if (0 > $lookupID) {
                     continue;
                 }
-                $workingObject->Content    = str_replace('$' . $lookupID, $location, $workingObject->Content);
-                $workingObject->RequestURL = str_replace('$' . $lookupID, $location, $workingObject->RequestURL);
+                $workingObject->incomingRequest()->applyContentID($lookupID, $location);
             }
 
             $this->processSubRequest($workingObject);
-            if ('GET' != $workingObject->RequestVerb &&
+            if (HTTPRequestMethod::GET() != $workingObject->incomingRequest()->getMethod() &&
                 !StringUtility::contains($workingObject->RequestURL, '/$links/')) {
-                if (null === $workingObject->Response->getHeaders()['Location']) {
+                if (null === $workingObject->outgoingResponse()->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for ' . $workingObject->RequestVerb
                         . ' request url ' . $workingObject->RequestURL;
-                    throw new Exception($msg);
+                    throw new \Exception($msg);
                 }
-                $this->contentIDToLocationLookup[$contentID] = $workingObject->Response->getHeaders()['Location'];
+                $this->contentIDToLocationLookup[$contentID] = $workingObject->outgoingResponse()->getHeaders()['Location'];
             }
         }
     }
@@ -84,18 +86,17 @@ class ChangeSetParser implements IBatchParser
     }
 
     /**
-     * @param $workingObject
+     * @param $newContext
      * @throws ODataException
      * @throws UrlFormatException
      */
-    protected function processSubRequest(&$workingObject)
+    protected function processSubRequest(&$newContext)
     {
-        $newContext = new WebOperationContext($workingObject->Request);
         $newHost    = new ServiceHost($newContext);
-
+        $oldHost = $this->getService()->getHost();
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();
-        $workingObject->Response = $newContext->outgoingResponse();
+        $this->getService()->setHost($oldHost);
     }
 
     /**
@@ -119,7 +120,7 @@ class ChangeSetParser implements IBatchParser
             '--' . $this->changeSetBoundary . $ODataEOL;
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
-            $headers = $workingObject->Response->getHeaders();
+            $headers = $workingObject->outgoingResponse()->getHeaders();
             $response .= $splitter;
 
             $response .= 'Content-Type: application/http' . $ODataEOL;
@@ -134,7 +135,7 @@ class ChangeSetParser implements IBatchParser
                 }
             }
             $response .= $ODataEOL;
-            $response .= $workingObject->Response->getStream();
+            $response .= $workingObject->outgoingResponse()->getStream();
         }
         $response .= trim($splitter);
         $response .= false === $this->changeSetBoundary ?
@@ -154,105 +155,53 @@ class ChangeSetParser implements IBatchParser
         return $response;
     }
 
-    /**
-     * @throws Exception
-     */
     public function handleData()
     {
-        $ODataEOL = $this->getService()->getConfiguration()->getLineEndings();
-
-        $firstLine               = trim(strtok($this->getData(), $ODataEOL));// with trim matches both crlf and lf
-        $this->changeSetBoundary = substr($firstLine, 40);
-
+        list($headerBlock, $contentBlock) = explode("\n\n", $this->getData(), 2);
+        $headers = self::parse_headers ($headerBlock);
+        $this->changeSetBoundary = $headers['Content-Type']['boundary'];
         $prefix  = 'HTTP_';
-        $matches = explode('--' . $this->changeSetBoundary, $this->getData());
-        array_shift($matches);
+        $matches = array_filter(explode('--' . $this->changeSetBoundary, $contentBlock));
         $contentIDinit = -1;
         foreach ($matches as $match) {
             if ('--' === trim($match)) {
                 continue;
             }
 
-            $stage               = 0;
-            $gotRequestPathParts = false;
-            $match               = trim($match);
-            $lines               = explode($ODataEOL, $match);
-
-            $requestPathParts = [];
-            $serverParts      = [];
-            $contentID        = $contentIDinit;
-            $content          = '';
-
-            foreach ($lines as $line) {
-                if ('' == $line) {
-                    $stage++;
+            list($RequestParams, $requestHeaders, $RequestBody) = explode("\n\n", $match);
+            $RequestBody = trim($RequestBody);
+            $requestHeadersArray = self::parse_headers($requestHeaders);
+            list($RequesetType, $RequestPath, $RequestProticol) = explode(" ", $requestHeadersArray['default'], 3);
+            $contentID = array_key_exists('Content-ID', $requestHeadersArray) ? $requestHeadersArray['Content-ID'] : $contentIDinit;
+            $inboundRequestHeaders = [];
+            $skip = true;
+            foreach(explode("\n", $requestHeaders) as $headerLine){
+                if($skip){
+                    $skip = false;
                     continue;
                 }
-                switch ($stage) {
-                    case 0:
-                        if (strtolower('Content-Type') == strtolower(substr($line, 0, 12))
-                            && 'application/http' != strtolower(substr($line, -16))
-                        ) {
-                            //TODO: throw an error about incorrect content type for changeSet
-                        }
-                        if (strtolower('Content-Transfer-Encoding') == strtolower(substr($line, 0, 25))
-                            && 'binary' != strtolower(substr($line, -6))
-                        ) {
-                            //TODO: throw an error about unsupported encoding
-                        }
-                        break;
-                    case 1:
-                        if (!$gotRequestPathParts) {
-                            $requestPathParts    = explode(' ', $line);
-                            $gotRequestPathParts = true;
-                            continue 2;
-                        }
-                        $headerSides = explode(':', $line);
-                        if (count($headerSides) != 2) {
-                            throw new Exception('Malformed header line: ' . $line);
-                        }
-                        if (strtolower(trim($headerSides[0])) == strtolower('Content-ID')) {
-                            $contentID = trim($headerSides[1]);
-                            continue 2;
-                        }
 
-                        $name  = trim($headerSides[0]);
-                        $name  = strtr(strtoupper($name), '-', '_');
-                        $value = trim($headerSides[1]);
-                        if (!StringUtility::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
-                            $name = $prefix . $name;
-                        }
-                        $serverParts[$name] = $value;
-
-                        break;
-                    case 2:
-                        $content .= $line;
-                        break;
-                    default:
-                        throw new Exception('how did we end up with more than 3 stages??');
-                }
+                list($key, $value) = explode(':', $headerLine);
+                $name = strtr(strtoupper(trim($key)), '-', '_');
+                $value = trim($value);
+                $name = substr($name, 0, strlen($prefix)) === $prefix || $name == 'CONTENT_TYPE' ? $name : $prefix . $name;
+                $inboundRequestHeaders[$name] = $value;
             }
-
+            $this->rawRequests[$contentID] = new WebOperationContext(
+                new IncomingRequest(
+                    new HTTPRequestMethod($RequesetType),
+                    [],
+                    [],
+                    $inboundRequestHeaders,
+                    null,
+                    $RequestBody,
+                    $RequestPath
+                )
+            );
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
             }
-
-            $this->rawRequests[$contentID] = (object)[
-                'RequestVerb' => $requestPathParts[0],
-                'RequestURL' => $requestPathParts[1],
-                'ServerParams' => $serverParts,
-                'Content' => $content,
-                'Request' => new IncomingRequest(
-                    new HTTPRequestMethod($requestPathParts[0]),
-                    [],
-                    [],
-                    $serverParts,
-                    null,
-                    $content,
-                    $requestPathParts[1]
-                ),
-                'Response' => null
-            ];
+            continue;
         }
     }
 
@@ -262,5 +211,30 @@ class ChangeSetParser implements IBatchParser
     public function getData()
     {
         return $this->data;
+    }
+
+
+    private static function parse_headers($headers, $splitter = "\n", $assignmentChar = ':')
+    {
+        $results = [];
+        foreach (array_filter(explode($splitter, trim($headers))) as $line) {
+
+            list ($key, $value) = strpos($line,$assignmentChar) !== false ? explode($assignmentChar, $line, 2) : ['default', $line];
+            $key = trim($key);
+            $value = trim($value);
+            if(strpos($value, ';') !== false){
+                $value = self::parse_headers($value,';','=');
+            }
+            if (isset($results[$key])) {
+                if (is_array($results[$key])) {
+                    $results[$key][] = $value;
+                }else {
+                    $results[$key] = [$results[$key], $value];
+                }
+            } else {
+                $results[$key] = $value;
+            }
+        }
+        return $results;
     }
 }
