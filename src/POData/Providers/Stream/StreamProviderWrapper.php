@@ -100,7 +100,7 @@ class StreamProviderWrapper
                     $requestETag,
                     $checkETagForEquality,
                     $opContext,
-                    $resourceStreamInfo,
+                    $resourceStreamInfo
                 );
             }
 

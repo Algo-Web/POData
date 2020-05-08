@@ -100,7 +100,12 @@ interface IStreamProvider
      * @return mixed          A valid default stream which is associated with the entity,  Null should never be returned
      *                        from this method
      */
-    public function getReadStream($entity, $eTag, $checkETagForEquality, IOperationContext $operationContext);
+    public function getReadStream(
+        $entity,
+        string $eTag,
+        bool $checkETagForEquality,
+        IOperationContext $operationContext
+    );
 
     /**
      * This method is invoked by the data services framework to
