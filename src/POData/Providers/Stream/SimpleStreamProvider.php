@@ -89,8 +89,9 @@ class SimpleStreamProvider implements IStreamProvider2
             return spl_object_hash($entity);
         }
         $name = $resourceStreamInfo->getName();
+        $raw  = $entity->{$name} ?? '';
 
-        return sha1($entity->{$name});
+        return sha1($raw);
     }
 
     /**
