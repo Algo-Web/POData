@@ -66,11 +66,11 @@ class ChangeSetParser implements IBatchParser
 
             $this->processSubRequest($workingObject);
             if (HTTPRequestMethod::GET() != $workingObject->incomingRequest()->getMethod() &&
-                !StringUtility::contains($workingObject->RequestURL, '/$links/')) {
+                !strpos($workingObject->incomingRequest()->getRawUrl(),  '/$links/') == false) {
                 if (null === $workingObject->outgoingResponse()->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for ' . $workingObject->incomingRequest()->getMethod()
                         . ' request url ' . $workingObject->incomingRequest()->getRawUrl();
-                    throw new \Exception($msg);
+                    throw new Exception($msg);
                 }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->outgoingResponse()->getHeaders()['Location'];
             }
