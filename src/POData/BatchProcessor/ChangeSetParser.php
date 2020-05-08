@@ -36,7 +36,7 @@ class ChangeSetParser implements IBatchParser
      */
     public function __construct(BaseService $service, $body)
     {
-        $this->service = $service;
+        $this->service            = $service;
         $this->data               = trim(str_replace("\r", '', $body)); // removes windows specific character
     }
 
@@ -93,7 +93,7 @@ class ChangeSetParser implements IBatchParser
     protected function processSubRequest(&$newContext)
     {
         $newHost    = new ServiceHost($newContext);
-        $oldHost = $this->getService()->getHost();
+        $oldHost    = $this->getService()->getHost();
         $this->getService()->setHost($newHost);
         $this->getService()->handleRequest();
         $this->getService()->setHost($oldHost);
@@ -158,33 +158,32 @@ class ChangeSetParser implements IBatchParser
     public function handleData()
     {
         list($headerBlock, $contentBlock) = explode("\n\n", $this->getData(), 2);
-        $headers = self::parse_headers ($headerBlock);
-        $this->changeSetBoundary = $headers['Content-Type']['boundary'];
-        $prefix  = 'HTTP_';
-        $matches = array_filter(explode('--' . $this->changeSetBoundary, $contentBlock));
-        $contentIDinit = -1;
+        $headers                          = self::parse_headers($headerBlock);
+        $this->changeSetBoundary          = $headers['Content-Type']['boundary'];
+        $prefix                           = 'HTTP_';
+        $matches                          = array_filter(explode('--' . $this->changeSetBoundary, $contentBlock));
+        $contentIDinit                    = -1;
         foreach ($matches as $match) {
             if ('--' === trim($match)) {
                 continue;
             }
 
             list($RequestParams, $requestHeaders, $RequestBody) = explode("\n\n", $match);
-            $RequestBody = trim($RequestBody);
-            $requestHeadersArray = self::parse_headers($requestHeaders);
-            list($RequesetType, $RequestPath, $RequestProticol) = explode(" ", $requestHeadersArray['default'], 3);
-            $contentID = array_key_exists('Content-ID', $requestHeadersArray) ? $requestHeadersArray['Content-ID'] : $contentIDinit;
-            $inboundRequestHeaders = [];
-            $skip = true;
-            foreach(explode("\n", $requestHeaders) as $headerLine){
-                if($skip){
+            $RequestBody                                        = trim($RequestBody);
+            $requestHeadersArray                                = self::parse_headers($requestHeaders);
+            list($RequesetType, $RequestPath, $RequestProticol) = explode(' ', $requestHeadersArray['default'], 3);
+            $contentID                                          = array_key_exists('Content-ID', $requestHeadersArray) ? $requestHeadersArray['Content-ID'] : $contentIDinit;
+            $inboundRequestHeaders                              = [];
+            $skip                                               = true;
+            foreach (explode("\n", $requestHeaders) as $headerLine) {
+                if ($skip) {
                     $skip = false;
                     continue;
-                }
-
-                list($key, $value) = explode(':', $headerLine);
-                $name = strtr(strtoupper(trim($key)), '-', '_');
-                $value = trim($value);
-                $name = substr($name, 0, strlen($prefix)) === $prefix || $name == 'CONTENT_TYPE' ? $name : $prefix . $name;
+                }   
+                list($key, $value)            = explode(':', $headerLine);
+                $name                         = strtr(strtoupper(trim($key)), '-', '_');
+                $value                        = trim($value);
+                $name                         = substr($name, 0, strlen($prefix)) === $prefix || $name == 'CONTENT_TYPE' ? $name : $prefix . $name;
                 $inboundRequestHeaders[$name] = $value;
             }
             $this->rawRequests[$contentID] = new WebOperationContext(
@@ -218,17 +217,16 @@ class ChangeSetParser implements IBatchParser
     {
         $results = [];
         foreach (array_filter(explode($splitter, trim($headers))) as $line) {
-
-            list ($key, $value) = strpos($line,$assignmentChar) !== false ? explode($assignmentChar, $line, 2) : ['default', $line];
-            $key = trim($key);
-            $value = trim($value);
-            if(strpos($value, ';') !== false){
-                $value = self::parse_headers($value,';','=');
+            list($key, $value) = strpos($line, $assignmentChar) !== false ? explode($assignmentChar, $line, 2) : ['default', $line];
+            $key               = trim($key);
+            $value             = trim($value);
+            if (strpos($value, ';') !== false) {
+                $value = self::parse_headers($value, ';', '=');
             }
             if (isset($results[$key])) {
                 if (is_array($results[$key])) {
                     $results[$key][] = $value;
-                }else {
+                } else {
                     $results[$key] = [$results[$key], $value];
                 }
             } else {

@@ -268,9 +268,9 @@ class IncomingRequest implements IHTTPRequest
     /**
      * @param string $contentID
      */
-    public function applyContentID(string $contentID,string $contentIdValue): void
+    public function applyContentID(string $contentID, string $contentIdValue): void
     {
         $this->rawInput    = str_replace('$' . $contentID, $contentIdValue, $this->rawInput);
-        $this->rawUrl = str_replace('$' . $contentID, $contentIdValue, $this->rawUrl);
+        $this->rawUrl      = str_replace('$' . $contentID, $contentIdValue, $this->rawUrl);
     }
 }

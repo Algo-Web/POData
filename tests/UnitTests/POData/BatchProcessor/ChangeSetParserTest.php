@@ -211,7 +211,7 @@ Content-ID: 2
             null,
             '<JSON representation of Customer ALFKI>',
             '/service/Customers(\'ALFKI\')'
-        ),$response);
+        ), $response);
 
 
         $foo = m::mock(ChangeSetParser::class)->makePartial();
