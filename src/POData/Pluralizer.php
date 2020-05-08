@@ -11,6 +11,10 @@ namespace POData;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 
+/**
+ * Class Pluralizer - hoisted from Laravel to support StringUtility
+ * @package POData
+ */
 class Pluralizer
 {
     /**
@@ -127,5 +131,4 @@ class Pluralizer
 
         return $value;
     }
-
 }
