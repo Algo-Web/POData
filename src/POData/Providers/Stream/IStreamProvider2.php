@@ -122,7 +122,7 @@ interface IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    );
+    ): string;
 
     /**
      * This method is invoked by the data services framework to obtain the ETag of the
@@ -151,7 +151,7 @@ interface IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    );
+    ): string;
 
     /**
      * This method is invoked by the data services framework to obtain the URI clients should
@@ -190,14 +190,14 @@ interface IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    );
+    ): string;
 
     /**
-     * @param $entity
+     * @param  $entity
      * @param  ResourceType            $resourceType
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  string|null             $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(

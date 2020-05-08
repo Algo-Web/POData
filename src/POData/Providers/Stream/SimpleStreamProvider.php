@@ -67,7 +67,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    ) {
+    ):string {
         if (null == $resourceStreamInfo) {
             return '*/*';
         }
@@ -84,7 +84,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $entity,
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    ) {
+    ): string {
         if (null == $resourceStreamInfo) {
             return spl_object_hash($entity);
         }
@@ -106,7 +106,7 @@ class SimpleStreamProvider implements IStreamProvider2
         ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
         $relativeUri = null
-    ) {
+    ):string {
         if (null == $resourceStreamInfo) {
             return $relativeUri . '/$value';
         }

@@ -377,7 +377,7 @@ class StreamProviderWrapper
         if (null === $resourceStreamInfo) {
             $this->loadAndValidateStreamProvider();
             $contentType = $this->streamProvider->getStreamContentType2($entity, null, $opContext);
-            if (null === $contentType) {
+            if (empty($contentType)) {
                 throw new InvalidOperationException(
                     Messages::streamProviderWrapperGetStreamContentTypeReturnsEmptyOrNull()
                 );

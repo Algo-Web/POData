@@ -276,9 +276,9 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getStreamContentType2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    ) {
+    ):string {
         if (!($entity instanceof Employee)) {
             throw new ODataException('Internal Server Error.', 500);
         }
@@ -303,9 +303,9 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getStreamETag2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    ) {
+    ): string {
     }
 
     /**
@@ -327,9 +327,9 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getReadStreamUri2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
+        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext
-    ) {
+    ): string {
     }
 
     //End IStreamProvider2 methods implementation
