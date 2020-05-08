@@ -15,6 +15,7 @@ Unreleased
        - Thanks to **kirill533** for spotting and fixing this.
    * Null-guard stream-side etag generation (see [#256] (https://github.com/Algo-Web/POData/pull/256))
    * Type-hint IStreamProvider2 methods (see [#257] (https://github.com/Algo-Web/POData/pull/257))
+   * Drop illuminate/* dependencies (see [#258] (https://github.com/Algo-Web/POData/pull/258))
 
 0.3.7 (2020-03-13)
 ------------------

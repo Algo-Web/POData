@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace POData\BatchProcessor;
 
 use Exception;
-use Illuminate\Support\Str;
 use POData\BaseService;
 use POData\Common\ODataException;
 use POData\Common\UrlFormatException;
@@ -13,6 +12,7 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\WebOperationContext;
+use POData\StringUtility;
 
 /**
  * Class ChangeSetParser.
@@ -63,7 +63,8 @@ class ChangeSetParser implements IBatchParser
             }
 
             $this->processSubRequest($workingObject);
-            if ('GET' != $workingObject->RequestVerb && !Str::contains($workingObject->RequestURL, '/$links/')) {
+            if ('GET' != $workingObject->RequestVerb &&
+                !StringUtility::contains($workingObject->RequestURL, '/$links/')) {
                 if (null === $workingObject->Response->getHeaders()['Location']) {
                     $msg = 'Location header not set in subrequest response for ' . $workingObject->RequestVerb
                         . ' request url ' . $workingObject->RequestURL;
@@ -218,7 +219,7 @@ class ChangeSetParser implements IBatchParser
                         $name  = trim($headerSides[0]);
                         $name  = strtr(strtoupper($name), '-', '_');
                         $value = trim($headerSides[1]);
-                        if (!Str::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
+                        if (!StringUtility::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
                             $name = $prefix . $name;
                         }
                         $serverParts[$name] = $value;

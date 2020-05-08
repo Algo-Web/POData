@@ -9,11 +9,11 @@ use AlgoWeb\ODataMetadata\MetadataV3\edm\TComplexTypeType;
 use AlgoWeb\ODataMetadata\MetadataV3\edm\TEntityTypeType;
 use ErrorException;
 use Exception;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
+use POData\StringUtility;
 use ReflectionClass;
 use ReflectionException;
 use stdClass;
@@ -401,7 +401,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
         $typeName   = $resourceType->getFullName();
-        $pluralName = Str::plural($typeName);
+        $pluralName = StringUtility::plural($typeName);
         if (null == $name) {
             $returnName = $pluralName;
         } else {

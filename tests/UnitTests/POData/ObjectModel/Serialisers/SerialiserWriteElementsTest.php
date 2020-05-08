@@ -510,7 +510,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
 
         $collection          = new QueryResult();
-        $collection->results = collect([]);
+        $collection->results = [];
         $collection->hasMore = true;
 
         $expandNode = m::mock(ExpandedProjectionNode::class);
