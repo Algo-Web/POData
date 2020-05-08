@@ -56,8 +56,8 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getReadStream(
         $entity,
-        $eTag,
-        $checkETagForEquality,
+        string $eTag,
+        bool $checkETagForEquality,
         $operationContext
     ) {
         /*
@@ -200,8 +200,6 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      *
      * @param object              $entity               The stream returned should be the default
      *                                                  stream associated with this entity instance
-     * @param ResourceStreamInfo  $resourceStreamInfo   The ResourceStreamInfo instance that describes
-     *                                                  the named stream
      * @param string              $eTag                 The etag value sent by the client (as the
      *                                                  value of an If[-None-]Match header) as part
      *                                                  of the HTTP request, This parameter will be
@@ -213,7 +211,9 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      *                                                  of an If-None-Match HTTP request header null if
      *                                                  the HTTP request for the stream was not a
      *                                                  conditional request
-     * @param WebOperationContext $operationContext     A reference to the context for the current operation
+     * @param IOperationContext   $operationContext     A reference to the context for the current operation
+     * @param ResourceStreamInfo|null  $resourceStreamInfo   The ResourceStreamInfo instance that describes
+     *                                                  the named stream
      *
      * @throws ODataException if a valid stream or null cannot be returned for the given arguments
      *
@@ -224,10 +224,10 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      */
     public function getReadStream2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        $eTag,
-        $checkETagForEquality,
-        IOperationContext $operationContext
+        string $eTag,
+        bool $checkETagForEquality,
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
     ) {
         /*
         if (!is_null($checkETagForEquality)) {
@@ -264,21 +264,22 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      * metadata is needed when constructing the payload for the entity associated with the
      * named stream or setting the Content-Type HTTP response header.
      *
-     * @param object              $entity             The entity instance associated with the
+     * @param object             $entity              The entity instance associated with the
      *                                                stream for which the content type is to
      *                                                be obtained
-     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                the named stream
-     * @param WebOperationContext $operationContext   A reference to the context for the current
+     * @param IOperationContext  $operationContext    A reference to the context for the current
      *                                                operation
+     * @param ResourceStreamInfo $resourceStreamInfo  The ResourceStreamInfo instance that describes
+     *                                                the named stream
      *
      * @return string Valid Content-Type string for the named stream associated with the entity
+     * @throws ODataException
      */
     public function getStreamContentType2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        IOperationContext $operationContext
-    ) {
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ):string {
         if (!($entity instanceof Employee)) {
             throw new ODataException('Internal Server Error.', 500);
         }
@@ -294,18 +295,18 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      *
      * @param object              $entity             The entity instance associated with the
      *                                                stream for which an etag is to be obtained
-     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                the named stream
      * @param WebOperationContext $operationContext   A reference to the context for the current
      *                                                operation
+     * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                                the named stream
      *
      * @return string ETag of the named stream associated with the entity specified
      */
     public function getStreamETag2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        IOperationContext $operationContext
-    ) {
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ): string {
     }
 
     /**
@@ -317,36 +318,37 @@ class NorthWindStreamProvider4 implements IStreamProvider2
      * @param object              $entity             The entity instance associated with the
      *                                                stream for which a read stream URI is to
      *                                                be obtained
+     * @param IOperationContext   $operationContext   A reference to the context for the current
+     *                                                operation
      * @param ResourceStreamInfo  $resourceStreamInfo The ResourceStreamInfo instance that describes
      *                                                the named stream
-     * @param WebOperationContext $operationContext   A reference to the context for the current
-     *                                                operation
      *
-     * @return string The URI clients should use when making retrieve (ie. GET) requests to
-     *                the stream(ie. Media Resource)
+     * @return string|null        The URI clients should use when making retrieve (ie. GET) requests to
+     *                            the stream(ie. Media Resource)
      */
     public function getReadStreamUri2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo,
-        IOperationContext $operationContext
-    ) {
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ): ?string {
     }
 
     //End IStreamProvider2 methods implementation
+
     /**
-     * @param $entity
-     * @param  ResourceType            $resourceType
+     * @param  $entity
+     * @param  ResourceType $resourceType
+     * @param  IOperationContext $operationContext
      * @param  ResourceStreamInfo|null $resourceStreamInfo
-     * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  string|null $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(
         $entity,
         ResourceType $resourceType,
-        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        ResourceStreamInfo $resourceStreamInfo = null,
+        string $relativeUri = null
     ) {
         // TODO: Implement getDefaultStreamEditMediaUri() method.
     }

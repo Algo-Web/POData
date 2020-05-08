@@ -62,8 +62,6 @@ interface IStreamProvider2
      *
      * @param object                  $entity               The stream returned should be the default
      *                                                      stream associated with this entity instance
-     * @param ResourceStreamInfo|null $resourceStreamInfo   The ResourceStreamInfo instance that describes
-     *                                                      the named stream
      * @param string                  $eTag                 The etag value sent by the client (as the
      *                                                      value of an If[-None-]Match header) as part
      *                                                      of the HTTP request, This parameter will be
@@ -76,6 +74,8 @@ interface IStreamProvider2
      *                                                      the HTTP request for the stream was not a
      *                                                      conditional request
      * @param IOperationContext       $operationContext     A reference to the context for the current operation
+     * @param ResourceStreamInfo|null $resourceStreamInfo   The ResourceStreamInfo instance that describes
+     *                                                      the named stream
      *
      * @throws ODataException if a valid stream or null cannot be returned for the given arguments
      * @return mixed          A valid stream the data service use to query/read a named stream which is
@@ -85,10 +85,10 @@ interface IStreamProvider2
      */
     public function getReadStream2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        $eTag,
-        $checkETagForEquality,
-        IOperationContext $operationContext
+        string $eTag,
+        bool $checkETagForEquality,
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
     );
 
     /**
@@ -111,18 +111,18 @@ interface IStreamProvider2
      * @param object                  $entity             The entity instance associated with the
      *                                                    stream for which the content type is to
      *                                                    be obtained
-     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                    the named stream
      * @param IOperationContext       $operationContext   A reference to the context for the current
      *                                                    operation
+     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                                    the named stream
      *
      * @return string Valid Content-Type string for the named stream associated with the entity
      */
     public function getStreamContentType2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext
-    );
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ): string;
 
     /**
      * This method is invoked by the data services framework to obtain the ETag of the
@@ -140,18 +140,18 @@ interface IStreamProvider2
      *
      * @param object                  $entity             The entity instance associated with the
      *                                                    stream for which an etag is to be obtained
-     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                    the named stream
      * @param IOperationContext       $operationContext   A reference to the context for the current
      *                                                    operation
+     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                                    the named stream
      *
      * @return string ETag of the named stream associated with the entity specified
      */
     public function getStreamETag2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext
-    );
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ): string;
 
     /**
      * This method is invoked by the data services framework to obtain the URI clients should
@@ -178,33 +178,33 @@ interface IStreamProvider2
      * @param object                  $entity             The entity instance associated with the
      *                                                    stream for which a read stream URI is to
      *                                                    be obtained
-     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
-     *                                                    the named stream
      * @param IOperationContext       $operationContext   A reference to the context for the current
      *                                                    operation
+     * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
+     *                                                    the named stream
      *
-     * @return string The URI clients should use when making retrieve (ie. GET) requests to
-     *                the stream(ie. Media Resource)
+     * @return string|null            The URI clients should use when making retrieve (ie. GET) requests to
+     *                                the stream(ie. Media Resource)
      */
     public function getReadStreamUri2(
         $entity,
-        ResourceStreamInfo $resourceStreamInfo = null,
-        IOperationContext $operationContext
-    );
+        IOperationContext $operationContext,
+        ResourceStreamInfo $resourceStreamInfo = null
+    ): ?string;
 
     /**
-     * @param $entity
+     * @param                          $entity
      * @param  ResourceType            $resourceType
-     * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @param  IOperationContext       $operationContext
-     * @param  null                    $relativeUri
+     * @param  ResourceStreamInfo|null $resourceStreamInfo
+     * @param  string|null             $relativeUri
      * @return mixed
      */
     public function getDefaultStreamEditMediaUri(
         $entity,
         ResourceType $resourceType,
-        ResourceStreamInfo $resourceStreamInfo = null,
         IOperationContext $operationContext,
-        $relativeUri = null
+        ResourceStreamInfo $resourceStreamInfo = null,
+        string $relativeUri = null
     );
 }

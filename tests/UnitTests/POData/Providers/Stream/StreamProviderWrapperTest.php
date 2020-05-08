@@ -168,7 +168,7 @@ class StreamProviderWrapperTest extends TestCase
         $opContext = m::mock(IOperationContext::class);
 
         $streamProv = m::mock(IStreamProvider2::class);
-        $streamProv->shouldReceive('getStreamContentType2')->andReturnNull()->once();
+        $streamProv->shouldReceive('getStreamContentType2')->andReturn('')->once();
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
@@ -202,7 +202,7 @@ class StreamProviderWrapperTest extends TestCase
         $opContext = m::mock(IOperationContext::class);
 
         $streamProv = m::mock(IStreamProvider2::class);
-        $streamProv->shouldReceive('getStreamContentType2')->andReturnNull()->once();
+        $streamProv->shouldReceive('getStreamContentType2')->andReturn('')->once();
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getResponseContentType')->andReturn('application/json');
@@ -219,7 +219,7 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $result = $foo->getStreamContentType($data, $streamInfo);
-        $this->assertNull($result);
+        $this->assertEmpty($result);
     }
 
     public function testGetStreamContentTypeHasStreamInfoV3AndReturnsNullProvider()
@@ -418,7 +418,7 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $result = $foo->getReadStream($data, $streamInfo);
-        $this->assertEquals('electric-rave', $result->getStreamContentType2(null, $streamInfo, $context));
+        $this->assertEquals('electric-rave', $result->getStreamContentType2(null, $context, $streamInfo));
     }
 
     public function testGetReadStreamNullStreamHasStreamInfoReturnNull()
@@ -631,7 +631,7 @@ class StreamProviderWrapperTest extends TestCase
         $data = new reusableEntityClass2('hammer', 'time!');
 
         $streamProv = m::mock(IStreamProvider2::class);
-        $streamProv->shouldReceive('getReadStreamUri2')->andReturn(null)->once();
+        $streamProv->shouldReceive('getReadStreamUri2')->andReturn('http://index')->once();
 
         $context = m::mock(IOperationContext::class);
 
@@ -653,7 +653,8 @@ class StreamProviderWrapperTest extends TestCase
         $foo->setService($service);
 
         $result = $foo->getReadStreamUri($data, $streamInfo, 'http://www.example.com');
-        $this->assertNull($result);
+        $expected = 'http://index';
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetReadStreamUriNoStreamInfoFallBackToDefault()

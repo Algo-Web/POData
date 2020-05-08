@@ -524,7 +524,7 @@ class CynicSerialiser implements IObjectSerialiser
 
         $mediaLink = null;
         if ($resourceType->isMediaLinkEntry()) {
-            $eTag      = $streamProviderWrapper->getStreamETag2($entryObject, null, $context);
+            $eTag      = $streamProviderWrapper->getStreamETag2($entryObject, $context, null);
             $mediaLink = new ODataMediaLink($type, '/$value', $relativeUri . '/$value', '*/*', $eTag, 'edit-media');
         }
         $mediaLinks = [];
@@ -533,19 +533,19 @@ class CynicSerialiser implements IObjectSerialiser
             foreach ($namedStreams as $streamTitle => $resourceStreamInfo) {
                 $readUri = $streamProviderWrapper->getReadStreamUri2(
                     $entryObject,
-                    $resourceStreamInfo,
                     $context,
+                    $resourceStreamInfo,
                     $relativeUri
                 );
                 $mediaContentType = $streamProviderWrapper->getStreamContentType2(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $context
+                    $context,
+                    $resourceStreamInfo
                 );
                 $eTag = $streamProviderWrapper->getStreamETag2(
                     $entryObject,
-                    $resourceStreamInfo,
-                    $context
+                    $context,
+                    $resourceStreamInfo
                 );
 
                 $nuLink       = new ODataMediaLink($streamTitle, $readUri, $readUri, $mediaContentType, $eTag);
