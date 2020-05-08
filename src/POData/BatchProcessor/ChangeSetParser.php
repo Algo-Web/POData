@@ -186,6 +186,8 @@ class ChangeSetParser implements IBatchParser
                 $name                         = substr($name, 0, strlen($prefix)) === $prefix || $name == 'CONTENT_TYPE' ? $name : $prefix . $name;
                 $inboundRequestHeaders[$name] = $value;
             }
+            $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? $_SERVER['SERVER_ADDR'] ?? 'localhost';
+            $protocol=$_SERVER['PROTOCOL'] = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ? 'https' : 'http';
             $this->rawRequests[$contentID] = new WebOperationContext(
                 new IncomingRequest(
                     new HTTPRequestMethod($RequesetType),
@@ -194,7 +196,7 @@ class ChangeSetParser implements IBatchParser
                     $inboundRequestHeaders,
                     null,
                     $RequestBody,
-                    $RequestPath
+                    $protocol . '://' . $host . $RequestPath
                 )
             );
             if ($contentIDinit == $contentID) {

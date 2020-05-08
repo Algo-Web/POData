@@ -88,7 +88,7 @@ Content-Length: ###
                 'HTTP_CONTENT_LENGTH' => '###'],
             null,
             '<AtomPub representation of a new Customer>',
-            '/service/Customers'
+            'http://localhost/service/Customers'
         ));
 
         $second =  new WebOperationContext(new IncomingRequest(
@@ -101,7 +101,7 @@ Content-Length: ###
                 'HTTP_CONTENT_LENGTH' => '###'],
             null,
             '<JSON representation of Customer ALFKI>',
-            '/service/Customers(\'ALFKI\')'
+            'http://localhost/service/Customers(\'ALFKI\')'
         ));
 
 
@@ -164,7 +164,7 @@ Content-ID: 2
                 'HTTP_CONTENT_LENGTH' => '###'],
             null,
             '<AtomPub representation of a new Customer>',
-            '/service/Customers'
+            'http://localhost/service/Customers'
         ));
 
         $second =  new WebOperationContext(new IncomingRequest(
@@ -178,7 +178,7 @@ Content-ID: 2
                 'HTTP_CONTENT_ID' => '2'],
             null,
             '<JSON representation of Customer ALFKI>',
-            '/service/Customers(\'ALFKI\')'
+            'http://localhost/service/Customers(\'ALFKI\')'
         ));
 
         $foo = new ChangeSetParser($service, $body);
@@ -330,37 +330,15 @@ Stream II: ELECTRIC BOOGALOO--
         $service = m::mock(BaseService::class);
         $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
+        $service->shouldReceive('getHost')->andReturn(m::mock(ServiceHost::class))->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
         $body    = 'foo';
         $request = m::mock(IncomingRequest::class);
         $request->shouldReceive('getMethod')->andReturn('POST');
         $request->shouldReceive('getRawUrl')->andReturn('http://localhost/service.svc/Customers');
 
-        $first =  new WebOperationContext(new IncomingRequest(
-            new HTTPRequestMethod('POST'),
-            [],
-            [],
-            ['HTTP_HOST' => 'host',
-                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                'HTTP_CONTENT_LENGTH' => '###'],
-            null,
-            '<AtomPub representation of a new Customer>',
-            '/service/Customers'
-        ));
+        $first =  new WebOperationContext($request);
 
-        $second =  new WebOperationContext(new IncomingRequest(
-            new HTTPRequestMethod('PUT'),
-            [],
-            [],
-            ['HTTP_HOST' => 'host',
-                'CONTENT_TYPE' => 'application/json',
-                'HTTP_IF_MATCH' => 'xxxxx',
-                'HTTP_CONTENT_LENGTH' => '###',
-                'HTTP_CONTENT_ID' => '2'],
-            null,
-            '<JSON representation of Customer ALFKI>',
-            '/service/Customers(\'ALFKI\')'
-        ));
 
 
         $foo = new ChangeSetParserDummy($service, $body);
