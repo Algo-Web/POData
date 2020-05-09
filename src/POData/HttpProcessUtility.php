@@ -269,8 +269,8 @@ class HttpProcessUtility
         $valueIsQuoted  = false;
         if ($textIndex < $textLen &&
             '"' == $text[$textIndex]) {
-                ++$textIndex;
-                $valueIsQuoted = true;
+            ++$textIndex;
+            $valueIsQuoted = true;
         }
 
         while ($textIndex < $textLen) {
