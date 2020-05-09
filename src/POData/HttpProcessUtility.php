@@ -67,7 +67,8 @@ class HttpProcessUtility
             }
         }
 
-        if ((null === $selectedContentType || 0 == $selectedQualityValue) && !empty($acceptTypes)) {
+        if ((null === $selectedContentType || 0 == $selectedQualityValue) &&
+            !empty($acceptTypes)) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
