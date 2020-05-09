@@ -21,7 +21,7 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var array
      */
-    private $headers = [];
+    protected $headers = [];
 
     /**
      * The incoming url in raw format.
@@ -35,28 +35,28 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var HTTPRequestMethod HttpVerb
      */
-    private $method;
+    protected $method;
 
     /**
      * The query options as key value.
      *
      * @var array(string, string);
      */
-    private $queryOptions = [];
+    protected $queryOptions = [];
 
     /**
      * A collection that represents mapping between query option and its count.
      *
      * @var array(string, int)
      */
-    private $queryOptionsCount = [];
+    protected $queryOptionsCount = [];
 
     /**
      * The raw query string.
      *
      * @var string|null;
      */
-    private $queryString = null;
+    protected $queryString = null;
 
     /**
      * The raw input.
