@@ -9,7 +9,6 @@ use POData\OperationContext\Web\IncomingRequest;
 
 class IncomingChangeSetRequest extends IncomingRequest
 {
-
     protected $contentID = null;
 
     public function __construct(string $requestChunk)

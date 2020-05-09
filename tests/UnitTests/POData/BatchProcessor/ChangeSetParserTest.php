@@ -132,7 +132,6 @@ Content-Length: ###
         $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $secondRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
         $this->assertEquals($second->incomingRequest()->getMethod(), $secondRequest->getMethod());
         $this->assertEquals($second->incomingRequest()->getRawUrl(), $secondRequest->getRawUrl());
-
     }
 
     public function testHandleDataWithContentID()
