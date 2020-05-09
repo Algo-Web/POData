@@ -16,11 +16,10 @@ class HttpProcessUtility
     /**
      * Gets the appropriate MIME type for the request, throwing if there is none.
      *
-     * @param string   $acceptTypesText    Text as it appears in an HTTP
-     *                                     Accepts header
-     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in
-     *                                     descending order of preference
-     * @param string   $inexactContentType Preferred fallback content type for inexact matches
+     * @param string|null   $acceptTypesText    Text as it appears in an HTTP Accepts header
+     * @param string[]      $exactContentTypes  Preferred content type to match if an exact media type is given - in
+     *                                          descending order of preference
+     * @param string|null   $inexactContentType Preferred fallback content type for inexact matches
      *
      * @throws HttpHeaderFailure
      * @return string|null       One of exactContentType or inexactContentType
@@ -28,67 +27,37 @@ class HttpProcessUtility
     public static function selectRequiredMimeType(
         ?string $acceptTypesText,
         array $exactContentTypes,
-        $inexactContentType
+        ?string $inexactContentType
     ): ?string {
-        $selectedContentType   = null;
-        $selectedMatchingParts = -1;
-        $selectedQualityValue  = 0;
-        $acceptable            = false;
-        $acceptTypesEmpty      = true;
-        $foundExactMatch       = false;
-
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
-
+        // fetch types client will accept
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-        foreach ($acceptTypes as $acceptType) {
-            $acceptTypesEmpty = false;
-            foreach ($exactContentTypes as $exactContentType) {
-                if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
-                    $selectedContentType  = $exactContentType;
-                    $selectedQualityValue = $acceptType->getQualityValue();
-                    $acceptable           = 0 != $selectedQualityValue;
-                    $foundExactMatch      = true;
-                    break;
-                }
-            }
-
-            if ($foundExactMatch) {
-                break;
-            }
-
-            $matchingParts = $acceptType->getMatchingRating($inexactContentType);
-            if ($matchingParts < 0) {
-                continue;
-            }
-
-            $candidateQualityValue = $acceptType->getQualityValue();
-            if ($matchingParts > $selectedMatchingParts) {
-                // A more specific type wins.
-                $selectedContentType   = $inexactContentType;
-                $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue  = $candidateQualityValue;
-                $acceptable            = 0 != $selectedQualityValue;
-            } elseif ($matchingParts == $selectedMatchingParts) {
-                // A type with a higher q-value wins.
-                if ($candidateQualityValue > $selectedQualityValue) {
-                    $selectedContentType  = $inexactContentType;
-                    $selectedQualityValue = $candidateQualityValue;
-                    $acceptable           = 0 != $selectedQualityValue;
-                }
-            }
+        if (empty($acceptTypes)) {
+            return $inexactContentType;
         }
-
-        if (!$acceptable && !$acceptTypesEmpty) {
+        // filter out transmitted types which have a zero quality
+        $acceptTypes = array_filter($acceptTypes, function (MediaType $acceptType) {
+            return 0 !== $acceptType->getQualityValue();
+        });
+        // reduce acceptable types down to any that matches are exact set.
+        $exactMatch = array_uintersect($acceptTypes, $exactContentTypes, function (MediaType $acceptType, $exactType) {
+            return strcasecmp($acceptType->getMimeType(), $exactType);
+        });
+        // check if an exact match was found
+        if (0 !== count($exactMatch)) {
+            return $exactMatch[0]->getMimeType();
+        }
+        // filter down all remaining accept types to any that are a partial match for inexact
+        $acceptTypes = array_filter($acceptTypes, function (MediaType $acceptType) use ($inexactContentType) {
+            return 0 < $acceptType->getMatchingRating($inexactContentType);
+        });
+        // if no inexact type go boom.
+        if (count($acceptTypes) === 0) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
-
-        if ($acceptTypesEmpty) {
-            $selectedContentType = $inexactContentType;
-        }
-
-        return $selectedContentType;
+        return $inexactContentType;
     }
 
     /**
@@ -243,12 +212,8 @@ class HttpProcessUtility
      */
     public static function isHttpSeparator(string $char): bool
     {
-        return
-            $char == '(' || $char == ')' || $char == '<' || $char == '>' ||
-            $char == '@' || $char == ',' || $char == ';' || $char == ':' ||
-            $char == '\\' || $char == '"' || $char == '/' || $char == '[' ||
-            $char == ']' || $char == '?' || $char == '=' || $char == '{' ||
-            $char == '}' || $char == ' ' || ord($char) == Char::TAB;
+        $httpSeperators = ['(', ')', '<', '>', '@', ',', ';', ':', '\\', '"', '/', '[', ']', '?', '=', '{', '}', ' '];
+        return in_array($char, $httpSeperators) || ord($char) == Char::TAB;
     }
 
     /**
@@ -279,9 +244,8 @@ class HttpProcessUtility
         }
 
         ++$textIndex;
-        $parameterValue
-                      = self::readQuotedParameterValue($parameterName, $text, $textIndex);
-        $parameters[] = [$parameterName => $parameterValue];
+        $parameterValue = self::readQuotedParameterValue($parameterName, $text, $textIndex);
+        $parameters[]   = [$parameterName => $parameterValue];
     }
 
     /**
@@ -303,11 +267,10 @@ class HttpProcessUtility
         $parameterValue = [];
         $textLen        = strlen($text);
         $valueIsQuoted  = false;
-        if ($textIndex < $textLen) {
-            if ('"' == $text[$textIndex]) {
-                ++$textIndex;
-                $valueIsQuoted = true;
-            }
+        if ($textIndex < $textLen &&
+            '"' == $text[$textIndex]) {
+            ++$textIndex;
+            $valueIsQuoted = true;
         }
 
         while ($textIndex < $textLen) {
@@ -429,8 +392,7 @@ class HttpProcessUtility
      * @param string $text       Text to read qvalue from
      * @param int    &$textIndex Index into text where the qvalue starts
      *
-     * @throws HttpHeaderFailure If any error occurred while reading and processing
-     *                           the quality factor
+     * @throws HttpHeaderFailure If any error occurred while reading and processing the quality factor
      * @return int               The normalised qvalue
      */
     public static function readQualityValue(string $text, int &$textIndex): int
@@ -448,33 +410,33 @@ class HttpProcessUtility
         }
 
         $textLen = strlen($text);
-        if ($textIndex < $textLen && '.' == $text[$textIndex]) {
-            ++$textIndex;
+        if ($textIndex >= $textLen || '.' != $text[$textIndex]) {
+            return $qualityValue * 1000;
+        }
 
-            $adjustFactor = 1000;
-            while (1 < $adjustFactor && $textIndex < $textLen) {
-                $c         = $text[$textIndex];
-                $charValue = self::digitToInt32($c);
-                if (0 <= $charValue) {
-                    ++$textIndex;
-                    $adjustFactor /= 10;
-                    $qualityValue *= 10;
-                    $qualityValue += $charValue;
-                } else {
-                    break;
-                }
-            }
+        ++$textIndex;
 
-            $qualityValue *= $adjustFactor;
-            if ($qualityValue > 1000) {
-                // Too high of a value in qvalue.
-                throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(),
-                    400
-                );
+        $adjustFactor = 1000;
+        while (1 < $adjustFactor && $textIndex < $textLen) {
+            $c = $text[$textIndex];
+            $charValue = self::digitToInt32($c);
+            if (0 <= $charValue) {
+                ++$textIndex;
+                $adjustFactor /= 10;
+                $qualityValue *= 10;
+                $qualityValue += $charValue;
+            } else {
+                break;
             }
-        } else {
-            $qualityValue *= 1000;
+        }
+
+        $qualityValue *= $adjustFactor;
+        if ($qualityValue > 1000) {
+            // Too high of a value in qvalue.
+            throw new HttpHeaderFailure(
+                Messages::httpProcessUtilityMalformedHeaderValue(),
+                400
+            );
         }
 
         return $qualityValue;
@@ -492,16 +454,14 @@ class HttpProcessUtility
     {
         if ('0' <= $c && '9' >= $c) {
             return intval($c);
-        } else {
-            if (self::isHttpElementSeparator($c)) {
-                return -1;
-            } else {
-                throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(),
-                    400
-                );
-            }
         }
+        if (self::isHttpElementSeparator($c)) {
+            return -1;
+        }
+        throw new HttpHeaderFailure(
+            Messages::httpProcessUtilityMalformedHeaderValue(),
+            400
+        );
     }
 
     /**
@@ -510,8 +470,7 @@ class HttpProcessUtility
      *
      * @param string $c Character to verify
      *
-     * @return bool true if c is a valid character for separating elements;
-     *              false otherwise
+     * @return bool true if c is a valid character for separating elements; false otherwise
      */
     public static function isHttpElementSeparator(string $c): bool
     {
@@ -527,21 +486,8 @@ class HttpProcessUtility
     public static function headerToServerKey(string $headerName): string
     {
         $name = strtoupper(str_replace('-', '_', $headerName));
-        switch ($name) {
-            case 'HOST':
-            case 'CONNECTION':
-            case 'CACHE_CONTROL':
-            case 'ORIGIN':
-            case 'USER_AGENT':
-            case 'POSTMAN_TOKEN':
-            case 'ACCEPT':
-            case 'ACCEPT_ENCODING':
-            case 'ACCEPT_LANGUAGE':
-            case 'DATASERVICEVERSION':
-            case 'MAXDATASERVICEVERSION':
-                return 'HTTP_' . $name;
-        }
-
-        return $name;
+        $prefixableKeys = ['HOST', 'CONNECTION', 'CACHE_CONTROL', 'ORIGIN', 'USER_AGENT', 'POSTMAN_TOKEN', 'ACCEPT',
+            'ACCEPT_ENCODING', 'ACCEPT_LANGUAGE', 'DATASERVICEVERSION', 'MAXDATASERVICEVERSION'];
+        return in_array($name, $prefixableKeys) ? 'HTTP_' . $name : $name;
     }
 }
