@@ -60,17 +60,19 @@ class HttpProcessUtility
             $candidateQualityValue = $acceptType->getQualityValue();
             if ($matchingParts > $selectedMatchingParts) {
                 // A more specific type wins.
-                $selectedContentType   = $inexactContentType;
+                $selectedContentType = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue  = $candidateQualityValue;
-                $acceptable            = 0 != $selectedQualityValue;
-            } elseif ($matchingParts == $selectedMatchingParts) {
+                $selectedQualityValue = $candidateQualityValue;
+                $acceptable = 0 != $selectedQualityValue;
+            } elseif ($matchingParts == $selectedMatchingParts &&
                 // A type with a higher q-value wins.
-                if ($candidateQualityValue > $selectedQualityValue) {
-                    $selectedContentType  = $inexactContentType;
-                    $selectedQualityValue = $candidateQualityValue;
-                    $acceptable           = 0 != $selectedQualityValue;
-                }
+                $candidateQualityValue > $selectedQualityValue
+            ) {
+
+                $selectedContentType  = $inexactContentType;
+                $selectedQualityValue = $candidateQualityValue;
+                $acceptable           = 0 != $selectedQualityValue;
+
             }
         }
 
