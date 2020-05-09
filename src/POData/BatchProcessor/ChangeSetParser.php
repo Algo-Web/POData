@@ -78,7 +78,7 @@ class ChangeSetParser implements IBatchParser
     }
 
     /**
-     * @return array
+     * @return WebOperationContext[]
      */
     public function getRawRequests()
     {
