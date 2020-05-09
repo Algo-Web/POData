@@ -13,7 +13,6 @@ use POData\ObjectModel\ObjectModelSerializer;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\Web\IncomingRequest;
 use ReflectionException;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use UnitTests\POData\TestCase;
 
 class SerialiserTestBase extends TestCase
@@ -28,7 +27,7 @@ class SerialiserTestBase extends TestCase
         $verb = new HTTPRequestMethod($method);
 
         $request          = m::mock(IncomingRequest::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request->headers = new HeaderBag(['CONTENT_TYPE' => 'application/atom+xml']);
+        $request->headers = ['CONTENT_TYPE' => 'application/atom+xml'];
         $request->shouldReceive('getMethod')->andReturn($verb);
         $request->shouldReceive('getBaseUrl')->andReturn('http://localhost/');
         //$request->shouldReceive('getQueryString')->andReturn('');
