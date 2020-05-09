@@ -33,7 +33,6 @@ class HttpProcessUtility
         $selectedContentType   = null;
         $selectedMatchingParts = -1;
         $selectedQualityValue  = 0;
-        $acceptable            = false;
 
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
@@ -44,8 +43,6 @@ class HttpProcessUtility
             foreach ($exactContentTypes as $exactContentType) {
                 if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
                     $selectedContentType  = $exactContentType;
-                    $selectedQualityValue = $acceptType->getQualityValue();
-                    $acceptable           = 0 != $selectedQualityValue;
                     break 2;
                 }
             }
@@ -67,11 +64,10 @@ class HttpProcessUtility
                 $selectedContentType = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
                 $selectedQualityValue = $candidateQualityValue;
-                $acceptable = 0 != $selectedQualityValue;
             }
         }
 
-        if (!$acceptable && !empty($acceptTypes)) {
+        if (null === $selectedContentType && !empty($acceptTypes)) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
