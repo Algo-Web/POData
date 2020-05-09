@@ -43,7 +43,11 @@
 
   "autoload": {
     "psr-0": {
-      "POData": "src/",
+      "POData": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-0": {
       "UnitTests" : "tests/"
     }
   }
