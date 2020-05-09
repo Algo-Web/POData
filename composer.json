@@ -37,14 +37,17 @@
     "pcov/clobber": "dev-master",
     "php-coveralls/php-coveralls": ">=v2.1",
     "phpunit/phpunit": "^7.0",
-    "mockery/mockery": "0.9.*|dev-master",
-    "fiunchinho/phpunit-randomizer": "2.0.*"
+    "mockery/mockery": "0.9.*|dev-master"
   },
 
   "autoload": {
-    "psr-0": {
-      "POData": "src/",
-      "UnitTests" : "tests/"
+    "psr-4": {
+      "POData\\": "src/POData/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "UnitTests\\POData\\": "tests/UnitTests/POData/"
     }
   }
 }
