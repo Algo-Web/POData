@@ -35,7 +35,6 @@ class HttpProcessUtility
         $selectedQualityValue  = 0;
         $acceptable            = false;
         $acceptTypesEmpty      = true;
-        $foundExactMatch       = false;
 
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
@@ -49,13 +48,8 @@ class HttpProcessUtility
                     $selectedContentType  = $exactContentType;
                     $selectedQualityValue = $acceptType->getQualityValue();
                     $acceptable           = 0 != $selectedQualityValue;
-                    $foundExactMatch      = true;
-                    break;
+                    break 2;
                 }
-            }
-
-            if ($foundExactMatch) {
-                break;
             }
 
             $matchingParts = $acceptType->getMatchingRating($inexactContentType);
