@@ -246,9 +246,8 @@ class HttpProcessUtility
         }
 
         ++$textIndex;
-        $parameterValue
-                      = self::readQuotedParameterValue($parameterName, $text, $textIndex);
-        $parameters[] = [$parameterName => $parameterValue];
+        $parameterValue = self::readQuotedParameterValue($parameterName, $text, $textIndex);
+        $parameters[]   = [$parameterName => $parameterValue];
     }
 
     /**
@@ -396,8 +395,7 @@ class HttpProcessUtility
      * @param string $text       Text to read qvalue from
      * @param int    &$textIndex Index into text where the qvalue starts
      *
-     * @throws HttpHeaderFailure If any error occurred while reading and processing
-     *                           the quality factor
+     * @throws HttpHeaderFailure If any error occurred while reading and processing the quality factor
      * @return int               The normalised qvalue
      */
     public static function readQualityValue(string $text, int &$textIndex): int
@@ -477,8 +475,7 @@ class HttpProcessUtility
      *
      * @param string $c Character to verify
      *
-     * @return bool true if c is a valid character for separating elements;
-     *              false otherwise
+     * @return bool true if c is a valid character for separating elements; false otherwise
      */
     public static function isHttpElementSeparator(string $c): bool
     {
