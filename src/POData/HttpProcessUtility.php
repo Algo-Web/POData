@@ -39,37 +39,33 @@ class HttpProcessUtility
         }
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-        foreach ($acceptTypes as $acceptType) {
-            // A Case insensative Search to see get an exact match by key.
-            $exactMatch = array_search(
-                strtolower($acceptType->getMimeType()),
-                array_map('strtolower', $exactContentTypes)
-            );
-            if(false !== $exactMatch){
-                $selectedContentType = $exactContentTypes[$exactMatch];
-                $selectedQualityValue = $acceptType->getQualityValue();
-                break;
-            }
+        $exactMatchs = array_uintersect($acceptTypes, $exactContentTypes, function(MediaType $acceptType, $exactType){
+            return strcasecmp($acceptType->getMimeType(), $exactType);
+        });
+        if(count($exactMatchs)!== 0){
+            $selectedContentType = $exactMatchs[0]->getMimeType();
+            $selectedQualityValue = $exactMatchs[0]->getQualityValue();
+        }else {
+            foreach ($acceptTypes as $acceptType) {
+                $matchingParts = $acceptType->getMatchingRating($inexactContentType);
+                if ($matchingParts < 0) {
+                    continue;
+                }
 
-            $matchingParts = $acceptType->getMatchingRating($inexactContentType);
-            if ($matchingParts < 0) {
-                continue;
-            }
-
-            $candidateQualityValue = $acceptType->getQualityValue();
-            // A more specific type wins.
-            if ($matchingParts > $selectedMatchingParts ||
-                (
-                    $matchingParts == $selectedMatchingParts &&
-                    // A type with a higher q-value wins.
-                    $candidateQualityValue > $selectedQualityValue
-                )) {
-                $selectedContentType = $inexactContentType;
-                $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue = $candidateQualityValue;
+                $candidateQualityValue = $acceptType->getQualityValue();
+                // A more specific type wins.
+                if ($matchingParts > $selectedMatchingParts ||
+                    (
+                        $matchingParts == $selectedMatchingParts &&
+                        // A type with a higher q-value wins.
+                        $candidateQualityValue > $selectedQualityValue
+                    )) {
+                    $selectedContentType = $inexactContentType;
+                    $selectedMatchingParts = $matchingParts;
+                    $selectedQualityValue = $candidateQualityValue;
+                }
             }
         }
-
         if ((null === $selectedContentType || 0 == $selectedQualityValue) &&
             !empty($acceptTypes)) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
