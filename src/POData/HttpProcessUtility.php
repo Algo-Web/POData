@@ -45,26 +45,22 @@ class HttpProcessUtility
         if(count($exactMatchs)!== 0){
             return $exactMatchs[0]->getMimeType();
         }
-        foreach ($acceptTypes as $acceptType) {
-            $matchingParts = $acceptType->getMatchingRating($inexactContentType);
-            if ($matchingParts < 0) {
-                continue;
+
+        usort($acceptTypes, function (MediaType $a, MediaType $b) use ($inexactContentType) {
+            $aMatch = $a->getMatchingRating($inexactContentType);
+            $bMatch = $b->getMatchingRating($inexactContentType);
+            $aQual  = $a->getQualityValue();
+            $bQual  = $b->getQualityValue();
+            if ($aMatch != $bMatch) {
+                return  $aMatch <=> $bMatch;
             }
 
-            $candidateQualityValue = $acceptType->getQualityValue();
-            // A more specific type wins.
-            if ($matchingParts > $selectedMatchingParts ||
-                (
-                    $matchingParts == $selectedMatchingParts &&
-                    // A type with a higher q-value wins.
-                    $candidateQualityValue > $selectedQualityValue
-                )) {
-                $selectedContentType = $inexactContentType;
-                $selectedMatchingParts = $matchingParts;
-                $selectedQualityValue = $candidateQualityValue;
-            }
+            return $aQual <=> $bQual;
+        });
+        if(0 <= $acceptTypes[0]->getMatchingRating($inexactContentType)){
+            $selectedContentType = $inexactContentType;
+            $selectedQualityValue = $acceptTypes[0]->getQualityValue();
         }
-
         if ((null === $selectedContentType || 0 == $selectedQualityValue) &&
             !empty($acceptTypes)) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
