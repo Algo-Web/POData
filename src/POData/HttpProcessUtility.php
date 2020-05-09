@@ -34,7 +34,6 @@ class HttpProcessUtility
         $selectedMatchingParts = -1;
         $selectedQualityValue  = 0;
         $acceptable            = false;
-        $acceptTypesEmpty      = true;
 
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
@@ -42,7 +41,6 @@ class HttpProcessUtility
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
         foreach ($acceptTypes as $acceptType) {
-            $acceptTypesEmpty = false;
             foreach ($exactContentTypes as $exactContentType) {
                 if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
                     $selectedContentType  = $exactContentType;
@@ -58,33 +56,26 @@ class HttpProcessUtility
             }
 
             $candidateQualityValue = $acceptType->getQualityValue();
-            if ($matchingParts > $selectedMatchingParts) {
-                // A more specific type wins.
+            // A more specific type wins.
+            if ($matchingParts > $selectedMatchingParts ||
+                (
+                    $matchingParts == $selectedMatchingParts &&
+                    // A type with a higher q-value wins.
+                    $candidateQualityValue > $selectedQualityValue
+                )) {
+
                 $selectedContentType = $inexactContentType;
                 $selectedMatchingParts = $matchingParts;
                 $selectedQualityValue = $candidateQualityValue;
                 $acceptable = 0 != $selectedQualityValue;
-            } elseif ($matchingParts == $selectedMatchingParts &&
-                // A type with a higher q-value wins.
-                $candidateQualityValue > $selectedQualityValue
-            ) {
-
-                $selectedContentType  = $inexactContentType;
-                $selectedQualityValue = $candidateQualityValue;
-                $acceptable           = 0 != $selectedQualityValue;
-
             }
         }
 
-        if (!$acceptable && !$acceptTypesEmpty) {
+        if (!$acceptable && !empty($acceptTypes)) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
-        if ($acceptTypesEmpty) {
-            $selectedContentType = $inexactContentType;
-        }
-
-        return $selectedContentType;
+        return empty($acceptTypes) ? $inexactContentType : $selectedContentType;
     }
 
     /**
