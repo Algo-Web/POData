@@ -52,5 +52,4 @@ class IncomingChangeSetRequest extends IncomingRequest
     {
         return $this->contentID;
     }
-
 }

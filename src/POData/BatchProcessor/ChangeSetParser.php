@@ -205,6 +205,4 @@ class ChangeSetParser implements IBatchParser
         }
         return $results;
     }
-
-
 }
