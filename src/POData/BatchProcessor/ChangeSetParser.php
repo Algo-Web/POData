@@ -166,9 +166,8 @@ class ChangeSetParser implements IBatchParser
             if ('--' === trim($match)) {
                 continue;
             }
-            $request = new IncomingChangeSetRequest($match);
-                $contentID = $request->getContentId(
-                    ) ?? $contentIDinit;
+            $request   = new IncomingChangeSetRequest($match);
+            $contentID = $request->getContentId() ?? $contentIDinit;
             $this->rawRequests[$contentID] = new WebOperationContext($request);
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
