@@ -114,8 +114,25 @@ Content-Length: ###
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
 
-        $this->assertEquals($first, $result[-1]);
-        $this->assertEquals($second, $result[-2]);
+        $firstRequest = $result[-1]->incomingRequest();
+        $secondRequest = $result[-2]->incomingRequest();
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_HOST'), $firstRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $firstRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $firstRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $firstRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($first->incomingRequest()->getMethod(), $firstRequest->getMethod());
+        $this->assertEquals($first->incomingRequest()->getRawUrl(), $firstRequest->getRawUrl());
+
+
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_HOST'), $secondRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $secondRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $secondRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $secondRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($second->incomingRequest()->getMethod(), $secondRequest->getMethod());
+        $this->assertEquals($second->incomingRequest()->getRawUrl(), $secondRequest->getRawUrl());
+
     }
 
     public function testHandleDataWithContentID()
@@ -189,8 +206,24 @@ Content-ID: 2
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
 
-        $this->assertEquals($first, $result[-1]);
-        $this->assertEquals($second, $result[-2]);
+        $firstRequest = $result[-1]->incomingRequest();
+        $secondRequest = $result[2]->incomingRequest();
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_HOST'), $firstRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $firstRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $firstRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $firstRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($first->incomingRequest()->getMethod(), $firstRequest->getMethod());
+        $this->assertEquals($first->incomingRequest()->getRawUrl(), $firstRequest->getRawUrl());
+
+
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_HOST'), $secondRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $secondRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $secondRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $secondRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($second->incomingRequest()->getMethod(), $secondRequest->getMethod());
+        $this->assertEquals($second->incomingRequest()->getRawUrl(), $secondRequest->getRawUrl());
     }
 
     public function testGetResponse()
