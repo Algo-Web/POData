@@ -31,14 +31,15 @@ class HttpProcessUtility
         $inexactContentType
     ): ?string {
         $selectedContentType   = null;
-        $selectedMatchingParts = -1;
-        $selectedQualityValue  = 0;
 
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
+        if(empty($acceptTypes)){
+            return $inexactContentType;
+        }
         $exactMatchs = array_uintersect($acceptTypes, $exactContentTypes, function(MediaType $acceptType, $exactType){
             return strcasecmp($acceptType->getMimeType(), $exactType) && 0 !== $acceptType->getQualityValue();
         });
@@ -57,16 +58,14 @@ class HttpProcessUtility
 
             return $aQual <=> $bQual;
         });
-        if(0 <= $acceptTypes[0]->getMatchingRating($inexactContentType)){
-            $selectedContentType = $inexactContentType;
-            $selectedQualityValue = $acceptTypes[0]->getQualityValue();
-        }
-        if ((null === $selectedContentType || 0 == $selectedQualityValue) &&
-            !empty($acceptTypes)) {
+
+        if (
+                0 >= $acceptTypes[0]->getMatchingRating($inexactContentType) ||
+                0 == $acceptTypes[0]->getQualityValue()
+        ) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
-
-        return empty($acceptTypes) ? $inexactContentType : $selectedContentType;
+        return $inexactContentType;
     }
 
     /**
