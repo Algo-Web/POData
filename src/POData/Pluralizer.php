@@ -12,7 +12,7 @@ use AlgoWeb\ODataMetadata\MetadataManager;
 use Doctrine\Inflector\Inflector;
 
 /**
- * Class Pluralizer - hoisted from Laravel to support StringUtility
+ * Class Pluralizer - hoisted from Laravel to support string pluralisation
  * @package POData
  */
 class Pluralizer

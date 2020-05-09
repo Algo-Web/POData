@@ -8,6 +8,7 @@ use Mockery as m;
 use POData\BaseService;
 use POData\BatchProcessor\BatchProcessor;
 use POData\BatchProcessor\ChangeSetParser;
+use POData\BatchProcessor\IncomingChangeSetRequest;
 use POData\BatchProcessor\QueryParser;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
@@ -16,11 +17,13 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Configuration\ServiceConfiguration;
 use POData\IService;
+use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\OutgoingResponse;
+use POData\OperationContext\Web\WebOperationContext;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\BatchProcessor\ChangeSetParserDummy;
 use UnitTests\POData\TestCase;
@@ -76,28 +79,32 @@ Content-Length: ###
 --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621-- 
 
 ';
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => null];
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => null];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            'http://localhost/service/Customers'
+        ));
+
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            'http://localhost/service/Customers(\'ALFKI\')'
+        ));
+
 
 
         $foo = new ChangeSetParser($service, $body);
@@ -106,14 +113,25 @@ Content-Length: ###
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
-        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
-        $this->assertTrue($result[-2]->Request instanceof IHTTPRequest);
-        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
-        // before proceeding to equality check
-        $result[-1]->Request = null;
-        $result[-2]->Request = null;
-        $this->assertEquals($first, $result[-1]);
-        $this->assertEquals($second, $result[-2]);
+
+        $firstRequest = $result[-1]->incomingRequest();
+        $secondRequest = $result[-2]->incomingRequest();
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_HOST'), $firstRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $firstRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $firstRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $firstRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($first->incomingRequest()->getMethod(), $firstRequest->getMethod());
+        $this->assertEquals($first->incomingRequest()->getRawUrl(), $firstRequest->getRawUrl());
+
+
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_HOST'), $secondRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $secondRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $secondRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $secondRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($second->incomingRequest()->getMethod(), $secondRequest->getMethod());
+        $this->assertEquals($second->incomingRequest()->getRawUrl(), $secondRequest->getRawUrl());
     }
 
     public function testHandleDataWithContentID()
@@ -153,29 +171,32 @@ Content-ID: 2
 
 ';
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => null];
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => null];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            'http://localhost/service/Customers'
+        ));
 
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            'http://localhost/service/Customers(\'ALFKI\')'
+        ));
 
         $foo = new ChangeSetParser($service, $body);
         $foo->handleData();
@@ -183,69 +204,25 @@ Content-ID: 2
         $this->assertEquals(2, count($result));
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
-        $this->assertTrue($result[-1]->Request instanceof IHTTPRequest);
-        $this->assertTrue($result[2]->Request instanceof IHTTPRequest);
-        // For moment, confirming that Request values are instances of IHTTPRequest is enough, so we can null them out
-        // before proceeding to equality check
-        $result[-1]->Request = null;
-        $result[2]->Request  = null;
-        $this->assertEquals($first, $result[-1]);
-        $this->assertEquals($second, $result[2]);
-    }
 
-    public function testHandleDataWithMalformedHeaderLine()
-    {
-        $service = m::mock(BaseService::class);
-        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
+        $firstRequest = $result[-1]->incomingRequest();
+        $secondRequest = $result[2]->incomingRequest();
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
+        $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_HOST'), $firstRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $firstRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $firstRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($first->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $firstRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($first->incomingRequest()->getMethod(), $firstRequest->getMethod());
+        $this->assertEquals($first->incomingRequest()->getRawUrl(), $firstRequest->getRawUrl());
 
-        $body    = ' 
-Content-Type: multipart/mixed; boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
-Content-Length: ###       
 
---changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621 
-Content-Type: application/http 
-Content-Transfer-Encoding: binary
-
-POST /service/Customers HTTP/1.1 
-Host: host  
-Content-Type: application/atom+xml:type=entry 
-Content-Length: ### 
-
-<AtomPub representation of a new Customer> 
-
---changeset_77162fcd-b8da-41ac-a9f8-9357efbbd621-- 
-
-';
-
-        $expected = 'Malformed header line: Content-Type: application/atom+xml:type=entry ';
-        $actual   = null;
-
-        $foo = new ChangeSetParser($service, $body);
-        try {
-            $foo->handleData();
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testHandleDataWithTooManySegments()
-    {
-        $bigPayload = '--.--' . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . '.--.--.--.';
-
-        $foo = m::mock(ChangeSetParser::class)->makePartial();
-        $foo->shouldReceive('getData')->andReturn('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.', $bigPayload);
-        $service = m::mock(BaseService::class);
-        $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
-        $foo->shouldReceive('getService')->andReturn($service);
-        $expected = 'how did we end up with more than 3 stages??';
-        $actual   = null;
-        try {
-            $foo->handleData();
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_HOST'), $secondRequest->getRequestHeader('HTTP_HOST'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('CONTENT_TYPE'), $secondRequest->getRequestHeader('CONTENT_TYPE'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_IF_MATCH'), $secondRequest->getRequestHeader('HTTP_IF_MATCH'));
+        $this->assertEquals($second->incomingRequest()->getRequestHeader('HTTP_CONTENT_LENGTH'), $secondRequest->getRequestHeader('HTTP_CONTENT_LENGTH'));
+        $this->assertEquals($second->incomingRequest()->getMethod(), $secondRequest->getMethod());
+        $this->assertEquals($second->incomingRequest()->getRawUrl(), $secondRequest->getRawUrl());
     }
 
     public function testGetResponse()
@@ -255,17 +232,20 @@ Content-Length: ###
         $response->shouldReceive('getStream')->andReturn('Stream II: ELECTRIC BOOGALOO');
         $response->shouldReceive('getHeaders')->andReturn($headers);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ), $response);
+
 
         $foo = m::mock(ChangeSetParser::class)->makePartial();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second])->once();
@@ -296,28 +276,31 @@ Stream II: ELECTRIC BOOGALOO--
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getHeaders')->andReturn(['Location' => 'Location Location'])->times(4);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ), $response);
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => $response];
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ), $response);
 
         $foo = m::mock(ChangeSetParser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second, 1 => $first])->once();
@@ -332,28 +315,32 @@ Stream II: ELECTRIC BOOGALOO--
         $response = m::mock(OutgoingResponse::class);
         $response->shouldReceive('getHeaders')->andReturn(['Location' => null])->times(1);
 
-        $second = (object) [
-            'RequestVerb' => 'PUT',
-            'RequestURL' => '/service/Customers(\'ALFKI\')',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/json',
-                    'HTTP_IF_MATCH' => 'xxxxx',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<JSON representation of Customer ALFKI>',
-            'Request' => null,
-            'Response' => $response];
+        $first =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('POST'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/atom+xml;type=entry',
+                'HTTP_CONTENT_LENGTH' => '###'],
+            null,
+            '<AtomPub representation of a new Customer>',
+            '/service/Customers'
+        ), $response);
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => null,
-            'Response' => $response];
+        $second =  new WebOperationContext(new IncomingRequest(
+            new HTTPRequestMethod('PUT'),
+            [],
+            [],
+            ['HTTP_HOST' => 'host',
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_IF_MATCH' => 'xxxxx',
+                'HTTP_CONTENT_LENGTH' => '###',
+                'HTTP_CONTENT_ID' => '2'],
+            null,
+            '<JSON representation of Customer ALFKI>',
+            '/service/Customers(\'ALFKI\')'
+        ), $response);
+
 
         $foo = m::mock(ChangeSetParser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRawRequests')->andReturn([-1 => $second, 1 => $first])->once();
@@ -376,25 +363,19 @@ Stream II: ELECTRIC BOOGALOO--
         $service = m::mock(BaseService::class);
         $service->shouldReceive('getConfiguration')->andReturn(new ServiceConfiguration(null))->atLeast(1);
         $service->shouldReceive('setHost')->andReturnNull()->atLeast(1);
+        $service->shouldReceive('getHost')->andReturn(m::mock(ServiceHost::class))->atLeast(1);
         $service->shouldReceive('handleRequest')->andReturnNull()->atLeast(1);
         $body    = 'foo';
         $request = m::mock(IncomingRequest::class);
         $request->shouldReceive('getMethod')->andReturn('POST');
         $request->shouldReceive('getRawUrl')->andReturn('http://localhost/service.svc/Customers');
 
-        $first = (object) [
-            'RequestVerb' => 'POST',
-            'RequestURL' => '/service/Customers',
-            'ServerParams' =>
-                ['HTTP_HOST' => 'host',
-                    'CONTENT_TYPE' => 'application/atom+xml;type=entry',
-                    'HTTP_CONTENT_LENGTH' => '###'],
-            'Content' => '<AtomPub representation of a new Customer>',
-            'Request' => $request,
-            'Response' => null];
+        $first =  new WebOperationContext($request);
+
+
 
         $foo = new ChangeSetParserDummy($service, $body);
         $foo->processSubRequest($first);
-        $this->assertNotNull($first->Response);
+        $this->assertNotNull($first->outgoingResponse());
     }
 }
