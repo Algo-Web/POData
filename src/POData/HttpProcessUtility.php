@@ -243,12 +243,8 @@ class HttpProcessUtility
      */
     public static function isHttpSeparator(string $char): bool
     {
-        return
-            $char == '(' || $char == ')' || $char == '<' || $char == '>' ||
-            $char == '@' || $char == ',' || $char == ';' || $char == ':' ||
-            $char == '\\' || $char == '"' || $char == '/' || $char == '[' ||
-            $char == ']' || $char == '?' || $char == '=' || $char == '{' ||
-            $char == '}' || $char == ' ' || ord($char) == Char::TAB;
+        $httpSeperators = ['(', ')', '<', '>', '@', ',', ';', ':', '\\', '"', '/', '[', ']', '?', '=', '{', '}', ' '];
+        return in_array($char, $httpSeperators) || ord($char) == Char::TAB;
     }
 
     /**
