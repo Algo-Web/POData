@@ -6,6 +6,7 @@ namespace UnitTests\POData\Facets\WordPress2;
 
 use POData\BaseService;
 use POData\Common\Messages;
+use POData\Common\NotImplementedException;
 use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
@@ -14,7 +15,6 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Query\IQueryProvider;
 use POData\UriProcessor\UriProcessor;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class WordPressDataService extends BaseService
 {
@@ -74,7 +74,7 @@ class WordPressDataService extends BaseService
      */
     public function getStreamProviderX()
     {
-        throw new Exception('not implemented');
+        throw new NotImplementedException('not implemented');
     }
 
     // For testing we overridden the BaseService::handleRequest method, one thing is the
