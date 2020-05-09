@@ -413,33 +413,33 @@ class HttpProcessUtility
         }
 
         $textLen = strlen($text);
-        if ($textIndex < $textLen && '.' == $text[$textIndex]) {
-            ++$textIndex;
+        if ($textIndex >= $textLen || '.' != $text[$textIndex]) {
+            return $qualityValue * 1000;
+        }
 
-            $adjustFactor = 1000;
-            while (1 < $adjustFactor && $textIndex < $textLen) {
-                $c         = $text[$textIndex];
-                $charValue = self::digitToInt32($c);
-                if (0 <= $charValue) {
-                    ++$textIndex;
-                    $adjustFactor /= 10;
-                    $qualityValue *= 10;
-                    $qualityValue += $charValue;
-                } else {
-                    break;
-                }
-            }
+        ++$textIndex;
 
-            $qualityValue *= $adjustFactor;
-            if ($qualityValue > 1000) {
-                // Too high of a value in qvalue.
-                throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(),
-                    400
-                );
+        $adjustFactor = 1000;
+        while (1 < $adjustFactor && $textIndex < $textLen) {
+            $c = $text[$textIndex];
+            $charValue = self::digitToInt32($c);
+            if (0 <= $charValue) {
+                ++$textIndex;
+                $adjustFactor /= 10;
+                $qualityValue *= 10;
+                $qualityValue += $charValue;
+            } else {
+                break;
             }
-        } else {
-            $qualityValue *= 1000;
+        }
+
+        $qualityValue *= $adjustFactor;
+        if ($qualityValue > 1000) {
+            // Too high of a value in qvalue.
+            throw new HttpHeaderFailure(
+                Messages::httpProcessUtilityMalformedHeaderValue(),
+                400
+            );
         }
 
         return $qualityValue;
@@ -457,16 +457,14 @@ class HttpProcessUtility
     {
         if ('0' <= $c && '9' >= $c) {
             return intval($c);
-        } else {
-            if (self::isHttpElementSeparator($c)) {
-                return -1;
-            } else {
-                throw new HttpHeaderFailure(
-                    Messages::httpProcessUtilityMalformedHeaderValue(),
-                    400
-                );
-            }
         }
+        if (self::isHttpElementSeparator($c)) {
+            return -1;
+        }
+        throw new HttpHeaderFailure(
+            Messages::httpProcessUtilityMalformedHeaderValue(),
+            400
+        );
     }
 
     /**
