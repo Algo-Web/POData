@@ -193,15 +193,7 @@ class ChangeSetParser implements IBatchParser
             if (strpos($value, ';') !== false) {
                 $value = self::parse_headers($value, ';', '=');
             }
-            if (isset($results[$key])) {
-                if (is_array($results[$key])) {
-                    $results[$key][] = $value;
-                } else {
-                    $results[$key] = [$results[$key], $value];
-                }
-            } else {
-                $results[$key] = $value;
-            }
+            $results[$key] = $value;
         }
         return $results;
     }
