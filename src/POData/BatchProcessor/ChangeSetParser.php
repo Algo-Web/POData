@@ -56,19 +56,21 @@ class ChangeSetParser implements IBatchParser
     {
         $raw = $this->getRawRequests();
         foreach ($raw as $contentID => &$workingObject) {
+            /** @var IncomingChangeSetRequest $request */
+            $request = $workingObject->incomingRequest();
             foreach ($this->contentIDToLocationLookup as $lookupID => $location) {
                 if (0 > $lookupID) {
                     continue;
                 }
-                $workingObject->incomingRequest()->applyContentID($lookupID, $location);
+                $request->applyContentID($lookupID, $location);
             }
 
             $this->processSubRequest($workingObject);
             if (HTTPRequestMethod::GET() != $workingObject->incomingRequest()->getMethod() &&
                 strpos($workingObject->incomingRequest()->getRawUrl(), '/$links/') === false) {
                 if (null === $workingObject->outgoingResponse()->getHeaders()['Location']) {
-                    $msg = 'Location header not set in subrequest response for ' . $workingObject->incomingRequest()->getMethod()
-                        . ' request url ' . $workingObject->incomingRequest()->getRawUrl();
+                    $msg = 'Location header not set in subrequest response for ' . $request->getMethod()
+                        . ' request url ' . $request->getRawUrl();
                     throw new Exception($msg);
                 }
                 $this->contentIDToLocationLookup[$contentID] = $workingObject->outgoingResponse()->getHeaders()['Location'];
