@@ -38,8 +38,8 @@ class HttpProcessUtility
             return $inexactContentType;
         }
         // filter out transmitted types which have a zero quality
-        $acceptTypes = array_filter($acceptTypes, function(MediaType $accpetType){
-            return 0 !== $accpetType->getQualityValue();
+        $acceptTypes = array_filter($acceptTypes, function (MediaType $acceptType) {
+            return 0 !== $acceptType->getQualityValue();
         });
         // reduce acceptable types down to any that matches are exact set.
         $exactMatch = array_uintersect($acceptTypes, $exactContentTypes, function (MediaType $acceptType, $exactType) {
@@ -50,7 +50,7 @@ class HttpProcessUtility
             return $exactMatch[0]->getMimeType();
         }
         // filter down all remaining accept types to any that are a partial match for inexact
-        $acceptTypes = array_filter($acceptTypes, function(MediaType $acceptType) use ($inexactContentType){
+        $acceptTypes = array_filter($acceptTypes, function (MediaType $acceptType) use ($inexactContentType) {
             return 0 < $acceptType->getMatchingRating($inexactContentType);
         });
         // if no inexact type go boom.
@@ -267,11 +267,10 @@ class HttpProcessUtility
         $parameterValue = [];
         $textLen        = strlen($text);
         $valueIsQuoted  = false;
-        if ($textIndex < $textLen) {
-            if ('"' == $text[$textIndex]) {
+        if ($textIndex < $textLen &&
+            '"' == $text[$textIndex]) {
                 ++$textIndex;
                 $valueIsQuoted = true;
-            }
         }
 
         while ($textIndex < $textLen) {
