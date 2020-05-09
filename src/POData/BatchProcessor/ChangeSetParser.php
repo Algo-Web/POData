@@ -160,45 +160,16 @@ class ChangeSetParser implements IBatchParser
         list($headerBlock, $contentBlock) = explode("\n\n", $this->getData(), 2);
         $headers                          = self::parse_headers($headerBlock);
         $this->changeSetBoundary          = $headers['Content-Type']['boundary'];
-        $prefix                           = 'HTTP_';
         $matches                          = array_filter(explode('--' . $this->changeSetBoundary, $contentBlock));
         $contentIDinit                    = -1;
         foreach ($matches as $match) {
             if ('--' === trim($match)) {
                 continue;
             }
-
-            list($RequestParams, $requestHeaders, $RequestBody) = explode("\n\n", $match);
-            $RequestBody                                        = trim($RequestBody);
-            $requestHeadersArray                                = self::parse_headers($requestHeaders);
-            list($RequesetType, $RequestPath, $RequestProticol) = explode(' ', $requestHeadersArray['default'], 3);
-            $contentID                                          = array_key_exists('Content-ID', $requestHeadersArray) ? $requestHeadersArray['Content-ID'] : $contentIDinit;
-            $inboundRequestHeaders                              = [];
-            $skip                                               = true;
-            foreach (explode("\n", $requestHeaders) as $headerLine) {
-                if ($skip) {
-                    $skip = false;
-                    continue;
-                }   
-                list($key, $value)            = explode(':', $headerLine);
-                $name                         = strtr(strtoupper(trim($key)), '-', '_');
-                $value                        = trim($value);
-                $name                         = substr($name, 0, strlen($prefix)) === $prefix || $name == 'CONTENT_TYPE' ? $name : $prefix . $name;
-                $inboundRequestHeaders[$name] = $value;
-            }
-            $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? $_SERVER['SERVER_ADDR'] ?? 'localhost';
-            $protocol=$_SERVER['PROTOCOL'] = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ? 'https' : 'http';
-            $this->rawRequests[$contentID] = new WebOperationContext(
-                new IncomingRequest(
-                    new HTTPRequestMethod($RequesetType),
-                    [],
-                    [],
-                    $inboundRequestHeaders,
-                    null,
-                    $RequestBody,
-                    $protocol . '://' . $host . $RequestPath
-                )
-            );
+            $request = new IncomingChangeSetRequest($match);
+                $contentID = $request->getContentId(
+                    ) ?? $contentIDinit;
+            $this->rawRequests[$contentID] = new WebOperationContext($request);
             if ($contentIDinit == $contentID) {
                 $contentIDinit--;
             }
@@ -213,8 +184,6 @@ class ChangeSetParser implements IBatchParser
     {
         return $this->data;
     }
-
-
     private static function parse_headers($headers, $splitter = "\n", $assignmentChar = ':')
     {
         $results = [];
@@ -237,4 +206,6 @@ class ChangeSetParser implements IBatchParser
         }
         return $results;
     }
+
+
 }

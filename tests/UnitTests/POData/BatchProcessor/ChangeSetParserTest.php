@@ -8,6 +8,7 @@ use Mockery as m;
 use POData\BaseService;
 use POData\BatchProcessor\BatchProcessor;
 use POData\BatchProcessor\ChangeSetParser;
+use POData\BatchProcessor\IncomingChangeSetRequest;
 use POData\BatchProcessor\QueryParser;
 use POData\Common\ErrorHandler;
 use POData\Common\HttpStatus;
@@ -189,7 +190,7 @@ Content-ID: 2
         $this->assertTrue(array_key_exists(2, $result));
 
         $this->assertEquals($first, $result[-1]);
-        $this->assertEquals($second, $result[2]);
+        $this->assertEquals($second, $result[-2]);
     }
 
     public function testGetResponse()
