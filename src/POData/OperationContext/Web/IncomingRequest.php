@@ -28,7 +28,7 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var string|null
      */
-    private $rawUrl = null;
+    protected $rawUrl = null;
 
     /**
      * The request method (GET, POST, PUT, DELETE or MERGE).
@@ -63,7 +63,7 @@ class IncomingRequest implements IHTTPRequest
      *
      * @var string|null;
      */
-    private $rawInput = null;
+    protected $rawInput = null;
 
     /**
      * Initialize a new instance of IHTTPRequest.
@@ -263,14 +263,5 @@ class IncomingRequest implements IHTTPRequest
             $this->rawInput = file_get_contents('php://input');
         }
         return $this->rawInput;
-    }
-
-    /**
-     * @param string $contentID
-     */
-    public function applyContentID(string $contentID, string $contentIdValue): void
-    {
-        $this->rawInput    = str_replace('$' . $contentID, $contentIdValue, $this->rawInput);
-        $this->rawUrl      = str_replace('$' . $contentID, $contentIdValue, $this->rawUrl);
     }
 }
