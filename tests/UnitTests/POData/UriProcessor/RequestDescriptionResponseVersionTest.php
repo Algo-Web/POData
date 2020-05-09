@@ -20,7 +20,6 @@ use POData\Readers\Atom\AtomODataReader;
 use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
-use Symfony\Component\EventDispatcher\Tests\Service;
 use UnitTests\POData\TestCase;
 
 //OData has some interesting version negotiations
