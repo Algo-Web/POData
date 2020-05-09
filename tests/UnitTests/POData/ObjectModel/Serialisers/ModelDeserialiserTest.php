@@ -22,7 +22,6 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Query\IQueryProvider;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Employee2;

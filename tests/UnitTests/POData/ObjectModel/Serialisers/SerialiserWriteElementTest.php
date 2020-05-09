@@ -30,7 +30,6 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Employee2;
@@ -417,7 +416,6 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             ->andReturn('/odata.svc/Employees(EmployeeID=\'Bruce\')?$expand=Manager');
         $request->shouldReceive('getRawUrl')
             ->andReturn('http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')?$expand=Manager');
-        $request->request = new ParameterBag([ '$expand' => 'Manager']);
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
