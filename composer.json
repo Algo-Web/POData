@@ -42,13 +42,13 @@
   },
 
   "autoload": {
-    "psr-0": {
-      "POData": "src/"
+    "psr-4": {
+      "POData\\": "src/POData/"
     }
   },
   "autoload-dev": {
-    "psr-0": {
-      "UnitTests" : "tests/"
+    "psr-4": {
+      "UnitTests\\POData\\": "tests/UnitTests/POData/"
     }
   }
 }
