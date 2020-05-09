@@ -40,12 +40,15 @@ class HttpProcessUtility
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
         foreach ($acceptTypes as $acceptType) {
-            foreach ($exactContentTypes as $exactContentType) {
-                if (0 == strcasecmp($acceptType->getMimeType(), $exactContentType)) {
-                    $selectedContentType  = $exactContentType;
-                    $selectedQualityValue = $acceptType->getQualityValue();
-                    break 2;
-                }
+            // A Case insensative Search to see get an exact match by key.
+            $exactMatch = array_search(
+                strtolower($acceptType->getMimeType()),
+                array_map('strtolower', $exactContentTypes)
+            );
+            if(false !== $exactMatch){
+                $selectedContentType = $exactContentTypes[$exactMatch];
+                $selectedQualityValue = $acceptType->getQualityValue();
+                break;
             }
 
             $matchingParts = $acceptType->getMatchingRating($inexactContentType);
