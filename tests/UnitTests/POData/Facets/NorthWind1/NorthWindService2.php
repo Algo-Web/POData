@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Facets\NorthWind1;
 
+use POData\Common\NotImplementedException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Query\IQueryProvider;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use UnitTests\POData\Facets\BaseServiceTestWrapper;
 
 class NorthWindService2 extends BaseServiceTestWrapper
@@ -54,6 +54,6 @@ class NorthWindService2 extends BaseServiceTestWrapper
 
     public function getStreamProviderX()
     {
-        throw new Exception('not implemented');
+        throw new NotImplementedException('not implemented');
     }
 }
