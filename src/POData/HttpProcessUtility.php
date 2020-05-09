@@ -16,11 +16,10 @@ class HttpProcessUtility
     /**
      * Gets the appropriate MIME type for the request, throwing if there is none.
      *
-     * @param string   $acceptTypesText    Text as it appears in an HTTP
-     *                                     Accepts header
-     * @param string[] $exactContentTypes  Preferred content type to match if an exact media type is given - this is in
-     *                                     descending order of preference
-     * @param string   $inexactContentType Preferred fallback content type for inexact matches
+     * @param string|null   $acceptTypesText    Text as it appears in an HTTP Accepts header
+     * @param string[]      $exactContentTypes  Preferred content type to match if an exact media type is given - in
+     *                                          descending order of preference
+     * @param string|null   $inexactContentType Preferred fallback content type for inexact matches
      *
      * @throws HttpHeaderFailure
      * @return string|null       One of exactContentType or inexactContentType
@@ -28,23 +27,21 @@ class HttpProcessUtility
     public static function selectRequiredMimeType(
         ?string $acceptTypesText,
         array $exactContentTypes,
-        $inexactContentType
+        ?string $inexactContentType
     ): ?string {
-        $selectedContentType   = null;
-
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
 
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
-        if(empty($acceptTypes)){
+        if (empty($acceptTypes)) {
             return $inexactContentType;
         }
-        $exactMatchs = array_uintersect($acceptTypes, $exactContentTypes, function(MediaType $acceptType, $exactType){
+        $exactMatch = array_uintersect($acceptTypes, $exactContentTypes, function (MediaType $acceptType, $exactType) {
             return strcasecmp($acceptType->getMimeType(), $exactType) && 0 !== $acceptType->getQualityValue();
         });
-        if(count($exactMatchs)!== 0){
-            return $exactMatchs[0]->getMimeType();
+        if (0 !== count($exactMatch)) {
+            return $exactMatch[0]->getMimeType();
         }
 
         usort($acceptTypes, function (MediaType $a, MediaType $b) use ($inexactContentType) {
@@ -53,16 +50,13 @@ class HttpProcessUtility
             $aQual  = $a->getQualityValue();
             $bQual  = $b->getQualityValue();
             if ($aMatch != $bMatch) {
-                return  $aMatch <=> $bMatch;
+                return $aMatch <=> $bMatch;
             }
 
             return $aQual <=> $bQual;
         });
 
-        if (
-                0 >= $acceptTypes[0]->getMatchingRating($inexactContentType) ||
-                0 == $acceptTypes[0]->getQualityValue()
-        ) {
+        if (0 >= $acceptTypes[0]->getMatchingRating($inexactContentType) || 0 == $acceptTypes[0]->getQualityValue()) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
         return $inexactContentType;
