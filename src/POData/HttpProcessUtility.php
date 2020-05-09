@@ -32,31 +32,29 @@ class HttpProcessUtility
         if (null === $acceptTypesText) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
-
+        // fetch types client will accept
         $acceptTypes = self::mimeTypesFromAcceptHeaders($acceptTypesText);
         if (empty($acceptTypes)) {
             return $inexactContentType;
         }
-        $exactMatch = array_uintersect($acceptTypes, $exactContentTypes, function (MediaType $acceptType, $exactType) {
-            return strcasecmp($acceptType->getMimeType(), $exactType) && 0 !== $acceptType->getQualityValue();
+        // filter out transmitted types which have a zero quality
+        $acceptTypes = array_filter($acceptTypes, function(MediaType $accpetType){
+            return 0 !== $accpetType->getQualityValue();
         });
+        // reduce acceptable types down to any that matches are exact set.
+        $exactMatch = array_uintersect($acceptTypes, $exactContentTypes, function (MediaType $acceptType, $exactType) {
+            return strcasecmp($acceptType->getMimeType(), $exactType);
+        });
+        // check if an exact match was found
         if (0 !== count($exactMatch)) {
             return $exactMatch[0]->getMimeType();
         }
-
-        usort($acceptTypes, function (MediaType $a, MediaType $b) use ($inexactContentType) {
-            $aMatch = $a->getMatchingRating($inexactContentType);
-            $bMatch = $b->getMatchingRating($inexactContentType);
-            $aQual  = $a->getQualityValue();
-            $bQual  = $b->getQualityValue();
-            if ($aMatch != $bMatch) {
-                return $aMatch <=> $bMatch;
-            }
-
-            return $aQual <=> $bQual;
+        // filter down all remaining accept types to any that are a partial match for inexact
+        $acceptTypes = array_filter($acceptTypes, function(MediaType $acceptType) use ($inexactContentType){
+            return 0 < $acceptType->getMatchingRating($inexactContentType);
         });
-
-        if (0 >= $acceptTypes[0]->getMatchingRating($inexactContentType) || 0 == $acceptTypes[0]->getQualityValue()) {
+        // if no inexact type go boom.
+        if (count($acceptTypes) === 0) {
             throw new HttpHeaderFailure(Messages::unsupportedMediaType(), 415);
         }
         return $inexactContentType;
