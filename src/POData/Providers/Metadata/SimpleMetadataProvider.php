@@ -11,9 +11,9 @@ use ErrorException;
 use Exception;
 use InvalidArgumentException;
 use POData\Common\InvalidOperationException;
+use POData\Pluralizer;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\IType;
-use POData\StringUtility;
 use ReflectionClass;
 use ReflectionException;
 use stdClass;
@@ -401,7 +401,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceSet($name, ResourceEntityType $resourceType)
     {
         $typeName   = $resourceType->getFullName();
-        $pluralName = StringUtility::plural($typeName);
+        $pluralName = Pluralizer::plural($typeName);
         if (null == $name) {
             $returnName = $pluralName;
         } else {

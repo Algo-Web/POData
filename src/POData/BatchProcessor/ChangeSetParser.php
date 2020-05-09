@@ -12,7 +12,6 @@ use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\IncomingRequest;
 use POData\OperationContext\Web\WebOperationContext;
-use POData\StringUtility;
 
 /**
  * Class ChangeSetParser.
