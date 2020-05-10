@@ -120,7 +120,6 @@ class CynicSerialiser implements IObjectSerialiser
      * @param QueryResult &$entryObjects Results property contains array of entry resources to be written
      *
      * @throws ODataException
-     * @throws ReflectionException
      * @throws InvalidOperationException
      * @return ODataFeed
      */
@@ -152,18 +151,20 @@ class CynicSerialiser implements IObjectSerialiser
             );
         }, $res);
 
-        $odata               = new ODataFeed();
-        $odata->title        = new ODataTitle($title);
-        $odata->id           = $absoluteUri;
-        $odata->selfLink     = $selfLink;
-        $odata->updated      = $this->getUpdated()->format(DATE_ATOM);
-        $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $odata               = new ODataFeed(
+            $absoluteUri,
+            new ODataTitle($title),
+            $selfLink,
+            $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
+                $this->getRequest()->getCountValue() :
+                null,
+            null,
+            $entries,
+            $this->getUpdated()->format(DATE_ATOM),
+            $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash
+        );
         $this->isBaseWritten = true;
 
-        $odata->rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
-            $this->getRequest()->getCountValue() :
-            null;
-        $odata->entries = $entries;
 
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
