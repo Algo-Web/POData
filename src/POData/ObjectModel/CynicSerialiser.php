@@ -142,7 +142,7 @@ class CynicSerialiser implements IObjectSerialiser
         $baseUri             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
 
-        $odata               = new ODataFeed(
+        return new ODataFeed(
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             new ODataTitle($this->getRequest()->getContainerName()),
             new ODataLink(
@@ -170,8 +170,6 @@ class CynicSerialiser implements IObjectSerialiser
             $this->getUpdated()->format(DATE_ATOM),
             $baseUri
         );
-
-        return $odata;
     }
 
     /**
