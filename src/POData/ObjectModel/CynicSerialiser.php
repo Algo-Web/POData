@@ -130,10 +130,9 @@ class CynicSerialiser implements IObjectSerialiser
         if (!is_array($res)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
+//TODO: this line is kinda bodgy? fneed fix.
+        $entryObjects->hasMore = 0 == count($entryObjects->results) ? false : $entryObjects->hasMore;
 
-        if (is_array($res) && 0 == count($entryObjects->results)) {
-            $entryObjects->hasMore = false;
-        }
 
         $this->loadStackIfEmpty();
         $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
@@ -174,13 +173,13 @@ class CynicSerialiser implements IObjectSerialiser
         $requestTop  = (null === $requestTop) ? $pageSize + 1 : $requestTop;
 
         if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
-            $stackSegment        = $setName;
             $lastObject          = end($entryObjects->results);
-            $segment             = $this->getNextLinkUri($lastObject);
-            $nextLink            = new ODataLink();
-            $nextLink->name      = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-            $nextLink->url       = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
-            $odata->nextPageLink = $nextLink;
+            $odata->nextPageLink            = new ODataLink(
+                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                null,
+                null,
+                rtrim($this->absoluteServiceUri, '/') . '/' . $setName . $this->getNextLinkUri($lastObject)
+            );
         }
 
         return $odata;
