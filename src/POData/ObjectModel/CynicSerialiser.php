@@ -125,12 +125,12 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        $res = $entryObjects->results;
-        if (!is_array($res)) {
+        $results = $entryObjects->results;
+        if (!is_array($results)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
         //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
-        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
+        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($results);
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize(
             $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet()
         );
@@ -145,7 +145,7 @@ class CynicSerialiser implements IObjectSerialiser
             return $this->writeTopLevelElement(
                 $entry instanceof QueryResult ? $entry : new QueryResult($entry)
             );
-        }, $res);
+        }, $results);
 
         $odata               = new ODataFeed(
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
@@ -165,7 +165,7 @@ class CynicSerialiser implements IObjectSerialiser
                 null,
                 rtrim($this->absoluteServiceUri, '/') .
                 '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($res))
+                $this->getNextLinkUri(end($results))
             ) : null,
             $entries,
             $this->getUpdated()->format(DATE_ATOM),
