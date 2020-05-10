@@ -142,6 +142,21 @@ class CynicSerialiser implements IObjectSerialiser
             );
         }, $res);
 
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
+        $nextPageLink = null;
+        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
+            $nextPageLink            = new ODataLink(
+                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                null,
+                null,
+                rtrim($this->absoluteServiceUri, '/') .
+                '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
+                $this->getNextLinkUri(end($entryObjects->results))
+            );
+        }
+
         $odata               = new ODataFeed(
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             new ODataTitle($this->getRequest()->getContainerName()),
@@ -154,25 +169,11 @@ class CynicSerialiser implements IObjectSerialiser
             $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
                 $this->getRequest()->getCountValue() :
                 null,
-            null,
+            $nextPageLink,
             $entries,
             $this->getUpdated()->format(DATE_ATOM),
             $baseUri
         );
-        
-        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
-        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
-        $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
-        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
-            $odata->nextPageLink            = new ODataLink(
-                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
-                null,
-                null,
-                rtrim($this->absoluteServiceUri, '/') .
-                '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($entryObjects->results))
-            );
-        }
 
         return $odata;
     }
