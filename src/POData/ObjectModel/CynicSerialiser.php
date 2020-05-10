@@ -127,7 +127,7 @@ class CynicSerialiser implements IObjectSerialiser
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
         $res = $entryObjects->results;
-        if (!(is_array($res))) {
+        if (!is_array($res)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
 
