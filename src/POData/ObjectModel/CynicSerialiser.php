@@ -159,9 +159,7 @@ class CynicSerialiser implements IObjectSerialiser
             $this->getUpdated()->format(DATE_ATOM),
             $baseUri
         );
-        $this->isBaseWritten = true;
-
-
+        
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
         $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
