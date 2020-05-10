@@ -131,6 +131,10 @@ class CynicSerialiser implements IObjectSerialiser
         }
         //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
         $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+            $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
+        $entryObjects->hasMore &= $requestTop > $pageSize;
 
         $this->loadStackIfEmpty();
 
@@ -142,11 +146,8 @@ class CynicSerialiser implements IObjectSerialiser
             );
         }, $res);
 
-        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
-        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
-        $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
+
         $nextPageLink = null;
-        $entryObjects->hasMore &= $requestTop > $pageSize;
         if ($entryObjects->hasMore) {
             $nextPageLink            = new ODataLink(
                 ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
