@@ -165,7 +165,7 @@ class CynicSerialiser implements IObjectSerialiser
                 null,
                 rtrim($this->absoluteServiceUri, '/') .
                 '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($entryObjects->results))
+                $this->getNextLinkUri(end($res))
             ) : null,
             $entries,
             $this->getUpdated()->format(DATE_ATOM),
