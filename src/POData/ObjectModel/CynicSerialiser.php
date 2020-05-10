@@ -833,7 +833,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @throws InvalidOperationException
      * @return string                    for the link for next page
      */
-    protected function getNextLinkUri(&$lastObject)
+    protected function getNextLinkUri($lastObject)
     {
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo           = $currentExpandedProjectionNode->getInternalOrderByInfo();

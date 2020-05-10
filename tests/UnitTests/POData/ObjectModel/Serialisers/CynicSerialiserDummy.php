@@ -28,7 +28,7 @@ class CynicSerialiserDummy extends CynicSerialiser
         return parent::needNextPageLink($resultSetCount);
     }
 
-    public function getNextLinkUri(&$lastObject)
+    public function getNextLinkUri($lastObject)
     {
         return parent::getNextLinkUri($lastObject);
     }
