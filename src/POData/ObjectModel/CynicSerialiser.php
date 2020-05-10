@@ -131,8 +131,9 @@ class CynicSerialiser implements IObjectSerialiser
         }
         //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
         $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
-        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
-        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize(
+            $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet()
+        );
         $requestTop  = $this->getRequest()->getTopOptionCount() ?? PHP_INT_MAX ;
         $entryObjects->hasMore &= $requestTop > $pageSize;
 
