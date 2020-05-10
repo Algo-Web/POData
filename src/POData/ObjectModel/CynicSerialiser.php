@@ -154,11 +154,11 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
 
-        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $odata->rowCount = $this->getRequest()->getCountValue();
-        }
+        $odata->rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
+            $this->getRequest()->getCountValue() :
+            null;
         $odata->entries = array_map(function($entry){
-             return $this->writeTopLevelElement(
+            return $this->writeTopLevelElement(
                 $entry instanceof QueryResult ? $entry : new QueryResult($entry)
             );
         }, $res);
@@ -167,12 +167,13 @@ class CynicSerialiser implements IObjectSerialiser
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
         $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
         if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
-            $lastObject          = end($entryObjects->results);
             $odata->nextPageLink            = new ODataLink(
                 ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
                 null,
                 null,
-                rtrim($this->absoluteServiceUri, '/') . '/' . $setName . $this->getNextLinkUri($lastObject)
+                rtrim($this->absoluteServiceUri, '/') .
+                '/' . $setName .
+                $this->getNextLinkUri(end($entryObjects->results))
             );
         }
 
@@ -864,10 +865,10 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $queryParameterString = null;
         foreach ([ODataConstants::HTTPQUERY_STRING_FILTER,
-            ODataConstants::HTTPQUERY_STRING_EXPAND,
-            ODataConstants::HTTPQUERY_STRING_ORDERBY,
-            ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
-            ODataConstants::HTTPQUERY_STRING_SELECT,] as $queryOption) {
+                     ODataConstants::HTTPQUERY_STRING_EXPAND,
+                     ODataConstants::HTTPQUERY_STRING_ORDERBY,
+                     ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
+                     ODataConstants::HTTPQUERY_STRING_SELECT,] as $queryOption) {
             $value = $this->getService()->getHost()->getQueryStringItem($queryOption);
             if (null !== $value) {
                 if (null !== $queryParameterString) {
