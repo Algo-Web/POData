@@ -141,11 +141,6 @@ class CynicSerialiser implements IObjectSerialiser
 
         $baseUri = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
-        $entries = array_map(function($entry){
-            return $this->writeTopLevelElement(
-                $entry instanceof QueryResult ? $entry : new QueryResult($entry)
-            );
-        }, $results);
 
         $odata               = new ODataFeed(
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
@@ -167,7 +162,11 @@ class CynicSerialiser implements IObjectSerialiser
                 '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
                 $this->getNextLinkUri(end($results))
             ) : null,
-            $entries,
+            array_map(function($entry){
+                return $this->writeTopLevelElement(
+                    $entry instanceof QueryResult ? $entry : new QueryResult($entry)
+                );
+            }, $results),
             $this->getUpdated()->format(DATE_ATOM),
             $baseUri
         );
