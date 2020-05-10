@@ -144,7 +144,8 @@ class CynicSerialiser implements IObjectSerialiser
         $selfLink->name  = 'self';
         $selfLink->title = $title;
         $selfLink->url   = $relativeUri;
-
+        $baseUri = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $this->isBaseWritten = true;
         $entries = array_map(function($entry){
             return $this->writeTopLevelElement(
                 $entry instanceof QueryResult ? $entry : new QueryResult($entry)
@@ -161,7 +162,7 @@ class CynicSerialiser implements IObjectSerialiser
             null,
             $entries,
             $this->getUpdated()->format(DATE_ATOM),
-            $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash
+            $baseUri
         );
         $this->isBaseWritten = true;
 
