@@ -146,6 +146,12 @@ class CynicSerialiser implements IObjectSerialiser
         $selfLink->title = $title;
         $selfLink->url   = $relativeUri;
 
+        $entries = array_map(function($entry){
+            return $this->writeTopLevelElement(
+                $entry instanceof QueryResult ? $entry : new QueryResult($entry)
+            );
+        }, $res);
+
         $odata               = new ODataFeed();
         $odata->title        = new ODataTitle($title);
         $odata->id           = $absoluteUri;
@@ -157,11 +163,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
             $this->getRequest()->getCountValue() :
             null;
-        $odata->entries = array_map(function($entry){
-            return $this->writeTopLevelElement(
-                $entry instanceof QueryResult ? $entry : new QueryResult($entry)
-            );
-        }, $res);
+        $odata->entries = $entries;
 
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
