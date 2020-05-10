@@ -147,19 +147,6 @@ class CynicSerialiser implements IObjectSerialiser
             );
         }, $res);
 
-
-        $nextPageLink = null;
-        if ($entryObjects->hasMore) {
-            $nextPageLink            = new ODataLink(
-                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
-                null,
-                null,
-                rtrim($this->absoluteServiceUri, '/') .
-                '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($entryObjects->results))
-            );
-        }
-
         $odata               = new ODataFeed(
             $this->getRequest()->getRequestUrl()->getUrlAsString(),
             new ODataTitle($this->getRequest()->getContainerName()),
@@ -172,7 +159,14 @@ class CynicSerialiser implements IObjectSerialiser
             $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
                 $this->getRequest()->getCountValue() :
                 null,
-            $nextPageLink,
+            $entryObjects->hasMore ? new ODataLink(
+                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                null,
+                null,
+                rtrim($this->absoluteServiceUri, '/') .
+                '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
+                $this->getNextLinkUri(end($entryObjects->results))
+            ) : null,
             $entries,
             $this->getUpdated()->format(DATE_ATOM),
             $baseUri
