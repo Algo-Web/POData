@@ -87,13 +87,13 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private $lightStack = [];
 
-    /*
+    /**
      * Update time to insert into ODataEntry/ODataFeed fields
      * @var \DateTime;
      */
     private $updated;
 
-    /*
+    /**
      * Has base URI already been written out during serialisation?
      * @var bool;
      */
@@ -102,6 +102,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * @param IService                $service Reference to the data service instance
      * @param RequestDescription|null $request Type instance describing the client submitted request
+     * @throws \Exception
      */
     public function __construct(IService $service, RequestDescription $request = null)
     {
