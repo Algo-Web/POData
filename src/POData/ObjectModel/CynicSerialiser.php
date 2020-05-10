@@ -136,7 +136,6 @@ class CynicSerialiser implements IObjectSerialiser
         $this->loadStackIfEmpty();
         $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
 
-        $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
 
         $baseUri = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
@@ -147,7 +146,7 @@ class CynicSerialiser implements IObjectSerialiser
         }, $res);
 
         $odata               = new ODataFeed(
-            $absoluteUri,
+            $this->getRequest()->getRequestUrl()->getUrlAsString(),
             new ODataTitle($this->getRequest()->getContainerName()),
             new ODataLink(
                 'self',
