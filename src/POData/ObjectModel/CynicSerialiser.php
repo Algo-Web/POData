@@ -129,13 +129,10 @@ class CynicSerialiser implements IObjectSerialiser
         if (!is_array($res)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
-//TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
+        //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
         $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
 
-
         $this->loadStackIfEmpty();
-        $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
-
 
         $baseUri = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
@@ -174,7 +171,7 @@ class CynicSerialiser implements IObjectSerialiser
                 null,
                 null,
                 rtrim($this->absoluteServiceUri, '/') .
-                '/' . $setName .
+                '/' . $this->getRequest()->getTargetResourceSetWrapper()->getName() .
                 $this->getNextLinkUri(end($entryObjects->results))
             );
         }
