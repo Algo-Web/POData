@@ -146,9 +146,8 @@ class CynicSerialiser implements IObjectSerialiser
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
         $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
         $nextPageLink = null;
-        $needsNextPage = $entryObjects->hasMore;
-        $needsNextPage &= $requestTop > $pageSize;
-        if ($needsNextPage) {
+        $entryObjects->hasMore &= $requestTop > $pageSize;
+        if ($entryObjects->hasMore) {
             $nextPageLink            = new ODataLink(
                 ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
                 null,
