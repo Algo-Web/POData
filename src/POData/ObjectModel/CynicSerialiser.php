@@ -129,8 +129,8 @@ class CynicSerialiser implements IObjectSerialiser
         if (!is_array($res)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
-//TODO: this line is kinda bodgy? fneed fix.
-        $entryObjects->hasMore = 0 == count($entryObjects->results) ? false : $entryObjects->hasMore;
+//TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
+        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
 
 
         $this->loadStackIfEmpty();
