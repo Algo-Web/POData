@@ -62,25 +62,25 @@ class ODataFeed
 
     /**
      * ODataFeed constructor.
-     * @param string $id
-     * @param ODataTitle $title
-     * @param ODataLink $selfLink
-     * @param int $rowCount
-     * @param ODataLink $nextPageLink
+     * @param string       $id
+     * @param ODataTitle   $title
+     * @param ODataLink    $selfLink
+     * @param int          $rowCount
+     * @param ODataLink    $nextPageLink
      * @param ODataEntry[] $entries
-     * @param string $updated
-     * @param string $baseURI
+     * @param string       $updated
+     * @param string       $baseURI
      */
     public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
-        $this->id = $id;
-        $this->title = $title;
-        $this->selfLink = $selfLink;
-        $this->rowCount = $rowCount;
+        $this->id           = $id;
+        $this->title        = $title;
+        $this->selfLink     = $selfLink;
+        $this->rowCount     = $rowCount;
         $this->nextPageLink = $nextPageLink;
-        $this->entries = $entries;
-        $this->updated = $updated;
-        $this->baseURI = $baseURI;
+        $this->entries      = $entries;
+        $this->updated      = $updated;
+        $this->baseURI      = $baseURI;
     }
 
     /**

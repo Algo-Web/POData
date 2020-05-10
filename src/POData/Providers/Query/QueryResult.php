@@ -30,13 +30,13 @@ class QueryResult
     /**
      * QueryResult constructor.
      * @param object|object[]|null $results
-     * @param int|null $count
-     * @param bool|null $hasMore
+     * @param int|null             $count
+     * @param bool|null            $hasMore
      */
     public function __construct($results = null, ?int $count = null, ?bool $hasMore = null)
     {
         $this->results = $results;
-        $this->count = $count;
+        $this->count   = $count;
         $this->hasMore = $hasMore;
     }
 
