@@ -133,7 +133,7 @@ class CynicSerialiser implements IObjectSerialiser
         $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($res);
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
-            $requestTop  = $this->getRequest()->getTopOptionCount() ?? $pageSize + 1;
+        $requestTop  = $this->getRequest()->getTopOptionCount() ?? PHP_INT_MAX ;
         $entryObjects->hasMore &= $requestTop > $pageSize;
 
         $this->loadStackIfEmpty();
