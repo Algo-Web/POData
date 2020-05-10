@@ -157,15 +157,11 @@ class CynicSerialiser implements IObjectSerialiser
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
             $odata->rowCount = $this->getRequest()->getCountValue();
         }
-        foreach ($res as $entry) {
-            if (!$entry instanceof QueryResult) {
-                $query          = new QueryResult();
-                $query->results = $entry;
-            } else {
-                $query = $entry;
-            }
-            $odata->entries[] = $this->writeTopLevelElement($query);
-        }
+        $odata->entries = array_map(function($entry){
+             return $this->writeTopLevelElement(
+                $entry instanceof QueryResult ? $entry : new QueryResult($entry)
+            );
+        }, $res);
 
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
         $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
