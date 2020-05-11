@@ -332,12 +332,7 @@ class SegmentParser
         bool $checkRights
     ): SegmentDescriptor {
         $previousKind = $previous->getTargetKind();
-        if ($previousKind == TargetKind::METADATA()
-            || $previousKind == TargetKind::BATCH()
-            || $previousKind == TargetKind::PRIMITIVE_VALUE()
-            || $previousKind == TargetKind::BAG()
-            || $previousKind == TargetKind::MEDIA_RESOURCE()
-        ) {
+        if ($previousKind->isTerminal()) {
             //All these targets are terminal segments, there cannot be anything after them.
             throw ODataException::resourceNotFoundError(
                 Messages::segmentParserMustBeLeafSegment($previous->getIdentifier())
