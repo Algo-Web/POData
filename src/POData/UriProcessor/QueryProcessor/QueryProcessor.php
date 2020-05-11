@@ -397,8 +397,7 @@ class QueryProcessor
         }
 
         $kind = $this->request->getTargetKind();
-        if (!($kind == TargetKind::RESOURCE()
-            || $kind == TargetKind::COMPLEX_OBJECT()
+        if (!($kind->isFilterable()
             || $this->request->queryType == QueryType::COUNT())
         ) {
             throw ODataException::createBadRequestError(
