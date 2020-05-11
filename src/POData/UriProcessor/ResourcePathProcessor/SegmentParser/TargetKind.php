@@ -25,6 +25,7 @@ class TargetKind extends Enum
 {
     protected const TERMINAL_VALUES = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
     protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
+    protected const FILTERABLE_VALUES = [3 => true, 4 => true];
 
     /**
      * Nothing specific is being requested.
@@ -124,5 +125,10 @@ class TargetKind extends Enum
     public function isDirectProcess(): bool
     {
         return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
+    }
+
+    public function isFilterable(): bool
+    {
+        return array_key_exists($this->getValue(), self::FILTERABLE_VALUES);
     }
 }

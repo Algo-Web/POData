@@ -76,4 +76,36 @@ class TargetKindTest extends TestCase
         $actual = $targ->isDirectProcess();
         $this->assertEquals($expected, $actual);
     }
+
+    public function isFilterableProvider(): array
+    {
+        $result = [];
+        $result[] = [TargetKind::NOTHING(), false];
+        $result[] = [TargetKind::SERVICE_DIRECTORY(), false];
+        $result[] = [TargetKind::RESOURCE(), true];
+        $result[] = [TargetKind::COMPLEX_OBJECT(), true];
+        $result[] = [TargetKind::PRIMITIVE(), false];
+        $result[] = [TargetKind::PRIMITIVE_VALUE(), false];
+        $result[] = [TargetKind::METADATA(), false];
+        $result[] = [TargetKind::VOID_SERVICE_OPERATION(), false];
+        $result[] = [TargetKind::BATCH(), false];
+        $result[] = [TargetKind::LINK(), false];
+        $result[] = [TargetKind::MEDIA_RESOURCE(), false];
+        $result[] = [TargetKind::BAG(), false];
+        $result[] = [TargetKind::SINGLETON(), false];
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider isFilterableProvider
+     *
+     * @param TargetKind $targ
+     * @param bool $expected
+     */
+    public function testIsFilterable(TargetKind $targ, bool $expected)
+    {
+        $actual = $targ->isFilterable();
+        $this->assertEquals($expected, $actual);
+    }
 }
