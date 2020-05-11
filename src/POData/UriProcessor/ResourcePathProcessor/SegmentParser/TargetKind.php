@@ -23,6 +23,8 @@ use MyCLabs\Enum\Enum;
  */
 class TargetKind extends Enum
 {
+    protected const TERMINAL_VALUES = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
+
     /**
      * Nothing specific is being requested.
      * e.g. http://localhost.
@@ -102,4 +104,14 @@ class TargetKind extends Enum
      * A singleton (parameter-less function wrapper).
      */
     protected const SINGLETON = 13;
+
+    /**
+     * Is this segment a terminal segment - nothing else can be added after it?
+     *
+     * @return bool
+     */
+    public function isTerminal(): bool
+    {
+        return array_key_exists($this->getValue(), self::TERMINAL_VALUES);
+    }
 }
