@@ -28,6 +28,19 @@ class QueryResult
     public $hasMore;
 
     /**
+     * QueryResult constructor.
+     * @param object|object[]|null $results
+     * @param int|null             $count
+     * @param bool|null            $hasMore
+     */
+    public function __construct($results = null, ?int $count = null, ?bool $hasMore = null)
+    {
+        $this->results = $results;
+        $this->count   = $count;
+        $this->hasMore = $hasMore;
+    }
+
+    /**
      * @param int      $count
      * @param int|null $top
      * @param int|null $skip

@@ -15,6 +15,7 @@ before_script:
   - composer config minimum-stability ${STABILITY}
   - COMPOSER_MEMORY_LIMIT=-1 composer install
   - vendor/bin/pcov clobber
+  - cat composer.lock
 # - wget http://getcomposer.org/composer.phar
 #  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress --prefer-source
 

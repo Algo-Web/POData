@@ -87,13 +87,13 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private $lightStack = [];
 
-    /*
+    /**
      * Update time to insert into ODataEntry/ODataFeed fields
      * @var \DateTime;
      */
     private $updated;
 
-    /*
+    /**
      * Has base URI already been written out during serialisation?
      * @var bool;
      */
@@ -102,6 +102,7 @@ class CynicSerialiser implements IObjectSerialiser
     /**
      * @param IService                $service Reference to the data service instance
      * @param RequestDescription|null $request Type instance describing the client submitted request
+     * @throws \Exception
      */
     public function __construct(IService $service, RequestDescription $request = null)
     {
@@ -120,70 +121,57 @@ class CynicSerialiser implements IObjectSerialiser
      * @param QueryResult &$entryObjects Results property contains array of entry resources to be written
      *
      * @throws ODataException
-     * @throws ReflectionException
      * @throws InvalidOperationException
      * @return ODataFeed
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        $res = $entryObjects->results;
-        if (!(is_array($res))) {
+        $results = $entryObjects->results;
+        if (!is_array($results)) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
-
-        if (is_array($res) && 0 == count($entryObjects->results)) {
-            $entryObjects->hasMore = false;
-        }
+        //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
+        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($results);
+        $pageSize              = $this->getService()->getConfiguration()->getEntitySetPageSize(
+            $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet()
+        );
+        $requestTop  = $this->getRequest()->getTopOptionCount() ?? PHP_INT_MAX ;
+        $entryObjects->hasMore &= $requestTop > $pageSize;
 
         $this->loadStackIfEmpty();
-        $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
 
-        $title       = $this->getRequest()->getContainerName();
-        $relativeUri = $this->getRequest()->getIdentifier();
-        $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
-
-        $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
-        $selfLink->title = $title;
-        $selfLink->url   = $relativeUri;
-
-        $odata               = new ODataFeed();
-        $odata->title        = new ODataTitle($title);
-        $odata->id           = $absoluteUri;
-        $odata->selfLink     = $selfLink;
-        $odata->updated      = $this->getUpdated()->format(DATE_ATOM);
-        $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $baseUri             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
+        $request             = $this->getRequest();
 
-        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $odata->rowCount = $this->getRequest()->getCountValue();
-        }
-        foreach ($res as $entry) {
-            if (!$entry instanceof QueryResult) {
-                $query          = new QueryResult();
-                $query->results = $entry;
-            } else {
-                $query = $entry;
-            }
-            $odata->entries[] = $this->writeTopLevelElement($query);
-        }
-
-        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
-        $requestTop  = $this->getRequest()->getTopOptionCount();
-        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
-        $requestTop  = (null === $requestTop) ? $pageSize + 1 : $requestTop;
-
-        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
-            $stackSegment        = $setName;
-            $lastObject          = end($entryObjects->results);
-            $segment             = $this->getNextLinkUri($lastObject);
-            $nextLink            = new ODataLink();
-            $nextLink->name      = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-            $nextLink->url       = rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment;
-            $odata->nextPageLink = $nextLink;
-        }
-
-        return $odata;
+        return new ODataFeed(
+            $request->getRequestUrl()->getUrlAsString(),
+            new ODataTitle($this->getRequest()->getContainerName()),
+            new ODataLink(
+                'self',
+                $request->getContainerName(),
+                null,
+                $request->getIdentifier()
+            ),
+            $request->queryType == QueryType::ENTITIES_WITH_COUNT() ?
+                $request->getCountValue() :
+                null,
+            $entryObjects->hasMore ? new ODataLink(
+                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                null,
+                null,
+                rtrim($this->absoluteServiceUri, '/') .
+                '/' . $request->getTargetResourceSetWrapper()->getName() .
+                $this->getNextLinkUri(end($results))
+            ) : null,
+            array_map(function ($entry) {
+                return $this->writeTopLevelElement(
+                    $entry instanceof QueryResult ? $entry : new QueryResult($entry)
+                );
+            }, $results),
+            $this->getUpdated()->format(DATE_ATOM),
+            $baseUri
+        );
     }
 
     /**
@@ -840,7 +828,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @throws InvalidOperationException
      * @return string                    for the link for next page
      */
-    protected function getNextLinkUri(&$lastObject)
+    protected function getNextLinkUri($lastObject)
     {
         $currentExpandedProjectionNode = $this->getCurrentExpandedProjectionNode();
         $internalOrderByInfo           = $currentExpandedProjectionNode->getInternalOrderByInfo();
