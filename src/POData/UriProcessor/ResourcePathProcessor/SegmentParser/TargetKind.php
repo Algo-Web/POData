@@ -25,7 +25,7 @@ class TargetKind extends Enum
 {
     protected const TERMINAL_VALUES = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
     protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
-    protected const FILTERABLE_VALUES = [3 => true, 4 => true];
+    protected const NON_FILTERABLE_VALUES = [3 => true, 4 => true];
 
     /**
      * Nothing specific is being requested.
@@ -127,8 +127,13 @@ class TargetKind extends Enum
         return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
     }
 
-    public function isFilterable(): bool
+    /**
+     * Is filtering prohibited for this type?
+     *
+     * @return bool
+     */
+    public function isNotFilterable(): bool
     {
-        return array_key_exists($this->getValue(), self::FILTERABLE_VALUES);
+        return array_key_exists($this->getValue(), self::NON_FILTERABLE_VALUES);
     }
 }

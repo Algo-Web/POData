@@ -105,7 +105,7 @@ class TargetKindTest extends TestCase
      */
     public function testIsFilterable(TargetKind $targ, bool $expected)
     {
-        $actual = $targ->isFilterable();
+        $actual = $targ->isNotFilterable();
         $this->assertEquals($expected, $actual);
     }
 }
