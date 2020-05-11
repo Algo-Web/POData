@@ -23,6 +23,10 @@ use MyCLabs\Enum\Enum;
  */
 class TargetKind extends Enum
 {
+    protected const TERMINAL_VALUES = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
+    protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
+    protected const NON_FILTERABLE_VALUES = [3 => true, 4 => true];
+
     /**
      * Nothing specific is being requested.
      * e.g. http://localhost.
@@ -102,4 +106,34 @@ class TargetKind extends Enum
      * A singleton (parameter-less function wrapper).
      */
     protected const SINGLETON = 13;
+
+    /**
+     * Is this segment a terminal segment - nothing else can be added after it?
+     *
+     * @return bool
+     */
+    public function isTerminal(): bool
+    {
+        return array_key_exists($this->getValue(), self::TERMINAL_VALUES);
+    }
+
+    /**
+     * Can this segment be accessed without necessarily directly touching database?
+     *
+     * @return bool
+     */
+    public function isSpecialPurpose(): bool
+    {
+        return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
+    }
+
+    /**
+     * Is filtering prohibited for this type?
+     *
+     * @return bool
+     */
+    public function isNotFilterable(): bool
+    {
+        return array_key_exists($this->getValue(), self::NON_FILTERABLE_VALUES);
+    }
 }
