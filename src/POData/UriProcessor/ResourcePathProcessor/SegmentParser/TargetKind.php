@@ -118,11 +118,11 @@ class TargetKind extends Enum
     }
 
     /**
-     * Can this segment be directly processed?
+     * Can this segment be accessed without necessarily directly touching database?
      *
      * @return bool
      */
-    public function isDirectProcess(): bool
+    public function isSpecialPurpose(): bool
     {
         return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
     }

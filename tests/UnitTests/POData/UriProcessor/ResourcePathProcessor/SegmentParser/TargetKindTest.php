@@ -73,7 +73,7 @@ class TargetKindTest extends TestCase
      */
     public function testIsDirectProcess(TargetKind $targ, bool $expected)
     {
-        $actual = $targ->isDirectProcess();
+        $actual = $targ->isSpecialPurpose();
         $this->assertEquals($expected, $actual);
     }
 

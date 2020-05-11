@@ -70,7 +70,7 @@ class ResourcePathProcessor
         );
         $kind = $request->getTargetKind();
 
-        if ($kind->isDirectProcess()) {
+        if ($kind->isSpecialPurpose()) {
             return $request;
         }
 
