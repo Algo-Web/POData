@@ -44,4 +44,36 @@ class TargetKindTest extends TestCase
         $actual = $targ->isTerminal();
         $this->assertEquals($expected, $actual);
     }
+
+    public function directProcessProvider(): array
+    {
+        $result = [];
+        $result[] = [TargetKind::NOTHING(), false];
+        $result[] = [TargetKind::SERVICE_DIRECTORY(), true];
+        $result[] = [TargetKind::RESOURCE(), false];
+        $result[] = [TargetKind::COMPLEX_OBJECT(), false];
+        $result[] = [TargetKind::PRIMITIVE(), false];
+        $result[] = [TargetKind::PRIMITIVE_VALUE(), false];
+        $result[] = [TargetKind::METADATA(), true];
+        $result[] = [TargetKind::VOID_SERVICE_OPERATION(), false];
+        $result[] = [TargetKind::BATCH(), true];
+        $result[] = [TargetKind::LINK(), false];
+        $result[] = [TargetKind::MEDIA_RESOURCE(), false];
+        $result[] = [TargetKind::BAG(), false];
+        $result[] = [TargetKind::SINGLETON(), false];
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider directProcessProvider
+     *
+     * @param TargetKind $targ
+     * @param bool $expected
+     */
+    public function testIsDirectProcess(TargetKind $targ, bool $expected)
+    {
+        $actual = $targ->isDirectProcess();
+        $this->assertEquals($expected, $actual);
+    }
 }
