@@ -681,17 +681,11 @@ abstract class BaseService implements IRequestHandler, IService
             TargetKind::RESOURCE()->getValue()          => array_merge([MimeTypes::MIME_APPLICATION_ATOM], $baseMimeTypes),
         ];
 
-        
-        switch ($targetKind) {
-            case TargetKind::METADATA():
-            case TargetKind::SERVICE_DIRECTORY():
-            case TargetKind::PRIMITIVE():
-            case TargetKind::COMPLEX_OBJECT():
-            case TargetKind::BAG():
-            case TargetKind::LINK():
-            case TargetKind::SINGLETON():
-            case TargetKind::RESOURCE():
+        if($targetKind && array_key_exists($targetKind->getValue(),$availableMimeTypesByTarget)){
             return HttpProcessUtility::selectMimeType($requestAcceptText, $availableMimeTypesByTarget[$targetKind->getValue()]);
+
+        }
+        switch ($targetKind) {
             case TargetKind::PRIMITIVE_VALUE():
                 $supportedResponseMimeTypes = [MimeTypes::MIME_TEXTPLAIN];
 
