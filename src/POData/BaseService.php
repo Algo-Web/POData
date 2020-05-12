@@ -545,20 +545,19 @@ abstract class BaseService implements IRequestHandler, IService
                         $targetResourceType,
                         $needToSerializeResponse
                     );
-                    if ($needToSerializeResponse) {
-                        if (null === $result || null === $result->results) {
-                            // In the query 'Orders(1245)/Customer', the targeted
-                            // Customer might be null
-                            // set status code to 204 => 'No Content'
-                            $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
-                            $hasResponseBody = false;
-                        } else {
-                            $odataModelInstance = $objectModelSerializer->writeTopLevelElement($result);
-                        }
+                    if ($needToSerializeResponse && !(null === $result || null === $result->results)) {
+                        $odataModelInstance = $objectModelSerializer->writeTopLevelElement($result);
+
                     } else {
+                        // In the query 'Orders(1245)/Customer', the targeted
+                        // Customer might be null
+                        // set status code to 204 => 'No Content'
+
                         // Resource is not modified so set status code
                         // to 304 => 'Not Modified'
-                        $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOT_MODIFIED);
+                        $status = $needToSerializeResponse ? HttpStatus::CODE_NOCONTENT : HttpStatus::CODE_NOT_MODIFIED ;
+
+                        $this->getHost()->setResponseStatusCode($status);
                         $hasResponseBody = false;
                     }
 
