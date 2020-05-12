@@ -410,7 +410,8 @@ class KeyDescriptor
     {
         if ($this->isEmpty()) {
             return 0;
-        } elseif (!empty($this->namedValues)) {
+        }
+        if (!empty($this->namedValues)) {
             return count($this->namedValues);
         }
 
