@@ -76,7 +76,7 @@ class OrderByInfo
      *
      * @return OrderByPathSegment[]
      */
-    public function getOrderByPathSegments()
+    public function getOrderByPathSegments(): array
     {
         return $this->orderByPathSegments;
     }
@@ -89,7 +89,7 @@ class OrderByInfo
      *
      * @return array<array<ResourceProperty>>|null
      */
-    public function getNavigationPropertiesUsed()
+    public function getNavigationPropertiesUsed(): ?array
     {
         return $this->navigationPropertiesUsedInTheOrderByClause;
     }
@@ -99,10 +99,12 @@ class OrderByInfo
      * will be performing the sorting or will library perform the sorting.
      *
      * @param bool $isSorted Set the flag so indicate that the result has been sorted
+     * @return bool
      */
-    public function setSorted($isSorted = true)
+    public function setSorted($isSorted = true): bool
     {
         $this->isSorted = $isSorted;
+        return true;
     }
 
     /**
@@ -111,7 +113,7 @@ class OrderByInfo
      *
      * @return bool
      */
-    public function requireInternalSorting()
+    public function requireInternalSorting(): bool
     {
         return !$this->isSorted;
     }

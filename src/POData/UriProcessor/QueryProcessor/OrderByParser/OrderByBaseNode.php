@@ -50,21 +50,21 @@ abstract class OrderByBaseNode
      *
      * @return ResourceType
      */
-    abstract public function getResourceType();
+    abstract public function getResourceType(): ResourceType;
 
     /**
      * Free resource used by this node.
      *
      * @return void
      */
-    abstract public function free();
+    abstract public function free(): void;
 
     /**
      * Gets the name of the property that corresponds to the sub path segment represented by this node.
      *
      * @return string
      */
-    public function getPropertyName()
+    public function getPropertyName(): string
     {
         return $this->propertyName;
     }
@@ -74,7 +74,7 @@ abstract class OrderByBaseNode
      *
      * @return ResourceProperty
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ResourceProperty
     {
         return $this->resourceProperty;
     }

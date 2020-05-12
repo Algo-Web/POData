@@ -119,7 +119,7 @@ class OrderByParser
         ResourceType $resourceType,
         $orderBy,
         ProvidersWrapper $providerWrapper
-    ) {
+    ): InternalOrderByInfo {
         assert(is_string($orderBy), 'OrderBy clause must be a string');
         $orderBy = trim($orderBy);
         if (0 == strlen($orderBy)) {
