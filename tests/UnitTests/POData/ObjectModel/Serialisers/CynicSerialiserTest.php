@@ -203,16 +203,8 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
-        $expected = '$expandedProjectionNode not instanceof ExpandedProjectionNode';
-        $actual   = null;
-
-        try {
-            $foo->getCurrentExpandedProjectionNode();
-        } catch (InvalidOperationException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
+        $this->expectException(\TypeError::class);
+        $foo->getCurrentExpandedProjectionNode();
     }
 
     public function testNeedNextPageLineNotOnRoot()

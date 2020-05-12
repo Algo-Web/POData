@@ -71,7 +71,7 @@ class ProjectionNode
      *
      * @return string
      */
-    public function getPropertyName()
+    public function getPropertyName(): ?string
     {
         return $this->propertyName;
     }
@@ -82,7 +82,7 @@ class ProjectionNode
      *
      * @return ResourceProperty|null
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ?ResourceProperty
     {
         return $this->resourceProperty;
     }

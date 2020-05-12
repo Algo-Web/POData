@@ -107,7 +107,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->baseResourceType;
     }
@@ -117,7 +117,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @return bool
      */
-    public function isSelectionSpecified()
+    public function isSelectionSpecified(): bool
     {
         return $this->selectionSpecified;
     }
@@ -128,7 +128,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      * @param bool $isSelectionSpecified True if selection found,
      *                                   False else
      */
-    public function setSelectionSpecified($isSelectionSpecified = true)
+    public function setSelectionSpecified($isSelectionSpecified = true): void
     {
         $this->selectionSpecified = $isSelectionSpecified;
     }
@@ -139,7 +139,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      * @param bool $hasPagedExpandedResult True if found paging on expanded
      *                                     result, False else
      */
-    public function setPagedExpandedResult($hasPagedExpandedResult = true)
+    public function setPagedExpandedResult($hasPagedExpandedResult = true): void
     {
         $this->hasPagedExpandedResult = $hasPagedExpandedResult;
     }
@@ -149,7 +149,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @return bool
      */
-    public function hasPagedExpandedResult()
+    public function hasPagedExpandedResult(): bool
     {
         return $this->hasPagedExpandedResult;
     }
@@ -159,7 +159,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @return string[]
      */
-    public function getEagerLoadList()
+    public function getEagerLoadList(): array
     {
         if (!$this->isExpansionSpecified()) {
             return [];
@@ -237,7 +237,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @return bool
      */
-    public function isExpansionSpecified()
+    public function isExpansionSpecified(): bool
     {
         return $this->expansionSpecified;
     }
@@ -247,7 +247,7 @@ class RootProjectionNode extends ExpandedProjectionNode
      *
      * @param bool $isExpansionSpecified True if expansion found, False else
      */
-    public function setExpansionSpecified($isExpansionSpecified = true)
+    public function setExpansionSpecified($isExpansionSpecified = true): void
     {
         $this->expansionSpecified = $isExpansionSpecified;
     }
