@@ -416,14 +416,7 @@ class KeyDescriptor
      */
     public function valueCount(): int
     {
-        if ($this->isEmpty()) {
-            return 0;
-        }
-        if (!empty($this->namedValues)) {
-            return count($this->namedValues);
-        }
-
-        return count($this->positionalValues);
+        return !empty($this->namedValues) ? count($this->namedValues) : count($this->positionalValues);
     }
 
     /**
