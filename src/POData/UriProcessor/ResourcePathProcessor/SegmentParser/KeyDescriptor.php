@@ -217,12 +217,12 @@ class KeyDescriptor
 
                 //expecting keyName=keyValue, verify it
                 $identifier = $currentToken->getIdentifier();
-                $currentToken = self::getNextLexerToken($expressionLexer);
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
                 }
 
-                $currentToken = self::getNextLexerToken($expressionLexer);
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 if (!$currentToken->isKeyValueToken()) {
                     return false;
                 }
@@ -270,9 +270,9 @@ class KeyDescriptor
                 return false;
             }
 
-            $currentToken = self::getNextLexerToken($expressionLexer);
+            $currentToken = self::toNextLexerToken($expressionLexer);
             if ($currentToken->getId() == ExpressionTokenId::COMMA()) {
-                $currentToken = self::getNextLexerToken($expressionLexer);
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 //end of text and comma, Trailing comma not allowed
                 if ($currentToken->getId() == ExpressionTokenId::END()) {
                     return false;
@@ -373,7 +373,7 @@ class KeyDescriptor
      * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
      * @throws ODataException
      */
-    private static function getNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
+    private static function toNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
     {
         $expressionLexer->nextToken();
         return $expressionLexer->getCurrentToken();
