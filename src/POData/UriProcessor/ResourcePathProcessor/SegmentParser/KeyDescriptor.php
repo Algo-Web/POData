@@ -424,8 +424,7 @@ class KeyDescriptor
      */
     public function isEmpty(): bool
     {
-        return empty($this->namedValues)
-            && empty($this->positionalValues);
+        return empty($this->namedValues) && empty($this->positionalValues);
     }
 
     /**
@@ -445,7 +444,6 @@ class KeyDescriptor
     {
         if ($this->isEmpty()) {
             $this->validatedNamedValues = [];
-
             return;
         }
 
@@ -525,8 +523,7 @@ class KeyDescriptor
                     );
                 }
 
-                $this->validatedNamedValues[$keyName]
-                    = $this->positionalValues[$i];
+                $this->validatedNamedValues[$keyName] = $this->positionalValues[$i];
                 ++$i;
             }
         }
