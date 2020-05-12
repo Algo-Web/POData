@@ -138,7 +138,7 @@ class KeyDescriptor
     public static function tryParseKeysFromKeyPredicate(
         $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
-    ) {
+    ): bool {
         $isKey     = true;
         $keyString = $keyPredicate;
         return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
@@ -364,7 +364,7 @@ class KeyDescriptor
      * @throws ODataException
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
-    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
+    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor): bool
     {
         $isKey     = false;
         $keyString = $skipToken;
@@ -376,7 +376,7 @@ class KeyDescriptor
      *
      * @return array[]
      */
-    public function getPositionalValues()
+    public function getPositionalValues(): array
     {
         return $this->positionalValues;
     }
@@ -386,7 +386,7 @@ class KeyDescriptor
      *
      * @return array[]
      */
-    public function &getPositionalValuesByRef()
+    public function &getPositionalValuesByRef(): array
     {
         return $this->positionalValues;
     }
@@ -396,7 +396,7 @@ class KeyDescriptor
      *
      * @return bool
      */
-    public function areNamedValues()
+    public function areNamedValues(): bool
     {
         return !empty($this->namedValues);
     }
@@ -406,7 +406,7 @@ class KeyDescriptor
      *
      * @return int
      */
-    public function valueCount()
+    public function valueCount(): int
     {
         if ($this->isEmpty()) {
             return 0;
@@ -422,7 +422,7 @@ class KeyDescriptor
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->namedValues)
             && empty($this->positionalValues);
@@ -441,7 +441,7 @@ class KeyDescriptor
      * @throws ODataException      If validation fails
      * @throws ReflectionException
      */
-    public function validate($segmentAsString, ResourceType $resourceType)
+    public function validate($segmentAsString, ResourceType $resourceType): void
     {
         if ($this->isEmpty()) {
             $this->validatedNamedValues = [];
@@ -541,7 +541,7 @@ class KeyDescriptor
      * @throws InvalidArgumentException
      * @return string
      */
-    public function generateRelativeUri(ResourceSet $resourceSet)
+    public function generateRelativeUri(ResourceSet $resourceSet): string
     {
         $resourceType = $resourceSet->getResourceType();
         $keys         = $resourceType->getKeyProperties();
@@ -578,7 +578,7 @@ class KeyDescriptor
      *
      * @return array[]
      */
-    public function getNamedValues()
+    public function getNamedValues(): array
     {
         return $this->namedValues;
     }
@@ -589,7 +589,7 @@ class KeyDescriptor
      * return array[]
      * @throws InvalidOperationException
      */
-    public function getODataProperties()
+    public function getODataProperties(): array
     {
         $values = $this->getValidatedNamedValues();
         $result = [];
@@ -614,7 +614,7 @@ class KeyDescriptor
      * @throws InvalidOperationException If this function invoked before invoking validate function
      * @return array[]
      */
-    public function getValidatedNamedValues()
+    public function getValidatedNamedValues(): array
     {
         if (empty($this->validatedNamedValues)) {
             throw new InvalidOperationException(
