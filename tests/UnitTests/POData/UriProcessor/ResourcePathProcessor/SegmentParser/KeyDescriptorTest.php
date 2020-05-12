@@ -290,7 +290,7 @@ class KeyDescriptorTest extends TestCase
         $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
         $this->assertFalse(null === $orderResourceSet);
 
-        $expected = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+        $expected = 'Mismatch between supplied key predicates and keys defined on resource set';
         $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
@@ -313,7 +313,7 @@ class KeyDescriptorTest extends TestCase
         $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
         $this->assertFalse(null === $orderResourceSet);
 
-        $expected = 'Key predicate OrderID not present in named values';
+        $expected = 'Mismatch between supplied key predicates and keys defined on resource set';
         $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();

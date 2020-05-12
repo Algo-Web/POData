@@ -553,18 +553,15 @@ class KeyDescriptor
         $keys         = $resourceType->getKeyProperties();
 
         $namedKeys = $this->getNamedValues();
-        assert(0 !== count($keys), 'count($keys) == 0');
-        if (count($keys) !== count($namedKeys)) {
-            $msg = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+        $keys = array_intersect_key($keys, $namedKeys);
+        if (0 == count($keys) || count($keys) !== count($namedKeys)) {
+            $msg = 'Mismatch between supplied key predicates and keys defined on resource set';
             throw new InvalidArgumentException($msg);
         }
+
         $editUrl = $resourceSet->getName() . '(';
         $comma   = null;
         foreach ($keys as $keyName => $resourceProperty) {
-            if (!array_key_exists($keyName, $namedKeys)) {
-                $msg = 'Key predicate ' . $keyName . ' not present in named values';
-                throw new InvalidArgumentException($msg);
-            }
             $keyType = $resourceProperty->getInstanceType();
             assert($keyType instanceof IType, '$keyType not instanceof IType');
             $keyValue = $namedKeys[$keyName][0];
