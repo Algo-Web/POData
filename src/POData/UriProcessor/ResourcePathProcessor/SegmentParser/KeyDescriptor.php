@@ -23,6 +23,7 @@ use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use ReflectionException;
 
@@ -136,9 +137,9 @@ class KeyDescriptor
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseKeysFromKeyPredicate(
-        $keyPredicate,
+        string $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
-    ) {
+    ): bool {
         $isKey     = true;
         $keyString = $keyPredicate;
         return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
@@ -151,15 +152,17 @@ class KeyDescriptor
      * @throws ODataException
      * @return bool
      */
-    protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
-    {
+    protected static function parseAndVerifyRawKeyPredicate(
+        string $keyString,
+        bool $isKey,
+        KeyDescriptor &$keyDescriptor = null
+    ): bool {
         $result = self::tryParseKeysFromRawKeyPredicate(
             $keyString,
             $isKey,
             !$isKey,
             $keyDescriptor
         );
-        assert(true === $result || false === $result, 'Result must be boolean');
         assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
         return $result;
     }
@@ -185,11 +188,11 @@ class KeyDescriptor
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     private static function tryParseKeysFromRawKeyPredicate(
-        $keyPredicate,
-        $allowNamedValues,
-        $allowNull,
-        &$keyDescriptor
-    ) {
+        string $keyPredicate,
+        bool $allowNamedValues,
+        bool $allowNull,
+        ?KeyDescriptor &$keyDescriptor
+    ): bool {
         $expressionLexer = new ExpressionLexer($keyPredicate);
         $currentToken    = $expressionLexer->getCurrentToken();
 
@@ -214,14 +217,12 @@ class KeyDescriptor
 
                 //expecting keyName=keyValue, verify it
                 $identifier = $currentToken->getIdentifier();
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
                 }
 
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 if (!$currentToken->isKeyValueToken()) {
                     return false;
                 }
@@ -269,11 +270,9 @@ class KeyDescriptor
                 return false;
             }
 
-            $expressionLexer->nextToken();
-            $currentToken = $expressionLexer->getCurrentToken();
+            $currentToken = self::toNextLexerToken($expressionLexer);
             if ($currentToken->getId() == ExpressionTokenId::COMMA()) {
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::toNextLexerToken($expressionLexer);
                 //end of text and comma, Trailing comma not allowed
                 if ($currentToken->getId() == ExpressionTokenId::END()) {
                     return false;
@@ -299,8 +298,12 @@ class KeyDescriptor
      *
      * @return bool True if $value is a valid type, else false
      */
-    private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
-    {
+    private static function getTypeAndValidateKeyValue(
+        string $value,
+        ExpressionTokenId $tokenId,
+        &$outValue,
+        IType &$outType = null
+    ): bool {
         switch ($tokenId) {
             case ExpressionTokenId::BOOLEAN_LITERAL():
                 $outType = new Boolean();
@@ -358,7 +361,7 @@ class KeyDescriptor
      * @throws ODataException
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
-    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor)
+    public static function tryParseValuesFromSkipToken(string $skipToken, ?KeyDescriptor &$keyDescriptor): bool
     {
         $isKey     = false;
         $keyString = $skipToken;
@@ -366,11 +369,22 @@ class KeyDescriptor
     }
 
     /**
+     * @param ExpressionLexer $expressionLexer
+     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
+     * @throws ODataException
+     */
+    private static function toNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
+    {
+        $expressionLexer->nextToken();
+        return $expressionLexer->getCurrentToken();
+    }
+
+    /**
      * Gets collection of positional key values.
      *
      * @return array[]
      */
-    public function getPositionalValues()
+    public function getPositionalValues(): array
     {
         return $this->positionalValues;
     }
@@ -380,7 +394,7 @@ class KeyDescriptor
      *
      * @return array[]
      */
-    public function &getPositionalValuesByRef()
+    public function &getPositionalValuesByRef(): array
     {
         return $this->positionalValues;
     }
@@ -390,7 +404,7 @@ class KeyDescriptor
      *
      * @return bool
      */
-    public function areNamedValues()
+    public function areNamedValues(): bool
     {
         return !empty($this->namedValues);
     }
@@ -400,15 +414,9 @@ class KeyDescriptor
      *
      * @return int
      */
-    public function valueCount()
+    public function valueCount(): int
     {
-        if ($this->isEmpty()) {
-            return 0;
-        } elseif (!empty($this->namedValues)) {
-            return count($this->namedValues);
-        }
-
-        return count($this->positionalValues);
+        return !empty($this->namedValues) ? count($this->namedValues) : count($this->positionalValues);
     }
 
     /**
@@ -416,10 +424,9 @@ class KeyDescriptor
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
-        return empty($this->namedValues)
-            && empty($this->positionalValues);
+        return empty($this->namedValues) && empty($this->positionalValues);
     }
 
     /**
@@ -435,11 +442,10 @@ class KeyDescriptor
      * @throws ODataException      If validation fails
      * @throws ReflectionException
      */
-    public function validate($segmentAsString, ResourceType $resourceType)
+    public function validate(string $segmentAsString, ResourceType $resourceType): void
     {
         if ($this->isEmpty()) {
             $this->validatedNamedValues = [];
-
             return;
         }
 
@@ -490,13 +496,10 @@ class KeyDescriptor
                 $this->validatedNamedValues[$keyName] = $this->namedValues[$keyName];
             }
         } else {
-            if (count($this->positionalValues) != $keyPropertiesCount) {
+            $numPos = count($this->positionalValues);
+            if ($numPos != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
-                    Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString,
-                        $keyPropertiesCount,
-                        count($this->positionalValues)
-                    )
+                    Messages::keyDescriptorKeyCountNotMatching($segmentAsString, $keyPropertiesCount, $numPos)
                 );
             }
 
@@ -519,8 +522,7 @@ class KeyDescriptor
                     );
                 }
 
-                $this->validatedNamedValues[$keyName]
-                    = $this->positionalValues[$i];
+                $this->validatedNamedValues[$keyName] = $this->positionalValues[$i];
                 ++$i;
             }
         }
@@ -535,24 +537,21 @@ class KeyDescriptor
      * @throws InvalidArgumentException
      * @return string
      */
-    public function generateRelativeUri(ResourceSet $resourceSet)
+    public function generateRelativeUri(ResourceSet $resourceSet): string
     {
         $resourceType = $resourceSet->getResourceType();
         $keys         = $resourceType->getKeyProperties();
 
         $namedKeys = $this->getNamedValues();
-        assert(0 !== count($keys), 'count($keys) == 0');
-        if (count($keys) !== count($namedKeys)) {
-            $msg = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+        $keys = array_intersect_key($keys, $namedKeys);
+        if (0 == count($keys) || count($keys) !== count($namedKeys)) {
+            $msg = 'Mismatch between supplied key predicates and keys defined on resource set';
             throw new InvalidArgumentException($msg);
         }
+
         $editUrl = $resourceSet->getName() . '(';
         $comma   = null;
         foreach ($keys as $keyName => $resourceProperty) {
-            if (!array_key_exists($keyName, $namedKeys)) {
-                $msg = 'Key predicate ' . $keyName . ' not present in named values';
-                throw new InvalidArgumentException($msg);
-            }
             $keyType = $resourceProperty->getInstanceType();
             assert($keyType instanceof IType, '$keyType not instanceof IType');
             $keyValue = $namedKeys[$keyName][0];
@@ -572,7 +571,7 @@ class KeyDescriptor
      *
      * @return array[]
      */
-    public function getNamedValues()
+    public function getNamedValues(): array
     {
         return $this->namedValues;
     }
@@ -583,7 +582,7 @@ class KeyDescriptor
      * return array[]
      * @throws InvalidOperationException
      */
-    public function getODataProperties()
+    public function getODataProperties(): array
     {
         $values = $this->getValidatedNamedValues();
         $result = [];
@@ -608,7 +607,7 @@ class KeyDescriptor
      * @throws InvalidOperationException If this function invoked before invoking validate function
      * @return array[]
      */
-    public function getValidatedNamedValues()
+    public function getValidatedNamedValues(): array
     {
         if (empty($this->validatedNamedValues)) {
             throw new InvalidOperationException(

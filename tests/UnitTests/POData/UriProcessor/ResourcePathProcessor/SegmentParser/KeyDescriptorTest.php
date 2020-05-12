@@ -290,7 +290,7 @@ class KeyDescriptorTest extends TestCase
         $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
         $this->assertFalse(null === $orderResourceSet);
 
-        $expected = 'Mismatch between supplied key predicates and number of keys defined on resource set';
+        $expected = 'Mismatch between supplied key predicates and keys defined on resource set';
         $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
@@ -313,7 +313,7 @@ class KeyDescriptorTest extends TestCase
         $orderResourceSet = $northWindMetadata->resolveResourceSet('Orders');
         $this->assertFalse(null === $orderResourceSet);
 
-        $expected = 'Key predicate OrderID not present in named values';
+        $expected = 'Mismatch between supplied key predicates and keys defined on resource set';
         $actual   = null;
 
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
@@ -401,6 +401,22 @@ class KeyDescriptorTest extends TestCase
 
         $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
         $this->assertTrue($result);
+    }
+
+    public function testGetTypeAndValidateKeyValueForDefault()
+    {
+        $reflec = new \ReflectionClass(KeyDescriptor::class);
+
+        $method = $reflec->getMethod('getTypeAndValidateKeyValue');
+        $method->setAccessible(true);
+
+        $value   = '1.0f';
+        $tokenId = m::mock(ExpressionTokenId::class);
+        $outVal  = null;
+        $outType = null;
+
+        $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
+        $this->assertFalse($result);
     }
 
     public function tearDown()
