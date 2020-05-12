@@ -100,7 +100,7 @@ class ExpressionParser
      *
      * @return bool
      */
-    public function hasLevel2Property()
+    public function hasLevel2Property(): bool
     {
         return $this->hasLevel2PropertyInTheExpression;
     }
@@ -111,7 +111,7 @@ class ExpressionParser
      * @param  string         $text Reset the expression to parse
      * @throws ODataException
      */
-    public function resetParser($text)
+    public function resetParser($text): void
     {
         $this->lexer          = new ExpressionLexer($text);
         $this->recursionDepth = 0;
@@ -125,7 +125,7 @@ class ExpressionParser
      * @throws NotImplementedException
      * @return AbstractExpression
      */
-    public function parseFilter()
+    public function parseFilter(): AbstractExpression
     {
         return $this->parseExpression();
     }
@@ -671,7 +671,7 @@ class ExpressionParser
      * @throws ODataException
      * @return AbstractExpression
      */
-    private function parseParenExpression(): AbstractExpression
+    private function parseParenExpression(): ?AbstractExpression
     {
         if ($this->getCurrentToken()->getId() != ExpressionTokenId::OPENPARAM()) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');

@@ -47,7 +47,7 @@ class ConstantExpression extends AbstractExpression
      * @return void
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         unset($this->value);
     }

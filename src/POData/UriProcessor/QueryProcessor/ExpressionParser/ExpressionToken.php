@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use PhpParser\Node\Stmt\Expression;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 
@@ -31,7 +32,7 @@ class ExpressionToken
      * @return bool True if this token represent a comparison operator
      *              False otherwise
      */
-    public function isComparisonOperator()
+    public function isComparisonOperator(): bool
     {
         return
             $this->Id == ExpressionTokenId::IDENTIFIER() &&
@@ -50,7 +51,7 @@ class ExpressionToken
      * @return bool True if this token represent a equality operator
      *              False otherwise
      */
-    public function isEqualityOperator()
+    public function isEqualityOperator(): bool
     {
         return
             $this->Id == ExpressionTokenId::IDENTIFIER() &&
@@ -65,7 +66,7 @@ class ExpressionToken
      * @return bool True if this token represent valid key value
      *              False otherwise
      */
-    public function isKeyValueToken()
+    public function isKeyValueToken(): bool
     {
         return
             $this->Id == ExpressionTokenId::BINARY_LITERAL() ||
@@ -82,7 +83,7 @@ class ExpressionToken
      * @throws ODataException
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         if ($this->Id != ExpressionTokenId::IDENTIFIER()) {
             throw ODataException::createSyntaxError(
@@ -100,7 +101,7 @@ class ExpressionToken
      *
      * @return bool true if this is an identifier with the specified text
      */
-    public function identifierIs($id)
+    public function identifierIs($id): bool
     {
         return $this->Id == ExpressionTokenId::IDENTIFIER()
             && strcmp($this->Text, $id) == 0;
@@ -109,7 +110,7 @@ class ExpressionToken
     /**
      * @return ExpressionTokenId
      */
-    public function getId()
+    public function getId(): ExpressionTokenId
     {
         return $this->Id;
     }
@@ -117,7 +118,7 @@ class ExpressionToken
     /**
      * @param ExpressionTokenId $Id
      */
-    public function setId(ExpressionTokenId $Id)
+    public function setId(ExpressionTokenId $Id): void
     {
         $this->Id = $Id;
     }

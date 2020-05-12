@@ -63,14 +63,8 @@ class PHPExpressionProviderErrorCheckTest extends TestCase
         $foo = new PHPExpressionProvider('abc');
         $foo->setResourceType($res);
 
-        $expected = 'onPropertyAccessExpression - expression has no resource property';
-        $actual   = null;
+        $this->expectException(\TypeError::class);
 
-        try {
-            $result = $foo->onPropertyAccessExpression($property);
-        } catch (\InvalidArgumentException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
+        $foo->onPropertyAccessExpression($property);
     }
 }

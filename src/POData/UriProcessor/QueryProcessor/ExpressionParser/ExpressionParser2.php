@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
+use Hoa\Iterator\Filter;
 use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\NotImplementedException;
@@ -82,8 +83,11 @@ class ExpressionParser2 extends ExpressionParser
      *                                 or building the php/custom expression
      * @return FilterInfo
      */
-    public static function parseExpression2($text, ResourceType $resourceType, IExpressionProvider $expressionProvider)
-    {
+    public static function parseExpression2(
+        $text,
+        ResourceType $resourceType,
+        IExpressionProvider $expressionProvider
+    ): FilterInfo {
         $expressionParser2 = new self($text, $resourceType, $expressionProvider instanceof PHPExpressionProvider);
         $expressionTree    = $expressionParser2->parseFilter();
 
@@ -112,7 +116,7 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @see library/POData/QueryProcessor/ExpressionParser::parseFilter()
      */
-    public function parseFilter()
+    public function parseFilter(): AbstractExpression
     {
         $expression = parent::parseFilter();
         if (!$expression->typeIs(new Boolean())) {

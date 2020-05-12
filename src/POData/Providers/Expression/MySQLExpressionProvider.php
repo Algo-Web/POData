@@ -258,9 +258,6 @@ class MySQLExpressionProvider implements IExpressionProvider
         if (null == $this->resourceType->getName()) {
             throw new InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
         }
-        if (null == $expression->getResourceProperty()) {
-            throw new InvalidArgumentException('onPropertyAccessExpression - expression has no resource property');
-        }
         $parent         = $expression;
         $entityTypeName = $this->resourceType->getName();
         $propertyName   = $parent->getResourceProperty()->getName();

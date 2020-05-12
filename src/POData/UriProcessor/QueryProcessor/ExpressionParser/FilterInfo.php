@@ -52,7 +52,7 @@ class FilterInfo
     /**
      * @return array
      */
-    public function getNavigationPropertiesUsed()
+    public function getNavigationPropertiesUsed(): array
     {
         return $this->navigationPropertiesUsedInTheFilterClause;
     }
@@ -62,7 +62,7 @@ class FilterInfo
      *
      * @return string
      */
-    public function getExpressionAsString()
+    public function getExpressionAsString(): ?string
     {
         return $this->filterExpressionAsDataSourceExpression;
     }

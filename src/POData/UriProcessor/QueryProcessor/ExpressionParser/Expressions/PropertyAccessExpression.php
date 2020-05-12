@@ -71,7 +71,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return PropertyAccessExpression|null
      */
-    public function getParent()
+    public function getParent(): ?PropertyAccessExpression
     {
         return isset($this->parent) ? $this->parent : null;
     }
@@ -81,7 +81,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return ResourceProperty
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ResourceProperty
     {
         return $this->resourceProperty;
     }
@@ -92,7 +92,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return ResourceProperty[] Returns empty array if no navigation property is used else array of ResourceProperty
      */
-    public function getNavigationPropertiesInThePath()
+    public function getNavigationPropertiesInThePath(): array
     {
         $basePropertyExpression = $this;
         while (($basePropertyExpression != null)
@@ -121,7 +121,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceProperty->getResourceType();
     }
@@ -134,7 +134,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return UnaryExpression|LogicalExpression|null Instance of UnaryExpression, LogicalExpression or Null
      */
-    public function createNullableExpressionTree($includeMe)
+    public function createNullableExpressionTree($includeMe): ?AbstractExpression
     {
         $basePropertyExpression = $this;
         while (($basePropertyExpression != null)
@@ -217,7 +217,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return PropertyAccessExpression|null
      */
-    public function getChild()
+    public function getChild(): ?PropertyAccessExpression
     {
         return isset($this->child) ? $this->child : null;
     }
@@ -227,7 +227,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @param PropertyAccessExpression $child The child expression
      */
-    public function setChild($child)
+    public function setChild($child): void
     {
         $this->child = $child;
     }
@@ -237,7 +237,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @see library/POData/QueryProcessor/Expressions/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         if (null !== $this->parent) {
             $this->parent->free();

@@ -37,7 +37,7 @@ class UnaryExpression extends AbstractExpression
      *
      * @return AbstractExpression|null
      */
-    public function getChild()
+    public function getChild(): ?AbstractExpression
     {
         return isset($this->child) ? $this->child : null;
     }
@@ -47,7 +47,7 @@ class UnaryExpression extends AbstractExpression
      *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         $this->child->free();
         unset($this->child);

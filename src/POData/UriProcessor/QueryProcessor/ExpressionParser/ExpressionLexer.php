@@ -110,7 +110,7 @@ class ExpressionLexer
      * Reads the next token, skipping whitespace as necessary.
      * @throws ODataException
      */
-    public function nextToken()
+    public function nextToken(): void
     {
         while (Char::isWhiteSpace($this->ch)) {
             $this->nextChar();
@@ -353,7 +353,7 @@ class ExpressionLexer
      *
      * @return bool true if it's a numeric literal; false otherwise
      */
-    public static function isNumeric(ExpressionTokenId $id)
+    public static function isNumeric(ExpressionTokenId $id): bool
     {
         return
             $id == ExpressionTokenId::INTEGER_LITERAL()
@@ -501,7 +501,7 @@ class ExpressionLexer
      *
      * @return ExpressionToken
      */
-    public function getCurrentToken()
+    public function getCurrentToken(): ExpressionToken
     {
         return $this->token;
     }
@@ -511,7 +511,7 @@ class ExpressionLexer
      *
      * @param ExpressionToken $token The expression token to set as current
      */
-    public function setCurrentToken(ExpressionToken $token)
+    public function setCurrentToken(ExpressionToken $token): void
     {
         $this->token = $token;
     }
@@ -521,7 +521,7 @@ class ExpressionLexer
      *
      * @return string
      */
-    public function getExpressionText()
+    public function getExpressionText(): string
     {
         return $this->text;
     }
@@ -531,7 +531,7 @@ class ExpressionLexer
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->token->Position;
     }
@@ -542,7 +542,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return ExpressionToken
      */
-    public function peekNextToken()
+    public function peekNextToken(): ExpressionToken
     {
         $savedTextPos = $this->textPos;
         assert(2 >= strlen($this->ch));
@@ -566,7 +566,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return string         The dotted identifier starting at the current identifier
      */
-    public function readDottedIdentifier()
+    public function readDottedIdentifier(): string
     {
         $this->validateToken(ExpressionTokenId::IDENTIFIER());
         $identifier = $this->token->Text;
@@ -589,7 +589,7 @@ class ExpressionLexer
      * @throws ODataException if current token is not of the
      *                        specified kind
      */
-    public function validateToken(ExpressionTokenId $tokenId)
+    public function validateToken(ExpressionTokenId $tokenId): void
     {
         if ($this->token->getId() != $tokenId) {
             $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));

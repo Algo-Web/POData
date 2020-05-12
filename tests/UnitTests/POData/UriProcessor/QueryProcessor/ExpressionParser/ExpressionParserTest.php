@@ -30,6 +30,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalEx
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use TypeError;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
@@ -690,8 +691,12 @@ class ExpressionParserTest extends TestCase
     public function primaryStartKaboomProvider(): array
     {
         $result   = [];
-        $result[] = [ExpressionTokenId::BINARY_LITERAL(), NotImplementedException::class, 'Support for binary is not implemented'];
-        $result[] = [null, ODataException::class, 'Expression expected'];
+        $result[] = [
+            ExpressionTokenId::BINARY_LITERAL(),
+            NotImplementedException::class,
+            'Support for binary is not implemented'
+        ];
+        $result[] = [null, TypeError::class, 'null returned'];
 
         return $result;
     }
@@ -741,8 +746,9 @@ class ExpressionParserTest extends TestCase
         $expression = 'year(datetime\'1988-11-11\')';
         $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
 
+        $id       = m::mock(ExpressionTokenId::class)->makePartial();
         $newToken = m::mock(ExpressionToken::class)->makePartial();
-        $newToken->shouldReceive('getId')->andReturn(null)->once();
+        $newToken->shouldReceive('getId')->andReturn($id)->once();
 
         $reflec = new \ReflectionClass($parser);
 
@@ -772,8 +778,9 @@ class ExpressionParserTest extends TestCase
         $expression = 'year(datetime\'1988-11-11\')';
         $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
 
+        $id       = m::mock(ExpressionTokenId::class)->makePartial();
         $newToken = m::mock(ExpressionToken::class)->makePartial();
-        $newToken->shouldReceive('getId')->andReturn(null)->once();
+        $newToken->shouldReceive('getId')->andReturn($id)->once();
 
         $reflec = new \ReflectionClass($parser);
 
