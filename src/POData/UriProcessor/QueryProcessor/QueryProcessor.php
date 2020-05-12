@@ -244,7 +244,7 @@ class QueryProcessor
      *                        value is present in the request, false query
      *                        item is absent in the request uri
      */
-    private function readSkipOrTopOption($queryItem, &$value): bool
+    private function readSkipOrTopOption(string $queryItem, ?int &$value): bool
     {
         $value = $this->service->getHost()->getQueryStringItem($queryItem);
         if (null !== $value) {
@@ -580,7 +580,7 @@ class QueryProcessor
      *                        options $select, $expand cannot be
      *                        applied to the requested resource
      */
-    private function checkExpandOrSelectApplicable($queryItem): void
+    private function checkExpandOrSelectApplicable(string $queryItem): void
     {
         if (!$this->expandSelectApplicable) {
             throw ODataException::createBadRequestError(
