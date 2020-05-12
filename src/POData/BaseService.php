@@ -527,15 +527,13 @@ abstract class BaseService implements IRequestHandler, IService
                 }
                 $requestTargetKind = $request->getTargetKind();
                 $requestProperty   = $request->getProjectedProperty();
-                if ($request->isLinkUri()) {
+                if ($request->isLinkUri() && $methodIsNotPost && $methodIsNotDelete) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
                     // Customer might be null
-                    if (null === $result->results && $methodIsNotPost && $methodIsNotDelete) {
+                    if (null === $result->results) {
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
-                    if ($methodIsNotPost && $methodIsNotDelete) {
-                        $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                    }
+                    $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
                 } elseif (TargetKind::RESOURCE() == $requestTargetKind
                     || TargetKind::SINGLETON() == $requestTargetKind) {
                     if (null !== $this->getHost()->getRequestIfMatch()
