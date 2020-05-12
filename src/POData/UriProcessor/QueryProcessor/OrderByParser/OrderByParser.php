@@ -164,7 +164,7 @@ class OrderByParser
      * @return array<array>   An array of 'OrderByPathSegment's, each of which
      *                        is array of 'OrderBySubPathSegment's
      */
-    private function readOrderBy($value)
+    private function readOrderBy($value): array
     {
         $orderByPathSegments = [];
         $lexer               = new ExpressionLexer($value);
@@ -411,7 +411,7 @@ class OrderByParser
      *
      * @throws ODataException
      */
-    private function assertion($condition)
+    private function assertion($condition): void
     {
         if (!$condition) {
             throw ODataException::createInternalServerError(Messages::orderByParserUnExpectedState());
@@ -486,7 +486,7 @@ class OrderByParser
      * Generates top level comparison function from sub comparison functions.
      * @throws ODataException
      */
-    private function generateTopLevelComparisonFunction()
+    private function generateTopLevelComparisonFunction(): void
     {
         $comparisonFunctionCount = count($this->comparisonFunctions);
         $this->assertion(0 < $comparisonFunctionCount);
