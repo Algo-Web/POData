@@ -151,8 +151,11 @@ class KeyDescriptor
      * @throws ODataException
      * @return bool
      */
-    protected static function parseAndVerifyRawKeyPredicate($keyString, $isKey, KeyDescriptor &$keyDescriptor = null)
-    {
+    protected static function parseAndVerifyRawKeyPredicate(
+        $keyString,
+        $isKey,
+        KeyDescriptor &$keyDescriptor = null
+    ): bool {
         $result = self::tryParseKeysFromRawKeyPredicate(
             $keyString,
             $isKey,
@@ -188,7 +191,7 @@ class KeyDescriptor
         $allowNamedValues,
         $allowNull,
         &$keyDescriptor
-    ):bool {
+    ): bool {
         $expressionLexer = new ExpressionLexer($keyPredicate);
         $currentToken    = $expressionLexer->getCurrentToken();
 
@@ -298,7 +301,7 @@ class KeyDescriptor
      *
      * @return bool True if $value is a valid type, else false
      */
-    private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType)
+    private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType): bool
     {
         switch ($tokenId) {
             case ExpressionTokenId::BOOLEAN_LITERAL():
