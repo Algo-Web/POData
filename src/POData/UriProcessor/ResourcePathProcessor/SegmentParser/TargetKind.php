@@ -9,18 +9,31 @@ use MyCLabs\Enum\Enum;
 
 /**
  * @method static TargetKind NOTHING()
+ * @method isNOTHING(): bool
  * @method static TargetKind SERVICE_DIRECTORY()
+ * @method isSERVICE_DIRECTORY(): bool
  * @method static TargetKind RESOURCE()
+ * @method isRESOURCE(): bool
  * @method static TargetKind COMPLEX_OBJECT()
+ * @method isCOMPLEX_OBJECT(): bool
  * @method static TargetKind PRIMITIVE()
+ * @method isPRIMITIVE(): bool
  * @method static TargetKind PRIMITIVE_VALUE()
+ * @method isPRIMITIVE_VALUE(): bool
  * @method static TargetKind METADATA()
+ * @method isMETADATA(): bool
  * @method static TargetKind VOID_SERVICE_OPERATION()
+ * @method isVOID_SERVICE_OPERATION(): bool
  * @method static TargetKind BATCH()
+ * @method isBATCH(): bool
  * @method static TargetKind LINK()
+ * @method isLINK(): bool
  * @method static TargetKind MEDIA_RESOURCE()
+ * @method isMEDIA_RESOURCE(): bool
  * @method static TargetKind BAG()
+ * @method isBAG(): bool
  * @method static TargetKind SINGLETON()
+ * @method isSINGLETON(): bool
  */
 class TargetKind extends BitMask
 {
