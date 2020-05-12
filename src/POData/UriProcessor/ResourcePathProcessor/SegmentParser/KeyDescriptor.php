@@ -159,7 +159,6 @@ class KeyDescriptor
             !$isKey,
             $keyDescriptor
         );
-        assert(true === $result || false === $result, 'Result must be boolean');
         assert($result === isset($keyDescriptor), 'Result must match existence of keyDescriptor');
         return $result;
     }
@@ -189,7 +188,7 @@ class KeyDescriptor
         $allowNamedValues,
         $allowNull,
         &$keyDescriptor
-    ) {
+    ):bool {
         $expressionLexer = new ExpressionLexer($keyPredicate);
         $currentToken    = $expressionLexer->getCurrentToken();
 
