@@ -73,7 +73,7 @@ class InternalSkipTokenInfo
      */
     public function __construct(
         InternalOrderByInfo &$internalOrderByInfo,
-        $orderByValuesInSkipToken,
+        array $orderByValuesInSkipToken,
         ResourceType &$resourceType
     ) {
         $this->internalOrderByInfo      = $internalOrderByInfo;
