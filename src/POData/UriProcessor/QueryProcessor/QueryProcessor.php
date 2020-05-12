@@ -110,7 +110,7 @@ class QueryProcessor
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    public static function process(RequestDescription $request, IService $service)
+    public static function process(RequestDescription $request, IService $service): void
     {
         $queryProcessor = new self($request, $service);
         if ($request->getTargetSource() == TargetSource::NONE()) {
