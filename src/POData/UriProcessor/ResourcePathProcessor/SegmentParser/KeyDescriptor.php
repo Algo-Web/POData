@@ -152,8 +152,8 @@ class KeyDescriptor
      * @return bool
      */
     protected static function parseAndVerifyRawKeyPredicate(
-        $keyString,
-        $isKey,
+        string $keyString,
+        bool $isKey,
         KeyDescriptor &$keyDescriptor = null
     ): bool {
         $result = self::tryParseKeysFromRawKeyPredicate(
@@ -187,10 +187,10 @@ class KeyDescriptor
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     private static function tryParseKeysFromRawKeyPredicate(
-        $keyPredicate,
-        $allowNamedValues,
-        $allowNull,
-        &$keyDescriptor
+        string $keyPredicate,
+        bool $allowNamedValues,
+        bool $allowNull,
+        ?KeyDescriptor &$keyDescriptor
     ): bool {
         $expressionLexer = new ExpressionLexer($keyPredicate);
         $currentToken    = $expressionLexer->getCurrentToken();
@@ -301,8 +301,12 @@ class KeyDescriptor
      *
      * @return bool True if $value is a valid type, else false
      */
-    private static function getTypeAndValidateKeyValue($value, $tokenId, &$outValue, &$outType): bool
-    {
+    private static function getTypeAndValidateKeyValue(
+        string $value,
+        ExpressionTokenId $tokenId,
+        &$outValue,
+        IType &$outType = null
+    ): bool {
         switch ($tokenId) {
             case ExpressionTokenId::BOOLEAN_LITERAL():
                 $outType = new Boolean();
