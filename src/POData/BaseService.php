@@ -510,13 +510,8 @@ abstract class BaseService implements IRequestHandler, IService
 
                 // If related resource set is empty for an entry then we should
                 // not throw error instead response must be empty feed or empty links
-                if ($request->isLinkUri()) {
-                    $odataModelInstance = $objectModelSerializer->writeUrlElements($entryObjects);
-                    assert($odataModelInstance instanceof ODataURLCollection, '$odataModelInstance instanceof ODataURLCollection');
-                } else {
-                    $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects);
-                    assert ($odataModelInstance instanceof ODataFeed , '!$odataModelInstance instanceof ODataFeed');
-                }
+                $method = $request->isLinkUri() ? 'writeUrlElements' : 'writeTopLevelElements';
+                $odataModelInstance = $objectModelSerializer->{$method}($entryObjects);
             } else {
                 // Code path for entity, complex, bag, resource reference link,
                 // primitive type or primitive value
