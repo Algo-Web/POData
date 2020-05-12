@@ -52,7 +52,7 @@ class FunctionDescription
      * @param IType   $returnType    Return type
      * @param IType[] $argumentTypes Parameter type
      */
-    public function __construct($name, $returnType, $argumentTypes)
+    public function __construct(string $name, IType $returnType, array $argumentTypes)
     {
         $this->name          = $name;
         $this->returnType    = $returnType;
@@ -191,9 +191,9 @@ class FunctionDescription
      * @return IType
      */
     public static function verifyAndPromoteArithmeticOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
     ): IType {
         $function
             = self::findFunctionWithPromotion(
@@ -221,9 +221,9 @@ class FunctionDescription
      * @return FunctionDescription|null Reference to the matching function if found else NULL
      */
     public static function findFunctionWithPromotion(
-        $functionDescriptions,
-        $argExpressions,
-        $promoteArguments = true
+        array $functionDescriptions,
+        array $argExpressions,
+        bool $promoteArguments = true
     ): ?FunctionDescription {
         $argCount            = count($argExpressions);
         $applicableFunctions = [];
@@ -290,7 +290,7 @@ class FunctionDescription
      *
      * @throws ODataException
      */
-    public static function incompatibleError($expressionToken, $argExpressions): void
+    public static function incompatibleError(ExpressionToken $expressionToken, array $argExpressions): void
     {
         $string = null;
         foreach ($argExpressions as $argExpression) {
@@ -322,9 +322,9 @@ class FunctionDescription
      * @throws ODataException
      */
     public static function verifyLogicalOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
     ): void {
         $function = self::findFunctionWithPromotion(
             self::logicalOperationFunctions(),
@@ -365,9 +365,9 @@ class FunctionDescription
      * @throws ODataException
      */
     public static function verifyRelationalOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
     ): void {
         //for null operands only equality operators are allowed
         $null = new Null1();
@@ -498,8 +498,10 @@ class FunctionDescription
      *
      * @throws ODataException
      */
-    public static function validateUnaryOpArguments($expressionToken, $argExpression): void
-    {
+    public static function validateUnaryOpArguments(
+        ExpressionToken $expressionToken,
+        AbstractExpression $argExpression
+    ): void {
         //Unary not
         if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0) {
             $function = self::findFunctionWithPromotion(
@@ -562,7 +564,7 @@ class FunctionDescription
      * @throws ODataException
      * @return FunctionDescription[] Array of matching functions
      */
-    public static function verifyFunctionExists($expressionToken): array
+    public static function verifyFunctionExists(ExpressionToken $expressionToken): array
     {
         if (!array_key_exists($expressionToken->Text, self::filterFunctionDescriptions())) {
             throw ODataException::createSyntaxError(
@@ -768,9 +770,9 @@ class FunctionDescription
      * @return FunctionDescription
      */
     public static function verifyFunctionCallOpArguments(
-        $functions,
-        $argExpressions,
-        $expressionToken
+        array $functions,
+        array $argExpressions,
+        ExpressionToken $expressionToken
     ): FunctionDescription {
         $function
             = self::findFunctionWithPromotion($functions, $argExpressions, false);
