@@ -23,6 +23,7 @@ use POData\Providers\Metadata\Type\Null1;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
 use ReflectionException;
 
@@ -216,14 +217,12 @@ class KeyDescriptor
 
                 //expecting keyName=keyValue, verify it
                 $identifier = $currentToken->getIdentifier();
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::getNextLexerToken($expressionLexer);
                 if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
                 }
 
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::getNextLexerToken($expressionLexer);
                 if (!$currentToken->isKeyValueToken()) {
                     return false;
                 }
@@ -271,11 +270,9 @@ class KeyDescriptor
                 return false;
             }
 
-            $expressionLexer->nextToken();
-            $currentToken = $expressionLexer->getCurrentToken();
+            $currentToken = self::getNextLexerToken($expressionLexer);
             if ($currentToken->getId() == ExpressionTokenId::COMMA()) {
-                $expressionLexer->nextToken();
-                $currentToken = $expressionLexer->getCurrentToken();
+                $currentToken = self::getNextLexerToken($expressionLexer);
                 //end of text and comma, Trailing comma not allowed
                 if ($currentToken->getId() == ExpressionTokenId::END()) {
                     return false;
@@ -369,6 +366,17 @@ class KeyDescriptor
         $isKey     = false;
         $keyString = $skipToken;
         return self::parseAndVerifyRawKeyPredicate($keyString, $isKey, $keyDescriptor);
+    }
+
+    /**
+     * @param ExpressionLexer $expressionLexer
+     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
+     * @throws ODataException
+     */
+    private static function getNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
+    {
+        $expressionLexer->nextToken();
+        return $expressionLexer->getCurrentToken();
     }
 
     /**
