@@ -597,16 +597,16 @@ abstract class BaseService implements IRequestHandler, IService
         }
 
         //Note: Response content type can be null for named stream
-        if ($hasResponseBody && null !== $responseContentType) {
-            if (TargetKind::MEDIA_RESOURCE() != $request->getTargetKind()
-                && MimeTypes::MIME_APPLICATION_OCTETSTREAM != $responseContentType) {
-                //append charset for everything except:
-                //stream resources as they have their own content type
-                //binary properties (they content type will be App Octet for those...is this a good way?
-                //we could also decide based upon the projected property
+        if ($hasResponseBody && null !== $responseContentType &&
+            TargetKind::MEDIA_RESOURCE() != $request->getTargetKind() &&
+            MimeTypes::MIME_APPLICATION_OCTETSTREAM != $responseContentType)
+        {
+            //append charset for everything except:
+            //stream resources as they have their own content type
+            //binary properties (they content type will be App Octet for those...is this a good way?
+            //we could also decide based upon the projected property
 
-                $responseContentType .= ';charset=utf-8';
-            }
+            $responseContentType .= ';charset=utf-8';
         }
 
         if ($hasResponseBody) {
