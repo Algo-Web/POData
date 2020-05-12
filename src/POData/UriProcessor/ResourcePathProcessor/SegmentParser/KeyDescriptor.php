@@ -503,13 +503,10 @@ class KeyDescriptor
                 $this->validatedNamedValues[$keyName] = $this->namedValues[$keyName];
             }
         } else {
-            if (count($this->positionalValues) != $keyPropertiesCount) {
+            $numPos = count($this->positionalValues);
+            if ($numPos != $keyPropertiesCount) {
                 throw ODataException::createSyntaxError(
-                    Messages::keyDescriptorKeyCountNotMatching(
-                        $segmentAsString,
-                        $keyPropertiesCount,
-                        count($this->positionalValues)
-                    )
+                    Messages::keyDescriptorKeyCountNotMatching($segmentAsString, $keyPropertiesCount, $numPos)
                 );
             }
 

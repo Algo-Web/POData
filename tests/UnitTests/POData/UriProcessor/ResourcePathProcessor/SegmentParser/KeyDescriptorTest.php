@@ -403,6 +403,22 @@ class KeyDescriptorTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testGetTypeAndValidateKeyValueForDefault()
+    {
+        $reflec = new \ReflectionClass(KeyDescriptor::class);
+
+        $method = $reflec->getMethod('getTypeAndValidateKeyValue');
+        $method->setAccessible(true);
+
+        $value   = '1.0f';
+        $tokenId = m::mock(ExpressionTokenId::class);
+        $outVal  = null;
+        $outType = null;
+
+        $result = $method->invokeArgs(null, [$value, $tokenId, &$outVal, &$outType]);
+        $this->assertFalse($result);
+    }
+
     public function tearDown()
     {
         parent::tearDown();
