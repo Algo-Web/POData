@@ -88,7 +88,7 @@ class SegmentParser
      * @throws ODataException      Exception in case of any error found while precessing segments
      * @return mixed
      */
-    private function createSegmentDescriptors($segments, $checkRights): void
+    private function createSegmentDescriptors(array $segments, bool $checkRights): void
     {
         if (empty($segments)) {
             //If there's no segments, then it's the service root
@@ -136,7 +136,7 @@ class SegmentParser
      * @throws ODataException If any error occurs while processing segment
      * @return string         The identifier part of the segment
      */
-    private function extractSegmentIdentifierAndKeyPredicate($segment, &$keyPredicate): string
+    private function extractSegmentIdentifierAndKeyPredicate(string $segment, ?string &$keyPredicate): string
     {
         $predicateStart = strpos($segment, '(');
         if ($predicateStart === false) {
@@ -170,8 +170,11 @@ class SegmentParser
      * @throws ODataException      Exception if any validation fails
      * @return SegmentDescriptor   Descriptor for the first segment
      */
-    private function createFirstSegmentDescriptor($segmentIdentifier, $keyPredicate, $checkRights): SegmentDescriptor
-    {
+    private function createFirstSegmentDescriptor(
+        string $segmentIdentifier,
+        ?string $keyPredicate,
+        bool $checkRights
+    ): SegmentDescriptor {
         $descriptor = new SegmentDescriptor();
         $descriptor->setIdentifier($segmentIdentifier);
 
@@ -261,7 +264,7 @@ class SegmentParser
      *
      * @throws ODataException
      */
-    private function assertion($condition): void
+    private function assertion(bool $condition): void
     {
         if (!$condition) {
             throw ODataException::createSyntaxError(Messages::syntaxError());
@@ -292,8 +295,11 @@ class SegmentParser
      *                             validating the key predicate
      * @return KeyDescriptor|null  Describes the key values in the $keyPredicate
      */
-    private function createKeyDescriptor($segment, ResourceType $resourceType, $keyPredicate): ?KeyDescriptor
-    {
+    private function createKeyDescriptor(
+        string $segment,
+        ResourceType $resourceType,
+        string $keyPredicate
+    ): ?KeyDescriptor {
         /**
          * @var KeyDescriptor|null $keyDescriptor
          */
