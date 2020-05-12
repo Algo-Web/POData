@@ -545,9 +545,8 @@ abstract class BaseService implements IRequestHandler, IService
                         $targetResourceType,
                         $needToSerializeResponse
                     );
-                    if ($needToSerializeResponse && !(null === $result || null === $result->results)) {
+                    if ($needToSerializeResponse && null !== $result && null !== $result->results) {
                         $odataModelInstance = $objectModelSerializer->writeTopLevelElement($result);
-
                     } else {
                         // In the query 'Orders(1245)/Customer', the targeted
                         // Customer might be null
