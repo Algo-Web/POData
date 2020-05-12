@@ -35,7 +35,7 @@ class ResourcePathProcessor
      * @throws ODataException            If any exception occurs while processing the segments
      * @return RequestDescription
      */
-    public static function process(IService $service)
+    public static function process(IService $service): RequestDescription
     {
         $host               = $service->getHost();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
