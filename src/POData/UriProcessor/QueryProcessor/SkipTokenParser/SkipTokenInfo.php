@@ -51,7 +51,7 @@ class SkipTokenInfo
      *
      * @return OrderByInfo
      */
-    public function getOrderByInfo()
+    public function getOrderByInfo(): OrderByInfo
     {
         return $this->orderByInfo;
     }
@@ -62,7 +62,7 @@ class SkipTokenInfo
      *
      * @return array<array<IType>>
      */
-    public function getOrderByKeysInToken()
+    public function getOrderByKeysInToken(): array
     {
         return $this->orderByValuesInSkipToken;
     }

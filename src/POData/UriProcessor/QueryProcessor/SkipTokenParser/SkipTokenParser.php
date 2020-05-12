@@ -48,7 +48,7 @@ class SkipTokenParser
         ResourceType &$resourceType,
         InternalOrderByInfo &$internalOrderByInfo,
         $skipToken
-    ) {
+    ): InternalSkipTokenInfo {
         /** @var KeyDescriptor|null $tokenValueDescriptor */
         $tokenValueDescriptor = null;
         if (!KeyDescriptor::tryParseValuesFromSkipToken(

@@ -90,7 +90,7 @@ class InternalSkipTokenInfo
      *
      * @return SkipTokenInfo
      */
-    public function getSkipTokenInfo()
+    public function getSkipTokenInfo(): SkipTokenInfo
     {
         if (null === $this->skipTokenInfo) {
             $orderbyInfo         = $this->getInternalOrderByInfo()->getOrderByInfo();
@@ -108,7 +108,7 @@ class InternalSkipTokenInfo
      *
      * @return InternalOrderByInfo
      */
-    public function getInternalOrderByInfo()
+    public function getInternalOrderByInfo(): InternalOrderByInfo
     {
         return $this->internalOrderByInfo;
     }
@@ -240,7 +240,7 @@ class InternalSkipTokenInfo
      *                        property
      * @return string
      */
-    public function buildNextPageLink($lastObject)
+    public function buildNextPageLink($lastObject): string
     {
         $nextPageLink = null;
         foreach ($this->getInternalOrderByInfo()->getOrderByPathSegments() as $orderByPathSegment) {
