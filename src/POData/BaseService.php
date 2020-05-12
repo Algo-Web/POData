@@ -504,7 +504,7 @@ abstract class BaseService implements IRequestHandler, IService
                     $result          = new QueryResult();
                     $result->results = $request->getTargetResult();
                 }
-                $requestTargetKind = $request->getTargetKind();
+                $requestTargetKind = $request->getTargetKind() ?? TargetKind::NOTHING();
                 $requestProperty   = $request->getProjectedProperty();
                 if ($request->isLinkUri() && $methodIsNotPost && $methodIsNotDelete) {
                     // In the query 'Orders(1245)/$links/Customer', the targeted
@@ -513,8 +513,8 @@ abstract class BaseService implements IRequestHandler, IService
                         throw ODataException::createResourceNotFoundError($request->getIdentifier());
                     }
                     $odataModelInstance = $objectModelSerializer->writeUrlElement($result);
-                } elseif (TargetKind::RESOURCE() == $requestTargetKind
-                    || TargetKind::SINGLETON() == $requestTargetKind) {
+                } elseif ($requestTargetKind->isRESOURCE() ||
+                    $requestTargetKind->isSINGLETON()) {
                     if (null !== $this->getHost()->getRequestIfMatch()
                         && null !== $this->getHost()->getRequestIfNoneMatch()
                     ) {
@@ -548,26 +548,24 @@ abstract class BaseService implements IRequestHandler, IService
                     if (null !== $eTag) {
                         $this->getHost()->setResponseETag($eTag);
                     }
-                } elseif (in_array($requestTargetKind, [TargetKind::COMPLEX_OBJECT(), TargetKind::BAG()])) {
+                } elseif ($requestTargetKind->isCOMPLEX_OBJECT() ||
+                    $requestTargetKind->isBAG()) {
                     if ( null === $requestProperty) {
                         throw new InvalidOperationException('Projected request property cannot be null');
                     }
 
-                    $targetKindToSerializeMethod = [
-                        TargetKind::COMPLEX_OBJECT()->getValue() => 'writeTopLevelComplexObject',
-                        TargetKind::BAG()->getValue()            => 'writeTopLevelBagObject',
-                    ];
-                    $odataModelInstance = $objectModelSerializer->{$targetKindToSerializeMethod[$requestTargetKind->getValue()]}(
+                    $serializeMethod = $requestTargetKind->isCOMPLEX_OBJECT() ? 'writeTopLevelComplexObject' : 'writeTopLevelBagObject';
+                    $odataModelInstance = $objectModelSerializer->{$serializeMethod}(
                         $result,
                         $requestProperty->getName(),
                         $targetResourceType
                     );
-                } elseif (TargetKind::PRIMITIVE() == $requestTargetKind){
+                } elseif ($requestTargetKind->isPRIMITIVE()){
                     $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
                         $result,
                         $requestProperty
                     );
-                } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
+                } elseif ($requestTargetKind->isPRIMITIVE_VALUE()) {
                     // Code path for primitive value (Since its primitive no need for
                     // object model serialization)
                     // Customers('ANU')/CompanyName/$value => string
