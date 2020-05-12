@@ -444,17 +444,14 @@ abstract class BaseService implements IRequestHandler, IService
      */
     protected function serializeResult(RequestDescription $request, IUriProcessor $uriProcessor)
     {
-        $isETagHeaderAllowed = $request->isETagHeaderAllowed();
 
-        if ($this->getConfiguration()->getValidateETagHeader() && !$isETagHeaderAllowed) {
-            if (null !== $this->getHost()->getRequestIfMatch()
-                || null !== $this->getHost()->getRequestIfNoneMatch()
-            ) {
-                throw ODataException::createBadRequestError(
-                    Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
-                );
-            }
+        if ($this->getConfiguration()->getValidateETagHeader() && !$request->isETagHeaderAllowed() &&
+            (null !== $this->getHost()->getRequestIfMatch() || null !== $this->getHost()->getRequestIfNoneMatch())) {
+            throw ODataException::createBadRequestError(
+                Messages::eTagCannotBeSpecified($this->getHost()->getAbsoluteRequestUri()->getUrlAsString())
+            );
         }
+
 
         $responseContentType = $this->getResponseContentType($request, $uriProcessor);
 
