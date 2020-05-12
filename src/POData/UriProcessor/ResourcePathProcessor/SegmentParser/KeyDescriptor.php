@@ -136,7 +136,7 @@ class KeyDescriptor
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
     public static function tryParseKeysFromKeyPredicate(
-        $keyPredicate,
+        string $keyPredicate,
         KeyDescriptor &$keyDescriptor = null
     ): bool {
         $isKey     = true;
@@ -364,7 +364,7 @@ class KeyDescriptor
      * @throws ODataException
      * @return bool           True if the given values were parsed; false if there was a syntax error
      */
-    public static function tryParseValuesFromSkipToken($skipToken, &$keyDescriptor): bool
+    public static function tryParseValuesFromSkipToken(string $skipToken, ?KeyDescriptor &$keyDescriptor): bool
     {
         $isKey     = false;
         $keyString = $skipToken;
@@ -441,7 +441,7 @@ class KeyDescriptor
      * @throws ODataException      If validation fails
      * @throws ReflectionException
      */
-    public function validate($segmentAsString, ResourceType $resourceType): void
+    public function validate(string $segmentAsString, ResourceType $resourceType): void
     {
         if ($this->isEmpty()) {
             $this->validatedNamedValues = [];
