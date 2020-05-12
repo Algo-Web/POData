@@ -71,9 +71,9 @@ class SegmentParser
      * @return SegmentDescriptor[]
      */
     public static function parseRequestUriSegments(
-        $segments,
+        array $segments,
         ProvidersWrapper $providerWrapper,
-        $checkForRights = true
+        bool $checkForRights = true
     ): array {
         $segmentParser = new self($providerWrapper);
         $segmentParser->createSegmentDescriptors($segments, $checkForRights);
