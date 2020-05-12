@@ -193,8 +193,10 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException
      * @return null|AbstractExpression
      */
-    private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree): ?AbstractExpression
-    {
+    private function calculateResultExpression(
+        ?AbstractExpression $leftNullableExpTree,
+        ?AbstractExpression $rightNullableExpTree
+    ): ?AbstractExpression {
         if (null != $leftNullableExpTree && null != $rightNullableExpTree) {
             $resultExpression = $this->mergeNullableExpressionTrees(
                 $leftNullableExpTree,
@@ -216,8 +218,8 @@ class ExpressionParser2 extends ExpressionParser
      * @return LogicalExpression|UnaryExpression|null
      */
     private function mergeNullableExpressionTrees(
-        $nullCheckExpTree1,
-        $nullCheckExpTree2
+        AbstractExpression $nullCheckExpTree1,
+        AbstractExpression $nullCheckExpTree2
     ): ?AbstractExpression {
         $this->mapTable = [];
         $this->map($nullCheckExpTree1);
@@ -261,7 +263,7 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @throws ODataException
      */
-    private function map($nullCheckExpTree): void
+    private function map(AbstractExpression $nullCheckExpTree): void
     {
         if ($nullCheckExpTree instanceof LogicalExpression) {
             $this->map($nullCheckExpTree->getLeft());
@@ -290,17 +292,15 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an arithmetic expression node for nullability.
      *
-     * @param FunctionCallExpression $expression       The function call expression
-     *                                                 node to process
-     * @param AbstractExpression     $parentExpression The parent expression of
-     *                                                 expression node to process
+     * @param FunctionCallExpression      $expression       The function call expression node to process
+     * @param AbstractExpression|null     $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return null|AbstractExpression
      */
     private function processFunctionCallNode(
         FunctionCallExpression $expression,
-        $parentExpression
+        ?AbstractExpression $parentExpression
     ): ?AbstractExpression {
         $paramExpressions      = $expression->getParamExpressions();
         $checkNullForMostChild = strcmp($expression->getFunctionDescription()->name, 'is_null') === 0;
@@ -332,17 +332,15 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an logical expression node for nullability.
      *
-     * @param LogicalExpression  $expression       The logical expression node
-     *                                             to process
-     * @param AbstractExpression $parentExpression The parent expression of
-     *                                             expression node to process
+     * @param LogicalExpression       $expression       The logical expression node to process
+     * @param AbstractExpression|null $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return null|AbstractExpression
      */
     private function processLogicalNode(
         LogicalExpression $expression,
-        $parentExpression
+        ?AbstractExpression $parentExpression
     ): ?AbstractExpression {
         $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
@@ -388,19 +386,16 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an property access expression node for nullability.
      *
-     * @param PropertyAccessExpression $expression            The property access
-     *                                                        expression node to process
-     * @param AbstractExpression       $parentExpression      The parent expression of
-     *                                                        expression node to process
-     * @param bool                     $checkNullForMostChild Whether to check null for
-     *                                                        most child node or not
+     * @param PropertyAccessExpression $expression            The property access expression node to process
+     * @param AbstractExpression|null  $parentExpression      The parent expression of expression node to process
+     * @param bool                     $checkNullForMostChild Whether to check null for most child node or not
      *
      * @return LogicalExpression|UnaryExpression|null
      */
     private function processPropertyAccessNode(
         PropertyAccessExpression $expression,
-        $parentExpression,
-        $checkNullForMostChild
+        ?AbstractExpression $parentExpression,
+        bool $checkNullForMostChild
     ): ?AbstractExpression {
         $navigationsUsed = $expression->getNavigationPropertiesInThePath();
         if (!empty($navigationsUsed)) {
@@ -423,17 +418,15 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process a relational expression node for nullability.
      *
-     * @param RelationalExpression $expression       The relational expression node
-     *                                               to process
-     * @param AbstractExpression   $parentExpression The parent expression of
-     *                                               expression node to process
+     * @param RelationalExpression      $expression       The relational expression node to process
+     * @param AbstractExpression|null   $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return null|AbstractExpression
      */
     private function processRelationalNode(
         RelationalExpression $expression,
-        $parentExpression
+        ?AbstractExpression $parentExpression
     ): ?AbstractExpression {
         $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
@@ -458,17 +451,15 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an unary expression node for nullability.
      *
-     * @param UnaryExpression    $expression       The unary expression node
-     *                                             to process
-     * @param AbstractExpression $parentExpression The parent expression of
-     *                                             expression node to process
+     * @param UnaryExpression         $expression       The unary expression node to process
+     * @param AbstractExpression|null $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return AbstractExpression|null
      */
     private function processUnaryNode(
         UnaryExpression $expression,
-        $parentExpression
+        ?AbstractExpression $parentExpression
     ): ?AbstractExpression {
         if (ExpressionType::NEGATE() == $expression->getNodeType()) {
             return $this->processNodeForNullability($expression, $expression->getChild());

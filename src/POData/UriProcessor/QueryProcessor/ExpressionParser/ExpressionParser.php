@@ -700,10 +700,10 @@ class ExpressionParser
      * @return FunctionCallExpression|UnaryExpression|RelationalExpression
      */
     private static function generateComparisonExpression(
-        $left,
-        $right,
-        $expressionToken,
-        $isPHPExpressionProvider
+        AbstractExpression $left,
+        AbstractExpression $right,
+        ExpressionToken $expressionToken,
+        bool $isPHPExpressionProvider
     ): AbstractExpression {
         FunctionDescription::verifyRelationalOpArguments($expressionToken, $left, $right);
 
@@ -833,9 +833,9 @@ class ExpressionParser
 
     /**
      * Check the current token is of a specific kind.
+     * TODO: Figure out why rest of code is passing a string instead of an object
      *
-     * @param ExpressionTokenId $expressionTokenId Token to check
-     *                                             with current token
+     * @param ExpressionTokenId $expressionTokenId Token to check with current token
      *
      * @return bool
      */

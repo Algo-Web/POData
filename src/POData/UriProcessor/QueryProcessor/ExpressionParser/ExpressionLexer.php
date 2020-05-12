@@ -98,7 +98,7 @@ class ExpressionLexer
      *
      * @param int $pos Value to position
      */
-    private function setTextPos($pos): void
+    private function setTextPos(int $pos): void
     {
         $this->textPos = $pos;
         $nextChar      = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
@@ -341,7 +341,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function parseError($message): void
+    private function parseError(string $message): void
     {
         throw ODataException::createSyntaxError($message);
     }
@@ -380,7 +380,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityLiteralDouble($text)
+    private static function isInfinityLiteralDouble(string $text): bool
     {
         return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
     }
@@ -390,10 +390,9 @@ class ExpressionLexer
      *
      * @param string $text Text to look in
      *
-     * @return bool true if the substring is equal using an ordinal comparison;
-     *              false otherwise
+     * @return bool true if the substring is equal using an ordinal comparison; false otherwise
      */
-    private static function isInfinityLiteralSingle($text)
+    private static function isInfinityLiteralSingle(string $text): bool
     {
         return strlen($text) == 4
             && ($text[3] == self::SINGLE_SUFFIX_LOWER
@@ -462,7 +461,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityOrNaNDouble($tokenText)
+    private static function isInfinityOrNaNDouble(string $tokenText): bool
     {
         if (strlen($tokenText) == 3) {
             if ($tokenText[0] == 'I') {
@@ -482,7 +481,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityOrNanSingle($tokenText)
+    private static function isInfinityOrNanSingle(string $tokenText): bool
     {
         if (strlen($tokenText) == 4) {
             if ($tokenText[0] == 'I') {
