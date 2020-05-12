@@ -61,7 +61,7 @@ class ExpressionParser2 extends ExpressionParser
      *                                                 implemented by user, False otherwise
      * @throws ODataException
      */
-    public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
+    public function __construct(string $text, ResourceType $resourceType, bool $isPHPExpressionProvider)
     {
         parent::__construct($text, $resourceType, $isPHPExpressionProvider);
         $this->navigationPropertiesUsedInTheExpression = [];
@@ -83,7 +83,7 @@ class ExpressionParser2 extends ExpressionParser
      * @return FilterInfo
      */
     public static function parseExpression2(
-        $text,
+        string $text,
         ResourceType $resourceType,
         IExpressionProvider $expressionProvider
     ): FilterInfo {

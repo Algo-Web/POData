@@ -43,7 +43,7 @@ class PropertyAccessExpression extends AbstractExpression
      * @param  PropertyAccessExpression|null $parent           The parent expression
      * @throws ReflectionException
      */
-    public function __construct($resourceProperty, PropertyAccessExpression $parent = null)
+    public function __construct(ResourceProperty $resourceProperty, PropertyAccessExpression $parent = null)
     {
         $this->parent           = $parent;
         $this->child            = null;
@@ -134,7 +134,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @return UnaryExpression|LogicalExpression|null Instance of UnaryExpression, LogicalExpression or Null
      */
-    public function createNullableExpressionTree($includeMe): ?AbstractExpression
+    public function createNullableExpressionTree(bool $includeMe): ?AbstractExpression
     {
         $basePropertyExpression = $this;
         while (($basePropertyExpression != null)
@@ -227,7 +227,7 @@ class PropertyAccessExpression extends AbstractExpression
      *
      * @param PropertyAccessExpression $child The child expression
      */
-    public function setChild($child): void
+    public function setChild(PropertyAccessExpression $child): void
     {
         $this->child = $child;
     }

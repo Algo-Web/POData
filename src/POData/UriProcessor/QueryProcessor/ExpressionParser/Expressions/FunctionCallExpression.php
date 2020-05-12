@@ -27,7 +27,7 @@ class FunctionCallExpression extends AbstractExpression
      * @param FunctionDescription       $functionDescription The signature of function-call
      * @param array<AbstractExpression> $paramExpressions    The parameters to the function
      */
-    public function __construct(FunctionDescription $functionDescription, $paramExpressions)
+    public function __construct(FunctionDescription $functionDescription, array $paramExpressions)
     {
         $this->functionDescription = $functionDescription;
         $this->paramExpressions    = $paramExpressions;

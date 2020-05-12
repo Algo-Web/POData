@@ -84,7 +84,7 @@ class ExpressionLexer
      * @param  string         $expression Expression to parse
      * @throws ODataException
      */
-    public function __construct($expression)
+    public function __construct(string $expression)
     {
         $this->text    = $expression;
         $this->textLen = strlen($this->text);

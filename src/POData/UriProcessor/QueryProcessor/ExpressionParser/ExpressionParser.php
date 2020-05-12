@@ -87,7 +87,7 @@ class ExpressionParser
      * TODO Expression parser should not depend on the fact that end user is implementing IExpressionProvider or not
      * @throws ODataException
      */
-    public function __construct($text, ResourceType $resourceType, $isPHPExpressionProvider)
+    public function __construct(string $text, ResourceType $resourceType, bool $isPHPExpressionProvider)
     {
         $this->lexer                            = new ExpressionLexer($text);
         $this->resourceType                     = $resourceType;
@@ -111,7 +111,7 @@ class ExpressionParser
      * @param  string         $text Reset the expression to parse
      * @throws ODataException
      */
-    public function resetParser($text): void
+    public function resetParser(string $text): void
     {
         $this->lexer          = new ExpressionLexer($text);
         $this->recursionDepth = 0;

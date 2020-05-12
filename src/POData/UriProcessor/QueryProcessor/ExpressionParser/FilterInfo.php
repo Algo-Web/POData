@@ -39,12 +39,8 @@ class FilterInfo
      * @param array  $navigationProperties     navigation properties in the $filter clause
      * @param string $filterExpAsDataSourceExp The $filter expression, specific to data source
      */
-    public function __construct(array $navigationProperties, $filterExpAsDataSourceExp)
+    public function __construct(array $navigationProperties, string $filterExpAsDataSourceExp)
     {
-        assert(
-            is_string($filterExpAsDataSourceExp),
-            'Filter expression must be a string'
-        );
         $this->navigationPropertiesUsedInTheFilterClause = $navigationProperties;
         $this->filterExpressionAsDataSourceExpression    = $filterExpAsDataSourceExp;
     }

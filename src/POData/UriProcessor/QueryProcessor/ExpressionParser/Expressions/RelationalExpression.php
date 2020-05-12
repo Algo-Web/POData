@@ -18,7 +18,7 @@ class RelationalExpression extends BinaryExpression
      * @param AbstractExpression $right    right expression
      * @param ExpressionType     $nodeType expression node type
      */
-    public function __construct($left, $right, ExpressionType $nodeType)
+    public function __construct(AbstractExpression $left, AbstractExpression $right, ExpressionType $nodeType)
     {
         $this->nodeType = $nodeType;
         $this->type     = new Boolean();
