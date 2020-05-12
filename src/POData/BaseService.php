@@ -452,6 +452,21 @@ abstract class BaseService implements IRequestHandler, IService
             );
         }
 
+        $targetKindToSeralizeMethod = [
+            TargetKind::COMPLEX_OBJECT()->getValue() => 'writeTopLevelComplexObject',
+            TargetKind::BAG()->getValue()            => 'writeTopLevelBagObject',
+            TargetKind::PRIMITIVE()->getValue()      => 'writeTopLevelPrimitive',
+        ];
+        $targetKindsRequiringProperties = [
+            TargetKind::COMPLEX_OBJECT(),
+            TargetKind::BAG()
+        ];
+        $justWrite = [
+            TargetKind::COMPLEX_OBJECT(),
+            TargetKind::BAG(),
+            TargetKind::PRIMITIVE()
+        ];
+
 
         $responseContentType = $this->getResponseContentType($request, $uriProcessor);
 
@@ -474,7 +489,6 @@ abstract class BaseService implements IRequestHandler, IService
             $uriProcessor->execute();
             if (HTTPRequestMethod::DELETE() == $method) {
                 $this->getHost()->setResponseStatusCode(HttpStatus::CODE_NOCONTENT);
-
                 return;
             }
 
@@ -566,28 +580,16 @@ abstract class BaseService implements IRequestHandler, IService
                     if (null !== $eTag) {
                         $this->getHost()->setResponseETag($eTag);
                     }
-                } elseif (TargetKind::COMPLEX_OBJECT() == $requestTargetKind) {
-                    if (null === $requestProperty) {
+                } elseif (in_array($requestTargetKind, $justWrite)) {
+                    $needsRequestProperty = in_array($requestTargetKind, $targetKindsRequiringProperties);
+                    if (in_array($requestTargetKind, $targetKindsRequiringProperties) && null === $requestProperty) {
                         throw new InvalidOperationException('Projected request property cannot be null');
                     }
-                    $odataModelInstance = $objectModelSerializer->writeTopLevelComplexObject(
+                    $property = $needsRequestProperty ? $requestProperty->getName() : $requestProperty;
+                    $odataModelInstance = $objectModelSerializer->{$targetKindToSeralizeMethod[$requestTargetKind->getValue()]}(
                         $result,
-                        $requestProperty->getName(),
+                        $property,
                         $targetResourceType
-                    );
-                } elseif (TargetKind::BAG() == $requestTargetKind) {
-                    if (null === $requestProperty) {
-                        throw new InvalidOperationException('Projected request property cannot be null');
-                    }
-                    $odataModelInstance = $objectModelSerializer->writeTopLevelBagObject(
-                        $result,
-                        $requestProperty->getName(),
-                        $targetResourceType
-                    );
-                } elseif (TargetKind::PRIMITIVE() == $requestTargetKind) {
-                    $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
-                        $result,
-                        $requestProperty
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
                     // Code path for primitive value (Since its primitive no need for
