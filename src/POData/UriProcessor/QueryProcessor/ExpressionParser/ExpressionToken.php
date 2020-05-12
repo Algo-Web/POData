@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use PhpParser\Node\Stmt\Expression;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 

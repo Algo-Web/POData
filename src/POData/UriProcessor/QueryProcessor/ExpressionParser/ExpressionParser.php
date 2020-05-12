@@ -671,7 +671,7 @@ class ExpressionParser
      * @throws ODataException
      * @return AbstractExpression
      */
-    private function parseParenExpression(): ?AbstractExpression
+    private function parseParenExpression(): AbstractExpression
     {
         if ($this->getCurrentToken()->getId() != ExpressionTokenId::OPENPARAM()) {
             throw ODataException::createSyntaxError('Open parenthesis expected.');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser;
 
-use Hoa\Iterator\Filter;
 use InvalidArgumentException;
 use POData\Common\Messages;
 use POData\Common\NotImplementedException;

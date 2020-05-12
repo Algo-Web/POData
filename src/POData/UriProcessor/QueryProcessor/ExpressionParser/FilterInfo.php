@@ -50,9 +50,9 @@ class FilterInfo
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getNavigationPropertiesUsed(): array
+    public function getNavigationPropertiesUsed(): ?array
     {
         return $this->navigationPropertiesUsedInTheFilterClause;
     }
