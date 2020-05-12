@@ -452,22 +452,6 @@ abstract class BaseService implements IRequestHandler, IService
             );
         }
 
-        $targetKindToSeralizeMethod = [
-            TargetKind::COMPLEX_OBJECT()->getValue() => 'writeTopLevelComplexObject',
-            TargetKind::BAG()->getValue()            => 'writeTopLevelBagObject',
-            TargetKind::PRIMITIVE()->getValue()      => 'writeTopLevelPrimitive',
-        ];
-        $targetKindsRequiringProperties = [
-            TargetKind::COMPLEX_OBJECT(),
-            TargetKind::BAG()
-        ];
-        $justWrite = [
-            TargetKind::COMPLEX_OBJECT(),
-            TargetKind::BAG(),
-            TargetKind::PRIMITIVE()
-        ];
-
-
         $responseContentType = $this->getResponseContentType($request, $uriProcessor);
 
         if (null === $responseContentType && $request->getTargetKind() != TargetKind::MEDIA_RESOURCE()) {
@@ -564,16 +548,24 @@ abstract class BaseService implements IRequestHandler, IService
                     if (null !== $eTag) {
                         $this->getHost()->setResponseETag($eTag);
                     }
-                } elseif (in_array($requestTargetKind, $justWrite)) {
-                    $needsRequestProperty = in_array($requestTargetKind, $targetKindsRequiringProperties);
-                    if (in_array($requestTargetKind, $targetKindsRequiringProperties) && null === $requestProperty) {
+                } elseif (in_array($requestTargetKind, [TargetKind::COMPLEX_OBJECT(), TargetKind::BAG()])) {
+                    if ( null === $requestProperty) {
                         throw new InvalidOperationException('Projected request property cannot be null');
                     }
-                    $property = $needsRequestProperty ? $requestProperty->getName() : $requestProperty;
-                    $odataModelInstance = $objectModelSerializer->{$targetKindToSeralizeMethod[$requestTargetKind->getValue()]}(
+
+                    $targetKindToSerializeMethod = [
+                        TargetKind::COMPLEX_OBJECT()->getValue() => 'writeTopLevelComplexObject',
+                        TargetKind::BAG()->getValue()            => 'writeTopLevelBagObject',
+                    ];
+                    $odataModelInstance = $objectModelSerializer->{$targetKindToSerializeMethod[$requestTargetKind->getValue()]}(
                         $result,
-                        $property,
+                        $requestProperty->getName(),
                         $targetResourceType
+                    );
+                } elseif (TargetKind::PRIMITIVE() == $requestTargetKind){
+                    $odataModelInstance = $objectModelSerializer->writeTopLevelPrimitive(
+                        $result,
+                        $requestProperty
                     );
                 } elseif (TargetKind::PRIMITIVE_VALUE() == $requestTargetKind) {
                     // Code path for primitive value (Since its primitive no need for
