@@ -45,8 +45,11 @@ class OrderByNode extends OrderByBaseNode
      *                                                    segment represented by this node, this will be null
      *                                                    if this node represents a complex sub path segment
      */
-    public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
-    {
+    public function __construct(
+        ?string $propertyName,
+        ?ResourceProperty $resourceProperty,
+        ?ResourceSetWrapper$resourceSetWrapper
+    ) {
         // This must be the parameter state at this point, we won't check
         // these as this is an internal class
         //if ($resourceProperty != NULL)
@@ -106,7 +109,7 @@ class OrderByNode extends OrderByBaseNode
      *
      * @return OrderByBaseNode|null
      */
-    public function findNode($propertyName): ?OrderByBaseNode
+    public function findNode(string $propertyName): ?OrderByBaseNode
     {
         if (array_key_exists($propertyName, $this->childNodes)) {
             return $this->childNodes[$propertyName];

@@ -101,7 +101,7 @@ class OrderByInfo
      * @param bool $isSorted Set the flag so indicate that the result has been sorted
      * @return bool
      */
-    public function setSorted($isSorted = true): bool
+    public function setSorted(bool $isSorted = true): bool
     {
         $this->isSorted = $isSorted;
         return true;

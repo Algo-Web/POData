@@ -96,7 +96,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @return Closure
      */
-    public function buildComparisonFunction($ancestors): callable
+    public function buildComparisonFunction(array $ancestors): callable
     {
         if (0 == count($ancestors)) {
             $msg = Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray();
