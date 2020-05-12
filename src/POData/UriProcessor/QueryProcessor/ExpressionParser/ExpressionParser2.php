@@ -143,7 +143,7 @@ class ExpressionParser2 extends ExpressionParser
         $parentExpression,
         AbstractExpression $expression = null,
         $checkNullForMostChild = true
-    ) {
+    ): ?AbstractExpression {
         if ($expression instanceof ArithmeticExpression) {
             return $this->processArithmeticNode($expression);
         } elseif ($expression instanceof ConstantExpression) {
@@ -178,7 +178,7 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException
      * @return AbstractExpression|null
      */
-    private function processArithmeticNode(ArithmeticExpression $expression)
+    private function processArithmeticNode(ArithmeticExpression $expression): ?AbstractExpression
     {
         $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
@@ -193,7 +193,7 @@ class ExpressionParser2 extends ExpressionParser
      * @throws ODataException
      * @return null|AbstractExpression
      */
-    private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree)
+    private function calculateResultExpression($leftNullableExpTree, $rightNullableExpTree): ?AbstractExpression
     {
         if (null != $leftNullableExpTree && null != $rightNullableExpTree) {
             $resultExpression = $this->mergeNullableExpressionTrees(
@@ -218,7 +218,7 @@ class ExpressionParser2 extends ExpressionParser
     private function mergeNullableExpressionTrees(
         $nullCheckExpTree1,
         $nullCheckExpTree2
-    ) {
+    ): ?AbstractExpression {
         $this->mapTable = [];
         $this->map($nullCheckExpTree1);
         $this->map($nullCheckExpTree2);
@@ -261,7 +261,7 @@ class ExpressionParser2 extends ExpressionParser
      *
      * @throws ODataException
      */
-    private function map($nullCheckExpTree)
+    private function map($nullCheckExpTree): void
     {
         if ($nullCheckExpTree instanceof LogicalExpression) {
             $this->map($nullCheckExpTree->getLeft());
@@ -301,7 +301,7 @@ class ExpressionParser2 extends ExpressionParser
     private function processFunctionCallNode(
         FunctionCallExpression $expression,
         $parentExpression
-    ) {
+    ): ?AbstractExpression {
         $paramExpressions      = $expression->getParamExpressions();
         $checkNullForMostChild = strcmp($expression->getFunctionDescription()->name, 'is_null') === 0;
         $resultExpression      = null;
@@ -343,7 +343,7 @@ class ExpressionParser2 extends ExpressionParser
     private function processLogicalNode(
         LogicalExpression $expression,
         $parentExpression
-    ) {
+    ): ?AbstractExpression {
         $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
         if ($expression->getNodeType() == ExpressionType::OR_LOGICAL()) {
@@ -401,7 +401,7 @@ class ExpressionParser2 extends ExpressionParser
         PropertyAccessExpression $expression,
         $parentExpression,
         $checkNullForMostChild
-    ) {
+    ): ?AbstractExpression {
         $navigationsUsed = $expression->getNavigationPropertiesInThePath();
         if (!empty($navigationsUsed)) {
             $this->navigationPropertiesUsedInTheExpression[] = $navigationsUsed;
@@ -434,7 +434,7 @@ class ExpressionParser2 extends ExpressionParser
     private function processRelationalNode(
         RelationalExpression $expression,
         $parentExpression
-    ) {
+    ): ?AbstractExpression {
         $leftNullableExpTree  = $this->processNodeForNullability($expression, $expression->getLeft());
         $rightNullableExpTree = $this->processNodeForNullability($expression, $expression->getRight());
 
@@ -469,7 +469,7 @@ class ExpressionParser2 extends ExpressionParser
     private function processUnaryNode(
         UnaryExpression $expression,
         $parentExpression
-    ) {
+    ): ?AbstractExpression {
         if (ExpressionType::NEGATE() == $expression->getNodeType()) {
             return $this->processNodeForNullability($expression, $expression->getChild());
         }

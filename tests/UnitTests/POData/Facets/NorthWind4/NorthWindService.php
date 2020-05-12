@@ -81,6 +81,7 @@ class NorthWindService extends BaseService
      * @throws \POData\Common\NotImplementedException
      * @throws \POData\Common\UrlFormatException
      * @throws \ReflectionException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @return \POData\UriProcessor\Interfaces\IUriProcessor|void
      */
     public function handleRequest()

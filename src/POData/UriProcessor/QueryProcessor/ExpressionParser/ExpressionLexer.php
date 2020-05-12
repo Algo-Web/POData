@@ -98,7 +98,7 @@ class ExpressionLexer
      *
      * @param int $pos Value to position
      */
-    private function setTextPos($pos)
+    private function setTextPos($pos): void
     {
         $this->textPos = $pos;
         $nextChar      = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
@@ -250,7 +250,7 @@ class ExpressionLexer
     /**
      * Advance to next character.
      */
-    private function nextChar()
+    private function nextChar(): void
     {
         if ($this->textPos < $this->textLen) {
             ++$this->textPos;
@@ -267,7 +267,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return ExpressionTokenId The kind of token recognized
      */
-    private function parseFromDigit()
+    private function parseFromDigit(): ExpressionTokenId
     {
         $startChar = $this->ch;
         $this->nextChar();
@@ -327,7 +327,7 @@ class ExpressionLexer
      * Validate current character is a digit.
      * @throws ODataException
      */
-    private function validateDigit()
+    private function validateDigit(): void
     {
         if (!Char::isDigit($this->ch)) {
             $this->parseError(Messages::expressionLexerDigitExpected($this->textPos));
@@ -341,7 +341,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function parseError($message)
+    private function parseError($message): void
     {
         throw ODataException::createSyntaxError($message);
     }
@@ -366,7 +366,7 @@ class ExpressionLexer
     /**
      * Parses an identifier by advancing the current character.
      */
-    private function parseIdentifier()
+    private function parseIdentifier(): void
     {
         do {
             $this->nextChar();
@@ -408,7 +408,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function handleTypePrefixedLiterals()
+    private function handleTypePrefixedLiterals(): void
     {
         $id = $this->token->getId();
         if ($id != ExpressionTokenId::IDENTIFIER()) {
