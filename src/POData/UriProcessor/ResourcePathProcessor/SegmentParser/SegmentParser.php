@@ -70,8 +70,11 @@ class SegmentParser
      * @throws ODataException      If any error occurs while processing segment
      * @return SegmentDescriptor[]
      */
-    public static function parseRequestUriSegments($segments, ProvidersWrapper $providerWrapper, $checkForRights = true)
-    {
+    public static function parseRequestUriSegments(
+        $segments,
+        ProvidersWrapper $providerWrapper,
+        $checkForRights = true
+    ): array {
         $segmentParser = new self($providerWrapper);
         $segmentParser->createSegmentDescriptors($segments, $checkForRights);
 
@@ -274,7 +277,7 @@ class SegmentParser
     /**
      * @return ProvidersWrapper
      */
-    public function getProviderWrapper()
+    public function getProviderWrapper(): ProvidersWrapper
     {
         return $this->providerWrapper;
     }
