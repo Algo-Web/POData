@@ -670,22 +670,28 @@ abstract class BaseService implements IRequestHandler, IService
         //getTargetKind doesn't deal with link resources directly and this can change things
         $targetKind = $request->isLinkUri() ? TargetKind::LINK() : $request->getTargetKind();
 
+        $availableMimeTypesByTarget = [
+            TargetKind::METADATA()->getValue()          => [MimeTypes::MIME_APPLICATION_XML],
+            TargetKind::SERVICE_DIRECTORY()->getValue() => array_merge([MimeTypes::MIME_APPLICATION_ATOMSERVICE], $baseMimeTypes),
+            TargetKind::PRIMITIVE()->getValue()              => array_merge([MimeTypes::MIME_APPLICATION_XML, MimeTypes::MIME_TEXTXML,], $baseMimeTypes),
+            TargetKind::COMPLEX_OBJECT()->getValue()              => array_merge([MimeTypes::MIME_APPLICATION_XML, MimeTypes::MIME_TEXTXML,], $baseMimeTypes),
+            TargetKind::BAG()->getValue()              => array_merge([MimeTypes::MIME_APPLICATION_XML, MimeTypes::MIME_TEXTXML,], $baseMimeTypes),
+            TargetKind::LINK()->getValue()              => array_merge([MimeTypes::MIME_APPLICATION_XML, MimeTypes::MIME_TEXTXML,], $baseMimeTypes),
+            TargetKind::SINGLETON()->getValue()          => array_merge([MimeTypes::MIME_APPLICATION_ATOM], $baseMimeTypes),
+            TargetKind::RESOURCE()->getValue()          => array_merge([MimeTypes::MIME_APPLICATION_ATOM], $baseMimeTypes),
+        ];
+
+        
         switch ($targetKind) {
             case TargetKind::METADATA():
-                return HttpProcessUtility::selectMimeType(
-                    $requestAcceptText,
-                    [MimeTypes::MIME_APPLICATION_XML]
-                );
-
             case TargetKind::SERVICE_DIRECTORY():
-                return HttpProcessUtility::selectMimeType(
-                    $requestAcceptText,
-                    array_merge(
-                        [MimeTypes::MIME_APPLICATION_ATOMSERVICE],
-                        $baseMimeTypes
-                    )
-                );
-
+            case TargetKind::PRIMITIVE():
+            case TargetKind::COMPLEX_OBJECT():
+            case TargetKind::BAG():
+            case TargetKind::LINK():
+            case TargetKind::SINGLETON():
+            case TargetKind::RESOURCE():
+            return HttpProcessUtility::selectMimeType($requestAcceptText, $availableMimeTypesByTarget[$targetKind->getValue()]);
             case TargetKind::PRIMITIVE_VALUE():
                 $supportedResponseMimeTypes = [MimeTypes::MIME_TEXTPLAIN];
 
@@ -708,28 +714,6 @@ abstract class BaseService implements IRequestHandler, IService
                     $supportedResponseMimeTypes
                 );
 
-            case TargetKind::PRIMITIVE():
-            case TargetKind::COMPLEX_OBJECT():
-            case TargetKind::BAG():
-            case TargetKind::LINK():
-                return HttpProcessUtility::selectMimeType(
-                    $requestAcceptText,
-                    array_merge(
-                        [MimeTypes::MIME_APPLICATION_XML,
-                            MimeTypes::MIME_TEXTXML,],
-                        $baseMimeTypes
-                    )
-                );
-
-            case TargetKind::SINGLETON():
-            case TargetKind::RESOURCE():
-                return HttpProcessUtility::selectMimeType(
-                    $requestAcceptText,
-                    array_merge(
-                        [MimeTypes::MIME_APPLICATION_ATOM],
-                        $baseMimeTypes
-                    )
-                );
 
             case TargetKind::MEDIA_RESOURCE():
                 if (!$request->isNamedStream() && true !== $request->getTargetResourceType()->isMediaLinkEntry()) {
