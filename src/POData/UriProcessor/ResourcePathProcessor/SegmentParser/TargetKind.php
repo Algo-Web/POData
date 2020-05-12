@@ -24,9 +24,9 @@ use MyCLabs\Enum\Enum;
  */
 class TargetKind extends BitMask
 {
-    protected const TERMINAL_VALUES       = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
-    protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
-    protected const NON_FILTERABLE_VALUES = [3 => true, 4 => true];
+    protected const TERMINAL_VALUES       = [32 => true, 64 => true, 256 => true, 1024 => true, 2048 => true];
+    protected const DIRECT_PROCESS_VALUES = [2 => true, 64 => true, 256 => true];
+    protected const NON_FILTERABLE_VALUES = [4 => true, 8 => true];
 
     /**
      * Nothing specific is being requested.
@@ -45,68 +45,68 @@ class TargetKind extends BitMask
      * e.g. http://localhost/myservice.svc/Customers
      *      http://localhost/myservice.svc/Customers('ALFKI')/Orders(123).
      */
-    protected const RESOURCE = 3;
+    protected const RESOURCE = 4;
 
     /**
      * A single complex value is requested (eg: an Address).
      * e.g. http://localhost/myservice.svc/Address.
      */
-    protected const COMPLEX_OBJECT = 4;
+    protected const COMPLEX_OBJECT = 8;
 
     /**
      * A single value is requested (eg: a Picture property).
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/CustomerName
      *      http://localhost/myservice.svc/Address/LineNumber.
      */
-    protected const PRIMITIVE = 5;
+    protected const PRIMITIVE = 16;
 
     /**
      * A single value is requested (eg: the raw stream of a Picture).
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/CustomerName/$value
      *      http://localhost/myservice.svc/Customers/$count.
      */
-    protected const PRIMITIVE_VALUE = 6;
+    protected const PRIMITIVE_VALUE = 32;
 
     /**
      * System metadata.
      * e.g. http://localhost/myservice.svc/$metadata.
      */
-    protected const METADATA = 7;
+    protected const METADATA = 64;
 
     /**
      * A data-service-defined operation that doesn't return anything.
      */
-    protected const VOID_SERVICE_OPERATION = 8;
+    protected const VOID_SERVICE_OPERATION = 128;
 
     /**
      * The request is a batch request.
      * e.g. http://localhost/myservice.svc/$batch.
      */
-    protected const BATCH = 9;
+    protected const BATCH = 256;
 
     /**
      * The request is a link operation - bind or unbind or simple get
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/$links/Orders.
      */
-    protected const LINK = 10;
+    protected const LINK = 512;
 
     /**
      * A stream property value is requested.
      * e.g. http://localhost/myservice.svc/Albums('trip')/Photos('123')/$value
      * e.g. http://localhost/myservice.svc/Albums('trip')/Photos('123')/ThumNail64x64/$value.
      */
-    protected const MEDIA_RESOURCE = 11;
+    protected const MEDIA_RESOURCE = 1024;
 
     /**
      * A single bag of primitive or complex values is requested
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/EMails.
      */
-    protected const BAG = 12;
+    protected const BAG = 2048;
 
     /**
      * A singleton (parameter-less function wrapper).
      */
-    protected const SINGLETON = 13;
+    protected const SINGLETON = 4096;
 
     /**
      * Is this segment a terminal segment - nothing else can be added after it?
