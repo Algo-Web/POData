@@ -17,7 +17,7 @@ class ODataBagContent
      *
      * @var string
      */
-    public $type;
+    private $type;
     /**
      * Represents elements of the bag.
      *

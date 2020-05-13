@@ -256,7 +256,7 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)//__metadata : { Type : "typename" }
             ->startObjectScope()
             ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($bag->type)
+            ->writeValue($bag->getType())
             ->endScope()// }
             ->writeName(ODataConstants::JSON_RESULT_NAME)// "__results":
             ->startArrayScope(); // [
@@ -269,7 +269,7 @@ class JsonODataV1Writer implements IODataWriter
             } else {
                 // retrieving the collection datatype in order
                 //to write in json specific format, with in chords or not
-                preg_match('#\((.*?)\)#', $bag->type, $type);
+                preg_match('#\((.*?)\)#', $bag->getType(), $type);
                 $this->writer->writeValue($content, $type[1]);
             }
         }

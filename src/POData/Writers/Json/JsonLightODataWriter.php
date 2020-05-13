@@ -223,7 +223,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             } else {
                 // retrieving the collection datatype in order
                 //to write in json specific format, with in chords or not
-                preg_match('#\((.*?)\)#', $bag->type, $type);
+                preg_match('#\((.*?)\)#', $bag->getType(), $type);
                 $this->writer->writeValue($content, $type[1]);
             }
         }
