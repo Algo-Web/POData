@@ -337,7 +337,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $isAbstract = false,
         $baseType = null,
         $pluralName = null
-    ) {
+    ): ResourceType {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
         }
@@ -470,7 +470,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $isETagProperty = false,
         $defaultValue = null,
         $nullable = false
-    ) {
+    ): void {
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException(
                 'Only primitive property can be etag property, bag property cannot be etag property.'
@@ -525,7 +525,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    private function checkInstanceProperty($name, ResourceType $resourceType)
+    private function checkInstanceProperty($name, ResourceType $resourceType): void
     {
         $instance       = $resourceType->getInstanceType();
         $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
@@ -666,7 +666,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $resourceMult,
         $many = false,
         ResourceEntityType $concreteType = null
-    ) {
+    ): void {
         $allowedMult   = ['*', '1', '0..1'];
         $backMultArray = ['*' => '*', '1' => '0..1', '0..1' => '1'];
         $this->checkInstanceProperty($name, $sourceResourceType);
@@ -791,7 +791,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $targetProperty,
         string $sourceMultiplicity,
         string $targetMultiplicity
-    ) {
+    ): void {
         $this->checkInstanceProperty($sourceProperty, $sourceResourceType);
         $this->checkInstanceProperty($targetProperty, $targetResourceType);
 
