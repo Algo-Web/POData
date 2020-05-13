@@ -35,4 +35,40 @@ class ODataCategory
         $this->term   = $term;
         $this->scheme = $scheme;
     }
+
+    /**
+     * @return string
+     */
+    public function getTerm(): string
+    {
+        return $this->term;
+    }
+
+    /**
+     * @param string $term
+     * @return ODataCategory
+     */
+    public function setTerm(string $term): ODataCategory
+    {
+        $this->term = $term;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheme(): string
+    {
+        return $this->scheme;
+    }
+
+    /**
+     * @param string $scheme
+     * @return ODataCategory
+     */
+    public function setScheme(string $scheme): ODataCategory
+    {
+        $this->scheme = $scheme;
+        return $this;
+    }
 }
