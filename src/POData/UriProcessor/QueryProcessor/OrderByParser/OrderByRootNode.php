@@ -46,7 +46,7 @@ class OrderByRootNode extends OrderByNode
      * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByNode::getResourceType()
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->baseResourceType;
     }

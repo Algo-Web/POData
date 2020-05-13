@@ -30,6 +30,7 @@ use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\RequestExpander;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
@@ -595,9 +596,10 @@ class UriProcessorNewTest extends TestCase
 
         $setWrapper = m::mock(ResourceSetWrapper::class);
 
+        $rawSkip = m::mock(SkipTokenInfo::class);
         $skipToken = m::mock(InternalSkipTokenInfo::class);
         $skipToken->shouldReceive('getIndexOfFirstEntryInTheNextPage')->andReturn(1)->once();
-        $skipToken->shouldReceive('getSkipTokenInfo')->andReturnNull()->once();
+        $skipToken->shouldReceive('getSkipTokenInfo')->andReturn($rawSkip)->once();
 
         $segment = m::mock(SegmentDescriptor::class)->makePartial();
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();

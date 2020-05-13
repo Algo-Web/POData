@@ -52,7 +52,7 @@ class FunctionDescription
      * @param IType   $returnType    Return type
      * @param IType[] $argumentTypes Parameter type
      */
-    public function __construct($name, $returnType, $argumentTypes)
+    public function __construct(string $name, IType $returnType, array $argumentTypes)
     {
         $this->name          = $name;
         $this->returnType    = $returnType;
@@ -64,7 +64,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function dateTimeComparisonFunctions()
+    public static function dateTimeComparisonFunctions(): array
     {
         return [
             new self(
@@ -80,7 +80,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function guidEqualityFunctions()
+    public static function guidEqualityFunctions(): array
     {
         return [
             new self(
@@ -96,7 +96,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function binaryEqualityFunctions()
+    public static function binaryEqualityFunctions(): array
     {
         return [
             new self(
@@ -112,7 +112,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[] indexed by function name
      */
-    public static function addOperationFunctions()
+    public static function addOperationFunctions(): array
     {
         return self::arithmeticOperationFunctions();
     }
@@ -122,7 +122,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function arithmeticOperationFunctions()
+    public static function arithmeticOperationFunctions(): array
     {
         return [
             new self(
@@ -163,7 +163,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[] indexed by function name
      */
-    public static function subtractOperationFunctions()
+    public static function subtractOperationFunctions(): array
     {
         return self::arithmeticOperationFunctions();
     }
@@ -175,7 +175,7 @@ class FunctionDescription
      *
      * @return FunctionDescription
      */
-    public static function isNullCheckFunction(IType $type)
+    public static function isNullCheckFunction(IType $type): FunctionDescription
     {
         return new self('is_null', new Boolean(), [$type]);
     }
@@ -191,10 +191,10 @@ class FunctionDescription
      * @return IType
      */
     public static function verifyAndPromoteArithmeticOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
-    ) {
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
+    ): IType {
         $function
             = self::findFunctionWithPromotion(
                 self::arithmeticOperationFunctions(),
@@ -221,10 +221,10 @@ class FunctionDescription
      * @return FunctionDescription|null Reference to the matching function if found else NULL
      */
     public static function findFunctionWithPromotion(
-        $functionDescriptions,
-        $argExpressions,
-        $promoteArguments = true
-    ) {
+        array $functionDescriptions,
+        array $argExpressions,
+        bool $promoteArguments = true
+    ): ?FunctionDescription {
         $argCount            = count($argExpressions);
         $applicableFunctions = [];
         foreach ($functionDescriptions as $functionDescription) {
@@ -290,7 +290,7 @@ class FunctionDescription
      *
      * @throws ODataException
      */
-    public static function incompatibleError($expressionToken, $argExpressions)
+    public static function incompatibleError(ExpressionToken $expressionToken, array $argExpressions): void
     {
         $string = null;
         foreach ($argExpressions as $argExpression) {
@@ -322,10 +322,10 @@ class FunctionDescription
      * @throws ODataException
      */
     public static function verifyLogicalOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
-    ) {
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
+    ): void {
         $function = self::findFunctionWithPromotion(
             self::logicalOperationFunctions(),
             [$leftArgument, $rightArgument],
@@ -344,7 +344,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function logicalOperationFunctions()
+    public static function logicalOperationFunctions(): array
     {
         return [
             new self(
@@ -365,10 +365,10 @@ class FunctionDescription
      * @throws ODataException
      */
     public static function verifyRelationalOpArguments(
-        $expressionToken,
-        $leftArgument,
-        $rightArgument
-    ) {
+        ExpressionToken $expressionToken,
+        AbstractExpression $leftArgument,
+        AbstractExpression $rightArgument
+    ): void {
         //for null operands only equality operators are allowed
         $null = new Null1();
         if ($leftArgument->typeIs($null) || $rightArgument->typeIs($null)) {
@@ -445,7 +445,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function relationalOperationFunctions()
+    public static function relationalOperationFunctions(): array
     {
         return array_merge(
             self::arithmeticOperationFunctions(),
@@ -479,7 +479,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function stringComparisonFunctions()
+    public static function stringComparisonFunctions(): array
     {
         return [
             new self(
@@ -498,8 +498,10 @@ class FunctionDescription
      *
      * @throws ODataException
      */
-    public static function validateUnaryOpArguments($expressionToken, $argExpression)
-    {
+    public static function validateUnaryOpArguments(
+        ExpressionToken $expressionToken,
+        AbstractExpression $argExpression
+    ): void {
         //Unary not
         if (strcmp($expressionToken->Text, ODataConstants::KEYWORD_NOT) == 0) {
             $function = self::findFunctionWithPromotion(
@@ -526,7 +528,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function notOperationFunctions()
+    public static function notOperationFunctions(): array
     {
         return [
             new self(
@@ -542,7 +544,7 @@ class FunctionDescription
      *
      * @return FunctionDescription[]
      */
-    public static function negateOperationFunctions()
+    public static function negateOperationFunctions(): array
     {
         return [
             new self('F', new Int16(), [new Int16()]),
@@ -562,7 +564,7 @@ class FunctionDescription
      * @throws ODataException
      * @return FunctionDescription[] Array of matching functions
      */
-    public static function verifyFunctionExists($expressionToken)
+    public static function verifyFunctionExists(ExpressionToken $expressionToken): array
     {
         if (!array_key_exists($expressionToken->Text, self::filterFunctionDescriptions())) {
             throw ODataException::createSyntaxError(
@@ -585,7 +587,7 @@ class FunctionDescription
      *
      * @return array indexed by function name
      */
-    public static function filterFunctionDescriptions()
+    public static function filterFunctionDescriptions(): array
     {
         $functions = [
             //EdmString Functions
@@ -768,10 +770,10 @@ class FunctionDescription
      * @return FunctionDescription
      */
     public static function verifyFunctionCallOpArguments(
-        $functions,
-        $argExpressions,
-        $expressionToken
-    ) {
+        array $functions,
+        array $argExpressions,
+        ExpressionToken $expressionToken
+    ): FunctionDescription {
         $function
             = self::findFunctionWithPromotion($functions, $argExpressions, false);
         if ($function == null) {
@@ -797,7 +799,7 @@ class FunctionDescription
      *
      * @return string
      */
-    public function getPrototypeAsString()
+    public function getPrototypeAsString(): string
     {
         $str = $this->returnType->getFullTypeName() . ' ' . $this->name . '(';
 

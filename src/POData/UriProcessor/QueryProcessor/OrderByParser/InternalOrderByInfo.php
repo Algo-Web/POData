@@ -85,7 +85,7 @@ class InternalOrderByInfo
      *
      * @return OrderByInfo
      */
-    public function getOrderByInfo()
+    public function getOrderByInfo(): OrderByInfo
     {
         return $this->orderByInfo;
     }
@@ -105,7 +105,7 @@ class InternalOrderByInfo
      *
      * @return callable[]
      */
-    public function getSubSorterFunctions()
+    public function getSubSorterFunctions(): array
     {
         return $this->subSorterFunctions;
     }
@@ -129,7 +129,7 @@ class InternalOrderByInfo
      * @throws ODataException If reflection exception occurs while accessing property
      * @return string
      */
-    public function buildSkipTokenValue($lastObject)
+    public function buildSkipTokenValue($lastObject): string
     {
         $nextPageLink = null;
         foreach ($this->getOrderByPathSegments() as $orderByPathSegment) {
@@ -189,7 +189,7 @@ class InternalOrderByInfo
      *
      * @return OrderByPathSegment[]
      */
-    public function getOrderByPathSegments()
+    public function getOrderByPathSegments(): array
     {
         return $this->orderByInfo->getOrderByPathSegments();
     }
@@ -199,7 +199,7 @@ class InternalOrderByInfo
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceType;
     }

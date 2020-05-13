@@ -337,7 +337,7 @@ class ExpandProjectionParser
      * @throws ODataException If any error occurs while processing select
      *                        path segments
      */
-    private function applySelectionToProjectionTree(array $selectPathSegments)
+    private function applySelectionToProjectionTree(array $selectPathSegments): void
     {
         foreach ($selectPathSegments as $selectSubPathSegments) {
             $currentNode  = $this->rootProjectionNode;

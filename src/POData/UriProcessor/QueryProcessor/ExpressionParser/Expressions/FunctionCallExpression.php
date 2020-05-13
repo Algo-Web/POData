@@ -27,7 +27,7 @@ class FunctionCallExpression extends AbstractExpression
      * @param FunctionDescription       $functionDescription The signature of function-call
      * @param array<AbstractExpression> $paramExpressions    The parameters to the function
      */
-    public function __construct(FunctionDescription $functionDescription, $paramExpressions)
+    public function __construct(FunctionDescription $functionDescription, array $paramExpressions)
     {
         $this->functionDescription = $functionDescription;
         $this->paramExpressions    = $paramExpressions;
@@ -40,7 +40,7 @@ class FunctionCallExpression extends AbstractExpression
      *
      * @return AbstractExpression[]
      */
-    public function getParamExpressions()
+    public function getParamExpressions(): array
     {
         return $this->paramExpressions;
     }
@@ -50,7 +50,7 @@ class FunctionCallExpression extends AbstractExpression
      *
      * @return FunctionDescription
      */
-    public function getFunctionDescription()
+    public function getFunctionDescription(): FunctionDescription
     {
         return $this->functionDescription;
     }
@@ -60,7 +60,7 @@ class FunctionCallExpression extends AbstractExpression
      *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         $numExpr = count($this->paramExpressions);
         for ($i = $numExpr - 1; $i >= 0; $i--) {

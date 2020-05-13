@@ -27,7 +27,7 @@ abstract class BinaryExpression extends AbstractExpression
      * @param AbstractExpression $left  The left expression
      * @param AbstractExpression $right The right expression
      */
-    public function __construct($left, $right)
+    public function __construct(AbstractExpression $left, AbstractExpression $right)
     {
         $this->left  = $left;
         $this->right = $right;
@@ -38,7 +38,7 @@ abstract class BinaryExpression extends AbstractExpression
      *
      * @return AbstractExpression|null
      */
-    public function getLeft()
+    public function getLeft(): ?AbstractExpression
     {
         return isset($this->left) ? $this->left : null;
     }
@@ -48,7 +48,7 @@ abstract class BinaryExpression extends AbstractExpression
      *
      * @param AbstractExpression $expression Expression to set as left operand
      */
-    public function setLeft($expression)
+    public function setLeft(AbstractExpression $expression): void
     {
         $this->left = $expression;
     }
@@ -58,7 +58,7 @@ abstract class BinaryExpression extends AbstractExpression
      *
      * @return AbstractExpression|null
      */
-    public function getRight()
+    public function getRight(): ?AbstractExpression
     {
         return isset($this->right) ? $this->right : null;
     }
@@ -68,7 +68,7 @@ abstract class BinaryExpression extends AbstractExpression
      *
      * @param AbstractExpression $expression Expression to set as right operand
      */
-    public function setRight($expression)
+    public function setRight(AbstractExpression $expression): void
     {
         $this->right = $expression;
     }
@@ -78,7 +78,7 @@ abstract class BinaryExpression extends AbstractExpression
      *
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         $this->left->free();
         $this->right->free();

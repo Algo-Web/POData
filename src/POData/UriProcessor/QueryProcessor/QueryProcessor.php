@@ -110,7 +110,7 @@ class QueryProcessor
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    public static function process(RequestDescription $request, IService $service)
+    public static function process(RequestDescription $request, IService $service): void
     {
         $queryProcessor = new self($request, $service);
         if ($request->getTargetSource() == TargetSource::NONE()) {
@@ -130,7 +130,7 @@ class QueryProcessor
      * @throws ODataException Throws bad request error if client request
      *                        includes any odata query option
      */
-    private function checkForEmptyQueryArguments()
+    private function checkForEmptyQueryArguments(): void
     {
         $serviceHost = $this->service->getHost();
         $items       = [
@@ -170,7 +170,7 @@ class QueryProcessor
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    private function processQuery()
+    private function processQuery(): void
     {
         $this->processSkipAndTop();
         $this->processOrderBy();
@@ -189,7 +189,7 @@ class QueryProcessor
      *                        bad request error if the $skip or $top option
      *                        is not applicable for the requested resource
      */
-    private function processSkipAndTop()
+    private function processSkipAndTop(): void
     {
         $value = null;
         if ($this->readSkipOrTopOption(ODataConstants::HTTPQUERY_STRING_SKIP, $value)) {
@@ -244,7 +244,7 @@ class QueryProcessor
      *                        value is present in the request, false query
      *                        item is absent in the request uri
      */
-    private function readSkipOrTopOption($queryItem, &$value)
+    private function readSkipOrTopOption(string $queryItem, ?int &$value): bool
     {
         $value = $this->service->getHost()->getQueryStringItem($queryItem);
         if (null !== $value) {
@@ -284,7 +284,7 @@ class QueryProcessor
      *
      * @return bool
      */
-    private function isSSPagingRequired()
+    private function isSSPagingRequired(): bool
     {
         if ($this->pagingApplicable) {
             $targetResourceSetWrapper = $this->request->getTargetResourceSetWrapper();
@@ -303,7 +303,7 @@ class QueryProcessor
      * @throws ODataException Throws bad request error if any of the query options $orderby, $inlinecount,
      *                        $skip or $top cannot be applied to the requested resource
      */
-    private function checkSetQueryApplicable()
+    private function checkSetQueryApplicable(): void
     {
         if (!$this->setQueryApplicable) {
             throw ODataException::createBadRequestError(
@@ -324,7 +324,7 @@ class QueryProcessor
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    private function processOrderBy()
+    private function processOrderBy(): void
     {
         $orderBy = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY);
 
@@ -389,7 +389,7 @@ class QueryProcessor
      * @throws NotImplementedException
      * @throws ReflectionException
      */
-    private function processFilter()
+    private function processFilter(): void
     {
         $filter = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER);
         if (null === $filter) {
@@ -420,7 +420,7 @@ class QueryProcessor
      *                        (3) If $inlinecount value is unknown
      *                        (4) If capability negotiation over version fails
      */
-    private function processCount()
+    private function processCount(): void
     {
         $inlineCount = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT);
 
@@ -480,7 +480,7 @@ class QueryProcessor
      *                             (3) If parsing of $skiptoken fails
      *                             (4) If capability negotiation over version fails
      */
-    private function processSkipToken()
+    private function processSkipToken(): void
     {
         $skipToken = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN);
         if (null === $skipToken) {
@@ -527,7 +527,7 @@ class QueryProcessor
      *                                   (2) If projection is disabled by the developer
      *                                   (3) If some error occurs while parsing the options
      */
-    private function processExpandAndSelect()
+    private function processExpandAndSelect(): void
     {
         $expand = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND);
 
@@ -580,7 +580,7 @@ class QueryProcessor
      *                        options $select, $expand cannot be
      *                        applied to the requested resource
      */
-    private function checkExpandOrSelectApplicable($queryItem)
+    private function checkExpandOrSelectApplicable(string $queryItem): void
     {
         if (!$this->expandSelectApplicable) {
             throw ODataException::createBadRequestError(

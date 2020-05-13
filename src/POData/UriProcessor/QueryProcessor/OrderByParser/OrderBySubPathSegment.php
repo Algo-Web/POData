@@ -44,7 +44,7 @@ class OrderBySubPathSegment
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->resourceProperty->getName();
     }
@@ -54,7 +54,7 @@ class OrderBySubPathSegment
      *
      * @return ResourceProperty
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ResourceProperty
     {
         return $this->resourceProperty;
     }

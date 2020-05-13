@@ -19,6 +19,7 @@ use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
@@ -30,6 +31,7 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\RelationalEx
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\UnaryExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionTokenId;
+use TypeError;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 use UnitTests\POData\TestCase;
 
@@ -690,8 +692,12 @@ class ExpressionParserTest extends TestCase
     public function primaryStartKaboomProvider(): array
     {
         $result   = [];
-        $result[] = [ExpressionTokenId::BINARY_LITERAL(), NotImplementedException::class, 'Support for binary is not implemented'];
-        $result[] = [null, ODataException::class, 'Expression expected'];
+        $result[] = [
+            ExpressionTokenId::BINARY_LITERAL(),
+            NotImplementedException::class,
+            'Support for binary is not implemented'
+        ];
+        $result[] = [null, TypeError::class, 'null returned'];
 
         return $result;
     }
@@ -741,8 +747,9 @@ class ExpressionParserTest extends TestCase
         $expression = 'year(datetime\'1988-11-11\')';
         $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
 
+        $id       = m::mock(ExpressionTokenId::class)->makePartial();
         $newToken = m::mock(ExpressionToken::class)->makePartial();
-        $newToken->shouldReceive('getId')->andReturn(null)->once();
+        $newToken->shouldReceive('getId')->andReturn($id)->once();
 
         $reflec = new \ReflectionClass($parser);
 
@@ -772,8 +779,9 @@ class ExpressionParserTest extends TestCase
         $expression = 'year(datetime\'1988-11-11\')';
         $parser     = new ExpressionParser($expression, $this->customersResourceType, false);
 
+        $id       = m::mock(ExpressionTokenId::class)->makePartial();
         $newToken = m::mock(ExpressionToken::class)->makePartial();
-        $newToken->shouldReceive('getId')->andReturn(null)->once();
+        $newToken->shouldReceive('getId')->andReturn($id)->once();
 
         $reflec = new \ReflectionClass($parser);
 
@@ -789,5 +797,52 @@ class ExpressionParserTest extends TestCase
         $parse->setAccessible(true);
 
         $parse->invokeArgs($parser, []);
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testRecursionExhaustion()
+    {
+        $type = m::mock(ResourceType::class);
+        $foo = new ExpressionParser('text', $type, true);
+
+        $reflec = new \ReflectionClass($foo);
+        $method = $reflec->getMethod('recurseEnter');
+        $method->setAccessible(true);
+
+        $this->expectException(ODataException::class);
+        $this->expectExceptionMessage('Recursion limit reached');
+
+        $numTimes = ExpressionParser::RECURSION_LIMIT;
+
+        for ($i = 0; $i < $numTimes + 1; $i++) {
+            $method->invokeArgs($foo, []);
+        }
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testBadPrimaryStart()
+    {
+        $type = m::mock(ResourceType::class);
+        $id = m::mock(ExpressionTokenId::class);
+        $lexer = m::mock(ExpressionLexer::class)->makePartial();
+        $lexer->shouldReceive('getCurrentToken->getId')->andReturn($id)->once();
+
+        $foo = new DummyExpressionParser('text', $type, true);
+        $foo->setLexer($lexer);
+
+        $reflec = new \ReflectionClass($foo);
+        $method = $reflec->getMethod('parsePrimaryStart');
+        $method->setAccessible(true);
+
+        $this->expectException(ODataException::class);
+        $this->expectExceptionMessage('Expression expected.');
+
+        $method->invokeArgs($foo, []);
     }
 }

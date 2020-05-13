@@ -45,8 +45,11 @@ class OrderByNode extends OrderByBaseNode
      *                                                    segment represented by this node, this will be null
      *                                                    if this node represents a complex sub path segment
      */
-    public function __construct($propertyName, $resourceProperty, $resourceSetWrapper)
-    {
+    public function __construct(
+        ?string $propertyName,
+        ?ResourceProperty $resourceProperty,
+        ?ResourceSetWrapper$resourceSetWrapper
+    ) {
         // This must be the parameter state at this point, we won't check
         // these as this is an internal class
         //if ($resourceProperty != NULL)
@@ -70,7 +73,7 @@ class OrderByNode extends OrderByBaseNode
      * @return void
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      */
-    public function free()
+    public function free(): void
     {
         foreach ($this->childNodes as $childNode) {
             $childNode->free();
@@ -83,7 +86,7 @@ class OrderByNode extends OrderByBaseNode
      * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceProperty->getResourceType();
     }
@@ -92,9 +95,9 @@ class OrderByNode extends OrderByBaseNode
      * To get reference to the resource set wrapper, this will be null
      * if this node represents a complex sub path segment.
      *
-     * @return ResourceSetWrapper
+     * @return ResourceSetWrapper|null
      */
-    public function getResourceSetWrapper()
+    public function getResourceSetWrapper(): ?ResourceSetWrapper
     {
         return $this->resourceSetWrapper;
     }
@@ -106,7 +109,7 @@ class OrderByNode extends OrderByBaseNode
      *
      * @return OrderByBaseNode|null
      */
-    public function findNode($propertyName)
+    public function findNode(string $propertyName): ?OrderByBaseNode
     {
         if (array_key_exists($propertyName, $this->childNodes)) {
             return $this->childNodes[$propertyName];
@@ -122,7 +125,7 @@ class OrderByNode extends OrderByBaseNode
      * @throws InvalidArgumentException
      * @return void
      */
-    public function addNode(OrderByBaseNode $node)
+    public function addNode(OrderByBaseNode $node): void
     {
         assert($node instanceof OrderByNode || $node instanceof OrderByLeafNode);
 

@@ -39,7 +39,7 @@ class SkipTokenInfo
      * @param array<array<IType>> $orderByValuesInSkipToken Collection of values in the skiptoken corresponds
      *                                                      to the orderby path segments
      */
-    public function __construct(OrderByInfo &$orderByInfo, $orderByValuesInSkipToken)
+    public function __construct(OrderByInfo &$orderByInfo, array $orderByValuesInSkipToken)
     {
         $this->orderByInfo              = $orderByInfo;
         $this->orderByValuesInSkipToken = $orderByValuesInSkipToken;
@@ -51,7 +51,7 @@ class SkipTokenInfo
      *
      * @return OrderByInfo
      */
-    public function getOrderByInfo()
+    public function getOrderByInfo(): OrderByInfo
     {
         return $this->orderByInfo;
     }
@@ -62,7 +62,7 @@ class SkipTokenInfo
      *
      * @return array<array<IType>>
      */
-    public function getOrderByKeysInToken()
+    public function getOrderByKeysInToken(): array
     {
         return $this->orderByValuesInSkipToken;
     }

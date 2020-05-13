@@ -30,7 +30,7 @@ abstract class AbstractExpression
      *
      * @return ExpressionType
      */
-    public function getNodeType()
+    public function getNodeType(): ExpressionType
     {
         return $this->nodeType;
     }
@@ -40,7 +40,7 @@ abstract class AbstractExpression
      *
      * @return IType
      */
-    public function getType()
+    public function getType(): IType
     {
         return $this->type;
     }
@@ -52,7 +52,7 @@ abstract class AbstractExpression
      *
      * @return void
      */
-    public function setType(IType $type)
+    public function setType(IType $type): void
     {
         $this->type = $type;
     }
@@ -64,7 +64,7 @@ abstract class AbstractExpression
      *
      * @return bool
      */
-    public function typeIs(IType $type)
+    public function typeIs(IType $type): bool
     {
         return $this->type->getTypeCode() == $type->getTypeCode();
     }
@@ -74,5 +74,5 @@ abstract class AbstractExpression
      *
      * @return void
      */
-    abstract public function free();
+    abstract public function free(): void;
 }

@@ -217,7 +217,12 @@ class OrderByParserTest extends TestCase
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Customers');
         $resourceType       = $resourceSetWrapper->getResourceType();
         $orderBy            = 'Address/HouseNumber';
-        $internalOrderInfo  = OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
+        $internalOrderInfo  = OrderByParser::parseOrderByClause(
+            $resourceSetWrapper,
+            $resourceType,
+            $orderBy,
+            $providersWrapper
+        );
         $orderByInfo        = $internalOrderInfo->getOrderByInfo();
         //There is no navigation (resource reference) property in the orderby path so getNavigationPropertiesUsed should
         //return null (not empty array)

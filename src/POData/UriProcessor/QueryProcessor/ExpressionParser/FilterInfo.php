@@ -39,20 +39,16 @@ class FilterInfo
      * @param array  $navigationProperties     navigation properties in the $filter clause
      * @param string $filterExpAsDataSourceExp The $filter expression, specific to data source
      */
-    public function __construct(array $navigationProperties, $filterExpAsDataSourceExp)
+    public function __construct(array $navigationProperties, string $filterExpAsDataSourceExp)
     {
-        assert(
-            is_string($filterExpAsDataSourceExp),
-            'Filter expression must be a string'
-        );
         $this->navigationPropertiesUsedInTheFilterClause = $navigationProperties;
         $this->filterExpressionAsDataSourceExpression    = $filterExpAsDataSourceExp;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getNavigationPropertiesUsed()
+    public function getNavigationPropertiesUsed(): ?array
     {
         return $this->navigationPropertiesUsedInTheFilterClause;
     }
@@ -62,7 +58,7 @@ class FilterInfo
      *
      * @return string
      */
-    public function getExpressionAsString()
+    public function getExpressionAsString(): ?string
     {
         return $this->filterExpressionAsDataSourceExpression;
     }

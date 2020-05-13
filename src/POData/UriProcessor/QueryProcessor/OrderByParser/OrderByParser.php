@@ -119,7 +119,7 @@ class OrderByParser
         ResourceType $resourceType,
         $orderBy,
         ProvidersWrapper $providerWrapper
-    ) {
+    ): InternalOrderByInfo {
         assert(is_string($orderBy), 'OrderBy clause must be a string');
         $orderBy = trim($orderBy);
         if (0 == strlen($orderBy)) {
@@ -164,7 +164,7 @@ class OrderByParser
      * @return array<array>   An array of 'OrderByPathSegment's, each of which
      *                        is array of 'OrderBySubPathSegment's
      */
-    private function readOrderBy($value)
+    private function readOrderBy(string $value): array
     {
         $orderByPathSegments = [];
         $lexer               = new ExpressionLexer($value);
@@ -225,7 +225,7 @@ class OrderByParser
      * @throws ODataException      If any error occurs while processing the orderby path segments
      * @return mixed
      */
-    private function buildOrderByTree(&$orderByPathSegments)
+    private function buildOrderByTree(array &$orderByPathSegments)
     {
         foreach ($orderByPathSegments as $index1 => &$orderBySubPathSegments) {
             /** @var OrderByNode $currentNode */
@@ -411,7 +411,7 @@ class OrderByParser
      *
      * @throws ODataException
      */
-    private function assertion($condition)
+    private function assertion(bool $condition): void
     {
         if (!$condition) {
             throw ODataException::createInternalServerError(Messages::orderByParserUnExpectedState());
@@ -486,7 +486,7 @@ class OrderByParser
      * Generates top level comparison function from sub comparison functions.
      * @throws ODataException
      */
-    private function generateTopLevelComparisonFunction()
+    private function generateTopLevelComparisonFunction(): void
     {
         $comparisonFunctionCount = count($this->comparisonFunctions);
         $this->assertion(0 < $comparisonFunctionCount);

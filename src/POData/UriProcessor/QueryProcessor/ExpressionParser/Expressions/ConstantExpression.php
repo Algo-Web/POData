@@ -24,7 +24,7 @@ class ConstantExpression extends AbstractExpression
      * @param string|bool $value The constant value
      * @param IType       $type  The expression node type
      */
-    public function __construct($value, $type)
+    public function __construct($value, IType $type)
     {
         $this->value    = $value;
         $this->nodeType = ExpressionType::CONSTANT();
@@ -47,7 +47,7 @@ class ConstantExpression extends AbstractExpression
      * @return void
      * @see library/POData/QueryProcessor/ExpressionParser/Expressions.AbstractExpression::free()
      */
-    public function free()
+    public function free(): void
     {
         unset($this->value);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use POData\ObjectModel\CynicSerialiser;
+use POData\UriProcessor\SegmentStack;
 
 class CynicSerialiserDummy extends CynicSerialiser
 {
@@ -31,5 +32,10 @@ class CynicSerialiserDummy extends CynicSerialiser
     public function getNextLinkUri($lastObject)
     {
         return parent::getNextLinkUri($lastObject);
+    }
+
+    public function setStack(SegmentStack $stack)
+    {
+        $this->stack = $stack;
     }
 }

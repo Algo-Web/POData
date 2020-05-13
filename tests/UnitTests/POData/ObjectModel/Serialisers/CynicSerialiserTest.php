@@ -13,9 +13,11 @@ use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\SimpleDataService;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ProjectionNode;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\RequestDescription;
+use POData\UriProcessor\SegmentStack;
 
 class CynicSerialiserTest extends SerialiserTestBase
 {
@@ -45,6 +47,31 @@ class CynicSerialiserTest extends SerialiserTestBase
 
         $foo = new CynicSerialiserDummy($mockService, $request);
         $this->assertNull($foo->getCurrentExpandedProjectionNode());
+    }
+
+    public function testGetCurrentExpandedProjectionNodeBadReturn()
+    {
+        $mockService = m::mock(IService::class);
+        $mockService->shouldReceive('getHost->getAbsoluteServiceUri->getUrlAsString')
+            ->andReturn('http://localhost/odata.svc/Models');
+
+        $stack = m::mock(SegmentStack::class)->makePartial();
+        $stack->shouldReceive('getSegmentNames')->andReturn(['foo', 'bar']);
+
+        $projNode = m::mock(ProjectionNode::class)->makePartial();
+        $rootNode = m::mock(RootProjectionNode::class)->makePartial();
+        $rootNode->shouldReceive('findNode')->withArgs(['bar'])->andReturn($projNode)->once();
+
+        $request = m::mock(RequestDescription::class)->makePartial();
+        $request->shouldReceive('getRootProjectionNode')->andReturn($rootNode)->once();
+
+        $foo = new CynicSerialiserDummy($mockService, $request);
+        $foo->setStack($stack);
+
+        $this->expectException(InvalidOperationException::class);
+        $this->expectExceptionMessage('$expandedProjectionNode not instanceof ExpandedProjectionNode');
+
+        $foo->getCurrentExpandedProjectionNode();
     }
 
     public function testGetProjectionNodesNothingToReturn()
@@ -203,16 +230,8 @@ class CynicSerialiserTest extends SerialiserTestBase
         $foo->getStack()->pushSegment($segName, $segWrapper);
         $foo->getStack()->pushSegment($segName, $segWrapper);
 
-        $expected = '$expandedProjectionNode not instanceof ExpandedProjectionNode';
-        $actual   = null;
-
-        try {
-            $foo->getCurrentExpandedProjectionNode();
-        } catch (InvalidOperationException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
+        $this->expectException(\TypeError::class);
+        $foo->getCurrentExpandedProjectionNode();
     }
 
     public function testNeedNextPageLineNotOnRoot()

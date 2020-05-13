@@ -84,7 +84,7 @@ class ExpressionLexer
      * @param  string         $expression Expression to parse
      * @throws ODataException
      */
-    public function __construct($expression)
+    public function __construct(string $expression)
     {
         $this->text    = $expression;
         $this->textLen = strlen($this->text);
@@ -98,7 +98,7 @@ class ExpressionLexer
      *
      * @param int $pos Value to position
      */
-    private function setTextPos($pos)
+    private function setTextPos(int $pos): void
     {
         $this->textPos = $pos;
         $nextChar      = $this->textPos < $this->textLen ? $this->text[$this->textPos] : '\0';
@@ -110,7 +110,7 @@ class ExpressionLexer
      * Reads the next token, skipping whitespace as necessary.
      * @throws ODataException
      */
-    public function nextToken()
+    public function nextToken(): void
     {
         while (Char::isWhiteSpace($this->ch)) {
             $this->nextChar();
@@ -250,7 +250,7 @@ class ExpressionLexer
     /**
      * Advance to next character.
      */
-    private function nextChar()
+    private function nextChar(): void
     {
         if ($this->textPos < $this->textLen) {
             ++$this->textPos;
@@ -267,7 +267,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return ExpressionTokenId The kind of token recognized
      */
-    private function parseFromDigit()
+    private function parseFromDigit(): ExpressionTokenId
     {
         $startChar = $this->ch;
         $this->nextChar();
@@ -327,7 +327,7 @@ class ExpressionLexer
      * Validate current character is a digit.
      * @throws ODataException
      */
-    private function validateDigit()
+    private function validateDigit(): void
     {
         if (!Char::isDigit($this->ch)) {
             $this->parseError(Messages::expressionLexerDigitExpected($this->textPos));
@@ -341,7 +341,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function parseError($message)
+    private function parseError(string $message): void
     {
         throw ODataException::createSyntaxError($message);
     }
@@ -353,7 +353,7 @@ class ExpressionLexer
      *
      * @return bool true if it's a numeric literal; false otherwise
      */
-    public static function isNumeric(ExpressionTokenId $id)
+    public static function isNumeric(ExpressionTokenId $id): bool
     {
         return
             $id == ExpressionTokenId::INTEGER_LITERAL()
@@ -366,7 +366,7 @@ class ExpressionLexer
     /**
      * Parses an identifier by advancing the current character.
      */
-    private function parseIdentifier()
+    private function parseIdentifier(): void
     {
         do {
             $this->nextChar();
@@ -380,7 +380,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityLiteralDouble($text)
+    private static function isInfinityLiteralDouble(string $text): bool
     {
         return strcmp($text, ODataConstants::XML_INFINITY_LITERAL) == 0;
     }
@@ -390,10 +390,9 @@ class ExpressionLexer
      *
      * @param string $text Text to look in
      *
-     * @return bool true if the substring is equal using an ordinal comparison;
-     *              false otherwise
+     * @return bool true if the substring is equal using an ordinal comparison; false otherwise
      */
-    private static function isInfinityLiteralSingle($text)
+    private static function isInfinityLiteralSingle(string $text): bool
     {
         return strlen($text) == 4
             && ($text[3] == self::SINGLE_SUFFIX_LOWER
@@ -408,7 +407,7 @@ class ExpressionLexer
      *
      * @throws ODataException
      */
-    private function handleTypePrefixedLiterals()
+    private function handleTypePrefixedLiterals(): void
     {
         $id = $this->token->getId();
         if ($id != ExpressionTokenId::IDENTIFIER()) {
@@ -462,7 +461,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityOrNaNDouble($tokenText)
+    private static function isInfinityOrNaNDouble(string $tokenText): bool
     {
         if (strlen($tokenText) == 3) {
             if ($tokenText[0] == 'I') {
@@ -482,7 +481,7 @@ class ExpressionLexer
      *
      * @return bool true if match found, false otherwise
      */
-    private static function isInfinityOrNanSingle($tokenText)
+    private static function isInfinityOrNanSingle(string $tokenText): bool
     {
         if (strlen($tokenText) == 4) {
             if ($tokenText[0] == 'I') {
@@ -502,7 +501,7 @@ class ExpressionLexer
      *
      * @return ExpressionToken
      */
-    public function getCurrentToken()
+    public function getCurrentToken(): ExpressionToken
     {
         return $this->token;
     }
@@ -512,7 +511,7 @@ class ExpressionLexer
      *
      * @param ExpressionToken $token The expression token to set as current
      */
-    public function setCurrentToken(ExpressionToken $token)
+    public function setCurrentToken(ExpressionToken $token): void
     {
         $this->token = $token;
     }
@@ -522,7 +521,7 @@ class ExpressionLexer
      *
      * @return string
      */
-    public function getExpressionText()
+    public function getExpressionText(): string
     {
         return $this->text;
     }
@@ -532,7 +531,7 @@ class ExpressionLexer
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->token->Position;
     }
@@ -543,7 +542,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return ExpressionToken
      */
-    public function peekNextToken()
+    public function peekNextToken(): ExpressionToken
     {
         $savedTextPos = $this->textPos;
         assert(2 >= strlen($this->ch));
@@ -567,7 +566,7 @@ class ExpressionLexer
      * @throws ODataException
      * @return string         The dotted identifier starting at the current identifier
      */
-    public function readDottedIdentifier()
+    public function readDottedIdentifier(): string
     {
         $this->validateToken(ExpressionTokenId::IDENTIFIER());
         $identifier = $this->token->Text;
@@ -590,7 +589,7 @@ class ExpressionLexer
      * @throws ODataException if current token is not of the
      *                        specified kind
      */
-    public function validateToken(ExpressionTokenId $tokenId)
+    public function validateToken(ExpressionTokenId $tokenId): void
     {
         if ($this->token->getId() != $tokenId) {
             $this->parseError(Messages::expressionLexerSyntaxError($this->textPos));

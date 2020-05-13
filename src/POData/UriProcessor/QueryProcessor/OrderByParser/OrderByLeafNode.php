@@ -60,7 +60,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::free()
      */
-    public function free()
+    public function free(): void
     {
         // By the time we call this function, the top level sorter function
         // will be already generated so we can free
@@ -74,7 +74,7 @@ class OrderByLeafNode extends OrderByBaseNode
      * @return ResourceType
      * @see library/POData/QueryProcessorOrderByParser.OrderByBaseNode::getResourceType()
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceProperty->getResourceType();
     }
@@ -84,7 +84,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @return bool
      */
-    public function isAscending()
+    public function isAscending(): bool
     {
         return $this->isAscending;
     }
@@ -96,7 +96,7 @@ class OrderByLeafNode extends OrderByBaseNode
      *
      * @return Closure
      */
-    public function buildComparisonFunction($ancestors)
+    public function buildComparisonFunction(array $ancestors): callable
     {
         if (0 == count($ancestors)) {
             $msg = Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray();

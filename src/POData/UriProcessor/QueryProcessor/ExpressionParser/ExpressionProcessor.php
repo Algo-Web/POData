@@ -42,7 +42,7 @@ class ExpressionProcessor
      *
      * @return string|null
      */
-    public function processExpression(AbstractExpression $rootExpression)
+    public function processExpression(AbstractExpression $rootExpression): ?string
     {
         return $this->processExpressionNode($rootExpression);
     }
@@ -51,6 +51,7 @@ class ExpressionProcessor
      * Recursive function to process each node of the expression.
      *
      * @param AbstractExpression|null $expression Current node to process
+     * TODO: Figure out why return type is b0rked
      *
      * @return string|null The language specific expression
      */

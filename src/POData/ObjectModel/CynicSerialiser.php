@@ -417,6 +417,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     protected function getCurrentExpandedProjectionNode()
     {
+        /** @var RootProjectionNode|null $expandedProjectionNode */
         $expandedProjectionNode = $this->getRequest()->getRootProjectionNode();
         if (null === $expandedProjectionNode) {
             return null;
