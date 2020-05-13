@@ -215,7 +215,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     {
         $this->writer->startArrayScope();
 
-        foreach ($bag->propertyContents as $content) {
+        foreach ($bag->getPropertyContents() as $content) {
             if ($content instanceof ODataPropertyContent) {
                 $this->writer->startObjectScope();
                 $this->writeProperties($content);

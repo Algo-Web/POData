@@ -23,7 +23,7 @@ class ODataBagContent
      *
      * @var string[]|ODataPropertyContent[]|null
      */
-    public $propertyContents;
+    private $propertyContents;
 
     /**
      * ODataBagContent constructor.

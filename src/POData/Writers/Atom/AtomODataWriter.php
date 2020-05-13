@@ -400,7 +400,7 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeBagContent(ODataBagContent $bag)
     {
-        foreach ($bag->propertyContents as $content) {
+        foreach ($bag->getPropertyContents() as $content) {
             if ($content instanceof ODataPropertyContent) {
                 $this->xmlWriter->startElementNs(
                     ODataConstants::ODATA_NAMESPACE_PREFIX,

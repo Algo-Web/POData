@@ -194,7 +194,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection->results = ['eins', 'zwei', 'polizei'];
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = ['eins', 'zwei', 'polizei'];
+        $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
         $objProp                                   = new ODataProperty();
         $objProp->name                             = 'makeItPhunkee';
         $objProp->typeName                         = 'Collection(stopHammerTime)';
@@ -231,7 +231,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection->results = ['eins', null, 'zwei', null, 'polizei'];
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = ['eins', 'zwei', 'polizei'];
+        $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
         $objProp                                   = new ODataProperty();
         $objProp->name                             = 'makeItPhunkee';
         $objProp->typeName                         = 'Collection(stopHammerTime)';
@@ -300,7 +300,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $complex->properties = ['name' => $comp1, 'type' => $comp2];
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = [$complex];
+        $bag->setPropertyContents([$complex]);
         $objProp                                   = new ODataProperty();
         $objProp->name                             = 'makeItPhunkee';
         $objProp->typeName                         = 'Collection(stopHammerTime)';

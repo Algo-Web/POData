@@ -261,7 +261,7 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_RESULT_NAME)// "__results":
             ->startArrayScope(); // [
 
-        foreach ($bag->propertyContents as $content) {
+        foreach ($bag->getPropertyContents() as $content) {
             if ($content instanceof ODataPropertyContent) {
                 $this->writer->startObjectScope();
                 $this->writeProperties($content);

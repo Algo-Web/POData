@@ -225,7 +225,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont1_1_1->properties = [$pr3, $pr4];
         $propCont1->properties     = [$pr5, $pr6];
 
-        $bagProp1->propertyContents = [$propCont1];
+        $bagProp1->setPropertyContents([$propCont1]);
 
         $pr7           = new ODataProperty();
         $pr7->name     = 'name';
@@ -447,7 +447,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr6->value    = $propCont3_2;
 
         $propCont3->properties      = [$pr5, $pr6];
-        $bagProp1->propertyContents = [$propCont3];
+        $bagProp1->setPropertyContents([$propCont3]);
 
         $pr7           = new ODataProperty();
         $pr7->name     = 'name';
@@ -543,7 +543,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr19->value    = $propCont5_2;
 
         $propCont5->properties      = [$pr18, $pr19];
-        $bagProp3->propertyContents = [$propCont5];
+        $bagProp3->setPropertyContents([$propCont5]);
 
         $pr20           = new ODataProperty();
         $pr20->name     = 'Addresses';
@@ -606,7 +606,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr28->value    = $propCont6_2;
 
         $propCont6->properties      = [$pr27, $pr28];
-        $bagProp4->propertyContents = [$propCont6];
+        $bagProp4->setPropertyContents([$propCont6]);
 
         $pr29           = new ODataProperty();
         $pr29->name     = 'Addresses';
@@ -816,7 +816,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr11->value    = $propCont1_2;
 
         $propCont1->properties      = [$pr10, $pr11];
-        $bagProp1->propertyContents = [$propCont1];
+        $bagProp1->setPropertyContents([$propCont1]);
 
         $pr12           = new ODataProperty();
         $pr12->name     = 'name';
@@ -999,9 +999,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         //bag property for property 3
         $bagEntryProp3 = new ODataBagContent();
 
-        $bagEntryProp3->propertyContents = [
+        $bagEntryProp3->setPropertyContents([
             'mike@foo.com',
-            'mike2@foo.com', ];
+            'mike2@foo.com', ]);
 
         $entryProp3           = new ODataProperty();
         $entryProp3->name     = 'EmailAddresses';
@@ -1048,9 +1048,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         //end property content for bagEntryProp4ContentProp1
 
-        $bagEntryProp4->propertyContents = [$bagEntryProp4ContentProp1Content,
+        $bagEntryProp4->setPropertyContents([$bagEntryProp4ContentProp1Content,
             $bagEntryProp4ContentProp1Content2,
-        ];
+        ]);
 
         $entryProp4           = new ODataProperty();
         $entryProp4->name     = 'Addresses';
@@ -1121,11 +1121,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataProperty->typeName = 'Bag(edm.String)';
         $odataProperty->value    = $odataBag;
 
-        $odataBag->propertyContents = [
+        $odataBag->setPropertyContents([
             'yash_kothari@persistent.co.in',
             'v-yashk@microsoft.com',
             'yash2712@gmail.com',
-            'y2k2712@yahoo.com', ];
+            'y2k2712@yahoo.com', ]);
 
         $propCont             = new ODataPropertyContent();
         $propCont->properties = [$odataProperty];

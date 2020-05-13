@@ -768,9 +768,9 @@ class JsonODataV2WriterTest extends TestCase
         //bag property for property 3
         $bagEntryProp3 = new ODataBagContent();
 
-        $bagEntryProp3->propertyContents = [
+        $bagEntryProp3->setPropertyContents([
             'mike@foo.com',
-            'mike2@foo.com', ];
+            'mike2@foo.com', ]);
         $bagEntryProp3->setType('Bag(Edm.String)'); //TODO: this might not be what really happens in the code..#61
 
         $entryProp3           = new ODataProperty();
@@ -818,9 +818,9 @@ class JsonODataV2WriterTest extends TestCase
 
         //end property content for bagEntryProp4ContentProp1
 
-        $bagEntryProp4->propertyContents = [$bagEntryProp4ContentProp1Content,
+        $bagEntryProp4->setPropertyContents([$bagEntryProp4ContentProp1Content,
             $bagEntryProp4ContentProp1Content2,
-        ];
+        ]);
         $bagEntryProp4->setType('Bag(SampleModel.Address)'); //TODO: this might not be what really happens in the code..#61
 
         $entryProp4           = new ODataProperty();

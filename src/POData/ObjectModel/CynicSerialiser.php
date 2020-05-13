@@ -616,9 +616,9 @@ class CynicSerialiser implements IObjectSerialiser
                     if (!$instance instanceof IType) {
                         throw new InvalidOperationException(get_class($instance));
                     }
-                    $bag->propertyContents[] = $this->primitiveToString($instance, $value);
+                    $bag->addPropertyContent($this->primitiveToString($instance, $value));
                 } elseif (ResourceTypeKind::COMPLEX() == $typeKind) {
-                    $bag->propertyContents[] = $this->writeComplexValue($resourceType, $value);
+                    $bag->addPropertyContent($this->writeComplexValue($resourceType, $value));
                 }
             }
         }

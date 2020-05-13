@@ -332,7 +332,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result->results = $caveJohnson;
 
         $emailBag                   = new ODataBagContent();
-        $emailBag->propertyContents = ['foo', 'bar'];
+        $emailBag->setPropertyContents(['foo', 'bar']);
 
         $propContent             = new ODataPropertyContent();
         $propContent->properties = ['EmployeeID' => new ODataProperty(), 'FirstName' => new ODataProperty(),
@@ -504,7 +504,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $contentProp5->name                    = 'Emails';
         $contentProp5->typeName                = 'Collection(Edm.String)';
         $contentProp5->value                   = new ODataBagContent();
-        $contentProp5->value->propertyContents = ['foo', 'bar'];
+        $contentProp5->value->setPropertyContents(['foo', 'bar']);
 
         $propContent                           = new ODataPropertyContent();
         $propContent->properties['EmployeeID'] = $contentProp1;
