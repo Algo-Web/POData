@@ -24,4 +24,52 @@ class ODataBagContent
      * @var string[]|ODataPropertyContent[]
      */
     public $propertyContents;
+
+    /**
+     * ODataBagContent constructor.
+     * @param string $type
+     * @param ODataPropertyContent[]|string[] $propertyContents
+     */
+    public function __construct(string $type = null, array $propertyContents = null)
+    {
+        $this->type = $type;
+        $this->propertyContents = $propertyContents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return ODataBagContent
+     */
+    public function setType(string $type): ODataBagContent
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return ODataPropertyContent[]|string[]
+     */
+    public function getPropertyContents()
+    {
+        return $this->propertyContents;
+    }
+
+    /**
+     * @param ODataPropertyContent[]|string[] $propertyContents
+     * @return ODataBagContent
+     */
+    public function setPropertyContents($propertyContents)
+    {
+        $this->propertyContents = $propertyContents;
+        return $this;
+    }
+
 }
