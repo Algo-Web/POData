@@ -47,7 +47,7 @@ class ResourceSet
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -57,7 +57,7 @@ class ResourceSet
      *
      * @return ResourceEntityType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceEntityType
     {
         return $this->resourceType;
     }

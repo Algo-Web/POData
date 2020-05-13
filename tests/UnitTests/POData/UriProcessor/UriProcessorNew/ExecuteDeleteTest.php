@@ -61,7 +61,7 @@ class ExecuteDeleteTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
@@ -134,7 +134,7 @@ class ExecuteDeleteTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
@@ -216,7 +216,7 @@ class ExecuteDeleteTest extends TestCase
         $keyProp = m::mock(ResourceProperty::class);
         $keyProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn(['id' => $keyProp])->atLeast(1);

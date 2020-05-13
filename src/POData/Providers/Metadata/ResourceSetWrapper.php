@@ -58,7 +58,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return string Resource set name
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->resourceSet->getName();
     }
@@ -68,7 +68,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return ResourceEntityType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceEntityType
     {
         return $this->resourceSet->getResourceType();
     }
@@ -78,7 +78,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return ResourceSet
      */
-    public function getResourceSet()
+    public function getResourceSet(): ResourceSet
     {
         return $this->resourceSet;
     }
@@ -98,7 +98,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @return int
      */
-    public function getResourceSetPageSize()
+    public function getResourceSetPageSize(): int
     {
         return $this->resourceSetPageSize;
     }
@@ -123,7 +123,7 @@ class ResourceSetWrapper extends ResourceSet
      * @throws InvalidOperationException
      * @return bool
      */
-    public function hasNamedStreams(ProvidersWrapper $provider)
+    public function hasNamedStreams(ProvidersWrapper $provider): bool
     {
         $hasNamedStream = $this->resourceSet->getResourceType()->hasNamedStream();
         // This will check only the resource type associated with
@@ -151,7 +151,7 @@ class ResourceSetWrapper extends ResourceSet
      * @throws InvalidOperationException
      * @return bool
      */
-    public function hasBagProperty(ProvidersWrapper $provider)
+    public function hasBagProperty(ProvidersWrapper $provider): bool
     {
         $arrayToDetectLoop = [];
         $hasBagProperty    = $this->resourceSet->getResourceType()->hasBagProperty($arrayToDetectLoop);
@@ -179,7 +179,7 @@ class ResourceSetWrapper extends ResourceSet
      *
      * @throws ODataException exception if read-access to this resource set is forbidden
      */
-    public function checkResourceSetRightsForRead($singleResult)
+    public function checkResourceSetRightsForRead($singleResult): void
     {
         $this->checkResourceSetRights(
             $singleResult ?

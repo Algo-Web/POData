@@ -117,12 +117,10 @@ class OrderByParser
     public static function parseOrderByClause(
         ResourceSetWrapper $resourceSetWrapper,
         ResourceType $resourceType,
-        $orderBy,
+        string $orderBy,
         ProvidersWrapper $providerWrapper
     ): InternalOrderByInfo {
-        assert(is_string($orderBy), 'OrderBy clause must be a string');
-        $orderBy = trim($orderBy);
-        if (0 == strlen($orderBy)) {
+        if (0 == strlen(trim($orderBy))) {
             throw new InvalidOperationException('OrderBy clause must not be trimmable to an empty string');
         }
         $orderByParser = new self($providerWrapper);
@@ -245,7 +243,6 @@ class OrderByParser
                     --$subPathCount;
                 }
             }
-
             $ancestors = [$this->rootOrderByNode->getResourceSetWrapper()->getName()];
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment      = ($index2 == $subPathCount - 1);

@@ -51,7 +51,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws Exception
      * @return string|null
      */
-    public function getXML()
+    public function getXML(): ?string
     {
         return $this->getMetadataManager()->getEdmxXML();
     }
@@ -59,7 +59,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * @return MetadataManager
      */
-    public function getMetadataManager()
+    public function getMetadataManager(): MetadataManager
     {
         return $this->metadataManager;
     }
@@ -69,7 +69,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return string container name
      */
-    public function getContainerName()
+    public function getContainerName(): string
     {
         return $this->containerName;
     }
@@ -79,7 +79,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return string namespace
      */
-    public function getContainerNamespace()
+    public function getContainerNamespace(): string
     {
         return $this->namespaceName;
     }
@@ -92,7 +92,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws ErrorException
      * @return ResourceSet[]
      */
-    public function getResourceSets($params = null)
+    public function getResourceSets($params = null): array
     {
         $parameters = [];
         if (is_string($params)) {
@@ -125,7 +125,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceType[]
      */
-    public function getTypes()
+    public function getTypes(): array
     {
         return array_values($this->resourceTypes);
     }
@@ -137,7 +137,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceSet|null resource set with the given name if found else NULL
      */
-    public function resolveResourceSet($name)
+    public function resolveResourceSet($name): ?ResourceSet
     {
         if (array_key_exists($name, $this->resourceSets)) {
             return $this->resourceSets[$name];
@@ -152,7 +152,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceType|null resource type with the given resource type name if found else NULL
      */
-    public function resolveResourceType($name)
+    public function resolveResourceType($name): ?ResourceType
     {
         if (array_key_exists($name, $this->resourceTypes)) {
             return $this->resourceTypes[$name];
@@ -167,7 +167,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceFunctionType|null singleton with the given name if found else NULL
      */
-    public function resolveSingleton($name)
+    public function resolveSingleton($name): ?ResourceFunctionType
     {
         if (array_key_exists($name, $this->singletons)) {
             return $this->singletons[$name];
@@ -182,7 +182,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceAssociationSet|null resource association set with the given name if found else NULL
      */
-    public function resolveAssociationSet($name)
+    public function resolveAssociationSet($name): ?ResourceAssociationSet
     {
         if (array_key_exists($name, $this->associationSets)) {
             return $this->associationSets[$name];
@@ -195,7 +195,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return int
      */
-    public function getAssociationCount()
+    public function getAssociationCount(): int
     {
         return count($this->associationSets);
     }
@@ -209,7 +209,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceType[]
      */
-    public function getDerivedTypes(ResourceEntityType $resourceType)
+    public function getDerivedTypes(ResourceEntityType $resourceType): array
     {
         $ret = [];
         foreach ($this->resourceTypes as $rType) {
@@ -225,7 +225,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
-    public function hasDerivedTypes(ResourceEntityType $resourceType)
+    public function hasDerivedTypes(ResourceEntityType $resourceType): bool
     {
         if (in_array($resourceType, $this->baseTypes)) {
             return true;
@@ -250,7 +250,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         ResourceSet $sourceResourceSet,
         ResourceEntityType $sourceResourceType,
         ResourceProperty $targetResourceProperty
-    ) {
+    ): ?ResourceAssociationSet {
         //e.g.
         //ResourceSet => Representing 'Customers' entity set
         //ResourceType => Representing'Customer' entity type
@@ -999,7 +999,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         $name,
         ResourceComplexType $complexResourceType,
         $isBag = false
-    ) {
+    ): ResourceProperty {
         if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()
             && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX()
         ) {
@@ -1037,9 +1037,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param  string       $name
      * @param  ResourceType $returnType
      * @param  array|string $functionName
-     * @return mixed|void
+     * @return void
      */
-    public function createSingleton($name, ResourceType $returnType, $functionName)
+    public function createSingleton($name, ResourceType $returnType, $functionName): void
     {
         $msg = null;
         if (array_key_exists($name, $this->singletons)) {
@@ -1068,7 +1068,7 @@ class SimpleMetadataProvider implements IMetadataProvider
     /**
      * @return array
      */
-    public function getSingletons()
+    public function getSingletons(): array
     {
         return $this->singletons;
     }

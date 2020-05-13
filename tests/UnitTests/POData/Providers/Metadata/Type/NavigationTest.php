@@ -72,6 +72,8 @@ class NavigationTest extends TestCase
         $foo = $this->getAsIType();
         $bar = $this->getAsIType(ResourceTypeKind::ENTITY());
 
+        $this->resource->shouldReceive('getFullName')->andReturn('foo');
+
         $this->assertTrue($foo->isCompatibleWith($bar));
         $this->assertTrue($bar->isCompatibleWith($foo));
     }

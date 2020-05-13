@@ -347,6 +347,7 @@ class QueryProcessor
          *     RequestDescription::getTopCount will give non-null value.
          *
          */
+
         if (null !== $this->request->getSkipCount() || null !== $this->request->getTopCount()) {
             $orderBy = null !== $orderBy ? $orderBy . ', ' : null;
             $keys    = array_keys($targetResourceType->getKeyProperties());

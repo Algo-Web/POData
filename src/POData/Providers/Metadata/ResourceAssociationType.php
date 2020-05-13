@@ -63,7 +63,7 @@ class ResourceAssociationType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -73,7 +73,7 @@ class ResourceAssociationType
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->fullName;
     }
@@ -83,7 +83,7 @@ class ResourceAssociationType
      *
      * @return ResourceAssociationTypeEnd
      */
-    public function getEnd1()
+    public function getEnd1(): ResourceAssociationTypeEnd
     {
         return $this->end1;
     }
@@ -93,7 +93,7 @@ class ResourceAssociationType
      *
      * @return ResourceAssociationTypeEnd
      */
-    public function getEnd2()
+    public function getEnd2(): ResourceAssociationTypeEnd
     {
         return $this->end2;
     }
@@ -109,7 +109,7 @@ class ResourceAssociationType
     public function getResourceAssociationTypeEnd(
         ResourceEntityType $resourceType,
         $resourceProperty
-    ) {
+    ): ?ResourceAssociationTypeEnd {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end1;
         }
@@ -131,7 +131,7 @@ class ResourceAssociationType
     public function getRelatedResourceAssociationSetEnd(
         ResourceEntityType $resourceType,
         $resourceProperty
-    ) {
+    ): ?ResourceAssociationTypeEnd {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end2;
         }

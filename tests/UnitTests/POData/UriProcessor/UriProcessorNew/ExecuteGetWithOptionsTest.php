@@ -15,6 +15,7 @@ use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -40,7 +41,7 @@ class ExecuteGetWithOptionsTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);
@@ -85,7 +86,7 @@ class ExecuteGetWithOptionsTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(2);

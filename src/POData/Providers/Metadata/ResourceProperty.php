@@ -60,8 +60,12 @@ class ResourceProperty
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(string $name, ?string $mimeType, ResourcePropertyKind $kind, ResourceType $propertyResourceType)
-    {
+    public function __construct(
+        string $name,
+        ?string $mimeType,
+        ResourcePropertyKind $kind,
+        ResourceType $propertyResourceType
+    ) {
         if (!$this->isValidPropertyName($name)) {
             throw new InvalidArgumentException(
                 'Property name violates OData specification.'

@@ -35,7 +35,7 @@ class MySQLExpressionProviderErrorCheckTest extends TestCase
     public function testonPropertyAccessExpressionOnTheResourceWithNoName()
     {
         $res = m::mock(ResourceType::class)->makePartial();
-        $res->shouldReceive('getName')->andReturn(null);
+        $res->shouldReceive('getName')->andReturn('');
 
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
         $foo      = new MySQLExpressionProvider();

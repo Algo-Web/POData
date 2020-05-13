@@ -217,7 +217,7 @@ abstract class ResourceType
      * @throws InvalidArgumentException
      * @return ResourcePrimitiveType
      */
-    public static function getPrimitiveResourceType(EdmPrimitiveType $typeCode)
+    public static function getPrimitiveResourceType(EdmPrimitiveType $typeCode): ResourcePrimitiveType
     {
         switch ($typeCode) {
             case EdmPrimitiveType::BINARY():
@@ -259,9 +259,9 @@ abstract class ResourceType
     /**
      * Get reference to ResourceType for base class.
      *
-     * @return ResourceType
+     * @return ResourceType|null
      */
-    public function getBaseType()
+    public function getBaseType(): ?ResourceType
     {
         return $this->baseType;
     }
@@ -271,7 +271,7 @@ abstract class ResourceType
      *
      * @return bool True if base type is defined, false otherwise
      */
-    public function hasBaseType()
+    public function hasBaseType(): bool
     {
         return null !== $this->baseType;
     }
@@ -291,7 +291,7 @@ abstract class ResourceType
      *
      * @param ResourceSet $object The custom object
      */
-    public function setCustomState($object)
+    public function setCustomState($object): void
     {
         $this->customState = $object;
     }
@@ -334,7 +334,7 @@ abstract class ResourceType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -345,7 +345,7 @@ abstract class ResourceType
      *
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespaceName;
     }
@@ -355,7 +355,7 @@ abstract class ResourceType
      *
      * @return ResourceTypeKind
      */
-    public function getResourceTypeKind()
+    public function getResourceTypeKind(): ResourceTypeKind
     {
         return $this->resourceTypeKind;
     }
@@ -365,7 +365,7 @@ abstract class ResourceType
      *
      * @return bool True if type is MLE else False
      */
-    public function isMediaLinkEntry()
+    public function isMediaLinkEntry(): bool
     {
         return $this->isMediaLinkEntry;
     }
@@ -377,7 +377,7 @@ abstract class ResourceType
      *
      * @throws InvalidOperationException
      */
-    public function setMediaLinkEntry($isMLE)
+    public function setMediaLinkEntry($isMLE): void
     {
         if (ResourceTypeKind::ENTITY() != $this->resourceTypeKind) {
             throw new InvalidOperationException(
@@ -396,7 +396,7 @@ abstract class ResourceType
      *
      * @throws InvalidOperationException
      */
-    public function addProperty(ResourceProperty $property, $throw = true)
+    public function addProperty(ResourceProperty $property, $throw = true): void
     {
         if (ResourceTypeKind::PRIMITIVE() == $this->resourceTypeKind) {
             throw new InvalidOperationException(
@@ -460,7 +460,7 @@ abstract class ResourceType
      *
      * @return bool True if type is abstract else False
      */
-    public function isAbstract()
+    public function isAbstract(): bool
     {
         return $this->abstractType;
     }
@@ -472,7 +472,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty[]
      */
-    public function getPropertiesDeclaredOnThisType()
+    public function getPropertiesDeclaredOnThisType(): array
     {
         return $this->propertiesDeclaredOnThisType;
     }
@@ -482,7 +482,7 @@ abstract class ResourceType
      *
      * @return bool
      */
-    public function hasETagProperties()
+    public function hasETagProperties(): bool
     {
         $properties = $this->getETagProperties();
 
@@ -494,7 +494,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty[]
      */
-    public function getETagProperties()
+    public function getETagProperties(): array
     {
         if (empty($this->eTagProperties)) {
             foreach ($this->getAllProperties() as $propertyName => $resourceProperty) {
@@ -514,7 +514,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty[]
      */
-    public function getAllProperties()
+    public function getAllProperties(): array
     {
         if (empty($this->allProperties)) {
             if (null != $this->baseType) {
@@ -538,7 +538,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty|null
      */
-    public function resolvePropertyDeclaredOnThisType($propertyName)
+    public function resolvePropertyDeclaredOnThisType($propertyName): ?ResourceProperty
     {
         if (array_key_exists($propertyName, $this->propertiesDeclaredOnThisType)) {
             return $this->propertiesDeclaredOnThisType[$propertyName];
@@ -554,7 +554,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty|null
      */
-    public function resolveProperty($propertyName)
+    public function resolveProperty($propertyName): ?ResourceProperty
     {
         if (array_key_exists($propertyName, $this->getAllProperties())) {
             return $this->allProperties[$propertyName];
@@ -569,7 +569,7 @@ abstract class ResourceType
      *
      * @throws InvalidOperationException
      */
-    public function addNamedStream(ResourceStreamInfo $namedStream)
+    public function addNamedStream(ResourceStreamInfo $namedStream): void
     {
         if ($this->resourceTypeKind != ResourceTypeKind::ENTITY()) {
             throw new InvalidOperationException(
@@ -605,7 +605,7 @@ abstract class ResourceType
      *
      * @return ResourceStreamInfo[]
      */
-    public function getNamedStreamsDeclaredOnThisType()
+    public function getNamedStreamsDeclaredOnThisType(): array
     {
         return $this->namedStreamsDeclaredOnThisType;
     }
@@ -618,7 +618,7 @@ abstract class ResourceType
      *
      * @return ResourceStreamInfo|null
      */
-    public function tryResolveNamedStreamDeclaredOnThisTypeByName($namedStreamName)
+    public function tryResolveNamedStreamDeclaredOnThisTypeByName($namedStreamName): ?ResourceStreamInfo
     {
         if (array_key_exists($namedStreamName, $this->namedStreamsDeclaredOnThisType)) {
             return $this->namedStreamsDeclaredOnThisType[$namedStreamName];
@@ -634,7 +634,7 @@ abstract class ResourceType
      *
      * @return ResourceStreamInfo|null
      */
-    public function tryResolveNamedStreamByName($namedStreamName)
+    public function tryResolveNamedStreamByName($namedStreamName): ?ResourceStreamInfo
     {
         if (array_key_exists($namedStreamName, $this->getAllNamedStreams())) {
             return $this->allNamedStreams[$namedStreamName];
@@ -648,7 +648,7 @@ abstract class ResourceType
      *
      * @return ResourceStreamInfo[]
      */
-    public function getAllNamedStreams()
+    public function getAllNamedStreams(): array
     {
         if (empty($this->allNamedStreams)) {
             if (null != $this->baseType) {
@@ -671,7 +671,7 @@ abstract class ResourceType
      *
      * @return bool true if resource type instance has named stream else false
      */
-    public function hasNamedStream()
+    public function hasNamedStream(): bool
     {
         // Note: Calling this method will initialize _allNamedStreams
         // and _hasNamedStreams flag to a boolean value
@@ -694,7 +694,7 @@ abstract class ResourceType
      *
      * @return bool|null true if resource type instance has bag property else false
      */
-    public function hasBagProperty(&$arrayToDetectLoopInComplexType)
+    public function hasBagProperty(&$arrayToDetectLoopInComplexType): ?bool
     {
         // Note: Calling this method will initialize _bagProperties
         // and _hasBagProperty flag to a boolean value
@@ -776,7 +776,7 @@ abstract class ResourceType
      *
      * @throws InvalidOperationException
      */
-    public function validateType()
+    public function validateType(): void
     {
         $keyProperties = $this->getKeyProperties();
         if (($this->resourceTypeKind == ResourceTypeKind::ENTITY()) && empty($keyProperties)) {
@@ -795,7 +795,7 @@ abstract class ResourceType
      *
      * @return ResourceProperty[]
      */
-    public function getKeyProperties()
+    public function getKeyProperties(): array
     {
         if (empty($this->keyProperties)) {
             $baseType = $this;
@@ -819,7 +819,7 @@ abstract class ResourceType
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->fullName;
     }
@@ -833,7 +833,7 @@ abstract class ResourceType
      *
      * @return bool
      */
-    public function isAssignableFrom(ResourceType $resourceType)
+    public function isAssignableFrom(ResourceType $resourceType): bool
     {
         $base = $this;
         while (null != $base) {

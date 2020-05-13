@@ -300,7 +300,7 @@ class ProvidersWrapper
      * @return ResourceSetWrapper|null Returns resource set with the given name if found,
      *                                 NULL if resource set is set to invisible or not found
      */
-    public function resolveResourceSet($name)
+    public function resolveResourceSet($name): ?ResourceSetWrapper
     {
         if (array_key_exists($name, $this->setWrapperCache)) {
             return $this->setWrapperCache[$name];
@@ -560,7 +560,7 @@ class ProvidersWrapper
      *                           $property is not declared anywhere
      *                           in the inheritance hierarchy
      */
-    private function getResourceTypeWherePropertyIsDeclared(ResourceType $type, ResourceProperty $property)
+    protected function getResourceTypeWherePropertyIsDeclared(ResourceType $type, ResourceProperty $property)
     {
         while (null !== $type) {
             if (null !== $type->resolvePropertyDeclaredOnThisType($property->getName())) {

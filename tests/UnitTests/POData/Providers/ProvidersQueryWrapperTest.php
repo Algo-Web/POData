@@ -7,6 +7,7 @@ namespace UnitTests\POData\Providers;
 use Mockery as m;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
@@ -340,7 +341,7 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetRelatedResourceReferenceResourceTypeMismatchThrowException()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn('ResourceSet')->once();
 
         $key = m::mock(KeyDescriptor::class);
@@ -376,7 +377,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceReferenceResourceNullKeysThrowException()
     {
         $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturnNull()->once();
 
@@ -413,7 +414,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceReferenceResourceNonNullKey()
     {
         $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturn('M.C.')->once();
 
@@ -477,7 +478,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetResourceFromRelatedResourceSetNullKeysThrowException()
     {
         $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturnNull()->once();
 

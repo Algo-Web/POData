@@ -69,12 +69,17 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet               = m::mock(ResourceSet::class)->makePartial();
         $this->mockResourceSet2              = m::mock(ResourceSet::class)->makePartial();
         $this->mockResourceType              = m::mock(ResourceEntityType::class)->makePartial();
-        $this->mockResourceType2             = m::mock(ResourceType::class)->makePartial();
+        $this->mockResourceType2             = m::mock(ResourceEntityType::class)->makePartial();
         $this->mockQueryProvider             = m::mock(IQueryProvider::class)->makePartial();
         $this->mockServiceConfig             = m::mock(ServiceConfiguration::class)->makePartial();
         $this->mockResourceProperty          = m::mock(ResourceProperty::class)->makePartial();
         $this->mockResourceAssociationSet    = m::mock(ResourceAssociationSet::class)->makePartial();
         $this->mockResourceAssociationSetEnd = m::mock(ResourceAssociationSetEnd::class)->makePartial();
+
+        $this->mockResourceType->shouldReceive('getName')->andReturn('rEntityType');
+        $this->mockResourceType2->shouldReceive('getName')->andReturn('rType');
+        $this->mockResourceSet->shouldReceive('getName')->andReturn('rEntityType');
+        $this->mockResourceSet2->shouldReceive('getName')->andReturn('rType');
     }
 
     /**
@@ -104,7 +109,7 @@ class ProvidersWrapperTest extends TestCase
     public function testGetContainerNameThrowsWhenNull()
     {
         $mockMeta = m::mock(IMetadataProvider::class)->makePartial();
-        $mockMeta->shouldReceive('getContainerName')->andReturnNull();
+        $mockMeta->shouldReceive('getContainerName')->andReturn('');
         $this->mockMetadataProvider = $mockMeta;
 
         $wrapper = $this->getMockedWrapper();
@@ -151,7 +156,7 @@ class ProvidersWrapperTest extends TestCase
     public function testGetContainerNamespaceThrowsWhenNull()
     {
         $mockMeta = m::mock(IMetadataProvider::class)->makePartial();
-        $mockMeta->shouldReceive('getContainerNamespace')->andReturnNull();
+        $mockMeta->shouldReceive('getContainerNamespace')->andReturn('');
         $this->mockMetadataProvider = $mockMeta;
 
         $wrapper = $this->getMockedWrapper();
@@ -188,6 +193,7 @@ class ProvidersWrapperTest extends TestCase
 
         $mockResource = m::mock(ResourceSet::class)->makePartial();
         $mockResource->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
+        $mockResource->shouldReceive('getName')->andReturn($fakeSetName);
         $this->mockResourceSet = $mockResource;
 
         $mockMeta = m::mock(IMetadataProvider::class)->makePartial();
@@ -219,7 +225,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);
 
         //make sure the metadata provider was only called once
-        $this->mockMetadataProvider->shouldReceive('resolveResourceSet')->andReturn($this->mockResourceSet)->once();
+        $this->mockMetadataProvider->shouldReceive('resolveResourceSet')->andReturn($this->mockResourceSet)->twice();
 
         //Indicate the resource set is NOT visible
         $this->mockServiceConfig->shouldReceive('getEntitySetAccessRule')->withArgs([$this->mockResourceSet])
@@ -269,6 +275,10 @@ class ProvidersWrapperTest extends TestCase
         $this->assertEquals($this->mockResourceType, $actual);
     }
 
+    /**
+     * @throws InvalidOperationException
+     * @throws ODataException
+     */
     public function testGetDerivedTypesNonArrayReturnedThrows()
     {
         $fakeName = 'FakeType';
@@ -279,15 +289,8 @@ class ProvidersWrapperTest extends TestCase
 
         $wrapper = $this->getMockedWrapper();
 
-        try {
-            $wrapper->getDerivedTypes($this->mockResourceType);
-            $this->fail('Expected exception not thrown');
-        } catch (InvalidOperationException $ex) {
-            $this->assertEquals(
-                Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($fakeName),
-                $ex->getMessage()
-            );
-        }
+        $this->expectException(\TypeError::class);
+        $wrapper->getDerivedTypes($this->mockResourceType);
     }
 
     public function testGetDerivedTypes()
@@ -444,7 +447,7 @@ class ProvidersWrapperTest extends TestCase
             $this->mockResourceSet,
         ];
 
-        $fakeName = 'Fake Set 1';
+        $fakeName = 'rEntityType';
 
         $this->mockMetadataProvider->shouldReceive('getResourceSets')->andReturn($fakeSets);
         $this->mockResourceSet->shouldReceive('getResourceType')->andReturn($this->mockResourceType);

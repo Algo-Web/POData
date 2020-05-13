@@ -687,7 +687,8 @@ class OrderByParserTest extends TestCase
     {
         $wrapper = m::mock(ResourceSetWrapper::class);
         $type    = m::mock(ResourceType::class);
-        $type->shouldReceive('getInstanceType->newInstance')->andReturn(new \stdClass());
+        $type->shouldReceive('getInstanceType->newInstanceArgs')
+            ->andReturn(new \stdClass());
         $orderBy  = ' ';
         $provider = m::mock(ProvidersWrapper::class);
 
