@@ -72,4 +72,10 @@ class ODataBagContent
         return $this;
     }
 
+    public function addPropertyContent(ODataPropertyContent $propertyContent){
+        $this->propertyContents[] = $propertyContent;
+        return $this;
+
+    }
+
 }
