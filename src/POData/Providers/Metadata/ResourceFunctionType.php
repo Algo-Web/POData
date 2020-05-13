@@ -102,9 +102,9 @@ class ResourceFunctionType
 
     /**
      * @param $func
-     * @param mixed $fromArray
+     * @param bool $fromArray
      */
-    private function checkBlacklist($func, $fromArray = false): void
+    private function checkBlacklist($func, bool $fromArray = false): void
     {
         if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
             $msg = (true === $fromArray ? 'First element of ' : '') . 'FunctionName blacklisted';

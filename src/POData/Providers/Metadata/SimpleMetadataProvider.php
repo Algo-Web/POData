@@ -319,9 +319,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param ReflectionClass $refClass
-     * @param string          $name
-     * @param $typeKind
+     * @param  ReflectionClass                        $refClass
+     * @param  string                                 $name
+     * @param  ResourceTypeKind                       $typeKind
      * @param  mixed                                  $isAbstract
      * @param  null|mixed                             $baseType
      * @param  null|mixed                             $pluralName
@@ -332,9 +332,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     private function createResourceType(
         ReflectionClass $refClass,
-        $name,
-        $typeKind,
-        $isAbstract = false,
+        string $name,
+        ResourceTypeKind $typeKind,
+        bool $isAbstract = false,
         $baseType = null,
         $pluralName = null
     ): ResourceType {
@@ -456,20 +456,20 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param bool             $isBag          property is bag or not
      * @param bool             $isETagProperty property is etag or not
      * @param null|mixed       $defaultValue
-     * @param mixed            $nullable
+     * @param bool             $nullable
      *
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
     private function addPrimitivePropertyInternal(
-        $resourceType,
-        $name,
+        ResourceType $resourceType,
+        string $name,
         EdmPrimitiveType $typeCode = null,
-        $isKey = false,
-        $isBag = false,
-        $isETagProperty = false,
+        bool $isKey = false,
+        bool $isBag = false,
+        bool $isETagProperty = false,
         $defaultValue = null,
-        $nullable = false
+        bool $nullable = false
     ): void {
         if ($isETagProperty && $isBag) {
             throw new InvalidOperationException(
@@ -525,7 +525,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    private function checkInstanceProperty($name, ResourceType $resourceType): void
+    private function checkInstanceProperty(string $name, ResourceType $resourceType): void
     {
         $instance       = $resourceType->getInstanceType();
         $hasMagicGetter = $instance instanceof IType || $instance->hasMethod('__get');
@@ -653,7 +653,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *                                               resource reference or reference
      *                                               set property points to
      * @param string             $resourceMult       The multiplicity of relation being added
-     * @param mixed              $many
+     * @param bool               $many
      *
      * @param  ResourceEntityType|null   $concreteType
      * @throws InvalidOperationException
@@ -664,7 +664,7 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $name,
         ResourceSet $targetResourceSet,
         string $resourceMult,
-        $many = false,
+        bool $many = false,
         ResourceEntityType $concreteType = null
     ): void {
         $allowedMult   = ['*', '1', '0..1'];
@@ -899,7 +899,7 @@ class SimpleMetadataProvider implements IMetadataProvider
             $name,
             $targetResourceSet,
             '*',
-            (true === $single) ? false : null,
+            (true === $single) ? false : true,
             $concreteType
         );
     }

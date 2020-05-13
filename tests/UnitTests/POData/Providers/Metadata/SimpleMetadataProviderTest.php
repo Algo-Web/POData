@@ -846,8 +846,10 @@ class SimpleMetadataProviderTest extends TestCase
         $reflector = new \ReflectionObject($foo);
         $method    = $reflector->getMethod('addPrimitivePropertyInternal');
         $method->setAccessible(true);
+        $rType     = m::mock(ResourceType::class)->makePartial();
+
         try {
-            $method->invoke($foo, null, null, null, true, true, true);
+            $method->invoke($foo, $rType, 'foo', null, true, true, true);
             $this->fail('expected exception not fired');
         } catch (InvalidOperationException $e) {
             $this->assertEquals(

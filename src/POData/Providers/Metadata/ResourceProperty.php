@@ -96,9 +96,9 @@ class ResourceProperty
      *
      * @return bool
      */
-    private function isValidPropertyName($name): bool
+    private function isValidPropertyName(string $name): bool
     {
-        if (!isset($name) || !is_string($name) || empty($name)) {
+        if (empty($name)) {
             return false;
         }
         if ('_' == substr($name, 0, 1)) {

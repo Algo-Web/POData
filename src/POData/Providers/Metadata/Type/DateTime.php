@@ -142,12 +142,12 @@ class DateTime implements IType
     }
 
     /**
-     * @param $dateTime
+     * @param \DateTime|string $dateTime
      * @param $msg
      * @throws Exception
      * @return false|int
      */
-    protected static function dateTimeCmpCheckInput($dateTime, $msg)
+    protected static function dateTimeCmpCheckInput($dateTime, string $msg)
     {
         if (is_object($dateTime) && $dateTime instanceof \DateTime) {
             $firstStamp = $dateTime->getTimestamp();
