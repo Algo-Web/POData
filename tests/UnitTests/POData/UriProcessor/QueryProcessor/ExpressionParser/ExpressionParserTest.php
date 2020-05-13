@@ -19,6 +19,7 @@ use POData\Providers\Metadata\Type\Int64;
 use POData\Providers\Metadata\Type\Navigation;
 use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\StringType;
+use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionParser;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ArithmeticExpression;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ConstantExpression;
@@ -796,5 +797,52 @@ class ExpressionParserTest extends TestCase
         $parse->setAccessible(true);
 
         $parse->invokeArgs($parser, []);
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testRecursionExhaustion()
+    {
+        $type = m::mock(ResourceType::class);
+        $foo = new ExpressionParser('text', $type, true);
+
+        $reflec = new \ReflectionClass($foo);
+        $method = $reflec->getMethod('recurseEnter');
+        $method->setAccessible(true);
+
+        $this->expectException(ODataException::class);
+        $this->expectExceptionMessage('Recursion limit reached');
+
+        $numTimes = ExpressionParser::RECURSION_LIMIT;
+
+        for ($i = 0; $i < $numTimes + 1; $i++) {
+            $method->invokeArgs($foo, []);
+        }
+    }
+
+    /**
+     * @throws ODataException
+     * @throws \ReflectionException
+     */
+    public function testBadPrimaryStart()
+    {
+        $type = m::mock(ResourceType::class);
+        $id = m::mock(ExpressionTokenId::class);
+        $lexer = m::mock(ExpressionLexer::class)->makePartial();
+        $lexer->shouldReceive('getCurrentToken->getId')->andReturn($id)->once();
+
+        $foo = new DummyExpressionParser('text', $type, true);
+        $foo->setLexer($lexer);
+
+        $reflec = new \ReflectionClass($foo);
+        $method = $reflec->getMethod('parsePrimaryStart');
+        $method->setAccessible(true);
+
+        $this->expectException(ODataException::class);
+        $this->expectExceptionMessage('Expression expected.');
+
+        $method->invokeArgs($foo, []);
     }
 }

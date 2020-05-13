@@ -46,7 +46,7 @@ class ExpressionParser
      *
      * @var ExpressionLexer
      */
-    private $lexer;
+    protected $lexer;
 
     /**
      * The current recursion depth.
