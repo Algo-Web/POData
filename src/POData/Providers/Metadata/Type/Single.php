@@ -53,7 +53,7 @@ class Single implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         // By default all real numbers are considered as 'Double'.
         // To consider a number (real or integer) as 'Single' i.e
@@ -74,7 +74,7 @@ class Single implements IType
      *
      * @return float
      */
-    public function convert($stringValue): float
+    public function convert(string $stringValue): float
     {
         return floatval($stringValue);
     }

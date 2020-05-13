@@ -46,7 +46,7 @@ class VoidType implements IType
      * @throws NotImplementedException
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         //No EDM void primitive type
         throw new NotImplementedException();
@@ -60,7 +60,7 @@ class VoidType implements IType
      * @throws NotImplementedException
      * @return void
      */
-    public function convert($stringValue): void
+    public function convert(string $stringValue): void
     {
         throw new NotImplementedException();
     }

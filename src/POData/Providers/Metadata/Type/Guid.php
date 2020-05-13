@@ -61,7 +61,7 @@ class Guid implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         ////The GUID value present in the $filter option should have one of the following pattern.
         //1. '/^guid\'([0-9a-fA-F]{32}\')?$/';
@@ -126,7 +126,7 @@ class Guid implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         $len = strlen($stringValue);
         if (2 > $len) {

@@ -42,13 +42,13 @@ class EdmString implements IType
      * Validate a value in Astoria uri is in a format for this type
      * Note: implementation of IType::validate.
      *
-     * @param string|mixed $value    The value to validate
+     * @param string       $value    The value to validate
      * @param string       $outValue The stripped form of $value that can
      *                               be used in PHP expressions
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (!is_string($value)) {
             return false;
@@ -66,7 +66,7 @@ class EdmString implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         $value = str_replace('%C3%82%C2%BB', '/', $stringValue);
         //Consider the odata url option

@@ -30,13 +30,13 @@ interface IType
      * interface
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
-     * @param string &$outValue The stripped form of $value that can be used in PHP
-     *                          expressions
+     * @param string      $value     The value to validate
+     * @param string|null &$outValue The stripped form of $value that can be used in PHP
+     *                               expressions
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool;
+    public function validate(string $value, ?string &$outValue): bool;
 
     /**
      * Gets full name of the type implementing this interface in EDM namespace
@@ -53,7 +53,7 @@ interface IType
      *
      * @return mixed
      */
-    public function convert($stringValue);
+    public function convert(string $stringValue);
 
     /**
      * Convert the given value to a form that can be used in OData uri.

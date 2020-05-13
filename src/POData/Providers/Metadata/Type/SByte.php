@@ -43,7 +43,7 @@ class SByte implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (1 != strlen($value)) {
             return false;
@@ -62,7 +62,7 @@ class SByte implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         return $stringValue;
     }

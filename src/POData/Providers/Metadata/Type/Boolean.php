@@ -43,7 +43,7 @@ class Boolean implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (0 != strcmp($value, 'true') && 0 != strcmp($value, 'false')) {
             return false;
@@ -79,7 +79,7 @@ class Boolean implements IType
      *
      * @return bool
      */
-    public function convert($stringValue): bool
+    public function convert(string $stringValue): bool
     {
         if (0 == strcmp($stringValue, 'true')) {
             return true;

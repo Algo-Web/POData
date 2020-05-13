@@ -123,7 +123,7 @@ class Char implements IType
      * @throws NotImplementedException
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         //No EDM Char primitive type
         throw new NotImplementedException();
@@ -137,7 +137,7 @@ class Char implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         return $stringValue;
     }

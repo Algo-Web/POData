@@ -54,7 +54,7 @@ class Double implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         // By default all real numbers are considered as 'Double'.
         // One can explicitly force an integral value to 'Double' with D or d postfix
@@ -74,7 +74,7 @@ class Double implements IType
      *
      * @return float
      */
-    public function convert($stringValue): float
+    public function convert(string $stringValue): float
     {
         return floatval($stringValue);
     }

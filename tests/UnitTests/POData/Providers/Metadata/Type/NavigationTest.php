@@ -87,24 +87,6 @@ class NavigationTest extends TestCase
         $this->assertFalse($bar->isCompatibleWith($foo));
     }
 
-    public function testValidateDifferentIType()
-    {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
-
-        $bar = new StringType();
-        $out = '';
-        $this->assertFalse($foo->validate($bar, $out));
-    }
-
-    public function testValidateSameIType()
-    {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
-
-        $bar = $this->getAsIType();
-        $out = '';
-        $this->assertTrue($foo->validate($bar, $out));
-    }
-
     public function testGetNameTest()
     {
         $foo = $this->getAsIType();

@@ -61,7 +61,7 @@ class Binary implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         $length  = strlen($value);
         $trimVal = $value;
@@ -94,12 +94,12 @@ class Binary implements IType
     /**
      * Checks a value is binary.
      *
-     * @param string $value     value to check in base64 form
-     * @param string &$outValue Processed value
+     * @param string      $value     value to check in base64 form
+     * @param string|null &$outValue Processed value
      *
      * @return bool
      */
-    public static function validateWithoutPrefix($value, &$outValue)
+    public static function validateWithoutPrefix(string $value, &$outValue)
     {
         $length = strlen($value);
         if (0 == $length || 0 != $length % 2) {
@@ -135,7 +135,7 @@ class Binary implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         return $stringValue;
     }

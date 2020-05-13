@@ -199,7 +199,7 @@ class DateTime implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         //1. The datetime value present in the $filter option should have 'datetime' prefix.
         //2. Month and day should be two digit
@@ -239,7 +239,7 @@ class DateTime implements IType
      *
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         return $stringValue;
     }

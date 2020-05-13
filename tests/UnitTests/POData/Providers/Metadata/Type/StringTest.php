@@ -110,6 +110,8 @@ class StringTest extends TestCase
 
         $in  = 4543;
         $out = null;
+
+        $this->expectException(\TypeError::class);
         $this->assertFalse($type->validate($in, $out));
     }
 

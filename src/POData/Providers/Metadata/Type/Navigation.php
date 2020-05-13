@@ -80,7 +80,7 @@ class Navigation implements INavigationType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (!$value instanceof self) {
             return false;
@@ -99,7 +99,7 @@ class Navigation implements INavigationType
      * @throws NotImplementedException
      * @return string
      */
-    public function convert($stringValue): string
+    public function convert(string $stringValue): string
     {
         throw new NotImplementedException();
     }

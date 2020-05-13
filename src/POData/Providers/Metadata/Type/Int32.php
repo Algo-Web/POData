@@ -51,7 +51,7 @@ class Int32 implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (1 !== preg_match('/^(\-)?\d+$/', $value)) {
             return false;
@@ -69,7 +69,7 @@ class Int32 implements IType
      *
      * @return int
      */
-    public function convert($stringValue): int
+    public function convert(string $stringValue): int
     {
         return intval($stringValue);
     }

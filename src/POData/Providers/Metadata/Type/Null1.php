@@ -46,7 +46,7 @@ class Null1 implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue): bool
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (0 != strcmp($value, 'null')) {
             return false;
@@ -64,7 +64,7 @@ class Null1 implements IType
      *
      * @return string|null
      */
-    public function convert($stringValue): ?string
+    public function convert(string $stringValue): ?string
     {
         if (0 == strcmp($stringValue, 'null')) {
             return null;
