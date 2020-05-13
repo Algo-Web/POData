@@ -15,7 +15,7 @@ class EdmString implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::STRING();
     }
@@ -28,7 +28,7 @@ class EdmString implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         $code = $type->getTypeCode();
 
@@ -48,7 +48,7 @@ class EdmString implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         if (!is_string($value)) {
             return false;
@@ -66,7 +66,7 @@ class EdmString implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert($stringValue): string
     {
         $value = str_replace('%C3%82%C2%BB', '/', $stringValue);
         //Consider the odata url option
@@ -95,7 +95,7 @@ class EdmString implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         $rawValue = str_replace('/', '»', $value);
         return '\'' . str_replace('%27', "''", urlencode(utf8_encode($rawValue))) . '\'';
@@ -107,7 +107,7 @@ class EdmString implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -118,7 +118,7 @@ class EdmString implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.String';
     }

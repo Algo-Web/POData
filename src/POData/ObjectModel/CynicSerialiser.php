@@ -483,7 +483,7 @@ class CynicSerialiser implements IObjectSerialiser
                 throw ODataException::createInternalServerError($msg);
             }
 
-            $keyValue = $keyType->convertToOData($keyValue);
+            $keyValue = $keyType->convertToOData(strval($keyValue));
             $keyString .= $comma . $keyName . '=' . $keyValue;
             $comma = ',';
         }

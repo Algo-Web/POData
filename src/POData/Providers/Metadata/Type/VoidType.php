@@ -17,7 +17,7 @@ class VoidType implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::VOID();
     }
@@ -30,7 +30,7 @@ class VoidType implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::VOID() == $type->getTypeCode();
     }
@@ -46,7 +46,7 @@ class VoidType implements IType
      * @throws NotImplementedException
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         //No EDM void primitive type
         throw new NotImplementedException();
@@ -60,7 +60,7 @@ class VoidType implements IType
      * @throws NotImplementedException
      * @return void
      */
-    public function convert($stringValue)
+    public function convert($stringValue): void
     {
         throw new NotImplementedException();
     }
@@ -73,7 +73,7 @@ class VoidType implements IType
      * @throws NotImplementedException
      * @return void
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         throw new NotImplementedException();
     }
@@ -84,7 +84,7 @@ class VoidType implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -95,7 +95,7 @@ class VoidType implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'System.Void';
     }

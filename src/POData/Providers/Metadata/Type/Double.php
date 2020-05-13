@@ -15,7 +15,7 @@ class Double implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::DOUBLE();
     }
@@ -28,7 +28,7 @@ class Double implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         switch ($type->getTypeCode()) {
             case TypeCode::BYTE():
@@ -54,7 +54,7 @@ class Double implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         // By default all real numbers are considered as 'Double'.
         // One can explicitly force an integral value to 'Double' with D or d postfix
@@ -74,7 +74,7 @@ class Double implements IType
      *
      * @return float
      */
-    public function convert($stringValue)
+    public function convert($stringValue): float
     {
         return floatval($stringValue);
     }
@@ -88,7 +88,7 @@ class Double implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value . 'D';
     }
@@ -99,7 +99,7 @@ class Double implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -110,7 +110,7 @@ class Double implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Double';
     }

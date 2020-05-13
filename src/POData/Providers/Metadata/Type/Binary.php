@@ -33,7 +33,7 @@ class Binary implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::BINARY();
     }
@@ -46,7 +46,7 @@ class Binary implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::BINARY() == $type->getTypeCode();
     }
@@ -61,7 +61,7 @@ class Binary implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         $length  = strlen($value);
         $trimVal = $value;
@@ -135,7 +135,7 @@ class Binary implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert($stringValue): string
     {
         return $stringValue;
     }
@@ -149,7 +149,7 @@ class Binary implements IType
      *
      * @return string Hexadecimal representation of the binary data prefixed with the 'binary'
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return 'binary\'' . bin2hex($value) . '\'';
     }
@@ -160,7 +160,7 @@ class Binary implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -171,7 +171,7 @@ class Binary implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Binary';
     }

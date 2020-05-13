@@ -171,7 +171,7 @@ class DateTime implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::DATETIME();
     }
@@ -184,7 +184,7 @@ class DateTime implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::DATETIME() == $type->getTypeCode();
     }
@@ -199,7 +199,7 @@ class DateTime implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         //1. The datetime value present in the $filter option should have 'datetime' prefix.
         //2. Month and day should be two digit
@@ -239,7 +239,7 @@ class DateTime implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert($stringValue): string
     {
         return $stringValue;
     }
@@ -253,7 +253,7 @@ class DateTime implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return 'datetime\'' . urlencode($value) . '\'';
     }
@@ -264,7 +264,7 @@ class DateTime implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -275,7 +275,7 @@ class DateTime implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.DateTime';
     }

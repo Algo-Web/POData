@@ -88,7 +88,7 @@ class Char implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::CHAR();
     }
@@ -101,7 +101,7 @@ class Char implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         switch ($type->getTypeCode()) {
             case TypeCode::BYTE():
@@ -123,7 +123,7 @@ class Char implements IType
      * @throws NotImplementedException
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         //No EDM Char primitive type
         throw new NotImplementedException();
@@ -137,7 +137,7 @@ class Char implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert($stringValue): string
     {
         return $stringValue;
     }
@@ -151,7 +151,7 @@ class Char implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value;
     }
@@ -162,7 +162,7 @@ class Char implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -173,7 +173,7 @@ class Char implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'System.Char';
     }

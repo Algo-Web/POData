@@ -33,7 +33,7 @@ class Guid implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::GUID();
     }
@@ -46,7 +46,7 @@ class Guid implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::GUID() == $type->getTypeCode();
     }
@@ -61,7 +61,7 @@ class Guid implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate($value, &$outValue): bool
     {
         ////The GUID value present in the $filter option should have one of the following pattern.
         //1. '/^guid\'([0-9a-fA-F]{32}\')?$/';
@@ -126,7 +126,7 @@ class Guid implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert($stringValue): string
     {
         $len = strlen($stringValue);
         if (2 > $len) {
@@ -145,7 +145,7 @@ class Guid implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return 'guid\'' . urlencode($value) . '\'';
     }
@@ -156,7 +156,7 @@ class Guid implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -167,7 +167,7 @@ class Guid implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Guid';
     }

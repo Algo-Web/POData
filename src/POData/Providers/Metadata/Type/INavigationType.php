@@ -19,5 +19,5 @@ interface INavigationType extends IType
      *
      * @return ResourceType
      */
-    public function getResourceType();
+    public function getResourceType(): ResourceType;
 }
