@@ -106,7 +106,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme',
-            $entry->type->scheme,
+            $entry->type->getScheme(),
             'The Type Scheme of the entry failed to deserialise correctly'
         );
 

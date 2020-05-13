@@ -22,7 +22,7 @@ class ODataCategory
      *
      * @var string
      */
-    public $scheme;
+    private $scheme;
 
     /**
      * ODataCategory constructor.
