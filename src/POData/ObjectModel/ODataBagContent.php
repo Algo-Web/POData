@@ -15,13 +15,13 @@ class ODataBagContent
     /**
      * The type name of the element.
      *
-     * @var string
+     * @var string|null
      */
     private $type;
     /**
      * Represents elements of the bag.
      *
-     * @var string[]|ODataPropertyContent[]
+     * @var string[]|ODataPropertyContent[]|null
      */
     public $propertyContents;
 
@@ -37,18 +37,18 @@ class ODataBagContent
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type
+     * @param string|null $type
      * @return ODataBagContent
      */
-    public function setType(string $type): ODataBagContent
+    public function setType(?string $type): ODataBagContent
     {
         $this->type = $type;
         return $this;
