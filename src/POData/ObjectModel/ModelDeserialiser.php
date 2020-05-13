@@ -42,7 +42,7 @@ class ModelDeserialiser
             throw new InvalidArgumentException($msg);
         }
 
-        $payloadType = $payload->type->term;
+        $payloadType = $payload->type->getTerm();
         $pay         = explode('.', $payloadType);
         $payloadType = $pay[count($pay) - 1];
         $actualType  = $entityType->getName();

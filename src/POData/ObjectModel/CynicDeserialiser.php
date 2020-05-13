@@ -401,7 +401,7 @@ class CynicDeserialiser
             assert(null !== $targSet, get_class($targSet));
             $type = $targSet->getResourceType();
         } else {
-            $type = $this->getMetaProvider()->resolveResourceType($result->type->term);
+            $type = $this->getMetaProvider()->resolveResourceType($result->type->getTerm());
         }
         assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->title;

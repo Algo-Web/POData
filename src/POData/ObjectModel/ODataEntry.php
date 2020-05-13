@@ -189,7 +189,7 @@ class ODataEntry
     {
         $this->type = $type;
         if (null !== $type) {
-            $rawTerm               = $type->term;
+            $rawTerm               = $type->getTerm();
             $termArray             = explode('.', $rawTerm);
             $final                 = $termArray[count($termArray) - 1];
             $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);

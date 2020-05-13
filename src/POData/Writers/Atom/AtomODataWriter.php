@@ -771,7 +771,7 @@ class AtomODataWriter implements IODataWriter
      */
     public function preWriteProperties(ODataEntry $entry)
     {
-        $effectiveType = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
+        $effectiveType = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
         $this->xmlWriter->startElement(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME,

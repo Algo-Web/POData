@@ -349,7 +349,7 @@ class JsonODataV1Writer implements IODataWriter
 
             // Write the type property, if the entry has type properties.
             if ($entry->type != null) {
-                $value = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
+                $value = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
                 $this->writer
                     ->writeName(ODataConstants::JSON_TYPE_STRING)
                     ->writeValue($value);

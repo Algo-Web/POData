@@ -101,7 +101,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'ODataDemo.ProductDetail',
-            $entry->type->term,
+            $entry->type->getTerm(),
             'The Type Term of the entry failed to deserialise correctly'
         );
         $this->assertEquals(

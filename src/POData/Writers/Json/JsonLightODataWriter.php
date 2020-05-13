@@ -245,7 +245,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             return $this;
         }
 
-        $typeValue = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
+        $typeValue = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
         $linkValue = $entry->editLink instanceof ODataLink ? $entry->editLink->url : $entry->editLink;
 
         $this->writer
