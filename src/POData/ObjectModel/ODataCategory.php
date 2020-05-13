@@ -15,7 +15,7 @@ class ODataCategory
      *
      * @var string
      */
-    public $term;
+    private $term;
 
     /**
      * Scheme.
