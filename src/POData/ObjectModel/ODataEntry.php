@@ -12,6 +12,8 @@ use POData\ObjectModel\AtomObjectModel\AtomContent;
 
 /**
  * Class ODataEntry.
+ * TODO: the methods should be rearranged to match theorder of the properties.
+ * TODO: the properties are still public needs a lot of unpicking to work out as type hints maybe wrong.
  */
 class ODataEntry
 {
