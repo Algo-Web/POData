@@ -82,10 +82,6 @@ class Navigation implements INavigationType
      */
     public function validate(string $value, ?string &$outValue): bool
     {
-        if (!$value instanceof self) {
-            return false;
-        }
-
         $outValue = $value;
 
         return true;

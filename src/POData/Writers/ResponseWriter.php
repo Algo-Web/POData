@@ -35,6 +35,7 @@ class ResponseWriter
         $responseContentType
     ) {
         $targetKind = $request->getTargetKind();
+        $responseBody = null;
 
         if (TargetKind::METADATA() == $targetKind) {
             // /$metadata

@@ -50,10 +50,6 @@ class EdmString implements IType
      */
     public function validate(string $value, ?string &$outValue): bool
     {
-        if (!is_string($value)) {
-            return false;
-        }
-
         $outValue = $value;
 
         return true;
