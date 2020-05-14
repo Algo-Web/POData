@@ -18,14 +18,14 @@ class ODataExpandedResult
     /**
      * Term.
      *
-     * @var ODataEntry
+     * @var ODataEntry|null
      */
     public $entry;
 
     /**
      * Scheme.
      *
-     * @var ODataFeed
+     * @var ODataFeed|null
      */
     public $feed;
 
@@ -39,5 +39,41 @@ class ODataExpandedResult
     {
         $this->entry = $entry;
         $this->feed  = $feed;
+    }
+
+    /**
+     * @return ODataEntry|null
+     */
+    public function getEntry(): ?ODataEntry
+    {
+        return $this->entry;
+    }
+
+    /**
+     * @param ODataEntry|null $entry
+     * @return ODataExpandedResult
+     */
+    public function setEntry(?ODataEntry $entry): ODataExpandedResult
+    {
+        $this->entry = $entry;
+        return $this;
+    }
+
+    /**
+     * @return ODataFeed|null
+     */
+    public function getFeed(): ?ODataFeed
+    {
+        return $this->feed;
+    }
+
+    /**
+     * @param ODataFeed|null $feed
+     * @return ODataExpandedResult
+     */
+    public function setFeed(?ODataFeed $feed): ODataExpandedResult
+    {
+        $this->feed = $feed;
+        return $this;
     }
 }
