@@ -431,7 +431,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getResourceType')->andReturn($rType);
-        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG])->andReturn(true, false);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::BAG()])->andReturn(true, false);
 
         $mailNode = m::mock(ExpandedProjectionNode::class);
         $mailNode->shouldReceive('getResourceProperty')->andReturn($rProp);

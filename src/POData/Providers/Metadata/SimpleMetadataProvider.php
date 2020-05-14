@@ -488,13 +488,13 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $primitiveResourceType = ResourceType::getPrimitiveResourceType($typeCode);
 
-        $kind = $isKey ? ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY : ResourcePropertyKind::PRIMITIVE;
+        $kind = $isKey ? ResourcePropertyKind::PRIMITIVE()->setKEY(true) : ResourcePropertyKind::PRIMITIVE();
         if ($isBag) {
-            $kind = $kind | ResourcePropertyKind::BAG;
+            $kind = $kind->setBAG(true);
         }
 
         if ($isETagProperty) {
-            $kind = $kind | ResourcePropertyKind::ETAG;
+            $kind = $kind->setETAG(true);
         }
 
         $kind = new ResourcePropertyKind($kind);
@@ -1015,9 +1015,9 @@ class SimpleMetadataProvider implements IMetadataProvider
 
         $this->checkInstanceProperty($name, $targetResourceType);
 
-        $kind = ResourcePropertyKind::COMPLEX_TYPE;
+        $kind = ResourcePropertyKind::COMPLEX_TYPE();
         if ($isBag) {
-            $kind = $kind | ResourcePropertyKind::BAG;
+            $kind = $kind->setBAG(true);
         }
 
         $kind = new ResourcePropertyKind($kind);

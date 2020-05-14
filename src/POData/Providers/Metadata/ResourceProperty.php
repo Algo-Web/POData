@@ -121,15 +121,14 @@ class ResourceProperty
      */
     public static function isValidResourcePropertyKind(ResourcePropertyKind $kind): bool
     {
-        return
-            !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
-                $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
-                $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
-                ($kind->getValue() != (ResourcePropertyKind::COMPLEX_TYPE | ResourcePropertyKind::BAG)) &&
-                $kind != ResourcePropertyKind::PRIMITIVE() &&
-                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG)) &&
-                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY)) &&
-                ($kind->getValue() != (ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::ETAG)));
+        return !($kind != ResourcePropertyKind::RESOURCE_REFERENCE() &&
+                 $kind != ResourcePropertyKind::RESOURCESET_REFERENCE() &&
+                 $kind != ResourcePropertyKind::COMPLEX_TYPE() &&
+                 ($kind != ResourcePropertyKind::COMPLEX_TYPE()->setBAG(true)) &&
+                 $kind != ResourcePropertyKind::PRIMITIVE() &&
+                 ($kind != ResourcePropertyKind::PRIMITIVE()->setBAG(true)) &&
+                 ($kind != ResourcePropertyKind::PRIMITIVE()->setKEY(true)) &&
+                 ($kind != ResourcePropertyKind::PRIMITIVE()->setETAG(true)));
     }
 
     /**

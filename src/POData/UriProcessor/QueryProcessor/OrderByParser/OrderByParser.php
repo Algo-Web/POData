@@ -261,7 +261,7 @@ class OrderByParser
                 }
                 /** @var ResourcePropertyKind $rKind */
                 $rKind   = $resourceProperty->getKind();
-                $rawKind = ($rKind instanceof ResourcePropertyKind) ? $rKind->getValue() : $rKind;
+                $rawKind = ($rKind instanceof ResourcePropertyKind) ? $rKind : $rKind;
 
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG())) {
                     throw ODataException::createBadRequestError(
@@ -284,8 +284,8 @@ class OrderByParser
                             Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName())
                         );
                     }
-                } elseif ($rawKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-                    || $rawKind == ResourcePropertyKind::RESOURCE_REFERENCE
+                } elseif ($rawKind == ResourcePropertyKind::RESOURCESET_REFERENCE()
+                    || $rawKind == ResourcePropertyKind::RESOURCE_REFERENCE()
                 ) {
                     $this->assertion($currentNode instanceof OrderByRootNode || $currentNode instanceof OrderByNode);
                     $resourceSetWrapper = $currentNode->getResourceSetWrapper();

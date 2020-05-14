@@ -360,7 +360,7 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::RESOURCESET_REFERENCE == $arg->getValue();
+            return ResourcePropertyKind::RESOURCESET_REFERENCE() == $arg;
         }))->andReturn(true);
         $property->shouldReceive('isKindOf')->andReturn(false);
 
@@ -378,7 +378,7 @@ class ObjectModelSerializerTest extends TestCase
         $rProp->shouldReceive('getInstanceType')->andReturn($itype);
         $rProp->shouldReceive('getResourceType')->andReturn($primType);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::BAG == $arg->getValue();
+            return ResourcePropertyKind::BAG() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
@@ -387,7 +387,7 @@ class ObjectModelSerializerTest extends TestCase
         $tProp->shouldReceive('getInstanceType')->andReturn($itype);
         $tProp->shouldReceive('getResourceType')->andReturn($primType);
         $tProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::BAG == $arg->getValue();
+            return ResourcePropertyKind::BAG() == $arg;
         }))->andReturn(false);
         $tProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
@@ -905,7 +905,7 @@ class ObjectModelSerializerTest extends TestCase
         $resolv->shouldReceive('getName')->andReturn('name');
         $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->atLeast(1);
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
-        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE()])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
         $resolv->shouldReceive('getInstanceType')->andReturn($iType);
 
@@ -913,7 +913,7 @@ class ObjectModelSerializerTest extends TestCase
         $typeProp->shouldReceive('getName')->andReturn('type');
         $typeProp->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->atLeast(1);
         $typeProp->shouldReceive('getResourceType')->andReturn($navType);
-        $typeProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $typeProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE()])->andReturn(true);
         $typeProp->shouldReceive('isKindOf')->andReturn(false);
         $typeProp->shouldReceive('getInstanceType')->andReturn($iType);
 
