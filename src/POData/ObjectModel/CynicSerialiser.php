@@ -126,52 +126,64 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        $results = $entryObjects->results;
-        if (!is_array($results)) {
+        $res = $entryObjects->results;
+        if (!(is_array($res))) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
-        //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
-        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($results);
-        $pageSize              = $this->getService()->getConfiguration()->getEntitySetPageSize(
-            $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet()
-        );
-        $requestTop  = $this->getRequest()->getTopOptionCount() ?? PHP_INT_MAX ;
-        $entryObjects->hasMore &= $requestTop > $pageSize;
+
+        if (is_array($res) && 0 == count($entryObjects->results)) {
+            $entryObjects->hasMore = false;
+        }
 
         $this->loadStackIfEmpty();
+        $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
 
-        $baseUri             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $title       = $this->getRequest()->getContainerName();
+        $relativeUri = $this->getRequest()->getIdentifier();
+        $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
+
+        $selfLink        = new ODataLink('self', $title, null, $relativeUri);
+
+        $odata               = new ODataFeed();
+        $odata->title        = new ODataTitle($title);
+        $odata->id           = $absoluteUri;
+        $odata->selfLink     = $selfLink;
+        $odata->updated      = $this->getUpdated()->format(DATE_ATOM);
+        $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
-        $request             = $this->getRequest();
 
-        return new ODataFeed(
-            $request->getRequestUrl()->getUrlAsString(),
-            new ODataTitle($this->getRequest()->getContainerName()),
-            new ODataLink(
-                'self',
-                $request->getContainerName(),
-                null,
-                $request->getIdentifier()
-            ),
-            $request->queryType == QueryType::ENTITIES_WITH_COUNT() ?
-                $request->getCountValue() :
-                null,
-            $entryObjects->hasMore ? new ODataLink(
+        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
+            $odata->rowCount = $this->getRequest()->getCountValue();
+        }
+        foreach ($res as $entry) {
+            if (!$entry instanceof QueryResult) {
+                $query          = new QueryResult();
+                $query->results = $entry;
+            } else {
+                $query = $entry;
+            }
+            $odata->entries[] = $this->writeTopLevelElement($query);
+        }
+
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $requestTop  = $this->getRequest()->getTopOptionCount();
+        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $requestTop  = (null === $requestTop) ? $pageSize + 1 : $requestTop;
+
+        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
+            $stackSegment        = $setName;
+            $lastObject          = end($entryObjects->results);
+            $segment             = $this->getNextLinkUri($lastObject);
+            $nextLink            = new ODataLink(
                 ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
                 null,
                 null,
-                rtrim($this->absoluteServiceUri, '/') .
-                '/' . $request->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($results))
-            ) : null,
-            array_map(function ($entry) {
-                return $this->writeTopLevelElement(
-                    $entry instanceof QueryResult ? $entry : new QueryResult($entry)
-                );
-            }, $results),
-            $this->getUpdated()->format(DATE_ATOM),
-            $baseUri
-        );
+                rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment
+            );
+            $odata->nextPageLink = $nextLink;
+        }
+
+        return $odata;
     }
 
     /**
@@ -319,7 +331,7 @@ class CynicSerialiser implements IObjectSerialiser
             $propType             = 'application/atom+xml;type=' . $propTail;
             $propName             = $prop->getName();
             $nuLink->title        = $propName;
-            $nuLink->name         = ODataConstants::ODATA_RELATED_NAMESPACE . $propName;
+            $nuLink->setName(ODataConstants::ODATA_RELATED_NAMESPACE . $propName);
             $nuLink->url          = $relativeUri . '/' . $propName;
             $nuLink->type         = $propType;
 
@@ -344,7 +356,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
         $odata->editLink         = new ODataLink();
         $odata->editLink->url    = $relativeUri;
-        $odata->editLink->name   = 'edit';
+        $odata->editLink->setName('edit');
         $odata->editLink->title  = $title;
         $odata->mediaLink        = $mediaLink;
         $odata->mediaLinks       = $mediaLinks;
@@ -807,7 +819,7 @@ class CynicSerialiser implements IObjectSerialiser
             } else {
                 $result                 = new ODataFeed();
                 $result->selfLink       = new ODataLink();
-                $result->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+                $result->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
             }
             $nuLink->expandedResult = $result;
         }
@@ -925,7 +937,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $lastObject         = end($entryObjects->results);
                 $segment            = $this->getNextLinkUri($lastObject);
                 $nextLink           = new ODataLink();
-                $nextLink->name     = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+                $nextLink->setName(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING);
                 $nextLink->url      = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment;
                 $nextLink->url      = ltrim($nextLink->url, '/');
                 $urls->nextPageLink = $nextLink;

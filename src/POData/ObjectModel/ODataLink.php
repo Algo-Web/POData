@@ -14,7 +14,7 @@ class ODataLink
      *
      * @var string
      */
-    public $name;
+    private $name;
     /**
      * Title of the link. This become value of title attribute.
      *

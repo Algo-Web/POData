@@ -129,7 +129,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry[1]->updated         = '2017-01-01T00:00:00+00:00';
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->title = 'Customers';
         $selfLink->url   = 'Customers';
 
@@ -178,7 +178,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $editStub = 'Customers(CustomerID=\'' . $i . '\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
 
             $link               = new ODataLink();
-            $link->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
+            $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
             $link->title        = 'Orders';
             $link->type         = 'application/atom+xml;type=feed';
             $link->url          = $editStub . '/Orders';
@@ -188,7 +188,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $cand->id                                                 = 'http://localhost/odata.svc/' . $editStub;
             $cand->editLink                                           = new ODataLink();
             $cand->editLink->url                                      = $editStub;
-            $cand->editLink->name                                     = 'edit';
+            $cand->editLink->setName('edit');
             $cand->editLink->title                                    = 'Customer';
             $cand->title                                              = new ODataTitle('Customer');
             $cand->type                                               = new ODataCategory('NorthWind.Customer');
@@ -203,12 +203,12 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         }
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->title = 'Customers';
         $selfLink->url   = 'Customers';
 
         $nextLink       = new ODataLink();
-        $nextLink->name = 'next';
+        $nextLink->setName('next');
         $nextLink->url  = 'http://localhost/odata.svc/Customers?$skiptoken=\'300\''
                          . ', guid\'123e4567-e89b-12d3-a456-426655440000\'';
 
@@ -253,7 +253,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection->results = [$deet1, $deet2];
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->title = 'Order_Details';
         $selfLink->url   = 'Order_Details';
 
@@ -363,7 +363,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $ironic->getRequest()->setRootProjectionNode($node);
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->title = 'Customers';
         $selfLink->url   = 'Customers';
 
@@ -372,7 +372,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $detailsFeed->title           = new ODataTitle('Order_Details');
         $detailsFeed->selfLink        = new ODataLink();
         $detailsFeed->selfLink->url   = 'Orders(OrderID=1)/Order_Details';
-        $detailsFeed->selfLink->name  = 'self';
+        $detailsFeed->selfLink->setName('self');
         $detailsFeed->selfLink->title = 'Order_Details';
 
         $customerEntry                  = new ODataEntry();
@@ -399,7 +399,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subEntry->title                                         = new ODataTitle('Order');
         $subEntry->editLink                                      = new ODataLink();
         $subEntry->editLink->url                                 = 'Orders(OrderID=1)';
-        $subEntry->editLink->name                                = 'edit';
+        $subEntry->editLink->setName('edit');
         $subEntry->editLink->title                               = 'Order';
         $subEntry->type                                          = new ODataCategory('NorthWind.Order');
         $subEntry->resourceSetName                               = 'Orders';
@@ -409,7 +409,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subEntry->updated                                       = '2017-01-01T00:00:00+00:00';
 
         $subSelf        = new ODataLink();
-        $subSelf->name  = 'self';
+        $subSelf->setName('self');
         $subSelf->title = 'Orders';
         $subSelf->url   = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
 
@@ -422,7 +422,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subFeed->updated  = '2017-01-01T00:00:00+00:00';
 
         $link                 = new ODataLink();
-        $link->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
+        $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
         $link->title          = 'Orders';
         $link->type           = 'application/atom+xml;type=feed';
         $link->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
@@ -436,7 +436,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry->title                                              = new ODataTitle('Customer');
         $entry->editLink                                           = new ODataLink();
         $entry->editLink->url                                      = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry->editLink->name                                     = 'edit';
+        $entry->editLink->setName('edit');
         $entry->editLink->title                                    = 'Customer';
         $entry->type                                               = new ODataCategory('NorthWind.Customer');
         $entry->resourceSetName                                    = 'Customers';
@@ -687,7 +687,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->updated          = '2017-01-01T00:00:00+00:00';
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->title = 'Employees';
         $selfLink->url   = 'Employees';
 

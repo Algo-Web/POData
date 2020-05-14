@@ -395,12 +395,12 @@ class ODataEntry
     {
         $this->links = [];
         foreach ($links as $link) {
-            if ('edit' == $link->name) {
+            if ('edit' == $link->getName()) {
                 $this->editLink        = $link;
                 $this->resourceSetName = explode('(', $link->url)[0];
                 continue;
             }
-            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->name, 0, 61)
+            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->getName(), 0, 61)
             ) {
                 $this->links[] = $link;
                 continue;

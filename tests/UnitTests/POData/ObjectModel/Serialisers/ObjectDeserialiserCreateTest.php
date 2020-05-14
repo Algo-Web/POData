@@ -213,7 +213,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->type            = new ODataCategory('Order');
         $objectResult->editLink        = new ODataLink();
         $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
@@ -327,7 +327,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->type            = new ODataCategory('Order');
         $objectResult->editLink        = new ODataLink();
         $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
@@ -441,7 +441,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->type            = new ODataCategory('Order');
         $objectResult->editLink        = new ODataLink();
         $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
@@ -558,7 +558,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->type            = new ODataCategory('Order');
         $objectResult->editLink        = new ODataLink();
         $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;

@@ -185,7 +185,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         //entry 1 links NOTE minimalmetadata means this won't be output
         //link1
         $link1        = new ODataLink();
-        $link1->name  = 'http://services.odata.org/OData/OData.svc/Products(0)/Categories';
+        $link1->setName('http://services.odata.org/OData/OData.svc/Products(0)/Categories');
         $link1->title = 'Categories';
         $link1->url   = 'http://services.odata.org/OData/OData.svc/Products(0)/Categories';
 
@@ -199,7 +199,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
         $selfLink            = new ODataLink();
-        $selfLink->name      = 'Products';
+        $selfLink->setName('Products');
         $selfLink->title     = 'Products';
         $selfLink->url       = 'Categories(0)/Products';
         $oDataFeed->selfLink = $selfLink;
@@ -208,7 +208,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         //next page link: NOTE minimalmetadata means this won't be output
         $nextPageLink            = new ODataLink();
-        $nextPageLink->name      = 'Next Page Link';
+        $nextPageLink->setName('Next Page Link');
         $nextPageLink->title     = 'Next Page';
         $nextPageLink->url       = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
         $oDataFeed->nextPageLink = $nextPageLink;
@@ -350,7 +350,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         //entry 1 links
         //link1
         $link1        = new ODataLink();
-        $link1->name  = 'Products';
+        $link1->setName('Products');
         $link1->title = 'Products';
         $link1->url   = 'http://services.odata.org/OData/OData.svc/Suppliers(0)/Products';
 
@@ -434,7 +434,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         //entry 2 links
         //link1
         $link1        = new ODataLink();
-        $link1->name  = 'Products';
+        $link1->setName('Products');
         $link1->title = 'Products';
         $link1->url   = 'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products';
 
@@ -448,7 +448,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
         $selfLink            = new ODataLink();
-        $selfLink->name      = 'Products';
+        $selfLink->setName('Products');
         $selfLink->title     = 'Products';
         $selfLink->url       = 'Categories(0)/Products';
         $oDataFeed->selfLink = $selfLink;
@@ -456,7 +456,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         //next page
         $nextPageLink            = new ODataLink();
-        $nextPageLink->name      = 'Next Page Link';
+        $nextPageLink->setName('Next Page Link');
         $nextPageLink->title     = 'Next Page';
         $nextPageLink->url       = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
         $oDataFeed->nextPageLink = $nextPageLink;
@@ -581,7 +581,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         //links
         $link        = new ODataLink();
-        $link->name  = 'Products';
+        $link->setName('Products');
         $link->title = 'Products';
         $link->url   = 'http://services.odata.org/OData/OData.svc/Categories(0)/Products';
 
@@ -1218,7 +1218,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
 
         $expandedFeedSelfLink        = new ODataLink();
-        $expandedFeedSelfLink->name  = 'self';
+        $expandedFeedSelfLink->setName('self');
         $expandedFeedSelfLink->title = 'SubCollection';
         $expandedFeedSelfLink->url   = 'SubCollection Self URL';
 
@@ -1377,7 +1377,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
         $feed->selfLink        = new ODataLink();
-        $feed->selfLink->name  = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
         $feed->selfLink->title = 'Feed Title';
         $feed->selfLink->url   = 'feedID';
 

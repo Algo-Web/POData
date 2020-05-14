@@ -89,7 +89,7 @@ class AtomODataWriterTest extends TestCase
         $urls->urls = [$url1, $url2];
 
         $nextPageLink        = new ODataLink();
-        $nextPageLink->name  = 'Next';
+        $nextPageLink->setName('Next');
         $nextPageLink->title = '';
         $nextPageLink->type  = '';
         $nextPageLink->url   = 'Next Link Url';
@@ -128,7 +128,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->rowCount = 'Count';
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'Self Link Name';
+        $selfLink->setName('Self Link Name');
         $selfLink->tytle = 'Self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link Url';
@@ -136,7 +136,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->selfLink = $selfLink;
 
         $nextPageLink        = new ODataLink();
-        $nextPageLink->name  = 'Next';
+        $nextPageLink->setName('Next');
         $nextPageLink->tytle = '';
         $nextPageLink->type  = '';
         $nextPageLink->url   = 'Next Link Url';
@@ -151,7 +151,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->title = new ODataTitle('Entry Title');
 
         $editLink        = new ODataLink();
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->tytle = 'Edit Link Title';
         $editLink->type  = 'Edit link type';
         $editLink->url   = 'Edit Link URL';
@@ -159,7 +159,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->tytle = 'self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link URL';
@@ -174,7 +174,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media ETag'
         )];
         $link        = new ODataLink();
-        $link->name  = 'Link Name';
+        $link->setName('Link Name');
         $link->tytle = 'Link Title';
         $link->type  = 'Link Type';
         $link->url   = 'Link URL';
@@ -302,7 +302,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->title = new ODataTitle('Entry Title');
 
         $editLink        = new ODataLink();
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->tytle = 'Edit Link Title';
         $editLink->type  = 'Edit link type';
         $editLink->url   = 'Edit Link URL';
@@ -310,7 +310,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->tytle = 'self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link URL';
@@ -364,7 +364,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->title = new ODataTitle('Entry Title');
 
         $editLink        = new ODataLink();
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->tytle = 'Edit Link Title';
         $editLink->type  = 'Edit link type';
         $editLink->url   = 'Edit Link URL';
@@ -372,7 +372,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->tytle = 'self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link URL';
@@ -395,7 +395,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             ), ];
 
         $link             = new ODataLink();
-        $link->name       = 'Link Name';
+        $link->setName('Link Name');
         $link->tytle      = 'Link Title';
         $link->type       = 'Link Type';
         $link->url        = 'Link URL';
@@ -651,7 +651,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->type  = new ODataCategory('');
 
         $editLink        = new ODataLink();
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->tytle = 'Edit Link Title';
         $editLink->type  = 'Edit link type';
         $editLink->url   = 'Edit Link URL';
@@ -659,7 +659,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->editLink = $editLink;
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->tytle = 'self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link URL';
@@ -688,7 +688,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->title = new ODataTitle('Entry Title');
 
         $editLink        = new ODataLink();
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->tytle = 'Edit Link Title';
         $editLink->type  = 'Edit link type';
         $editLink->url   = 'Edit Link URL';
@@ -696,7 +696,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->editLink = $editLink;
 
         $selfLink        = new ODataLink();
-        $selfLink->name  = 'self';
+        $selfLink->setName('self');
         $selfLink->tytle = 'self Link Title';
         $selfLink->type  = '';
         $selfLink->url   = 'Self Link URL';
@@ -718,7 +718,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         )];
 
         $link             = new ODataLink();
-        $link->name       = 'Link Name';
+        $link->setName('Link Name');
         $link->tytle      = 'Link Title';
         $link->type       = 'Link Type';
         $link->url        = 'Link URL';
@@ -1397,7 +1397,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
         $feed->selfLink        = new ODataLink();
-        $feed->selfLink->name  = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
+        $feed->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
         $feed->selfLink->title = 'Feed Title';
         $feed->selfLink->url   = 'feedID';
 

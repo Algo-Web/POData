@@ -171,7 +171,7 @@ class EntryProcessor extends BaseNodeHandler
      */
     private function handleODataLink(ODataLink $link)
     {
-        if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
+        if ($link->getName() === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
             $this->oDataEntry->editLink = $link;
         } else {
             $this->oDataEntry->links[] = $link;

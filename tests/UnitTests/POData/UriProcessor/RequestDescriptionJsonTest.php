@@ -130,7 +130,7 @@ class RequestDescriptionJsonTest extends TestCase
         $objectResult->editLink      = new ODataLink();
         $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
                                        . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->editLink->name   = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title  = 'Customer';
         $objectResult->propertyContent  = $propContent;
         $objectResult->resourceSetName  = 'Customers';

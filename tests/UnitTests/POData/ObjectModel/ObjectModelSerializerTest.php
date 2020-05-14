@@ -132,7 +132,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->title = 'rType';
 
         $ret = $foo->writeTopLevelElement($queryResult);
@@ -210,7 +210,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
         $this->assertEquals(new ODataTitle('data'), $ret->title);
 
-        $this->assertEquals('self', $ret->selfLink->name);
+        $this->assertEquals('self', $ret->selfLink->getName());
         $this->assertEquals('data', $ret->selfLink->title);
         $this->assertEquals('Entity', $ret->selfLink->url);
 
@@ -230,7 +230,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->title = 'rType';
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
@@ -312,7 +312,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
         $this->assertEquals(new ODataTitle('data'), $ret->title);
 
-        $this->assertEquals('self', $ret->selfLink->name);
+        $this->assertEquals('self', $ret->selfLink->getName());
         $this->assertEquals('data', $ret->selfLink->title);
         $this->assertEquals('Entity', $ret->selfLink->url);
 
@@ -332,7 +332,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->title = 'rType';
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
@@ -637,7 +637,7 @@ class ObjectModelSerializerTest extends TestCase
         $url = new Url('https://www.example.org/odata.svc');
 
         $odataLink       = new ODataLink();
-        $odataLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
+        $odataLink->setName(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING);
         $odataLink->url  = 'https://www.example.org/odata.svc/customer?skipToken=200';
 
         $resourceWrap = m::mock(ResourceSetWrapper::class);
@@ -987,7 +987,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $editLink        = new ODataLink();
         $editLink->url   = 'customer';
-        $editLink->name  = 'edit';
+        $editLink->setName('edit');
         $editLink->title = 'customers';
 
         $type = new ODataCategory('customers');

@@ -54,7 +54,7 @@ class AtomODataReaderTest extends TestCase
             $data->selfLink->url,
             'the Feed Self Link href Failed to deserialise correctly'
         );
-        $this->assertEquals('self', $data->selfLink->name, 'the Feed Self Link Title Failed to deseralize correctly');
+        $this->assertEquals('self', $data->selfLink->getName(), 'the Feed Self Link Title Failed to deseralize correctly');
         $this->assertEquals(4, count($data->getEntries()), 'The Feed Deseralized the wrong number of entries');
         $this->assertInstanceOf(
             ODataEntry::class,
@@ -86,7 +86,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'edit',
-            $entry->editLink->name,
+            $entry->editLink->getName(),
             'the name of the edit link failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -135,7 +135,7 @@ class AtomODataReaderTest extends TestCase
 
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product',
-            $relatedLink->name,
+            $relatedLink->getName(),
             'The Name of the Related link failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -156,7 +156,7 @@ class AtomODataReaderTest extends TestCase
 
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product',
-            $associatedLink->name,
+            $associatedLink->getName(),
             'The Name of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(

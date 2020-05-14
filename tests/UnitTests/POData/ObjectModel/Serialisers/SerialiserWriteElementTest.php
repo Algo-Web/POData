@@ -60,7 +60,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result->results = $model;
 
         $link               = new ODataLink();
-        $link->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
+        $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
         $link->type         = 'application/atom+xml;type=feed';
         $link->title        = 'Orders';
         $link->url          = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
@@ -95,7 +95,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->editLink      = new ODataLink();
         $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
                                        . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Customer';
         $objectResult->propertyContent = $propContent;
         $objectResult->links[]         = $link;
@@ -234,7 +234,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                              . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $linkRawResult->title           = new ODataTitle('Orders');
         $linkRawResult->selfLink        = new ODataLink();
-        $linkRawResult->selfLink->name  = 'self';
+        $linkRawResult->selfLink->setName('self');
         $linkRawResult->selfLink->title = 'Orders';
         $linkRawResult->selfLink->url   = 'Customers(CustomerID=\'1\','
                                         . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
@@ -247,7 +247,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->editLink      = new ODataLink();
         $linkResult->editLink->url = 'Customers(CustomerID=\'1\','
                                      . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $linkResult->editLink->name  = 'edit';
+        $linkResult->editLink->setName('edit');
         $linkResult->editLink->title = 'Customer';
         $linkResult->type            = new ODataCategory('NorthWind.Customer');
         $linkResult->links           = [new ODataLink()];
@@ -267,7 +267,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkFeedResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
         $linkFeedResult->title           = new ODataTitle('Order_Details');
         $linkFeedResult->selfLink        = new ODataLink();
-        $linkFeedResult->selfLink->name  = 'self';
+        $linkFeedResult->selfLink->setName('self');
         $linkFeedResult->selfLink->title = 'Order_Details';
         $linkFeedResult->selfLink->url   = 'Orders(OrderID=1)/Order_Details';
 
@@ -293,7 +293,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->type            = new ODataCategory('NorthWind.Order');
         $objectResult->editLink        = new ODataLink();
         $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->name  = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title = 'Order';
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
@@ -533,7 +533,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerResult->resourceSetName = 'Employee';
 
         $managerLink1                 = new ODataLink();
-        $managerLink1->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager';
+        $managerLink1->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
         $managerLink1->title          = 'Manager';
         $managerLink1->type           = 'application/atom+xml;type=entry';
         $managerLink1->url            = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
@@ -541,7 +541,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink1->isExpanded     = true;
         $managerLink1->expandedResult = $managerResult;
         $managerLink2                 = new ODataLink();
-        $managerLink2->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
+        $managerLink2->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates');
         $managerLink2->title          = 'Subordinates';
         $managerLink2->type           = 'application/atom+xml;type=feed';
         $managerLink2->url            = 'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates';
@@ -554,7 +554,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $manager->title            = new ODataTitle('Employee');
         $manager->editLink         = new ODataLink();
         $manager->editLink->url    = 'Employees(EmployeeID=\'Cave+Johnson\')';
-        $manager->editLink->name   = 'edit';
+        $manager->editLink->setName('edit');
         $manager->editLink->title  = 'Employee';
         $manager->mediaLink        = $managerMedia1;
         $manager->mediaLinks       = [$managerMedia2];
@@ -566,7 +566,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $manager->updated          = '2017-01-01T00:00:00+00:00';
 
         $link                 = new ODataLink();
-        $link->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager';
+        $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
         $link->title          = 'Manager';
         $link->type           = 'application/atom+xml;type=entry';
         $link->url            = 'Employees(EmployeeID=\'Bruce\')/Manager';
@@ -586,7 +586,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult->title            = new ODataTitle('Employee');
         $objectResult->editLink         = new ODataLink();
         $objectResult->editLink->url    = 'Employees(EmployeeID=\'Bruce\')';
-        $objectResult->editLink->name   = 'edit';
+        $objectResult->editLink->setName('edit');
         $objectResult->editLink->title  = 'Employee';
         $objectResult->type             = new ODataCategory('NorthWind.Employee');
         $objectResult->propertyContent  = $objContent;
