@@ -31,7 +31,7 @@ class LinkProcessorTest extends TestCase
 
         $result = $foo->getObjetModelObject()->getExpandResult();
         $this->assertTrue($result->feed instanceof ODataFeed);
-        $this->assertNull($result->entry);
+        $this->assertNull($result->getEntry());
     }
 
     public function testConstructorWithEditMediaRelation()

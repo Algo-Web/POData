@@ -23,7 +23,7 @@ class ODataLinkTest extends TestCase
         $foo->setExpandResult($expand);
         $result = $foo->getExpandResult();
 
-        $this->assertNotNull($result->entry);
+        $this->assertNotNull($result->getEntry());
         $this->assertNull($result->feed);
     }
 
@@ -36,7 +36,7 @@ class ODataLinkTest extends TestCase
         $foo->setExpandResult($expand);
         $result = $foo->getExpandResult();
 
-        $this->assertNull($result->entry);
+        $this->assertNull($result->getEntry());
         $this->assertNotNull($result->feed);
     }
 

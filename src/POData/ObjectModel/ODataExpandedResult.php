@@ -20,7 +20,7 @@ class ODataExpandedResult
      *
      * @var ODataEntry|null
      */
-    public $entry;
+    private $entry;
 
     /**
      * Scheme.

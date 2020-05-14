@@ -100,10 +100,10 @@ class ODataLink
             $this->isCollection   = true;
             $this->expandedResult = $eResult->feed;
         }
-        if (null !== $eResult->entry) {
+        if (null !== $eResult->getEntry()) {
             $this->isExpanded     = true;
             $this->isCollection   = false;
-            $this->expandedResult = $eResult->entry;
+            $this->expandedResult = $eResult->getEntry();
         }
     }
 }
