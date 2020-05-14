@@ -107,6 +107,198 @@ class ODataEntry
     public $baseURI;
 
     /**
+     * ODataEntry constructor.
+     * @param string|null $id
+     * @param string|null $selfLink
+     * @param ODataTitle|null $title
+     * @param ODataLink|null $editLink
+     * @param ODataCategory|null $type
+     * @param ODataPropertyContent|null $propertyContent
+     * @param array $mediaLinks
+     * @param ODataMediaLink|null $mediaLink
+     * @param array $links
+     * @param string|null $eTag
+     * @param bool|null $isMediaLinkEntry
+     * @param string|null $resourceSetName
+     * @param string|null $updated
+     * @param string|null $baseURI
+     */
+    public function __construct(
+        ?string $id = null,
+        ?string $selfLink = null,
+        ?ODataTitle $title = null,
+        ?ODataLink $editLink = null,
+        ?ODataCategory $type = null,
+        ?ODataPropertyContent $propertyContent = null,
+        array $mediaLinks = [],
+        ?ODataMediaLink $mediaLink = null,
+        array $links = [],
+        ?string $eTag = null,
+        ?bool $isMediaLinkEntry = null,
+        ?string $resourceSetName = null,
+        ?string $updated = null,
+        ?string $baseURI = null
+    ) {
+        $this->id = $id;
+        $this->selfLink = $selfLink;
+        $this->title = $title;
+        $this->editLink = $editLink;
+        $this->type = $type;
+        $this->propertyContent = $propertyContent;
+        $this->mediaLinks = $mediaLinks;
+        $this->mediaLink = $mediaLink;
+        $this->links = $links;
+        $this->eTag = $eTag;
+        $this->isMediaLinkEntry = $isMediaLinkEntry;
+        $this->resourceSetName = $resourceSetName;
+        $this->updated = $updated;
+        $this->baseURI = $baseURI;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string|null $id
+     * @return ODataEntry
+     */
+    public function setId(?string $id): ODataEntry
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSelfLink(): ?string
+    {
+        return $this->selfLink;
+    }
+
+    /**
+     * @param string|null $selfLink
+     * @return ODataEntry
+     */
+    public function setSelfLink(?string $selfLink): ODataEntry
+    {
+        $this->selfLink = $selfLink;
+        return $this;
+    }
+
+    /**
+     * @return ODataTitle|null
+     */
+    public function getTitle(): ?ODataTitle
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param ODataTitle|null $title
+     * @return ODataEntry
+     */
+    public function setTitle(?ODataTitle $title): ODataEntry
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getETag(): ?string
+    {
+        return $this->eTag;
+    }
+
+    /**
+     * @param string|null $eTag
+     * @return ODataEntry
+     */
+    public function setETag(?string $eTag): ODataEntry
+    {
+        $this->eTag = $eTag;
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsMediaLinkEntry(): ?bool
+    {
+        return $this->isMediaLinkEntry;
+    }
+
+    /**
+     * @param bool|null $isMediaLinkEntry
+     * @return ODataEntry
+     */
+    public function setIsMediaLinkEntry(?bool $isMediaLinkEntry): ODataEntry
+    {
+        $this->isMediaLinkEntry = $isMediaLinkEntry;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getResourceSetName(): ?string
+    {
+        return $this->resourceSetName;
+    }
+
+    /**
+     * @param string|null $resourceSetName
+     * @return ODataEntry
+     */
+    public function setResourceSetName(?string $resourceSetName): ODataEntry
+    {
+        $this->resourceSetName = $resourceSetName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUpdated(): ?string
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param string|null $updated
+     * @return ODataEntry
+     */
+    public function setUpdated(?string $updated): ODataEntry
+    {
+        $this->updated = $updated;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBaseURI(): ?string
+    {
+        return $this->baseURI;
+    }
+
+    /**
+     * @param string|null $baseURI
+     * @return ODataEntry
+     */
+    public function setBaseURI(?string $baseURI): ODataEntry
+    {
+        $this->baseURI = $baseURI;
+        return $this;
+    }
+    /**
      * @return AtomContent
      */
     public function getAtomContent()
