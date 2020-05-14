@@ -317,7 +317,6 @@ class CynicSerialiser implements IObjectSerialiser
 
         $links = [];
         foreach ($relProp as $prop) {
-            $nuLink   = new ODataLink();
             $propKind = $prop->getKind();
 
             assert(
@@ -327,13 +326,16 @@ class CynicSerialiser implements IObjectSerialiser
                 . ' $propKind != ResourcePropertyKind::RESOURCE_REFERENCE'
             );
             $propTail             = ResourcePropertyKind::RESOURCE_REFERENCE() == $propKind ? 'entry' : 'feed';
-            $nuLink->isCollection = 'feed' === $propTail;
             $propType             = 'application/atom+xml;type=' . $propTail;
             $propName             = $prop->getName();
-            $nuLink->title        = $propName;
-            $nuLink->setName(ODataConstants::ODATA_RELATED_NAMESPACE . $propName);
-            $nuLink->url          = $relativeUri . '/' . $propName;
-            $nuLink->type         = $propType;
+            $nuLink   = new ODataLink(
+                ODataConstants::ODATA_RELATED_NAMESPACE . $propName,
+                $propName,
+                $propType,
+                $relativeUri . '/' . $propName,
+                'feed' === $propTail
+            );
+
 
             $shouldExpand = $this->shouldExpandSegment($propName);
 
@@ -341,7 +343,7 @@ class CynicSerialiser implements IObjectSerialiser
             if ($navProp->expanded) {
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
-            $nuLink->isExpanded = isset($nuLink->expandedResult);
+            $nuLink->setIsExpanded(isset($nuLink->expandedResult));
             assert(null !== $nuLink->isCollection);
 
             $links[] = $nuLink;
@@ -354,10 +356,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->type             = new ODataCategory($type);
         $odata->propertyContent  = $propertyContent;
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink         = new ODataLink();
-        $odata->editLink->url    = $relativeUri;
-        $odata->editLink->setName('edit');
-        $odata->editLink->title  = $title;
+        $odata->editLink         = new ODataLink('edit',$title, null, $relativeUri);
         $odata->mediaLink        = $mediaLink;
         $odata->mediaLinks       = $mediaLinks;
         $odata->links            = $links;
@@ -818,16 +817,15 @@ class CynicSerialiser implements IObjectSerialiser
                 $result->resourceSetName = $type->getName();
             } else {
                 $result                 = new ODataFeed();
-                $result->selfLink       = new ODataLink();
-                $result->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
+                $result->selfLink       = new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
             }
             $nuLink->expandedResult = $result;
         }
         if (isset($nuLink->expandedResult->selfLink)) {
-            $nuLink->expandedResult->selfLink->title = $propName;
-            $nuLink->expandedResult->selfLink->url   = $nuLink->url;
+            $nuLink->expandedResult->selfLink->setTitle($propName);
+            $nuLink->expandedResult->selfLink->setUrl($nuLink->url);
             $nuLink->expandedResult->title           = new ODataTitle($propName);
-            $nuLink->expandedResult->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
+            $nuLink->expandedResult->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }
     }
 
@@ -936,10 +934,11 @@ class CynicSerialiser implements IObjectSerialiser
                 $stackSegment       = $this->getRequest()->getTargetResourceSetWrapper()->getName();
                 $lastObject         = end($entryObjects->results);
                 $segment            = $this->getNextLinkUri($lastObject);
-                $nextLink           = new ODataLink();
-                $nextLink->setName(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING);
-                $nextLink->url      = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment;
-                $nextLink->url      = ltrim($nextLink->url, '/');
+                $nextLink           = new ODataLink(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                    null,
+                    null,
+                    ltrim(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment, '/')
+                    );
                 $urls->nextPageLink = $nextLink;
             }
         }
