@@ -87,13 +87,13 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $linkContent = [$content1, $content2];
 
         $links                  = [new ODataLink(), new ODataLink()];
-        $links[0]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
+        $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
         $links[0]->title        = 'Orders';
         $links[0]->type         = 'application/atom+xml;type=feed';
         $links[0]->url          = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $links[0]->isCollection = true;
         $links[0]->isExpanded   = false;
-        $links[1]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders';
+        $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
         $links[1]->title        = 'Orders';
         $links[1]->type         = 'application/atom+xml;type=feed';
         $links[1]->url          = 'Customers(CustomerID=\'2\',CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')/Orders';
@@ -108,7 +108,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry[0]->editLink      = new ODataLink();
         $entry[0]->editLink->url = 'Customers(CustomerID=\'1\','
                                    . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry[0]->editLink->name  = 'edit';
+        $entry[0]->editLink->setName('edit');
         $entry[0]->editLink->title = 'Customer';
         $entry[0]->links[]         = $links[0];
         $entry[0]->propertyContent = $linkContent[0];
@@ -121,7 +121,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry[1]->editLink      = new ODataLink();
         $entry[1]->editLink->url = 'Customers(CustomerID=\'2\','
                                    . 'CustomerGuid=guid\'223e4567-e89b-12d3-a456-426655440000\')';
-        $entry[1]->editLink->name  = 'edit';
+        $entry[1]->editLink->setName('edit');
         $entry[1]->editLink->title = 'Customer';
         $entry[1]->links[]         = $links[1];
         $entry[1]->propertyContent = $linkContent[1];
@@ -260,10 +260,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $links              = [];
         $links[]            = [new ODataLink(), new ODataLink()];
         $links[]            = [new ODataLink(), new ODataLink()];
-        $links[0][0]->name  = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $links[0][1]->name  = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product';
-        $links[1][0]->name  = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order';
-        $links[1][1]->name  = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product';
+        $links[0][0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
+        $links[0][1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product');
+        $links[1][0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
+        $links[1][1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product');
         $links[0][0]->title = 'Order';
         $links[0][1]->title = 'Product';
         $links[1][0]->title = 'Order';
@@ -283,7 +283,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->editLink                                        = new ODataLink();
         $entries[0]->editLink->url                                   = 'Order_Details(ProductID=1,OrderID=1)';
         $entries[0]->editLink->title                                 = 'Order_Details';
-        $entries[0]->editLink->name                                  = 'edit';
+        $entries[0]->editLink->setName('edit');
         $entries[0]->type                                            = new ODataCategory('NorthWind.Order_Details');
         $entries[0]->propertyContent                                 = $this->generateOrderDetailsProperties();
         $entries[0]->propertyContent->properties['ProductID']->value = '1';
@@ -296,7 +296,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->editLink                                        = new ODataLink();
         $entries[1]->editLink->url                                   = 'Order_Details(ProductID=2,OrderID=1)';
         $entries[1]->editLink->title                                 = 'Order_Details';
-        $entries[1]->editLink->name                                  = 'edit';
+        $entries[1]->editLink->setName('edit');
         $entries[1]->type                                            = new ODataCategory('NorthWind.Order_Details');
         $entries[1]->propertyContent                                 = $this->generateOrderDetailsProperties();
         $entries[1]->propertyContent->properties['ProductID']->value = '2';
@@ -379,14 +379,14 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $customerEntry->resourceSetName = 'Customer';
 
         $subLinks                    = [new ODataLink(), new ODataLink()];
-        $subLinks[0]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
+        $subLinks[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $subLinks[0]->title          = 'Customer';
         $subLinks[0]->type           = 'application/atom+xml;type=entry';
         $subLinks[0]->url            = 'Orders(OrderID=1)/Customer';
         $subLinks[0]->isExpanded     = true;
         $subLinks[0]->isCollection   = false;
         $subLinks[0]->expandedResult = $customerEntry;
-        $subLinks[1]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
+        $subLinks[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $subLinks[1]->title          = 'Order_Details';
         $subLinks[1]->type           = 'application/atom+xml;type=feed';
         $subLinks[1]->url            = 'Orders(OrderID=1)/Order_Details';
@@ -625,10 +625,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $links                     = [];
         $links[]                   = [new ODataLink(), new ODataLink()];
         $links[]                   = [new ODataLink(), new ODataLink()];
-        $links[0][0]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager';
-        $links[0][1]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
-        $links[1][0]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager';
-        $links[1][1]->name         = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates';
+        $links[0][0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
+        $links[0][1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates');
+        $links[1][0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
+        $links[1][1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates');
         $links[0][0]->title        = 'Manager';
         $links[0][1]->title        = 'Subordinates';
         $links[1][0]->title        = 'Manager';
@@ -661,7 +661,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->title            = new ODataTitle('Employee');
         $entries[0]->editLink         = new ODataLink();
         $entries[0]->editLink->url    = 'Employees(EmployeeID=\'1\')';
-        $entries[0]->editLink->name   = 'edit';
+        $entries[0]->editLink->setName('edit');
         $entries[0]->editLink->title  = 'Employee';
         $entries[0]->type             = new ODataCategory('NorthWind.Employee');
         $entries[0]->isMediaLinkEntry = true;
@@ -675,7 +675,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->title            = new ODataTitle('Employee');
         $entries[1]->editLink         = new ODataLink();
         $entries[1]->editLink->url    = 'Employees(EmployeeID=\'2\')';
-        $entries[1]->editLink->name   = 'edit';
+        $entries[1]->editLink->setName('edit');
         $entries[1]->editLink->title  = 'Employee';
         $entries[1]->type             = new ODataCategory('NorthWind.Employee');
         $entries[1]->isMediaLinkEntry = true;

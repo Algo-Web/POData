@@ -308,7 +308,7 @@ class JsonODataV1Writer implements IODataWriter
     protected function writeEntry(ODataEntry $entry)
     {
         $this->writeEntryMetadata($entry);
-        foreach ($entry->links as $link) {
+        foreach ($entry->getLinks() as $link) {
             $this->writeLink($link);
         }
 

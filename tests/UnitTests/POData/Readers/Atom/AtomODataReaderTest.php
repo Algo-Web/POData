@@ -112,7 +112,7 @@ class AtomODataReaderTest extends TestCase
 
         $this->assertEquals(2, count($entry->links), 'the entry deserialised the wrong number of links');
 
-        if ($entry->links[0]->name === 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product') {
+        if ($entry->links[0]->getName() === 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product') {
             /**
              * @var ODataLink $relatedLink
              */

@@ -195,14 +195,14 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
-        $links[0]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
+        $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->title          = 'Customer';
         $links[0]->type           = 'application/atom+xml;type=entry';
         $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $links[0]->isCollection   = false;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = null;
-        $links[1]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
+        $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->title          = 'Order_Details';
         $links[1]->type           = 'application/atom+xml;type=feed';
         $links[1]->url            = null;
@@ -310,13 +310,13 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
-        $links[0]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
+        $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->title          = 'Customer';
         $links[0]->type           = 'application/atom+xml;type=entry';
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = $linkResult;
-        $links[1]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
+        $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->title          = 'Order_Details';
         $links[1]->type           = 'application/atom+xml;type=feed';
         $links[1]->url            = null;
@@ -423,13 +423,13 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $propContent->properties['Price']->value           = 42;
 
         $links                    = [new ODataLink(), new ODataLink()];
-        $links[0]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
+        $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->title          = 'Customer';
         $links[0]->type           = 'application/atom+xml;type=entry';
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = $linkResult;
-        $links[1]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
+        $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->title          = 'Order_Details';
         $links[1]->type           = 'application/atom+xml;type=feed';
         $links[1]->url            = null;
@@ -539,14 +539,14 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $propContent->properties['Price']->value           = 42;
 
         $links                    = [new ODataLink(), new ODataLink()];
-        $links[0]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer';
+        $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->title          = 'Customer';
         $links[0]->type           = 'application/atom+xml;type=entry';
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $links[0]->expandedResult = $linkResult;
-        $links[1]->name           = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details';
+        $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->title          = 'Order_Details';
         $links[1]->type           = 'application/atom+xml;type=feed';
         $links[1]->url            = null;
