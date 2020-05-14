@@ -27,7 +27,7 @@ class ODataExpandedResult
      *
      * @var ODataFeed|null
      */
-    public $feed;
+    private $feed;
 
     /**
      * ODataExpandedResult constructor.

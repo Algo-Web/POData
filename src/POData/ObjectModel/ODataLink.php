@@ -95,10 +95,10 @@ class ODataLink
      */
     public function setExpandResult(ODataExpandedResult $eResult)
     {
-        if (null !== $eResult->feed) {
+        if (null !== $eResult->getFeed()) {
             $this->isExpanded     = true;
             $this->isCollection   = true;
-            $this->expandedResult = $eResult->feed;
+            $this->expandedResult = $eResult->getFeed();
         }
         if (null !== $eResult->getEntry()) {
             $this->isExpanded     = true;

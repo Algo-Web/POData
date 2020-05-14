@@ -30,7 +30,7 @@ class LinkProcessorTest extends TestCase
         $foo->handleChildComplete($obj);
 
         $result = $foo->getObjetModelObject()->getExpandResult();
-        $this->assertTrue($result->feed instanceof ODataFeed);
+        $this->assertTrue($result->getFeed() instanceof ODataFeed);
         $this->assertNull($result->getEntry());
     }
 
