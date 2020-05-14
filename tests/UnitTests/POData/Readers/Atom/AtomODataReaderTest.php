@@ -175,7 +175,7 @@ class AtomODataReaderTest extends TestCase
             'The url of the associated link failed to deserialise correctly'
         );
 
-        $content = $entry->atomContent;
+        $content = $entry->getAtomContent();
 
         $this->assertEquals(
             'application/xml',

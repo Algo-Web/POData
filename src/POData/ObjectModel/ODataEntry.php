@@ -18,31 +18,31 @@ class ODataEntry
     /**
      * Entry id.
      *
-     * @var string
+     * @var string|null
      */
     public $id;
     /**
      * Entry Self Link.
      *
-     * @var string
+     * @var string|null
      */
     public $selfLink;
     /**
      * Entry title.
      *
-     * @var ODataTitle
+     * @var ODataTitle|null
      */
     public $title;
     /**
      * Entry Edit Link.
      *
-     * @var ODataLink
+     * @var ODataLink|null
      */
     public $editLink;
     /**
      * Entry Type. This become the value of term attribute of Category element.
      *
-     * @var ODataCategory
+     * @var ODataCategory|null
      */
     public $type;
     /**
@@ -50,7 +50,7 @@ class ODataEntry
      * Properties corresponding to "m:properties" under content element
      * in the case of Non-MLE. For MLE "m:properties" is direct child of entry.
      *
-     * @var ODataPropertyContent
+     * @var ODataPropertyContent|null
      */
     public $propertyContent;
     /**
@@ -62,7 +62,7 @@ class ODataEntry
     /**
      * media link entry (MLE Link).
      *
-     * @var ODataMediaLink
+     * @var ODataMediaLink|null
      */
     public $mediaLink;
     /**
@@ -74,46 +74,37 @@ class ODataEntry
     /**
      * Entry ETag.
      *
-     * @var string
+     * @var string|null
      */
     public $eTag;
 
     /**
      * True if this is a media link entry.
      *
-     * @var bool
+     * @var bool|null
      */
     public $isMediaLinkEntry;
 
     /**
      * The name of the resource set this entry belongs to, use in metadata output.
      *
-     * @var string
+     * @var string|null
      */
     public $resourceSetName;
 
     /**
      * Last updated timestamp.
      *
-     * @var string
+     * @var string|null
      */
     public $updated;
 
     /**
      * Service Base URI.
      *
-     * @var string
+     * @var string|null
      */
     public $baseURI;
-
-    /**
-     * @var AtomObjectModel\AtomContent
-     */
-    public $atomContent;
-    /**
-     * @var AtomObjectModel\AtomAuthor
-     */
-    public $atomAuthor;
 
     /**
      * @return AtomContent
@@ -136,7 +127,6 @@ class ODataEntry
     public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
     {
         $this->setPropertyContent($atomContent->properties);
-        $this->atomContent = $atomContent;
     }
 
     /**
