@@ -376,13 +376,15 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetRelatedResourceReferenceResourceNullKeysThrowException()
     {
+        $keyProperties = ['foo' => 'bar'];
+
         $data = new reusableEntityClass2('hammer', 'time!');
         $type = m::mock(ResourceEntityType::class);
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturnNull()->once();
+        $type->shouldReceive('getKeyProperties')->andReturn($keyProperties);
 
-        $keyProperties = ['foo' => 'bar'];
-        $this->targProperty->shouldReceive('getResourceType->getKeyProperties')->andReturn($keyProperties);
+        $this->targProperty->shouldReceive('getResourceType')->andReturn($type);
 
         $key = m::mock(KeyDescriptor::class);
 
@@ -413,13 +415,14 @@ class ProvidersQueryWrapperTest extends TestCase
 
     public function testGetRelatedResourceReferenceResourceNonNullKey()
     {
+        $keyProperties = ['foo' => 'bar'];
         $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceEntityType::class);
+        $type = m::mock(ResourceEntityType::class)->makePartial();
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturn('M.C.')->once();
+        $type->shouldReceive('getKeyProperties')->andReturn($keyProperties);
 
-        $keyProperties = ['foo' => 'bar'];
-        $this->targProperty->shouldReceive('getResourceType->getKeyProperties')->andReturn($keyProperties);
+        $this->targProperty->shouldReceive('getResourceType')->andReturn($type);
 
         $key = m::mock(KeyDescriptor::class);
 
@@ -445,7 +448,7 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetResourceFromRelatedResourceSetNullInstanceThrowException()
     {
         $data     = new reusableEntityClass2('hammer', 'time!');
-        $type     = m::mock(ResourceType::class);
+        $type     = m::mock(ResourceType::class)->makePartial();
         $property = m::mock(ResourceProperty::class);
 
         $key = m::mock(KeyDescriptor::class);

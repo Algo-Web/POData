@@ -10,6 +10,8 @@ use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\IQueryProvider;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\InternalSkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
@@ -35,9 +37,11 @@ class InternalSkipTokenInfoTest extends TestCase
             return $object1 < $object2 ? -1 : 1;
         };
 
+        $orderBy = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderBy->shouldReceive('getSorterFunction')->andReturn($comparer);
         $foo = m::mock(InternalSkipTokenInfo::class)->makePartial();
         $foo->shouldReceive('getKeyObject')->andReturn(3);
-        $foo->shouldReceive('getInternalOrderByInfo->getSorterFunction')->andReturn($comparer);
+        $foo->shouldReceive('getInternalOrderByInfo')->andReturn($orderBy);
 
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -55,9 +59,11 @@ class InternalSkipTokenInfoTest extends TestCase
             return $object1 < $object2 ? -1 : 1;
         };
 
+        $orderBy = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderBy->shouldReceive('getSorterFunction')->andReturn($comparer);
         $foo = m::mock(InternalSkipTokenInfo::class)->makePartial();
         $foo->shouldReceive('getKeyObject')->andReturn(8);
-        $foo->shouldReceive('getInternalOrderByInfo->getSorterFunction')->andReturn($comparer);
+        $foo->shouldReceive('getInternalOrderByInfo')->andReturn($orderBy);
 
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -75,9 +81,11 @@ class InternalSkipTokenInfoTest extends TestCase
             return $object1 < $object2 ? -1 : 1;
         };
 
+        $orderBy = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderBy->shouldReceive('getSorterFunction')->andReturn($comparer);
         $foo = m::mock(InternalSkipTokenInfo::class)->makePartial();
         $foo->shouldReceive('getKeyObject')->andReturn(7);
-        $foo->shouldReceive('getInternalOrderByInfo->getSorterFunction')->andReturn($comparer);
+        $foo->shouldReceive('getInternalOrderByInfo')->andReturn($orderBy);
 
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -95,9 +103,11 @@ class InternalSkipTokenInfoTest extends TestCase
             return $object1 < $object2 ? -1 : 1;
         };
 
+        $orderBy = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderBy->shouldReceive('getSorterFunction')->andReturn($comparer);
         $foo = m::mock(InternalSkipTokenInfo::class)->makePartial();
         $foo->shouldReceive('getKeyObject')->andReturn(-1);
-        $foo->shouldReceive('getInternalOrderByInfo->getSorterFunction')->andReturn($comparer);
+        $foo->shouldReceive('getInternalOrderByInfo')->andReturn($orderBy);
 
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -115,9 +125,11 @@ class InternalSkipTokenInfoTest extends TestCase
             return $object1 < $object2 ? -1 : 1;
         };
 
+        $orderBy = m::mock(InternalOrderByInfo::class)->makePartial();
+        $orderBy->shouldReceive('getSorterFunction')->andReturn($comparer);
         $foo = m::mock(InternalSkipTokenInfo::class)->makePartial();
         $foo->shouldReceive('getKeyObject')->andReturn(4.5);
-        $foo->shouldReceive('getInternalOrderByInfo->getSorterFunction')->andReturn($comparer);
+        $foo->shouldReceive('getInternalOrderByInfo')->andReturn($orderBy);
 
         $searchArray = [0, 1, 2, 3, 4, 5, 6, 7];
 

@@ -13,14 +13,16 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
 
+/**
+ * Class ResourceAssociationSetTest
+ * @package UnitTests\POData\Providers\Metadata
+ */
 class ResourceAssociationSetTest extends TestCase
 {
     public function testConstructorBothPropertiesNullThrowException()
     {
-        $end1 = m::mock(ResourceAssociationSetEnd::class);
-        $end1->shouldReceive('getResourceProperty')->andReturnNull()->once();
-        $end2 = m::mock(ResourceAssociationSetEnd::class);
-        $end2->shouldReceive('getResourceProperty')->andReturnNull()->once();
+        $end1 = m::mock(ResourceAssociationSetEnd::class)->makePartial();
+        $end2 = m::mock(ResourceAssociationSetEnd::class)->makePartial();
 
         $expected = 'Both the resource properties of the association set cannot be null.';
         $actual   = null;

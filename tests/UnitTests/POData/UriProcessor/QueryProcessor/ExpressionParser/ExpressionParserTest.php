@@ -830,8 +830,10 @@ class ExpressionParserTest extends TestCase
     {
         $type = m::mock(ResourceType::class);
         $id = m::mock(ExpressionTokenId::class);
+        $token = m::mock(ExpressionToken::class)->makePartial();
+        $token->shouldReceive('getId')->andReturn($id)->once();
         $lexer = m::mock(ExpressionLexer::class)->makePartial();
-        $lexer->shouldReceive('getCurrentToken->getId')->andReturn($id)->once();
+        $lexer->shouldReceive('getCurrentToken')->andReturn($token)->once();
 
         $foo = new DummyExpressionParser('text', $type, true);
         $foo->setLexer($lexer);

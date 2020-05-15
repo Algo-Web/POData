@@ -57,8 +57,7 @@ class ResourceAssociationSet
     ) {
         $prop1 = $end1->getResourceProperty();
         $prop2 = $end2->getResourceProperty();
-        if (null === $prop1 && null === $prop2
-        ) {
+        if (null === $prop1 && null === $prop2) {
             throw new InvalidArgumentException(
                 Messages::resourceAssociationSetResourcePropertyCannotBeBothNull()
             );

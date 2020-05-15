@@ -214,13 +214,15 @@ class SimpleMetadataProviderTest extends TestCase
     {
         $set     = m::mock(ResourceSet::class);
         $targSet = m::mock(ResourceSet::class);
-        $targSet->shouldReceive('getResourceType->getName')->andReturn('M.C.');
-        $type = m::mock(ResourceEntityType::class);
+        $targType = m::mock(ResourceEntityType::class)->makePartial();
+        $targType->shouldReceive('getName')->andReturn('M.C.');
+        $targSet->shouldReceive('getResourceType')->andReturn($targType);
+        $type = m::mock(ResourceEntityType::class)->makePartial();
         $type->shouldReceive('getName')->andReturn('Hawking');
-        $targType = m::mock(ResourceType::class);
+        $targType = m::mock(ResourceType::class)->makePartial();
         $targType->shouldReceive('getCustomState')->andReturn($targSet)->once();
         $targType->shouldReceive('getName')->andReturn('Hammer');
-        $property = m::mock(ResourceProperty::class);
+        $property = m::mock(ResourceProperty::class)->makePartial();
         $property->shouldReceive('getResourceType')->andReturn($targType);
         $property->shouldReceive('getName')->andReturn('Hammer');
 
