@@ -169,7 +169,7 @@ class InternalOrderByInfo
                         // e.g. $valueM, $valueF, datetime'$value', guid'$value',
                         // '$value' etc..
                         // Also we can think about moving above urlencode to this function
-                        $value = $type->convertToOData($currentObject);
+                        $value = $type->convertToOData(strval($currentObject));
                         $nextPageLink .= $value . ', ';
                     }
                 } catch (ReflectionException $reflectionException) {
