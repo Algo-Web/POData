@@ -182,6 +182,12 @@ class ResourceTypeTest extends TestCase
         $foo->resolvePropertyDeclaredOnThisType(null);
     }
 
+    public function testResolveNonexistentProperty()
+    {
+        $foo = m::mock(ResourceType::class)->makePartial();
+        $this->assertNull($foo->resolvePropertyDeclaredOnThisType('foo'));
+    }
+
     public function testAddKeyPropertyToEntityTypeWithAbstractBase()
     {
         $baseType = m::mock(ResourceEntityType::class);

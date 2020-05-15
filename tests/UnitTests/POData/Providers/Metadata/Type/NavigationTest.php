@@ -135,4 +135,13 @@ class NavigationTest extends TestCase
         $result = $foo->getResourceType();
         $this->assertEquals(ResourceTypeKind::COMPLEX(), $result->getResourceTypeKind());
     }
+
+    public function testValidate()
+    {
+        $foo = $this->getAsIType();
+        $value = 'value';
+        $outValue = null;
+        $this->assertTrue($foo->validate($value, $outValue));
+        $this->assertEquals($value, $outValue);
+    }
 }

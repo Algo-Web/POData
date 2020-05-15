@@ -27,6 +27,7 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ReflectionException;
+use TypeError;
 
 /**
  * Class ProvidersWrapper.
@@ -359,17 +360,12 @@ class ProvidersWrapper
      * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws ODataException
-     * @throws InvalidOperationException when the meat provider doesn't return an array
+     * @throws \TypeError when the meat provider doesn't return an array
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)
     {
         $derivedTypes = $this->getMetaProvider()->getDerivedTypes($resourceType);
-        if (!is_array($derivedTypes)) {
-            throw new InvalidOperationException(
-                Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceType->getName())
-            );
-        }
 
         foreach ($derivedTypes as $derivedType) {
             $this->validateResourceType($derivedType);
