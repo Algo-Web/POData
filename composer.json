@@ -37,7 +37,8 @@
     "pcov/clobber": "dev-master",
     "php-coveralls/php-coveralls": ">=v2.1",
     "phpunit/phpunit": "^7.0",
-    "mockery/mockery": "0.9.*|dev-master"
+    "mockery/mockery": "0.9.*|dev-master",
+    "symfony/var-dumper": ">=4.0.0"
   },
 
   "autoload": {
