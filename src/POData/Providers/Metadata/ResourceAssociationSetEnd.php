@@ -116,7 +116,7 @@ class ResourceAssociationSetEnd
         ResourceSet $resourceSet,
         ResourceType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    ): bool {
         return strcmp($resourceSet->getName(), $this->resourceSet->getName()) == 0
             && $this->resourceType->isAssignableFrom($resourceType)
             && ((null === $resourceProperty && null === $this->resourceProperty)
@@ -129,7 +129,7 @@ class ResourceAssociationSetEnd
      *
      * @return ResourceSet
      */
-    public function getResourceSet()
+    public function getResourceSet(): ResourceSet
     {
         return $this->resourceSet;
     }
@@ -139,7 +139,7 @@ class ResourceAssociationSetEnd
      *
      * @return ResourceEntityType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceEntityType
     {
         return $this->resourceType;
     }
@@ -149,7 +149,7 @@ class ResourceAssociationSetEnd
      *
      * @return ResourceEntityType
      */
-    public function getConcreteType()
+    public function getConcreteType(): ResourceEntityType
     {
         return $this->concreteType;
     }
@@ -157,9 +157,9 @@ class ResourceAssociationSetEnd
     /**
      * Gets reference to resource property.
      *
-     * @return ResourceProperty
+     * @return ResourceProperty|null
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ?ResourceProperty
     {
         return $this->resourceProperty;
     }

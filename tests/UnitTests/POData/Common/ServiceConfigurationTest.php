@@ -26,7 +26,7 @@ class ServiceConfigurationTest extends TestCase
         $resource->shouldReceive('getName')->andReturn('entity');
 
         $meta = m::mock(IMetadataProvider::class);
-        $meta->shouldReceive('resolveResourceSet')->andReturn(true);
+        $meta->shouldReceive('resolveResourceSet')->andReturn($resource);
 
         $foo = new ServiceConfiguration($meta);
         $foo->setEntitySetPageSize('entity', PHP_INT_MAX);

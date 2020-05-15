@@ -9,7 +9,6 @@
 namespace POData;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
-use Doctrine\Inflector\Inflector;
 
 /**
  * Class Pluralizer - hoisted from Laravel to support string pluralisation
@@ -75,7 +74,7 @@ class Pluralizer
      * @param  int     $count
      * @return string
      */
-    public static function plural($value, $count = 2)
+    public static function plural(string $value, $count = 2)
     {
         if ((int) abs($count) === 1 || static::uncountable($value)) {
             return $value;
@@ -84,19 +83,6 @@ class Pluralizer
         $plural = MetadataManager::pluralize($value);
 
         return static::matchCase($plural, $value);
-    }
-
-    /**
-     * Get the singular form of an English word.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public static function singular($value)
-    {
-        $singular = Inflector::singularize($value);
-
-        return static::matchCase($singular, $value);
     }
 
     /**

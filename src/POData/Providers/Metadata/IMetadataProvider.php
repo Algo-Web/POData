@@ -19,28 +19,28 @@ interface IMetadataProvider
      *
      * @return string that contains the name of the container
      */
-    public function getContainerName();
+    public function getContainerName(): string;
 
     /**
      * To get Namespace name for the data source.
      *
      * @return string that contains the namespace name
      */
-    public function getContainerNamespace();
+    public function getContainerNamespace(): string;
 
     /**
      *  To get all entity set information.
      *
      * @return ResourceSet[]
      */
-    public function getResourceSets();
+    public function getResourceSets(): array;
 
     /**
      * To get all resource types in the data source.
      *
      * @return ResourceType[]
      */
-    public function getTypes();
+    public function getTypes(): array;
 
     /**
      * To get a resource set based on the specified resource set name.
@@ -49,7 +49,7 @@ interface IMetadataProvider
      *
      * @return ResourceSet|null resource set with the given name if found else NULL
      */
-    public function resolveResourceSet($name);
+    public function resolveResourceSet(string $name): ?ResourceSet;
 
     /**
      * To get a resource type based on the resource set name.
@@ -58,7 +58,7 @@ interface IMetadataProvider
      *
      * @return ResourceType|null resource type with the given resource set name if found else NULL
      */
-    public function resolveResourceType($name);
+    public function resolveResourceType(string $name): ?ResourceType;
 
     /**
      * The method must return a collection of all the types derived from
@@ -69,14 +69,14 @@ interface IMetadataProvider
      *
      * @return ResourceType[]
      */
-    public function getDerivedTypes(ResourceEntityType $resourceType);
+    public function getDerivedTypes(ResourceEntityType $resourceType): array;
 
     /**
      * @param ResourceEntityType $resourceType Resource to check for derived resource types
      *
      * @return bool true if $resourceType represents an Entity Type which has derived Entity Types, else false
      */
-    public function hasDerivedTypes(ResourceEntityType $resourceType);
+    public function hasDerivedTypes(ResourceEntityType $resourceType): bool;
 
     /**
      * Gets the ResourceAssociationSet instance for the given source
@@ -89,13 +89,13 @@ interface IMetadataProvider
      * @param ResourceProperty   $resourceProperty Resource property of the source
      *                                             association end
      *
-     * @return ResourceAssociationSet
+     * @return ResourceAssociationSet|null
      */
     public function getResourceAssociationSet(
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    );
+    ): ?ResourceAssociationSet;
 
     /**
      * Generate singleton wrapper.
@@ -104,16 +104,16 @@ interface IMetadataProvider
      * @param ResourceType $returnType   Return type wrapper
      * @param string|array $functionName Function call to be wrapped
      *
-     * @return mixed
+     * @return void
      */
-    public function createSingleton($name, ResourceType $returnType, $functionName);
+    public function createSingleton(string $name, ResourceType $returnType, $functionName): void;
 
     /**
      * Get all singletons defined on this object.
      *
      * @return array
      */
-    public function getSingletons();
+    public function getSingletons(): array;
 
     /**
      * Call $name singleton and return result.
@@ -122,11 +122,11 @@ interface IMetadataProvider
      *
      * @return mixed
      */
-    public function callSingleton($name);
+    public function callSingleton(string $name);
 
     /**
      * @throws Exception
      * @return string|null
      */
-    public function getXML();
+    public function getXML(): ?string;
 }

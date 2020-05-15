@@ -48,7 +48,7 @@ class Navigation implements INavigationType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::NAVIGATION();
     }
@@ -61,7 +61,7 @@ class Navigation implements INavigationType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         if (!($type instanceof self)) {
             return false;
@@ -80,12 +80,8 @@ class Navigation implements INavigationType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
-        if (!$value instanceof self) {
-            return false;
-        }
-
         $outValue = $value;
 
         return true;
@@ -97,9 +93,9 @@ class Navigation implements INavigationType
      * @param string $stringValue value to convert
      *
      * @throws NotImplementedException
-     * @return bool
+     * @return string
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): string
     {
         throw new NotImplementedException();
     }
@@ -110,9 +106,9 @@ class Navigation implements INavigationType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
-     * @return bool
+     * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         throw new NotImplementedException();
     }
@@ -123,7 +119,7 @@ class Navigation implements INavigationType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -134,7 +130,7 @@ class Navigation implements INavigationType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return $this->resourceType->getFullName();
     }
@@ -148,7 +144,7 @@ class Navigation implements INavigationType
      *
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceType;
     }

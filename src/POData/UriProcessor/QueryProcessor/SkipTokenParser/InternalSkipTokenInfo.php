@@ -258,7 +258,7 @@ class InternalSkipTokenInfo
                     } elseif ($isLastSegment) {
                         $type = $subPathSegment->getInstanceType();
                         assert($type instanceof IType, get_class($type));
-                        $value = $type->convertToOData($currentObject);
+                        $value = $type->convertToOData(strval($currentObject));
                         $nextPageLink .= $value . ', ';
                     }
                 } catch (ReflectionException $reflectionException) {

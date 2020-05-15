@@ -244,7 +244,7 @@ class PHPExpressionProvider implements IExpressionProvider
         if (null == $this->resourceType) {
             throw new InvalidArgumentException('onPropertyAccessExpression - resourceType null');
         }
-        if (null == $this->resourceType->getName()) {
+        if (empty($this->resourceType->getName())) {
             throw new InvalidArgumentException('onPropertyAccessExpression - resourceType has no name');
         }
 

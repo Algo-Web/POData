@@ -65,7 +65,7 @@ class ResourceTypeTest extends TestCase
     {
         $property = m::mock(ResourceType::class);
         $property->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::ETAG == $arg->getValue();
+            return ResourcePropertyKind::ETAG() == $arg;
         }))->andReturn(true);
         $property->shouldReceive('getName')->andReturn('property');
 
@@ -177,7 +177,15 @@ class ResourceTypeTest extends TestCase
     public function testResolvePropertyOnPrimitiveType()
     {
         $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
-        $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('must be of the type string, null given');
+        $foo->resolvePropertyDeclaredOnThisType(null);
+    }
+
+    public function testResolveNonexistentProperty()
+    {
+        $foo = m::mock(ResourceType::class)->makePartial();
+        $this->assertNull($foo->resolvePropertyDeclaredOnThisType('foo'));
     }
 
     public function testAddKeyPropertyToEntityTypeWithAbstractBase()
@@ -199,7 +207,7 @@ class ResourceTypeTest extends TestCase
 
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getName')->andReturn('RType');
-        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY])->andReturn(true);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::KEY()])->andReturn(true);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
 
         $foo->addProperty($rProp);
@@ -224,12 +232,13 @@ class ResourceTypeTest extends TestCase
 
         $foo = new ResourceEntityType($reflec, $entity, $meta);
 
-        $rProp = m::mock(ResourceProperty::class);
+        $rProp = m::mock(ResourceProperty::class)->makePartial();
         $rProp->shouldReceive('getName')->andReturn('RType');
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::KEY === $arg->getValue();
+            return ResourcePropertyKind::KEY() === $arg;
         }))
             ->andReturn(true)->atLeast(1);
+        $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::KEY());
 
         $this->expectException(InvalidOperationException::class);
         $this->expectExceptionMessage('Key properties cannot be defined in derived types');
@@ -244,13 +253,13 @@ class ResourceTypeTest extends TestCase
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getName')->andReturn('number')->twice();
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::ETAG == $arg->getValue();
+            return ResourcePropertyKind::ETAG() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::KEY == $arg->getValue();
+            return ResourcePropertyKind::KEY() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::PRIMITIVE == $arg->getValue();
+            return ResourcePropertyKind::PRIMITIVE() == $arg;
         }))->andReturn(true);
 
         $this->assertEquals(0, count($rType->getAllProperties()));
@@ -267,13 +276,13 @@ class ResourceTypeTest extends TestCase
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('getName')->andReturn('number')->once();
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::ETAG == $arg->getValue();
+            return ResourcePropertyKind::ETAG() == $arg;
         }))->andReturn(true);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::KEY == $arg->getValue();
+            return ResourcePropertyKind::KEY() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::PRIMITIVE == $arg->getValue();
+            return ResourcePropertyKind::PRIMITIVE() == $arg;
         }))->andReturn(false);
 
         $this->expectException(InvalidOperationException::class);

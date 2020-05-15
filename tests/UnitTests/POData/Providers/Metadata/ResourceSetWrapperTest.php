@@ -20,7 +20,7 @@ class ResourceSetWrapperTest extends TestCase
     public function testHasNamedStreamsYes()
     {
         $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('hasNamedStream')->andReturnNull()->once();
+        $type->shouldReceive('hasNamedStream')->andReturn(false)->once();
 
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getResourceType')->andReturn($type);

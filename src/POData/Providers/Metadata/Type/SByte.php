@@ -15,7 +15,7 @@ class SByte implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::SBYTE();
     }
@@ -28,7 +28,7 @@ class SByte implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::SBYTE() == $type->getTypeCode();
     }
@@ -43,7 +43,7 @@ class SByte implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (1 != strlen($value)) {
             return false;
@@ -62,7 +62,7 @@ class SByte implements IType
      *
      * @return string
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): string
     {
         return $stringValue;
     }
@@ -76,7 +76,7 @@ class SByte implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value;
     }
@@ -87,7 +87,7 @@ class SByte implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -98,7 +98,7 @@ class SByte implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.SByte';
     }

@@ -21,6 +21,7 @@ use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -96,6 +97,8 @@ class ObjectModelSerializerTest extends TestCase
         $entity->name           = 'bilbo';
         $entity->type           = 2;
         $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceType->shouldReceive('getName')->andReturn('rType');
+        $mockResourceType->shouldReceive('getFullName')->andReturn('rType');
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
         $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
         $mockResourceType->shouldReceive('getCustomState')->andReturn($mockResourceSet);
@@ -130,7 +133,7 @@ class ObjectModelSerializerTest extends TestCase
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
         $editLink->name  = 'edit';
-        $editLink->title = null;
+        $editLink->title = 'rType';
 
         $ret = $foo->writeTopLevelElement($queryResult);
         $this->assertEquals("http://192.168.2.1/abm-master/public/odata.svc/Entity(name='bilbo',type=2)", $ret->id);
@@ -148,7 +151,9 @@ class ObjectModelSerializerTest extends TestCase
         $entity1->name = 'dildo';
         $entity1->type = 3;
 
-        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceEntityType::class)->makePartial();
+        $mockResourceType->shouldReceive('getName')->andReturn('rType');
+        $mockResourceType->shouldReceive('getFullName')->andReturn('rType');
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
         $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
 
@@ -188,6 +193,7 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $mockResourceSet->shouldReceive('getName')->andReturn('Entity');
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
+        $mockResourceSetWrapper->shouldReceive('getResourceSet')->andReturn($mockResourceSet);
         $mockResourceType->shouldReceive('getCustomState')->andReturn($mockResourceSet);
 
         $e                    = [$entity, $entity1];
@@ -225,7 +231,7 @@ class ObjectModelSerializerTest extends TestCase
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
         $editLink->name  = 'edit';
-        $editLink->title = null;
+        $editLink->title = 'rType';
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
 
@@ -246,7 +252,7 @@ class ObjectModelSerializerTest extends TestCase
         $entity1->name = 'dildo';
         $entity1->type = 3;
 
-        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceType::class)->makePartial();
+        $mockResourceType       = m::mock(\POData\Providers\Metadata\ResourceEntityType::class)->makePartial();
         $mockResourceSetWrapper = m::mock(\POData\Providers\Metadata\ResourceSetWrapper::class)->makePartial();
         $mockResourceSet        = m::mock(\POData\Providers\Metadata\ResourceSet::class)->makePartial();
         $mockResourceSet->shouldReceive('getName')->andReturn('Entity');
@@ -287,7 +293,10 @@ class ObjectModelSerializerTest extends TestCase
         $mockResourceType->shouldReceive('getKeyProperties')->andReturn($keysProperty);
 
         $mockResourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
+        $mockResourceType->shouldReceive('getName')->andReturn('rType');
+        $mockResourceType->shouldReceive('getFullName')->andReturn('rType');
         $mockResourceSetWrapper->shouldReceive('getName')->andReturn('Entity');
+        $mockResourceSetWrapper->shouldReceive('getResourceSet')->andReturn($mockResourceSet);
 
         $e                    = [$entity, $entity1];
         $queryResult          = new QueryResult();
@@ -324,7 +333,7 @@ class ObjectModelSerializerTest extends TestCase
         $editLink        = new ODataLink();
         $editLink->url   = "Entity(name='bilbo',type=2)";
         $editLink->name  = 'edit';
-        $editLink->title = null;
+        $editLink->title = 'rType';
 
         $this->assertEquals($editLink, $ret->entries[0]->editLink);
         $editLink->url = "Entity(name='dildo',type=3)";
@@ -351,7 +360,7 @@ class ObjectModelSerializerTest extends TestCase
         $property->shouldReceive('getKind')->andReturn(ResourcePropertyKind::RESOURCESET_REFERENCE());
         $property->shouldReceive('getName')->andReturn('name');
         $property->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::RESOURCESET_REFERENCE == $arg->getValue();
+            return ResourcePropertyKind::RESOURCESET_REFERENCE() == $arg;
         }))->andReturn(true);
         $property->shouldReceive('isKindOf')->andReturn(false);
 
@@ -361,6 +370,7 @@ class ObjectModelSerializerTest extends TestCase
         $primType = m::mock(ResourcePrimitiveType::class)->makePartial();
         $primType->shouldReceive('getCustomState')->andReturn($rSet);
         $primType->shouldReceive('getInstanceType')->andReturn(new StringType());
+        $primType->shouldReceive('getFullName')->andReturn('primType');
 
         $itype = new StringType();
         $rProp = m::mock(ResourceProperty::class);
@@ -368,7 +378,7 @@ class ObjectModelSerializerTest extends TestCase
         $rProp->shouldReceive('getInstanceType')->andReturn($itype);
         $rProp->shouldReceive('getResourceType')->andReturn($primType);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::BAG == $arg->getValue();
+            return ResourcePropertyKind::BAG() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
@@ -377,7 +387,7 @@ class ObjectModelSerializerTest extends TestCase
         $tProp->shouldReceive('getInstanceType')->andReturn($itype);
         $tProp->shouldReceive('getResourceType')->andReturn($primType);
         $tProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::BAG == $arg->getValue();
+            return ResourcePropertyKind::BAG() == $arg;
         }))->andReturn(false);
         $tProp->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
@@ -586,7 +596,7 @@ class ObjectModelSerializerTest extends TestCase
 
     public function testWriteNonNullUrlElement()
     {
-        $type = m::mock(ResourceType::class);
+        $type = m::mock(ResourceEntityType::class);
 
         $wrap = m::mock(ResourceSetWrapper::class);
         $wrap->shouldReceive('getResourceType')->andReturn($type);
@@ -618,6 +628,10 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertEquals(1, $result->count);
     }
 
+    /**
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function testWriteNonNullUrlCollection()
     {
         $url = new Url('https://www.example.org/odata.svc');
@@ -627,7 +641,7 @@ class ObjectModelSerializerTest extends TestCase
         $odataLink->url  = 'https://www.example.org/odata.svc/customer?skipToken=200';
 
         $resourceWrap = m::mock(ResourceSetWrapper::class);
-        $resourceWrap->shouldReceive('getName')->andReturn(null);
+        $resourceWrap->shouldReceive('getName')->andReturn('');
 
         $foo = $this->Construct();
 
@@ -885,12 +899,13 @@ class ObjectModelSerializerTest extends TestCase
 
         $navType = m::mock(ResourceType::class)->makePartial();
         $navType->shouldReceive('getInstanceType')->andReturn($iType);
+        $navType->shouldReceive('getFullName')->andReturn('');
 
         $resolv = m::mock(ResourceProperty::class)->makePartial();
         $resolv->shouldReceive('getName')->andReturn('name');
         $resolv->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->atLeast(1);
         $resolv->shouldReceive('getResourceType')->andReturn($navType);
-        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $resolv->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE()])->andReturn(true);
         $resolv->shouldReceive('isKindOf')->andReturn(false);
         $resolv->shouldReceive('getInstanceType')->andReturn($iType);
 
@@ -898,7 +913,7 @@ class ObjectModelSerializerTest extends TestCase
         $typeProp->shouldReceive('getName')->andReturn('type');
         $typeProp->shouldReceive('getTypeKind')->andReturn(ResourceTypeKind::ENTITY())->atLeast(1);
         $typeProp->shouldReceive('getResourceType')->andReturn($navType);
-        $typeProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true);
+        $typeProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE()])->andReturn(true);
         $typeProp->shouldReceive('isKindOf')->andReturn(false);
         $typeProp->shouldReceive('getInstanceType')->andReturn($iType);
 

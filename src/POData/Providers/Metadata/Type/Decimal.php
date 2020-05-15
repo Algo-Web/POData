@@ -15,7 +15,7 @@ class Decimal implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::DECIMAL();
     }
@@ -28,7 +28,7 @@ class Decimal implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         switch ($type->getTypeCode()) {
             case TypeCode::BYTE():
@@ -54,7 +54,7 @@ class Decimal implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         // By default all real numbers are considered as 'Double'.
         // To consider a number
@@ -77,7 +77,7 @@ class Decimal implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value . 'M';
     }
@@ -89,7 +89,7 @@ class Decimal implements IType
      *
      * @return float
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): float
     {
         return floatval($stringValue);
     }
@@ -100,7 +100,7 @@ class Decimal implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -111,7 +111,7 @@ class Decimal implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Decimal';
     }

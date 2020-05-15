@@ -51,21 +51,21 @@ class ResourceAssociationSet
      * @throws InvalidArgumentException
      */
     public function __construct(
-        $name,
+        string $name,
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
     ) {
-        if (null === $end1->getResourceProperty()
-            && null === $end2->getResourceProperty()
-        ) {
+        $prop1 = $end1->getResourceProperty();
+        $prop2 = $end2->getResourceProperty();
+        if (null === $prop1 && null === $prop2) {
             throw new InvalidArgumentException(
                 Messages::resourceAssociationSetResourcePropertyCannotBeBothNull()
             );
         }
+        $type1 = $end1->getResourceType();
+        $type2 = $end2->getResourceType();
 
-        if ($end1->getResourceType() == $end2->getResourceType()
-            && $end1->getResourceProperty() == $end2->getResourceProperty()
-        ) {
+        if ($type1 === $type2  && $prop1 === $prop2) {
             throw new InvalidArgumentException(
                 Messages::resourceAssociationSetSelfReferencingAssociationCannotBeBiDirectional()
             );
@@ -82,7 +82,7 @@ class ResourceAssociationSet
      * @param  ResourceSet        $targetResourceSet
      * @return string
      */
-    public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet)
+    public static function keyName(ResourceEntityType $sourceType, $linkName, ResourceSet $targetResourceSet): string
     {
         return $sourceType->getName() . '_' . $linkName . '_' . $targetResourceSet->getResourceType()->getName();
     }
@@ -92,8 +92,10 @@ class ResourceAssociationSet
      * @param  ResourceProperty   $property
      * @return string
      */
-    public static function keyNameFromTypeAndProperty(ResourceEntityType $sourceType, ResourceProperty $property)
-    {
+    public static function keyNameFromTypeAndProperty(
+        ResourceEntityType $sourceType,
+        ResourceProperty $property
+    ): string {
         return $sourceType->getName() . '_' . $property->getName() . '_' . $property->getResourceType()->getName();
     }
 
@@ -111,7 +113,7 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    ): ?ResourceAssociationSetEnd {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end1;
         }
@@ -136,7 +138,7 @@ class ResourceAssociationSet
         ResourceSet $resourceSet,
         ResourceEntityType $resourceType,
         ResourceProperty $resourceProperty
-    ) {
+    ): ?ResourceAssociationSetEnd {
         if ($this->end1->isBelongsTo($resourceSet, $resourceType, $resourceProperty)) {
             return $this->end2;
         }
@@ -152,7 +154,7 @@ class ResourceAssociationSet
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -162,7 +164,7 @@ class ResourceAssociationSet
      *
      * @return ResourceAssociationSetEnd
      */
-    public function getEnd1()
+    public function getEnd1(): ResourceAssociationSetEnd
     {
         return $this->end1;
     }
@@ -172,7 +174,7 @@ class ResourceAssociationSet
      *
      * @return ResourceAssociationSetEnd
      */
-    public function getEnd2()
+    public function getEnd2(): ResourceAssociationSetEnd
     {
         return $this->end2;
     }
@@ -183,7 +185,7 @@ class ResourceAssociationSet
      *
      * @return bool true if relationship is bidirectional, otherwise false
      */
-    public function isBidirectional()
+    public function isBidirectional(): bool
     {
         return null !== $this->end1->getResourceProperty()
             && null !== $this->end2->getResourceProperty();

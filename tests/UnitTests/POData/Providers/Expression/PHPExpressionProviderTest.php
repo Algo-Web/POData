@@ -7,6 +7,7 @@ namespace UnitTests\POData\Providers\Expression;
 use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Providers\Expression\PHPExpressionProvider;
+use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\IType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\ExpressionType;
@@ -313,8 +314,10 @@ class PHPExpressionProviderTest extends TestCase
 
     public function testonPropertyAccessExpression()
     {
+        $rProp    = m::mock(ResourceProperty::class)->makePartial();
+        $rProp->shouldReceive('getName')->andReturn('HAMMER TIME!');
         $property = m::mock(PropertyAccessExpression::class)->makePartial();
-        $property->shouldReceive('getResourceProperty->getName')->andReturn('HAMMER TIME!');
+        $property->shouldReceive('getResourceProperty')->andReturn($rProp);
         $res = m::mock(ResourceType::class)->makePartial();
         $res->shouldReceive('getName')->andReturn('OH NOES!');
         $foo = new PHPExpressionProvider('abc');

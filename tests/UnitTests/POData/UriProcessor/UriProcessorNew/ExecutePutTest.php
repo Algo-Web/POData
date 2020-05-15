@@ -53,6 +53,7 @@ class ExecutePutTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT());
@@ -61,7 +62,7 @@ class ExecutePutTest extends TestCase
         $context = m::mock(IOperationContext::class);
         $context->shouldReceive('incomingRequest')->andReturn($request);
 
-        $resourceType = m::mock(ResourceType::class);
+        $resourceType = m::mock(ResourceEntityType::class);
         $resourceType->shouldReceive('getName')->andReturn('Customer');
         $resourceType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
         $resourceType->shouldReceive('getKeyProperties')->andReturn([])->atLeast(1);
@@ -121,6 +122,7 @@ class ExecutePutTest extends TestCase
         $requestPayload->id              = 'http://localhost/odata.svc/customers(id=1)';
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT());
@@ -181,6 +183,13 @@ class ExecutePutTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function testExecutePutOnSingleWithData()
     {
         $baseUrl = new Url('http://localhost/odata.svc');
@@ -202,6 +211,7 @@ class ExecutePutTest extends TestCase
         $requestPayload->propertyContent->properties['otherNumber']->value = 42;
         $requestPayload->propertyContent->properties['CustomerID']         = new ODataProperty();
         $requestPayload->propertyContent->properties['CustomerID']->value  = 42;
+        $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::PUT());

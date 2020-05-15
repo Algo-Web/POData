@@ -15,7 +15,7 @@ class Int64 implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::INT64();
     }
@@ -28,7 +28,7 @@ class Int64 implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         switch ($type->getTypeCode()) {
             case TypeCode::BYTE():
@@ -52,7 +52,7 @@ class Int64 implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (1 !== preg_match('/^(\-)?\d+[lL]{1}$/', $value)) {
             return false;
@@ -71,7 +71,7 @@ class Int64 implements IType
      *
      * @return int
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): int
     {
         return intval($stringValue);
     }
@@ -85,7 +85,7 @@ class Int64 implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value . 'L';
     }
@@ -96,7 +96,7 @@ class Int64 implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -107,7 +107,7 @@ class Int64 implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Int64';
     }

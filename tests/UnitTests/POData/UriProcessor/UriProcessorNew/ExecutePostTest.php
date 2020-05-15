@@ -65,6 +65,7 @@ class ExecutePostTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
@@ -145,6 +146,7 @@ class ExecutePostTest extends TestCase
         $requestPayload->propertyContent                                   = new ODataPropertyContent();
         $requestPayload->propertyContent->properties['otherNumber']        = new ODataProperty();
         $requestPayload->propertyContent->properties['otherNumber']->value = 42;
+        $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
@@ -284,8 +286,10 @@ class ExecutePostTest extends TestCase
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getAbsoluteServiceUri')->andReturn($reqUrl);
 
+        $rType = m::mock(ResourceEntityType::class)->makePartial();
+
         $set = m::mock(ResourceSetWrapper::class)->makePartial();
-        $set->shouldReceive('getResourceType')->andReturnNull()->once();
+        $set->shouldReceive('getResourceType')->andReturn($rType)->once();
         $set->shouldReceive('checkResourceSetRightsForRead')->andReturnNull()->once();
 
         $wrapper = m::mock(ProvidersWrapper::class)->makePartial();

@@ -50,7 +50,10 @@ class AtomODataReader implements IODataReader
 
     public function __destruct()
     {
-        xml_parser_free($this->parser);
+        if (isset($this->parser)) {
+            xml_parser_free($this->parser);
+        }
+        unset($this->parser);
     }
 
     /**

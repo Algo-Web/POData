@@ -27,6 +27,7 @@ use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use ReflectionException;
+use TypeError;
 
 /**
  * Class ProvidersWrapper.
@@ -300,7 +301,7 @@ class ProvidersWrapper
      * @return ResourceSetWrapper|null Returns resource set with the given name if found,
      *                                 NULL if resource set is set to invisible or not found
      */
-    public function resolveResourceSet($name)
+    public function resolveResourceSet($name): ?ResourceSetWrapper
     {
         if (array_key_exists($name, $this->setWrapperCache)) {
             return $this->setWrapperCache[$name];
@@ -359,17 +360,12 @@ class ProvidersWrapper
      * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws ODataException
-     * @throws InvalidOperationException when the meat provider doesn't return an array
+     * @throws \TypeError when the meat provider doesn't return an array
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)
     {
         $derivedTypes = $this->getMetaProvider()->getDerivedTypes($resourceType);
-        if (!is_array($derivedTypes)) {
-            throw new InvalidOperationException(
-                Messages::metadataAssociationTypeSetInvalidGetDerivedTypesReturnType($resourceType->getName())
-            );
-        }
 
         foreach ($derivedTypes as $derivedType) {
             $this->validateResourceType($derivedType);
@@ -560,7 +556,7 @@ class ProvidersWrapper
      *                           $property is not declared anywhere
      *                           in the inheritance hierarchy
      */
-    private function getResourceTypeWherePropertyIsDeclared(ResourceType $type, ResourceProperty $property)
+    protected function getResourceTypeWherePropertyIsDeclared(ResourceType $type, ResourceProperty $property)
     {
         while (null !== $type) {
             if (null !== $type->resolvePropertyDeclaredOnThisType($property->getName())) {

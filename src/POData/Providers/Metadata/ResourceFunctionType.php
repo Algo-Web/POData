@@ -102,9 +102,9 @@ class ResourceFunctionType
 
     /**
      * @param $func
-     * @param mixed $fromArray
+     * @param bool $fromArray
      */
-    private function checkBlacklist($func, $fromArray = false)
+    private function checkBlacklist($func, bool $fromArray = false): void
     {
         if (in_array($func, $this->blacklist) || in_array(strtolower($func), $this->blacklist)) {
             $msg = (true === $fromArray ? 'First element of ' : '') . 'FunctionName blacklisted';
@@ -117,7 +117,7 @@ class ResourceFunctionType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->baseType->getName();
     }
@@ -127,7 +127,7 @@ class ResourceFunctionType
      *
      * @return string
      */
-    public function getFunctionName()
+    public function getFunctionName(): string
     {
         return $this->functionName;
     }
@@ -135,7 +135,7 @@ class ResourceFunctionType
     /**
      * @return ResourceType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceType
     {
         return $this->resourceType;
     }
@@ -164,7 +164,7 @@ class ResourceFunctionType
      *
      * @return TFunctionImportParameterType[]
      */
-    public function getParms()
+    public function getParms(): array
     {
         return $this->baseType->getParameter();
     }

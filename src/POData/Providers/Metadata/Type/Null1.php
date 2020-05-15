@@ -17,7 +17,7 @@ class Null1 implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::NULL1();
     }
@@ -31,7 +31,7 @@ class Null1 implements IType
      * @throws NotImplementedException
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         throw new NotImplementedException();
     }
@@ -46,7 +46,7 @@ class Null1 implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (0 != strcmp($value, 'null')) {
             return false;
@@ -64,7 +64,7 @@ class Null1 implements IType
      *
      * @return string|null
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): ?string
     {
         if (0 == strcmp($stringValue, 'null')) {
             return null;
@@ -79,9 +79,9 @@ class Null1 implements IType
      * @param mixed $value value to convert
      *
      * @throws NotImplementedException
-     * @return bool
+     * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         throw new NotImplementedException();
     }
@@ -92,7 +92,7 @@ class Null1 implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -103,7 +103,7 @@ class Null1 implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'System.NULL';
     }

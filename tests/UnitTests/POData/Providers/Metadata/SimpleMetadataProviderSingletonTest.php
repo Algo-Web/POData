@@ -176,12 +176,9 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $foo  = new SimpleMetadataProvider('string', 'number');
         $name = [];
 
-        try {
-            $foo->callSingleton($name);
-        } catch (Error $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage(' must be of the type string, array given');
+        $foo->callSingleton($name);
     }
 
     public function testCallNonExistentSingletonWithObjectName()
@@ -192,12 +189,9 @@ class SimpleMetadataProviderSingletonTest extends SimpleMetadataProviderTest
         $foo  = new SimpleMetadataProvider('string', 'number');
         $name = new \DateTime();
 
-        try {
-            $foo->callSingleton($name);
-        } catch (Error $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage(' must be of the type string, object given');
+        $foo->callSingleton($name);
     }
 
 

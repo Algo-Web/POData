@@ -117,12 +117,10 @@ class OrderByParser
     public static function parseOrderByClause(
         ResourceSetWrapper $resourceSetWrapper,
         ResourceType $resourceType,
-        $orderBy,
+        string $orderBy,
         ProvidersWrapper $providerWrapper
     ): InternalOrderByInfo {
-        assert(is_string($orderBy), 'OrderBy clause must be a string');
-        $orderBy = trim($orderBy);
-        if (0 == strlen($orderBy)) {
+        if (0 == strlen(trim($orderBy))) {
             throw new InvalidOperationException('OrderBy clause must not be trimmable to an empty string');
         }
         $orderByParser = new self($providerWrapper);
@@ -245,7 +243,6 @@ class OrderByParser
                     --$subPathCount;
                 }
             }
-
             $ancestors = [$this->rootOrderByNode->getResourceSetWrapper()->getName()];
             foreach ($orderBySubPathSegments as $index2 => $orderBySubPathSegment) {
                 $isLastSegment      = ($index2 == $subPathCount - 1);
@@ -264,7 +261,7 @@ class OrderByParser
                 }
                 /** @var ResourcePropertyKind $rKind */
                 $rKind   = $resourceProperty->getKind();
-                $rawKind = ($rKind instanceof ResourcePropertyKind) ? $rKind->getValue() : $rKind;
+                $rawKind = ($rKind instanceof ResourcePropertyKind) ? $rKind : $rKind;
 
                 if ($resourceProperty->isKindOf(ResourcePropertyKind::BAG())) {
                     throw ODataException::createBadRequestError(
@@ -287,8 +284,8 @@ class OrderByParser
                             Messages::orderByParserSortByBinaryPropertyNotAllowed($resourceProperty->getName())
                         );
                     }
-                } elseif ($rawKind == ResourcePropertyKind::RESOURCESET_REFERENCE
-                    || $rawKind == ResourcePropertyKind::RESOURCE_REFERENCE
+                } elseif ($rawKind == ResourcePropertyKind::RESOURCESET_REFERENCE()
+                    || $rawKind == ResourcePropertyKind::RESOURCE_REFERENCE()
                 ) {
                     $this->assertion($currentNode instanceof OrderByRootNode || $currentNode instanceof OrderByNode);
                     $resourceSetWrapper = $currentNode->getResourceSetWrapper();

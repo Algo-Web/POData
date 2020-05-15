@@ -17,7 +17,7 @@ class StringType extends EdmString
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return parent::isCompatibleWith($type);
     }

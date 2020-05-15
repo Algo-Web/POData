@@ -15,7 +15,7 @@ class Boolean implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::BOOLEAN();
     }
@@ -28,7 +28,7 @@ class Boolean implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         return TypeCode::BOOLEAN() == $type->getTypeCode();
     }
@@ -43,7 +43,7 @@ class Boolean implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (0 != strcmp($value, 'true') && 0 != strcmp($value, 'false')) {
             return false;
@@ -63,7 +63,7 @@ class Boolean implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         if ($value) {
             return 'true';
@@ -79,7 +79,7 @@ class Boolean implements IType
      *
      * @return bool
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): bool
     {
         if (0 == strcmp($stringValue, 'true')) {
             return true;
@@ -94,7 +94,7 @@ class Boolean implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -105,7 +105,7 @@ class Boolean implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Boolean';
     }

@@ -19,9 +19,12 @@ use POData\OperationContext\IHTTPRequest;
 use POData\OperationContext\IOperationContext;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
+use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
+use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\ProvidersWrapper;
 use POData\Providers\Query\QueryResult;
@@ -30,6 +33,7 @@ use POData\Readers\Atom\AtomODataReader;
 use POData\Readers\ODataReaderRegistry;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\UriProcessor;
+use UnitTests\POData\Facets\NorthWind2\Customer1;
 use UnitTests\POData\TestCase;
 
 //These are in the file loaded by above use statement
@@ -73,6 +77,9 @@ class UriProcessorTest extends TestCase
     /** @var ResourceProperty */
     protected $mockRelatedCollectionKeyProperty;
 
+    /**
+     * @throws \POData\Common\UrlFormatException
+     */
     public function setUp()
     {
         parent::setUp();
@@ -86,12 +93,17 @@ class UriProcessorTest extends TestCase
         $this->mockMetadataProvider                    = m::mock(IMetadataProvider::class)->makePartial();
         $this->mockProvidersWrapper                    = m::mock(ProvidersWrapper::class)->makePartial();
         $this->mockCollectionResourceSetWrapper        = m::mock(ResourceSetWrapper::class)->makePartial();
-        $this->mockCollectionResourceType              = m::mock(ResourceType::class)->makePartial();
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getResourceSetPageSize')->andReturn(11);
+        $this->mockCollectionResourceType              = m::mock(ResourceEntityType::class)->makePartial();
         $this->mockCollectionKeyProperty               = m::mock(ResourceProperty::class)->makePartial();
         $this->mockCollectionRelatedCollectionProperty = m::mock(ResourceProperty::class)->makePartial();
         $this->mockRelatedCollectionResourceSetWrapper = m::mock(ResourceSetWrapper::class)->makePartial();
-        $this->mockRelatedCollectionResourceType       = m::mock(ResourceType::class)->makePartial();
+        $this->mockRelatedCollectionResourceType       = m::mock(ResourceEntityType::class)->makePartial();
         $this->mockRelatedCollectionKeyProperty        = m::mock(ResourceProperty::class)->makePartial();
+
+        $reflec                                        = m::mock(\ReflectionClass::class);
+        $reflec->shouldReceive('newInstanceArgs')->andReturn(null);
+        $this->mockCollectionResourceType->shouldReceive('getInstanceType')->andReturn($reflec);
 
         //setup some general navigation between POData types
 
@@ -109,12 +121,18 @@ class UriProcessorTest extends TestCase
             ->andReturn($this->mockCollectionResourceType);
 
         $this->mockCollectionResourceType->shouldReceive('getKeyProperties')
-            ->andReturn([$this->mockCollectionKeyProperty]);
+            ->andReturn(['id' => $this->mockCollectionKeyProperty]);
 
         $this->mockCollectionKeyProperty->shouldReceive('getInstanceType')->andReturn(new Int32());
+        $this->mockCollectionKeyProperty->shouldReceive('getKind')->andReturn(ResourcePropertyKind::PRIMITIVE());
 
         $this->mockCollectionResourceType->shouldReceive('resolveProperty')->withArgs(['RelatedCollection'])
             ->andReturn($this->mockCollectionRelatedCollectionProperty);
+        $this->mockCollectionResourceType->shouldReceive('getName')->andReturn('rType');
+        $this->mockCollectionResourceType->shouldReceive('getResourceTypeKind')
+            ->andReturn(m::mock(ResourceTypeKind::class)->makePartial());
+        $this->mockCollectionResourceType->shouldReceive('resolveProperty')->withArgs(['id'])
+            ->andReturn($this->mockCollectionKeyProperty);
 
         $this->mockProvidersWrapper->shouldReceive('resolveResourceSet')->withArgs(['RelatedCollection'])
             ->andReturn($this->mockRelatedCollectionResourceSetWrapper);
@@ -122,8 +140,11 @@ class UriProcessorTest extends TestCase
         $this->mockRelatedCollectionResourceSetWrapper->shouldReceive('getResourceType')
             ->andReturn($this->mockRelatedCollectionResourceType);
 
+        $this->mockRelatedCollectionResourceSetWrapper->shouldReceive('getName')
+            ->andReturn('rType');
+
         $this->mockRelatedCollectionResourceType->shouldReceive('getKeyProperties')
-            ->andReturn([$this->mockRelatedCollectionKeyProperty]);
+            ->andReturn(['id' => $this->mockRelatedCollectionKeyProperty]);
 
         $this->mockRelatedCollectionKeyProperty->shouldReceive('getInstanceType')->andReturn(new Int32());
 
@@ -152,13 +173,21 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
-        $this->mockProvidersWrapper->shouldReceive('handlesOrderedPaging')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
         $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
+        $this->mockProvidersWrapper->shouldReceive('handlesOrderedPaging')->andReturn(false);
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
+        $one = new \stdClass();
+        $one->id = 1;
+        $two = new \stdClass();
+        $two->id = 2;
+        $three = new \stdClass();
+        $three->id = 3;
+
         $fakeQueryResult          = new QueryResult();
-        $fakeQueryResult->results = [1, 2, 3];
+        $fakeQueryResult->results = [$one, $two, $three];
 
         /* TODO: Figure out why this doesn't work when it should
         $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
@@ -178,7 +207,7 @@ class UriProcessorTest extends TestCase
         $actual = $request->getTargetResult();
         $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual->results);
+        $this->assertEquals([$one, $two, $three], $actual->results);
     }
 
     public function testProcessRequestForCollectionCountThrowsWhenServiceVersionIs10()
@@ -337,6 +366,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(false);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(false);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
         $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
@@ -370,6 +400,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('HAMMER TIME!');
         $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
@@ -392,6 +423,13 @@ class UriProcessorTest extends TestCase
         }
     }
 
+    /**
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function testProcessRequestForCollectionWithNoInlineCountWhenVersionIsTooLow()
     {
         //I'm not so sure about this test...basically $inlinecount is ignored if it's none, but maybe we should
@@ -427,40 +465,21 @@ class UriProcessorTest extends TestCase
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1());
 
-        $uriProcessor = UriProcessor::process($this->mockService);
-
-        $fakeQueryResult          = new QueryResult();
-        $fakeQueryResult->results = [1, 2, 3];
-        $fakeQueryResult->count   = 10; //note this is different than the size of the array
-
-        /* TODO: Figure out why commented version loses plot while anyArgs version passes
-        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withArgs([
-            QueryType::ENTITIES(),
-            $this->mockCollectionResourceSetWrapper,
-            null,
-            null,
-            null,
-            0,
-            null])->andReturn($fakeQueryResult);*/
-        $this->mockProvidersWrapper->shouldReceive('getResourceSet')->withAnyArgs()->andReturn($fakeQueryResult);
-
-        //indicate that POData must perform the paging (thus it will use the count of the results in QueryResult)
-        $this->mockProvidersWrapper->shouldReceive('handlesOrderedPaging')->andReturn(false);
-
-        $uriProcessor->execute();
-
-        $request = $uriProcessor->getRequest();
-
-        $actual = $request->getTargetResult();
-        $this->assertTrue($actual instanceof QueryResult);
-
-        $this->assertEquals([1, 2, 3], $actual->results);
-        $this->assertNull(
-            $request->getCountValue(),
-            'Since $inlinecount is specified as none, there should be no count set'
+        $this->expectException(ODataException::class);
+        $this->expectExceptionMessage(
+            'Request version \'1.0\' is not supported for the request payload. The only supported version is \'2.0\'.'
         );
+
+        $uriProcessor = UriProcessor::process($this->mockService);
     }
 
+    /**
+     * @throws ODataException
+     * @throws \POData\Common\InvalidOperationException
+     * @throws \POData\Common\NotImplementedException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function testProcessRequestForCollectionWithInlineCountProviderDoesNotHandlePaging()
     {
         $request = m::mock(IHTTPRequest::class);
@@ -470,7 +489,7 @@ class UriProcessorTest extends TestCase
         $opCon = m::mock(IOperationContext::class);
         $opCon->shouldReceive('incomingRequest')->andReturn($request);
 
-        $requestURI = new Url('http://host.com/data.svc/Collection/?$inlinecount=allpages');
+        $requestURI = new Url('http://host.com/data.svc/Collection?$inlinecount=allpages');
         $this->mockService->shouldReceive('getOperationContext')->andReturn($opCon);
         $this->mockServiceHost->shouldReceive('getAbsoluteRequestUri')->andReturn($requestURI);
         $this->mockServiceHost->shouldReceive('getRequestVersion')->andReturn('2.0');
@@ -483,19 +502,26 @@ class UriProcessorTest extends TestCase
 
         //mock inline count as all pages
         $this->mockServiceHost->shouldReceive('getQueryStringItem')
-            ->with(\Mockery::not(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
-            ->andReturn(null);
-        $this->mockServiceHost->shouldReceive('getQueryStringItem')
             ->withArgs([ODataConstants::HTTPQUERY_STRING_INLINECOUNT])
             ->andReturn('allpages');
+        $this->mockServiceHost->shouldReceive('getQueryStringItem')
+            ->with(\Mockery::not(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
+            ->andReturn(null);
 
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2());
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
+        $one = new \stdClass();
+        $one->id = 1;
+        $two = new \stdClass();
+        $two->id = 2;
+        $three = new \stdClass();
+        $three->id = 3;
+
         $fakeQueryResult          = new QueryResult();
-        $fakeQueryResult->results = [1, 2, 3];
+        $fakeQueryResult->results = [$one, $two, $three];
         $fakeQueryResult->count   = 10; //note this is different than the size of the array
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -519,7 +545,7 @@ class UriProcessorTest extends TestCase
         $actual = $request->getTargetResult();
         $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual->results);
+        $this->assertEquals([$one, $two, $three], $actual->results);
         $this->assertEquals(3, $request->getCountValue());
     }
 
@@ -540,6 +566,7 @@ class UriProcessorTest extends TestCase
         $this->mockCollectionResourceSetWrapper->shouldReceive('checkResourceSetRightsForRead')->andReturnNull();
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasNamedStreams')->andReturn(true);
         $this->mockCollectionResourceSetWrapper->shouldReceive('hasBagProperty')->andReturn(true);
+        $this->mockCollectionResourceSetWrapper->shouldReceive('getName')->andReturn('STOP!');
         $this->mockProvidersWrapper->shouldReceive('resolveSingleton')->andReturn(null);
 
         //mock inline count as all pages
@@ -553,8 +580,15 @@ class UriProcessorTest extends TestCase
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
 
+        $one = new \stdClass();
+        $one->id = 1;
+        $two = new \stdClass();
+        $two->id = 2;
+        $three = new \stdClass();
+        $three->id = 3;
+
         $fakeQueryResult          = new QueryResult();
-        $fakeQueryResult->results = [1, 2, 3];
+        $fakeQueryResult->results = [$one, $two, $three];
         $fakeQueryResult->count   = 10;
 
         /* TODO: Figure out why commented version loses plot while anyArgs version passes
@@ -580,7 +614,7 @@ class UriProcessorTest extends TestCase
         $actual = $request->getTargetResult();
         $this->assertTrue($actual instanceof QueryResult);
 
-        $this->assertEquals([1, 2, 3], $actual->results);
+        $this->assertEquals([$one, $two, $three], $actual->results);
         $this->assertEquals(10, $request->getCountValue());
     }
 

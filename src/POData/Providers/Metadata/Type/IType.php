@@ -14,7 +14,7 @@ interface IType
      *
      * @return TypeCode
      */
-    public function getTypeCode();
+    public function getTypeCode(): TypeCode;
 
     /**
      * Checks the type implementing this interface is compatible with another type.
@@ -23,20 +23,20 @@ interface IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type);
+    public function isCompatibleWith(IType $type): bool;
 
     /**
      * Validate a value in Astoria uri is in a format for the type implementing this
      * interface
      * Note: implementation of IType::validate.
      *
-     * @param string $value     The value to validate
-     * @param string &$outValue The stripped form of $value that can be used in PHP
-     *                          expressions
+     * @param string      $value     The value to validate
+     * @param string|null &$outValue The stripped form of $value that can be used in PHP
+     *                               expressions
      *
      * @return bool
      */
-    public function validate($value, &$outValue);
+    public function validate(string $value, ?string &$outValue): bool;
 
     /**
      * Gets full name of the type implementing this interface in EDM namespace
@@ -44,7 +44,7 @@ interface IType
      *
      * @return string
      */
-    public function getFullTypeName();
+    public function getFullTypeName(): string;
 
     /**
      * Converts the given string value to this type.
@@ -53,7 +53,7 @@ interface IType
      *
      * @return mixed
      */
-    public function convert($stringValue);
+    public function convert(string $stringValue);
 
     /**
      * Convert the given value to a form that can be used in OData uri.
@@ -62,7 +62,7 @@ interface IType
      *
      * @return string
      */
-    public function convertToOData($value);
+    public function convertToOData($value): string;
 
     /**
      * Gets full name of the type implementing this interface in EDM namespace
@@ -70,5 +70,5 @@ interface IType
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 }

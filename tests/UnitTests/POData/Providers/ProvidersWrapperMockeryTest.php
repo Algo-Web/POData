@@ -10,6 +10,7 @@ use POData\Configuration\IServiceConfiguration;
 use POData\Providers\Metadata\EdmSchemaVersion;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceAssociationSet;
+use POData\Providers\Metadata\ResourceAssociationSetEnd;
 use POData\Providers\Metadata\ResourceComplexType;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -377,12 +378,13 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getName')->andReturn('rSet');
-        $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
-        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
 
         $prop = m::mock(ResourceProperty::class);
         $prop->shouldReceive('getName')->andReturn('rProp');
+
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn($prop)->once();
+        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
 
         $associationSet = m::mock(ResourceAssociationSet::class);
         $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn(null)->once();
@@ -412,22 +414,27 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getName')->andReturn('rSet');
-        $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
+
+        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn(null);
         $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
+        $type->shouldReceive('getBaseType')->andReturn(null);
 
         $prop = m::mock(ResourceProperty::class);
         $prop->shouldReceive('getName')->andReturn('rProp');
 
+        $end2 = m::mock(ResourceAssociationSetEnd::class);
+
         $associationSet = m::mock(ResourceAssociationSet::class);
         $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn(null)->once();
-        $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn('foo')->once();
+        $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn($end2)->once();
 
         $meta = m::mock(IMetadataProvider::class);
         $meta->shouldReceive('getResourceAssociationSet')->andReturn($associationSet);
 
-        $foo = m::mock(ProvidersWrapper::class)->makePartial();
+        $foo = m::mock(ProvidersWrapper::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getMetaProvider')->andReturn($meta);
+        $foo->shouldReceive('getResourceTypeWherePropertyIsDeclared')->andReturn($type);
 
         try {
             $foo->getResourceAssociationSet($set, $type, $prop);
@@ -447,15 +454,18 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $set = m::mock(ResourceSet::class);
         $set->shouldReceive('getName')->andReturn('rSet');
-        $type = m::mock(ResourceEntityType::class);
-        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn('foo')->once();
-        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
 
         $prop = m::mock(ResourceProperty::class);
         $prop->shouldReceive('getName')->andReturn('rProp');
 
+        $type = m::mock(ResourceEntityType::class);
+        $type->shouldReceive('resolvePropertyDeclaredOnThisType')->andReturn($prop)->once();
+        $type->shouldReceive('getFullName')->andReturn('rTypeDelta');
+
+        $end2 = m::mock(ResourceAssociationSetEnd::class);
+
         $associationSet = m::mock(ResourceAssociationSet::class);
-        $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn('foo')->once();
+        $associationSet->shouldReceive('getResourceAssociationSetEnd')->andReturn($end2)->once();
         $associationSet->shouldReceive('getRelatedResourceAssociationSetEnd')->andReturn(null)->once();
 
         $meta = m::mock(IMetadataProvider::class);

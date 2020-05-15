@@ -16,43 +16,44 @@ use Cruxinator\BitMask\BitMask;
  * @method static RESOURCE_REFERENCE()
  * @method static RESOURCESET_REFERENCE()
  * @method static NONE()
+ * @method setPRIMITIVE()
  */
 class ResourcePropertyKind extends BitMask
 {
-    const NONE = 0;
+    protected const NONE = 0;
 
     /**
      * A bag of primitive or complex types.
      */
-    const BAG = 1;
+    protected const BAG = 1;
 
     /**
      * A complex (compound) property.
      */
-    const COMPLEX_TYPE = 2;
+    protected const COMPLEX_TYPE = 2;
 
     /**
      * Whether this property is a etag property.
      */
-    const ETAG = 4;
+    protected const ETAG = 4;
 
     /**
      * A property that is part of the key.
      */
-    const KEY = 8;
+    protected const KEY = 8;
 
     /**
      * A primitive type property.
      */
-    const PRIMITIVE = 16;
+    protected const PRIMITIVE = 16;
 
     /**
      * A reference to another resource.
      */
-    const RESOURCE_REFERENCE = 32;
+    protected const RESOURCE_REFERENCE = 32;
 
     /**
      * A reference to another resource set.
      */
-    const RESOURCESET_REFERENCE = 64;
+    protected const RESOURCESET_REFERENCE = 64;
 }

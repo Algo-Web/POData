@@ -72,6 +72,8 @@ class NavigationTest extends TestCase
         $foo = $this->getAsIType();
         $bar = $this->getAsIType(ResourceTypeKind::ENTITY());
 
+        $this->resource->shouldReceive('getFullName')->andReturn('foo');
+
         $this->assertTrue($foo->isCompatibleWith($bar));
         $this->assertTrue($bar->isCompatibleWith($foo));
     }
@@ -85,24 +87,6 @@ class NavigationTest extends TestCase
 
         $this->assertFalse($foo->isCompatibleWith($bar));
         $this->assertFalse($bar->isCompatibleWith($foo));
-    }
-
-    public function testValidateDifferentIType()
-    {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
-
-        $bar = new StringType();
-        $out = '';
-        $this->assertFalse($foo->validate($bar, $out));
-    }
-
-    public function testValidateSameIType()
-    {
-        $foo = $this->getAsIType(ResourceTypeKind::COMPLEX());
-
-        $bar = $this->getAsIType();
-        $out = '';
-        $this->assertTrue($foo->validate($bar, $out));
     }
 
     public function testGetNameTest()
@@ -150,5 +134,14 @@ class NavigationTest extends TestCase
         $foo    = $this->getAsIType();
         $result = $foo->getResourceType();
         $this->assertEquals(ResourceTypeKind::COMPLEX(), $result->getResourceTypeKind());
+    }
+
+    public function testValidate()
+    {
+        $foo = $this->getAsIType();
+        $value = 'value';
+        $outValue = null;
+        $this->assertTrue($foo->validate($value, $outValue));
+        $this->assertEquals($value, $outValue);
     }
 }

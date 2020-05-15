@@ -112,7 +112,7 @@ class ResourceClassesTest extends TestCase
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
-            new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY),
+            ResourcePropertyKind::PRIMITIVE()->setKEY(true),
             $stringResourceType
         );
         $customerNamePrimProperty = new ResourceProperty(
@@ -139,7 +139,7 @@ class ResourceClassesTest extends TestCase
         $isPrimaryPrimProperty = new ResourceProperty(
             'IsPrimary',
             null,
-            new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY),
+            ResourcePropertyKind::PRIMITIVE()->setKEY(true),
             $booleanResourceType
         );
         try {
@@ -227,7 +227,7 @@ class ResourceClassesTest extends TestCase
             new ResourceProperty(
                 'EmployeeID',
                 null,
-                new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY),
+                ResourcePropertyKind::PRIMITIVE()->setKEY(true),
                 $stringResourceType
             )
         );
@@ -235,7 +235,7 @@ class ResourceClassesTest extends TestCase
             new ResourceProperty(
                 'Emails',
                 null,
-                new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::BAG),
+                ResourcePropertyKind::PRIMITIVE()->setBAG(true),
                 $stringResourceType
             )
         );
@@ -296,7 +296,7 @@ class ResourceClassesTest extends TestCase
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
-            new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY),
+            ResourcePropertyKind::PRIMITIVE()->setKEY(true),
             $stringResourceType
         );
         $customerNamePrimProperty = new ResourceProperty(
@@ -629,7 +629,7 @@ class ResourceClassesTest extends TestCase
 
         $stringResourceType     = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::STRING());
         $intResourceType        = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
-        $kind                   = new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY);
+        $kind                   = ResourcePropertyKind::PRIMITIVE()->setKEY(true);
         $customerIDPrimProperty = new ResourceProperty(
             'CustomerID',
             null,
@@ -673,7 +673,7 @@ class ResourceClassesTest extends TestCase
         );
 
         $intResourceType        = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::INT32());
-        $kind                   = new ResourcePropertyKind(ResourcePropertyKind::PRIMITIVE | ResourcePropertyKind::KEY);
+        $kind                   = ResourcePropertyKind::PRIMITIVE()->setKEY(true);
         $orderIDPrimProperty    = new ResourceProperty(
             'OrderID',
             null,

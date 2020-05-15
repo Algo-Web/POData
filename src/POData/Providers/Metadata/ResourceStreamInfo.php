@@ -24,7 +24,7 @@ class ResourceStreamInfo
      *
      * @param string $name Name of the stream
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -34,7 +34,7 @@ class ResourceStreamInfo
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

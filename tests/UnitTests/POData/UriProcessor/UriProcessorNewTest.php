@@ -351,7 +351,7 @@ class UriProcessorNewTest extends TestCase
 
         $resourceSet = m::mock(ResourceSet::class);
 
-        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE();
 
         $property = m::mock(ResourceProperty::class)->makePartial();
         $property->shouldReceive('getKind')->andReturn($propKind);
@@ -425,7 +425,7 @@ class UriProcessorNewTest extends TestCase
         $cereal = m::mock(ModelDeserialiser::class);
         $cereal->shouldReceive('bulkDeserialise')->andReturn(null)->once();
 
-        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE();
 
         $property = m::mock(ResourceProperty::class)->makePartial();
         $property->shouldReceive('getKind')->andReturn($propKind);
@@ -493,7 +493,7 @@ class UriProcessorNewTest extends TestCase
         $resourceSetWrapper = m::mock(ResourceSetWrapper::class);
         $keyDescript        = m::mock(KeyDescriptor::class);
 
-        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE;
+        $propKind = ResourcePropertyKind::RESOURCE_REFERENCE();
 
         $property = m::mock(ResourceProperty::class)->makePartial();
         $property->shouldReceive('getKind')->andReturn($propKind);
@@ -516,6 +516,7 @@ class UriProcessorNewTest extends TestCase
         $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $model = new Customer2();
 

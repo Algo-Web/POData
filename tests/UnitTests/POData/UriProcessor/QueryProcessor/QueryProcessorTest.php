@@ -7,6 +7,7 @@ namespace UnitTests\POData\UriProcessor\QueryProcessor;
 use Mockery as m;
 use POData\Common\ODataConstants;
 use POData\Common\ODataException;
+use POData\Common\Version;
 use POData\IService;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\ResourceSetWrapper;
@@ -26,6 +27,7 @@ class QueryProcessorTest extends TestCase
         $providers = m::mock(ProvidersWrapper::class)->makePartial();
 
         $rSet  = m::mock(ResourceSetWrapper::class)->makePartial();
+        $rSet->shouldReceive('getResourceSetPageSize')->andReturn(11);
         $rType = m::mock(ResourceType::class)->makePartial();
         $rType->shouldReceive('getResourceTypeKind')->andReturn(ResourceTypeKind::ENTITY());
 
@@ -33,6 +35,7 @@ class QueryProcessorTest extends TestCase
         $host->shouldReceive('getQueryStringItem')->withArgs([ODataConstants::HTTPQUERY_STRING_ORDERBY])->andReturn('');
         $host->shouldReceive('getQueryStringItem')->withAnyArgs()->andReturn(null);
 
+        $version = new Version(1, 0);
         $request = m::mock(RequestDescription::class)->makePartial();
         $request->shouldReceive('isSingleResult')->andReturn(false);
         $request->shouldReceive('isLinkUri')->andReturn(false);
@@ -42,10 +45,11 @@ class QueryProcessorTest extends TestCase
         $request->shouldReceive('getTargetResourceSetWrapper')->andReturn($rSet);
         $request->shouldReceive('setSkipCount')->andReturnNull()->never();
         $request->shouldReceive('setTopOptionCount')->andReturnNull()->never();
-        $request->shouldReceive('setTopCount')->andReturnNull()->never();
+        $request->shouldReceive('setTopCount')->andReturnNull();
         $request->shouldReceive('setInternalSkipTokenInfo')->andReturnNull()->never();
         $request->shouldReceive('setFilterInfo')->andReturnNull()->never();
         $request->shouldReceive('setRootProjectionNode')->andReturnNull()->once();
+        $request->shouldReceive('raiseResponseVersion')->andReturnNull();
 
         $service = m::mock(IService::class);
         $service->shouldReceive('getHost')->andReturn($host);

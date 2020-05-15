@@ -36,7 +36,7 @@ class ResourceSet
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($name, ResourceEntityType $resourceType)
+    public function __construct(string $name, ResourceEntityType $resourceType)
     {
         $this->name         = $name;
         $this->resourceType = $resourceType;
@@ -47,7 +47,7 @@ class ResourceSet
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -57,7 +57,7 @@ class ResourceSet
      *
      * @return ResourceEntityType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceEntityType
     {
         return $this->resourceType;
     }

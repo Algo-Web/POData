@@ -15,7 +15,7 @@ class Int16 implements IType
      *
      * @return TypeCode
      */
-    public function getTypeCode()
+    public function getTypeCode(): TypeCode
     {
         return TypeCode::INT16();
     }
@@ -28,7 +28,7 @@ class Int16 implements IType
      *
      * @return bool
      */
-    public function isCompatibleWith(IType $type)
+    public function isCompatibleWith(IType $type): bool
     {
         switch ($type->getTypeCode()) {
             case TypeCode::BYTE():
@@ -50,7 +50,7 @@ class Int16 implements IType
      *
      * @return bool
      */
-    public function validate($value, &$outValue)
+    public function validate(string $value, ?string &$outValue): bool
     {
         if (1 !== preg_match('/^(\-)?\d+$/', $value)) {
             return false;
@@ -68,7 +68,7 @@ class Int16 implements IType
      *
      * @return int
      */
-    public function convert($stringValue)
+    public function convert(string $stringValue): int
     {
         return intval($stringValue);
     }
@@ -82,7 +82,7 @@ class Int16 implements IType
      *
      * @return string
      */
-    public function convertToOData($value)
+    public function convertToOData($value): string
     {
         return $value;
     }
@@ -93,7 +93,7 @@ class Int16 implements IType
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getFullTypeName();
     }
@@ -104,7 +104,7 @@ class Int16 implements IType
      *
      * @return string
      */
-    public function getFullTypeName()
+    public function getFullTypeName(): string
     {
         return 'Edm.Int16';
     }

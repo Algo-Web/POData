@@ -465,16 +465,16 @@ class SegmentParser
                     );
                 }
 
-                switch ($rawKind->getValue()) {
-                    case ResourcePropertyKind::COMPLEX_TYPE:
+                switch ($rawKind) {
+                    case ResourcePropertyKind::COMPLEX_TYPE():
                         $current->setTargetKind(TargetKind::COMPLEX_OBJECT());
                         break;
-                    case ResourcePropertyKind::BAG | ResourcePropertyKind::PRIMITIVE:
-                    case ResourcePropertyKind::BAG | ResourcePropertyKind::COMPLEX_TYPE:
+                    case ResourcePropertyKind::BAG()->setPRIMITIVE(true):
+                    case ResourcePropertyKind::BAG()->setCOMPLEX_TYPE(true):
                         $current->setTargetKind(TargetKind::BAG());
                         break;
-                    case ResourcePropertyKind::RESOURCE_REFERENCE:
-                    case ResourcePropertyKind::RESOURCESET_REFERENCE:
+                    case ResourcePropertyKind::RESOURCE_REFERENCE():
+                    case ResourcePropertyKind::RESOURCESET_REFERENCE():
                         $current->setTargetKind(TargetKind::RESOURCE());
                         $prevResource = $previous->getTargetResourceType();
                         $this->assertion($prevResource instanceof ResourceEntityType);

@@ -87,7 +87,7 @@ class ResourceAssociationTypeEnd
      *
      * @return bool
      */
-    public function isBelongsTo(ResourceEntityType $resourceType, $resourceProperty)
+    public function isBelongsTo(ResourceEntityType $resourceType, ResourceProperty $resourceProperty = null): bool
     {
         $flag1 = null === $resourceProperty;
         $flag2 = null === $this->resourceProperty;
@@ -111,7 +111,7 @@ class ResourceAssociationTypeEnd
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -121,7 +121,7 @@ class ResourceAssociationTypeEnd
      *
      * @return ResourceEntityType
      */
-    public function getResourceType()
+    public function getResourceType(): ResourceEntityType
     {
         return $this->resourceType;
     }
@@ -131,7 +131,7 @@ class ResourceAssociationTypeEnd
      *
      * @return ResourceProperty
      */
-    public function getResourceProperty()
+    public function getResourceProperty(): ResourceProperty
     {
         return $this->resourceProperty;
     }
@@ -141,7 +141,7 @@ class ResourceAssociationTypeEnd
      *
      * @return string
      */
-    public function getMultiplicity()
+    public function getMultiplicity(): string
     {
         if (null !== $this->fromProperty
             && $this->fromProperty->getKind() == ResourcePropertyKind::RESOURCE_REFERENCE()

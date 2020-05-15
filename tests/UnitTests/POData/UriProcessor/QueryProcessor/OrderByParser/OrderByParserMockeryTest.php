@@ -62,10 +62,10 @@ class OrderByParserMockeryTest extends TestCase
 
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::PRIMITIVE == $arg->getValue();
+            return ResourcePropertyKind::PRIMITIVE() == $arg;
         }))->andReturn(true);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::BAG == $arg->getValue();
+            return ResourcePropertyKind::BAG() == $arg;
         }))->andReturn(false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
         $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
@@ -132,7 +132,7 @@ class OrderByParserMockeryTest extends TestCase
         $rClass->shouldReceive('newInstanceArgs')->andReturn(new \stdClass());
 
         $rProp = m::mock(ResourceProperty::class);
-        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE])->andReturn(true, false);
+        $rProp->shouldReceive('isKindOf')->withArgs([ResourcePropertyKind::PRIMITIVE()])->andReturn(true, false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
         $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
         $rProp->shouldReceive('getName')->andReturn('rProp');
@@ -165,7 +165,7 @@ class OrderByParserMockeryTest extends TestCase
 
         $rProp = m::mock(ResourceProperty::class);
         $rProp->shouldReceive('isKindOf')->with(m::on(function (ResourcePropertyKind $arg) {
-            return ResourcePropertyKind::PRIMITIVE == $arg->getValue();
+            return ResourcePropertyKind::PRIMITIVE() == $arg;
         }))->andReturn(true, false);
         $rProp->shouldReceive('isKindOf')->withAnyArgs()->andReturn(false);
         $rProp->shouldReceive('getInstanceType')->andReturn($rClass);
