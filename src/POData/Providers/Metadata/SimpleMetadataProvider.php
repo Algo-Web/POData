@@ -38,7 +38,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param string $containerName container name for the data source
      * @param string $namespaceName namespace for the data source
      */
-    public function __construct($containerName, $namespaceName)
+    public function __construct(string $containerName, string $namespaceName)
     {
         $this->containerName   = $containerName;
         $this->namespaceName   = $namespaceName;
@@ -167,7 +167,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceFunctionType|null singleton with the given name if found else NULL
      */
-    public function resolveSingleton($name): ?ResourceFunctionType
+    public function resolveSingleton(string $name): ?ResourceFunctionType
     {
         if (array_key_exists($name, $this->singletons)) {
             return $this->singletons[$name];
@@ -182,7 +182,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      *
      * @return ResourceAssociationSet|null resource association set with the given name if found else NULL
      */
-    public function resolveAssociationSet($name): ?ResourceAssociationSet
+    public function resolveAssociationSet(string $name): ?ResourceAssociationSet
     {
         if (array_key_exists($name, $this->associationSets)) {
             return $this->associationSets[$name];
@@ -301,9 +301,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addEntityType(
         ReflectionClass $refClass,
-        $name,
-        $pluralName = null,
-        $isAbstract = false,
+        string $name,
+        string $pluralName = null,
+        bool $isAbstract = false,
         $baseType = null
     ): ResourceEntityType {
         $result = $this->createResourceType(
@@ -335,8 +335,8 @@ class SimpleMetadataProvider implements IMetadataProvider
         string $name,
         ResourceTypeKind $typeKind,
         bool $isAbstract = false,
-        $baseType = null,
-        $pluralName = null
+        ResourceType $baseType = null,
+        string $pluralName = null
     ): ResourceType {
         if (array_key_exists($name, $this->resourceTypes)) {
             throw new InvalidOperationException('Type with same name already added');
@@ -384,7 +384,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @internal param string $namespace namespace of the data source
      * @internal param ResourceType $baseResourceType base resource type
      */
-    public function addComplexType(ReflectionClass $refClass, $name): ResourceComplexType
+    public function addComplexType(ReflectionClass $refClass, string $name): ResourceComplexType
     {
         $result = $this->createResourceType($refClass, $name, ResourceTypeKind::COMPLEX());
         assert($result instanceof ResourceComplexType);
@@ -392,17 +392,17 @@ class SimpleMetadataProvider implements IMetadataProvider
     }
 
     /**
-     * @param string             $name         name of the resource set (now taken from resource type)
+     * @param string|null        $name         name of the resource set (now taken from resource type)
      * @param ResourceEntityType $resourceType resource type
      *
      * @throws InvalidOperationException
      * @return ResourceSet
      */
-    public function addResourceSet($name, ResourceEntityType $resourceType): ResourceSet
+    public function addResourceSet(?string $name, ResourceEntityType $resourceType): ResourceSet
     {
         $typeName   = $resourceType->getFullName();
         $pluralName = Pluralizer::plural($typeName);
-        if (null == $name) {
+        if (null === $name) {
             $returnName = $pluralName;
         } else {
             // handle case where $name is a fully-qualified PHP class name
@@ -441,7 +441,7 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
-    public function addKeyProperty($resourceType, $name, EdmPrimitiveType $typeCode): void
+    public function addKeyProperty(ResourceType $resourceType, string $name, EdmPrimitiveType $typeCode): void
     {
         $this->addPrimitivePropertyInternal($resourceType, $name, $typeCode, true);
     }
@@ -555,17 +555,17 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param  EdmPrimitiveType          $typeCode     type of the key property
      * @param  bool                      $isBag        property is bag or not
      * @param  null|mixed                $defaultValue
-     * @param  mixed                     $nullable
+     * @param  bool                      $nullable
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
     public function addPrimitiveProperty(
-        $resourceType,
-        $name,
+        ResourceType $resourceType,
+        string $name,
         EdmPrimitiveType $typeCode,
-        $isBag = false,
+        bool $isBag = false,
         $defaultValue = null,
-        $nullable = false
+        bool $nullable = false
     ): void {
         $this->addPrimitivePropertyInternal(
             $resourceType,
@@ -592,11 +592,11 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @throws ReflectionException
      */
     public function addETagProperty(
-        $resourceType,
-        $name,
+        ResourceType $resourceType,
+        string $name,
         EdmPrimitiveType $typeCode,
         $defaultValue = null,
-        $nullable = false
+        bool $nullable = false
     ): void {
         $this->addPrimitivePropertyInternal(
             $resourceType,
@@ -618,18 +618,18 @@ class SimpleMetadataProvider implements IMetadataProvider
      * @param  string                    $name              The name of the property to add
      * @param  ResourceSet               $targetResourceSet The resource set the resource reference
      *                                                      property points to
-     * @param  mixed                     $flip
-     * @param  mixed                     $many
+     * @param  bool                      $flip
+     * @param  bool                      $many
      * @param  ResourceEntityType|null   $concreteType      Underlying concrete resource reference type, if set
      * @throws InvalidOperationException
      * @throws ReflectionException
      */
     public function addResourceReferenceProperty(
         ResourceEntityType $resourceType,
-        $name,
+        string $name,
         ResourceSet $targetResourceSet,
-        $flip = false,
-        $many = false,
+        bool $flip = false,
+        bool $many = false,
         ResourceEntityType $concreteType = null
     ): void {
         $this->addReferencePropertyInternal(
@@ -739,9 +739,9 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty,
-        $nullable = false
+        string $sourceProperty,
+        string $targetProperty,
+        bool $nullable = false
     ): void {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
@@ -889,10 +889,10 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addResourceSetReferenceProperty(
         ResourceEntityType $resourceType,
-        $name,
+        string $name,
         ResourceSet $targetResourceSet,
         ResourceEntityType $concreteType = null,
-        $single = false
+        bool $single = false
     ): void {
         $this->addReferencePropertyInternal(
             $resourceType,
@@ -919,8 +919,8 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceSetReferencePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty
+        string $sourceProperty,
+        string $targetProperty
     ): void {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
@@ -958,8 +958,8 @@ class SimpleMetadataProvider implements IMetadataProvider
     public function addResourceReferenceSinglePropertyBidirectional(
         ResourceEntityType $sourceResourceType,
         ResourceEntityType $targetResourceType,
-        $sourceProperty,
-        $targetProperty
+        string $sourceProperty,
+        string $targetProperty
     ): void {
         $this->addReferencePropertyInternalBidirectional(
             $sourceResourceType,
@@ -996,9 +996,9 @@ class SimpleMetadataProvider implements IMetadataProvider
      */
     public function addComplexProperty(
         ResourceType $targetResourceType,
-        $name,
+        string $name,
         ResourceComplexType $complexResourceType,
-        $isBag = false
+        bool $isBag = false
     ): ResourceProperty {
         if ($targetResourceType->getResourceTypeKind() != ResourceTypeKind::ENTITY()
             && $targetResourceType->getResourceTypeKind() != ResourceTypeKind::COMPLEX()
