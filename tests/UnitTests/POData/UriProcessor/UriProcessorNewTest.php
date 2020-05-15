@@ -516,6 +516,7 @@ class UriProcessorNewTest extends TestCase
         $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $model = new Customer2();
 

@@ -49,7 +49,7 @@ interface IMetadataProvider
      *
      * @return ResourceSet|null resource set with the given name if found else NULL
      */
-    public function resolveResourceSet($name): ?ResourceSet;
+    public function resolveResourceSet(string $name): ?ResourceSet;
 
     /**
      * To get a resource type based on the resource set name.
@@ -58,7 +58,7 @@ interface IMetadataProvider
      *
      * @return ResourceType|null resource type with the given resource set name if found else NULL
      */
-    public function resolveResourceType($name): ?ResourceType;
+    public function resolveResourceType(string $name): ?ResourceType;
 
     /**
      * The method must return a collection of all the types derived from
@@ -106,7 +106,7 @@ interface IMetadataProvider
      *
      * @return void
      */
-    public function createSingleton($name, ResourceType $returnType, $functionName): void;
+    public function createSingleton(string $name, ResourceType $returnType, $functionName): void;
 
     /**
      * Get all singletons defined on this object.
@@ -122,7 +122,7 @@ interface IMetadataProvider
      *
      * @return mixed
      */
-    public function callSingleton($name);
+    public function callSingleton(string $name);
 
     /**
      * @throws Exception

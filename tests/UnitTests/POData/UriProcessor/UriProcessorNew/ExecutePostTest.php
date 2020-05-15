@@ -65,6 +65,7 @@ class ExecutePostTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
         $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
@@ -145,6 +146,7 @@ class ExecutePostTest extends TestCase
         $requestPayload->propertyContent                                   = new ODataPropertyContent();
         $requestPayload->propertyContent->properties['otherNumber']        = new ODataProperty();
         $requestPayload->propertyContent->properties['otherNumber']->value = 42;
+        $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
         $request->shouldReceive('getMethod')->andReturn(HTTPRequestMethod::POST());
