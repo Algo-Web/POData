@@ -47,8 +47,8 @@ class ResourceAssociationType
      * @param ResourceAssociationTypeEnd $end2          Second end of the association
      */
     public function __construct(
-        $name,
-        $namespaceName,
+        string $name,
+        string $namespaceName,
         ResourceAssociationTypeEnd $end1,
         ResourceAssociationTypeEnd $end2
     ) {
@@ -108,7 +108,7 @@ class ResourceAssociationType
      */
     public function getResourceAssociationTypeEnd(
         ResourceEntityType $resourceType,
-        $resourceProperty
+        ResourceProperty $resourceProperty
     ): ?ResourceAssociationTypeEnd {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end1;
@@ -130,7 +130,7 @@ class ResourceAssociationType
      */
     public function getRelatedResourceAssociationSetEnd(
         ResourceEntityType $resourceType,
-        $resourceProperty
+        ResourceProperty $resourceProperty
     ): ?ResourceAssociationTypeEnd {
         if ($this->end1->isBelongsTo($resourceType, $resourceProperty)) {
             return $this->end2;

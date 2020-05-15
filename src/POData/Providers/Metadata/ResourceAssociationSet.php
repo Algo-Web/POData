@@ -51,7 +51,7 @@ class ResourceAssociationSet
      * @throws InvalidArgumentException
      */
     public function __construct(
-        $name,
+        string $name,
         ResourceAssociationSetEnd $end1,
         ResourceAssociationSetEnd $end2
     ) {

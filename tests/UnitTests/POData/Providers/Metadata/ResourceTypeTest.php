@@ -177,7 +177,9 @@ class ResourceTypeTest extends TestCase
     public function testResolvePropertyOnPrimitiveType()
     {
         $foo = ResourceType::getPrimitiveResourceType(EdmPrimitiveType::BINARY());
-        $this->assertNull($foo->resolvePropertyDeclaredOnThisType(null));
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('must be of the type string, null given');
+        $foo->resolvePropertyDeclaredOnThisType(null);
     }
 
     public function testAddKeyPropertyToEntityTypeWithAbstractBase()

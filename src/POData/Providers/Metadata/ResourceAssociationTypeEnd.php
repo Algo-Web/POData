@@ -87,7 +87,7 @@ class ResourceAssociationTypeEnd
      *
      * @return bool
      */
-    public function isBelongsTo(ResourceEntityType $resourceType, $resourceProperty): bool
+    public function isBelongsTo(ResourceEntityType $resourceType, ResourceProperty $resourceProperty = null): bool
     {
         $flag1 = null === $resourceProperty;
         $flag2 = null === $this->resourceProperty;
