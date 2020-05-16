@@ -86,7 +86,7 @@ class LinkProcessor extends BaseNodeHandler
             assert($objectModel instanceof ODataEntry); // its an assumption but lets check it
             $expandResult = new ODataExpandedResult($objectModel);
         }
-        $this->link->setExpandResult($expandResult);
+        $this->link->setExpandedResult($expandResult);
     }
 
     /**

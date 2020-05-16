@@ -202,12 +202,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setUrl('Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $links[0]->setIsCollection(false);
         $links[0]->setIsExpanded(true);
-        $links[0]->setExpandResult(null);
+        $links[0]->setExpandedResult(null);
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->setUrl(null);
-        $links[1]->setExpandResult(null);
+        $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
         $objectResult->title           = new ODataTitle('Order');
@@ -313,12 +313,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->setIsCollection(true);
         $links[0]->setIsExpanded(true);
-        $links[0]->setExpandResult(new ODataExpandedResult($linkResult));
+        $links[0]->setExpandedResult(new ODataExpandedResult($linkResult));
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->setUrl(null);
-        $links[1]->setExpandResult(null);
+        $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
         $objectResult->title           = new ODataTitle('Order');
@@ -423,12 +423,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->setIsCollection(true);
         $links[0]->setIsExpanded(true);
-        $links[0]->setExpandResult(new ODataExpandedResult($linkResult));
+        $links[0]->setExpandedResult(new ODataExpandedResult($linkResult));
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->setUrl(null);
-        $links[1]->setExpandResult(null);
+        $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
         $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
@@ -537,12 +537,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setIsCollection(true);
         $links[0]->setIsExpanded(true);
         $links[0]->setUrl('Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
-        $links[0]->setExpandResult(new ODataExpandedResult($linkResult));
+        $links[0]->setExpandedResult(new ODataExpandedResult($linkResult));
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->setUrl(null);
-        $links[1]->setExpandResult(null);
+        $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
         $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';

@@ -78,7 +78,7 @@ class ODataLink
             ->setType($type)
             ->setUrl($url)
             ->setIsCollection($isCollection)
-            ->setExpandResult($expandedResult)
+            ->setExpandedResult($expandedResult)
             ->setIsExpanded($isExpanded);
     }
     /**
@@ -192,7 +192,7 @@ class ODataLink
     /**
      * @return null|ODataExpandedResult
      */
-    public function getExpandResult(): ?ODataExpandedResult
+    public function getExpandedResult(): ?ODataExpandedResult
     {
         if (!$this->isExpanded) {
             return null;
@@ -208,7 +208,7 @@ class ODataLink
     /**
      * @param ODataExpandedResult $eResult
      */
-    public function setExpandResult(?ODataExpandedResult $eResult): self
+    public function setExpandedResult(?ODataExpandedResult $eResult): self
     {
         if (null === $eResult) {
             return $this;
