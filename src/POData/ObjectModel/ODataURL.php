@@ -20,7 +20,7 @@ class ODataURL
      * @param  string|null $msg
      * @return bool
      */
-    public function isOk(&$msg = null)
+    public function isOk(&$msg = null): bool
     {
         if (null == $this->url || empty($this->url)) {
             $msg = 'Url value must be non-empty';

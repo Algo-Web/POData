@@ -223,16 +223,18 @@ class ODataEntry extends ODataContainerBase
 
     /**
      * @param AtomContent $atomContent
+     * @return ODataEntry
      */
-    public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
+    public function setAtomContent(AtomObjectModel\AtomContent $atomContent): self
     {
         $this->setPropertyContent($atomContent->properties);
+        return $this;
     }
 
     /**
      * @return AtomAuthor
      */
-    public function getAtomAuthor()
+    public function getAtomAuthor(): AtomAuthor
     {
         return new AtomObjectModel\AtomAuthor();
     }
@@ -240,7 +242,7 @@ class ODataEntry extends ODataContainerBase
     /**
      * @return null|ODataPropertyContent
      */
-    public function getPropertyContent()
+    public function getPropertyContent(): ?ODataPropertyContent
     {
         if (!$this->isMediaLinkEntry) {
             return null;
@@ -250,16 +252,18 @@ class ODataEntry extends ODataContainerBase
 
     /**
      * @param ODataPropertyContent|null $oDataPropertyContent
+     * @return ODataEntry
      */
-    public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null)
+    public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null): self
     {
         $this->propertyContent = $oDataPropertyContent;
+        return $this;
     }
 
     /**
      * @return ODataLink
      */
-    public function getEditLink()
+    public function getEditLink(): ODataLink
     {
         return $this->editLink;
     }
@@ -267,15 +271,16 @@ class ODataEntry extends ODataContainerBase
     /**
      * @return ODataCategory
      */
-    public function getType()
+    public function getType(): ?ODataCategory
     {
         return $this->type;
     }
 
     /**
      * @param ODataCategory|null $type
+     * @return ODataEntry
      */
-    public function setType(ODataCategory $type = null)
+    public function setType(ODataCategory $type = null): self
     {
         $this->type = $type;
         if (null !== $type) {
@@ -284,20 +289,22 @@ class ODataEntry extends ODataContainerBase
             $final                 = $termArray[count($termArray) - 1];
             $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
         }
+        return $this;
     }
 
     /**
      * @return ODataLink[]
      */
-    public function getLinks()
+    public function getLinks(): array
     {
         return $this->links;
     }
 
     /**
      * @param $links ODataLink[]
+     * @return ODataEntry
      */
-    public function setLinks(array $links)
+    public function setLinks(array $links): self
     {
         $this->links = [];
         foreach ($links as $link) {
@@ -312,20 +319,22 @@ class ODataEntry extends ODataContainerBase
                 continue;
             }
         }
+        return $this;
     }
 
     /**
      * @return ODataMediaLink[]
      */
-    public function getMediaLinks()
+    public function getMediaLinks(): array
     {
         return $this->mediaLinks;
     }
 
     /**
      * @param ODataMediaLink[] $mediaLinks
+     * @return ODataEntry
      */
-    public function setMediaLinks(array $mediaLinks)
+    public function setMediaLinks(array $mediaLinks): self
     {
         $this->mediaLinks = [];
         $editLink         = null;
@@ -336,13 +345,14 @@ class ODataEntry extends ODataContainerBase
         if (null === $this->mediaLink) {
             $this->isMediaLinkEntry = false;
         }
+        return $this;
     }
 
     /**
      * @param ODataMediaLink      $mediaLink
      * @param ODataMediaLink|null $editLink
      */
-    private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null)
+    private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null): void
     {
         if ('edit-media' == $mediaLink->rel) {
             $this->isMediaLinkEntry = true;
@@ -359,7 +369,7 @@ class ODataEntry extends ODataContainerBase
     /**
      * @param ODataMediaLink|null $editLink
      */
-    private function correctMediaLinkSrc(ODataMediaLink $editLink = null)
+    private function correctMediaLinkSrc(ODataMediaLink $editLink = null): void
     {
         if (null !== $this->mediaLink && null !== $editLink) {
             $this->mediaLink->srcLink = $editLink->editLink . $this->mediaLink->editLink;
@@ -372,7 +382,7 @@ class ODataEntry extends ODataContainerBase
     /**
      * @return ODataMediaLink
      */
-    public function getMediaLink()
+    public function getMediaLink(): ODataMediaLink
     {
         return $this->mediaLink;
     }
@@ -381,7 +391,7 @@ class ODataEntry extends ODataContainerBase
      * @param  string|null $msg
      * @return bool
      */
-    public function isOk(&$msg = null)
+    public function isOk(&$msg = null): bool
     {
         if (!$this->propertyContent instanceof ODataPropertyContent) {
             $msg = 'Property content must be instanceof ODataPropertyContent.';

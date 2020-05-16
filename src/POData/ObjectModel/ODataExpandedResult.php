@@ -25,8 +25,7 @@ class ODataExpandedResult
     /**
      * ODataExpandedResult constructor.
      *
-     * @param ODataEntry|null $entry
-     * @param ODataFeed|null  $feed
+     * @param ODataContainerBase|null $data
      */
     public function __construct(ODataContainerBase $data = null)
     {

@@ -23,7 +23,7 @@ class ODataBagContent
      *
      * @var string[]|ODataPropertyContent[]|null
      */
-    private $propertyContents;
+    private $propertyContents = [];
 
     /**
      * ODataBagContent constructor.
@@ -57,7 +57,7 @@ class ODataBagContent
     /**
      * @return ODataPropertyContent[]|string[]
      */
-    public function getPropertyContents()
+    public function getPropertyContents(): ?array
     {
         return $this->propertyContents;
     }
@@ -66,16 +66,15 @@ class ODataBagContent
      * @param ODataPropertyContent[]|string[] $propertyContents
      * @return ODataBagContent
      */
-    public function setPropertyContents($propertyContents)
+    public function setPropertyContents(array $propertyContents): ODataBagContent
     {
         $this->propertyContents = $propertyContents;
         return $this;
     }
 
-    public function addPropertyContent($propertyContent){
+    public function addPropertyContent($propertyContent)
+    {
         $this->propertyContents[] = $propertyContent;
         return $this;
-
     }
-
 }

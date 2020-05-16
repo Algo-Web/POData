@@ -58,32 +58,36 @@ class ODataFeed extends ODataContainerBase
     /**
      * @return ODataLink
      */
-    public function getNextPageLink()
+    public function getNextPageLink(): ?ODataLink
     {
         return $this->nextPageLink;
     }
 
     /**
      * @param ODataLink $nextPageLink
+     * @return ODataFeed
      */
-    public function setNextPageLink(ODataLink $nextPageLink)
+    public function setNextPageLink(ODataLink $nextPageLink): self
     {
         $this->nextPageLink = $nextPageLink->isEmpty() ? null : $nextPageLink;
+        return $this;
     }
 
     /**
      * @return ODataEntry[]
      */
-    public function getEntries()
+    public function getEntries(): array
     {
         return $this->entries;
     }
 
     /**
      * @param ODataEntry[] $entries
+     * @return ODataFeed
      */
-    public function setEntries(array $entries)
+    public function setEntries(array $entries): self
     {
         $this->entries = $entries;
+        return $this;
     }
 }

@@ -199,7 +199,7 @@ class ODataLink
         }
         if ($this->isCollection) {
             assert($this->expandedResult instanceof ODataFeed);
-            return new ODataExpandedResult( $this->expandedResult);
+            return new ODataExpandedResult($this->expandedResult);
         }
         assert($this->expandedResult instanceof ODataEntry);
         return new ODataExpandedResult($this->expandedResult);
@@ -208,9 +208,9 @@ class ODataLink
     /**
      * @param ODataExpandedResult $eResult
      */
-    public function setExpandResult(?ODataExpandedResult $eResult)
+    public function setExpandResult(?ODataExpandedResult $eResult): self
     {
-        if(null === $eResult){
+        if (null === $eResult) {
             return $this;
         }
         if (null !== $eResult->getFeed()) {

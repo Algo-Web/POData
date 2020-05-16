@@ -19,19 +19,21 @@ class ODataPropertyContent
     /**
      * @return ODataProperty[]
      */
-    public function getPropertys()
+    public function getPropertys(): array
     {
         return $this->properties;
     }
 
     /**
      * @param $newProperties ODataProperty[]
+     * @return ODataPropertyContent
      */
-    public function setPropertys(array $newProperties)
+    public function setPropertys(array $newProperties): self
     {
         foreach ($newProperties as $key => $property) {
             $property->name = $key;
         }
         $this->properties = $newProperties;
+        return $this;
     }
 }
