@@ -29,7 +29,7 @@ class ODataExpandedResult
      */
     public function __construct(ODataContainerBase $data = null)
     {
-        $this->data = $data;
+        $this->{$data instanceof ODataEntry ? 'setEntry' : 'setFeed'}($data);
     }
 
     /**
