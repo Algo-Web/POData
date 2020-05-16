@@ -398,7 +398,6 @@ class CynicDeserialiser
                 $result->id instanceof KeyDescriptor;
             if ($isUrlKey || $isIdKey) {
                 if ($isIdKey) {
-                    $link->setUrl($result->id->generateRelativeUri($targSet));
                 }
                 return;
             }
@@ -426,7 +425,6 @@ class CynicDeserialiser
             $target = $this->getWrapper()->getResourceFromResourceSet($targSet, $keyDesc);
             assert(isset($target));
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
-            $link->setUrl($keyDesc->generateRelativeUri($targSet));
             return;
         }
         // creating new resource
@@ -442,7 +440,6 @@ class CynicDeserialiser
         // updating existing resource and connecting to it
         list($targSet, $target) = $this->processEntryContent($result);
         assert(isset($target));
-        $link->setUrl($keyDesc->generateRelativeUri($targSet));
         $result->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
         return;
