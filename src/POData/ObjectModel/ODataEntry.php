@@ -55,6 +55,7 @@ class ODataEntry extends ODataContainerBase
      * @var array<ODataLink>
      */
     public $links = [];
+
     /**
      * Entry ETag.
      *
