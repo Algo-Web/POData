@@ -538,7 +538,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             'Employees(EmployeeID=\'Cave+Johnson\')/Manager',
             false
         );
-        $managerLink1->isExpanded     = true;
+        $managerLink1->setIsExpanded(true);
         $managerLink1->setExpandedResult(new ODataExpandedResult($managerResult));
         $managerLink2                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates',
@@ -547,7 +547,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates',
             true
         );
-        $managerLink2->isExpanded     = false;
+        $managerLink2->setIsExpanded(false);
 
 
         $manager                   = new ODataEntry();

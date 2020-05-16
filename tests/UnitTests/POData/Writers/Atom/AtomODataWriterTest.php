@@ -158,7 +158,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1->links            = [];
         $entry1->eTag             = 'Entry ETag';
-        $link->isExpanded         = false;
+        $link->setIsExpanded(false);
         $entry1->isMediaLinkEntry = false;
 
         $bagProp1 = new ODataBagContent();
@@ -356,7 +356,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             ), ];
 
         $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL', null,null);
-        $link->isExpanded = false;
+        $link->setIsExpanded(false);
 
         $entry1->links = [$link];
 
@@ -661,7 +661,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         )];
 
         $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL');
-        $link->isExpanded = false;
+        $link->setIsExpanded(false);
 
         $odataExpandEntry->links            = [];
         $odataExpandEntry->eTag             = 'Entry ETag';

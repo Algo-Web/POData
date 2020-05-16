@@ -51,7 +51,7 @@ class ODataLink
      *
      * @var bool
      */
-    public $isExpanded;
+    private $isExpanded;
 
     /**
      * ODataLink constructor.

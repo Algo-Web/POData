@@ -785,7 +785,7 @@ class CynicSerialiser implements IObjectSerialiser
         string $propName
     ) {
         $nextName             = $prop->getResourceType()->getName();
-        $nuLink->isExpanded   = true;
+        $nuLink->setIsExpanded(true);
         $value                = $entryObject->results->{$propName};
         $isCollection         = ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind;
         $nuLink->setIsCollection($isCollection);

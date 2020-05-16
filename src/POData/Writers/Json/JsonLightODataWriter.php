@@ -276,7 +276,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
                 ->writeValue($link->getUrl());
         }
 
-        if ($link->isExpanded) {
+        if ($link->isExpanded()) {
             $this->writer->writeName($link->getTitle());
 
             if (null === $link->getExpandedResult() || null === $link->getExpandedResult()->getData()) {

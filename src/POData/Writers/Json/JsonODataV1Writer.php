@@ -413,7 +413,7 @@ class JsonODataV1Writer implements IODataWriter
         // "<linkname>" :
         $this->writer->writeName($link->getTitle());
 
-        if ($link->isExpanded) {
+        if ($link->isExpanded()) {
             if (null === $link->getExpandedResult() || null === $link->getExpandedResult()->getData()) {
                 $this->writer->writeValue('null');
             } else {

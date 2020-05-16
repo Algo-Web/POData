@@ -721,9 +721,9 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeLink(ODataLink $link)
     {
-        $this->writeLinkNode($link, $link->isExpanded);
+        $this->writeLinkNode($link, $link->isExpanded());
 
-        if ($link->isExpanded) {
+        if ($link->isExpanded()) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_INLINE_ELEMENT_NAME,
