@@ -42,9 +42,8 @@ class ODataFeed extends ODataContainerBase
     public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
         parent::__construct($id, $title, $selfLink, $updated, $baseURI);
+        $this->setNextPageLink($nextPageLink)->setEntries($entries);
         $this->rowCount     = $rowCount;
-        $this->nextPageLink = $nextPageLink;
-        $this->entries      = $entries;
     }
 
     /**
@@ -59,16 +58,16 @@ class ODataFeed extends ODataContainerBase
      * @param ODataLink $nextPageLink
      * @return ODataFeed
      */
-    public function setNextPageLink(ODataLink $nextPageLink): self
+    public function setNextPageLink(?ODataLink $nextPageLink): self
     {
-        $this->nextPageLink = $nextPageLink->isEmpty() ? null : $nextPageLink;
+        $this->nextPageLink = null === $nextPageLink || $nextPageLink->isEmpty() ? null : $nextPageLink;
         return $this;
     }
 
     /**
      * @return ODataEntry[]
      */
-    public function getEntries(): array
+    public function getEntries(): ?array
     {
         return $this->entries;
     }
@@ -77,7 +76,7 @@ class ODataFeed extends ODataContainerBase
      * @param ODataEntry[] $entries
      * @return ODataFeed
      */
-    public function setEntries(array $entries): self
+    public function setEntries(?array $entries): self
     {
         $this->entries = $entries;
         return $this;

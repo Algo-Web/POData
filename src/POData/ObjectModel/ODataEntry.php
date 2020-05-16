@@ -111,20 +111,17 @@ class ODataEntry extends ODataContainerBase
         ?string $updated = null,
         ?string $baseURI = null
     ) {
-        $this->id = $id;
-        $this->setSelfLink($selfLink);
-        $this->title = $title;
+        parent::__construct($id, $title, $selfLink, $updated, $baseURI);
+        $this
+            ->setType($type)
+            ->setPropertyContent($propertyContent)
+            ->setMediaLinks($mediaLinks)
+            ->setLinks($links)
+            ->setETag($eTag)
+            ->setIsMediaLinkEntry($isMediaLinkEntry)
+            ->setResourceSetName($resourceSetName);
         $this->editLink = $editLink;
-        $this->type = $type;
-        $this->propertyContent = $propertyContent;
-        $this->mediaLinks = $mediaLinks;
         $this->mediaLink = $mediaLink;
-        $this->links = $links;
-        $this->eTag = $eTag;
-        $this->isMediaLinkEntry = $isMediaLinkEntry;
-        $this->resourceSetName = $resourceSetName;
-        $this->updated = $updated;
-        $this->baseURI = $baseURI;
     }
 
 
