@@ -442,7 +442,7 @@ class CynicDeserialiser
         // updating existing resource and connecting to it
         list($targSet, $target) = $this->processEntryContent($result);
         assert(isset($target));
-        $link->setUrl($keyDesc);
+        $link->setUrl($keyDesc->generateRelativeUri($targSet));
         $result->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
         return;

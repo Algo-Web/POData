@@ -556,7 +556,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertTrue($objectResult->links[0]->url instanceof KeyDescriptor);
+        $this->assertTrue(!($objectResult->links[0]->url instanceof KeyDescriptor));
         $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
     }
 
