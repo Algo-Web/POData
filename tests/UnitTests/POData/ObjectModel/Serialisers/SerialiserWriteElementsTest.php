@@ -244,7 +244,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [$deet1, $deet2];
 
-        $selfLink        = new ODataLink('self',  'Order_Details',null,  'Order_Details');
+        $selfLink        = new ODataLink('self', 'Order_Details', null, 'Order_Details');
 
         $links              = [];
         $links[]            = [new ODataLink(), new ODataLink()];
@@ -279,7 +279,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->updated                                         = '2017-01-01T00:00:00+00:00';
         $entries[1]->id                                              = 'http://localhost/odata.svc/Order_Details(ProductID=2,OrderID=1)';
         $entries[1]->title                                           = new ODataTitle('Order_Details');
-        $entries[1]->editLink                                        = new ODataLink('edit','Order_Details',null, 'Order_Details(ProductID=2,OrderID=1)');
+        $entries[1]->editLink                                        = new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=2,OrderID=1)');
         $entries[1]->type                                            = new ODataCategory('NorthWind.Order_Details');
         $entries[1]->propertyContent                                 = $this->generateOrderDetailsProperties();
         $entries[1]->propertyContent->properties['ProductID']->value = '2';
@@ -406,14 +406,13 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             true,
             new ODataExpandedResult($subFeed),
             true
-
         );
 
         $entry     = new ODataEntry();
         $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                      . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $entry->title                                              = new ODataTitle('Customer');
-        $entry->editLink                                           = new ODataLink('edit',  'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
+        $entry->editLink                                           = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $entry->type                                               = new ODataCategory('NorthWind.Customer');
         $entry->resourceSetName                                    = 'Customers';
         $entry->propertyContent                                    = $this->generateCustomerProperties();

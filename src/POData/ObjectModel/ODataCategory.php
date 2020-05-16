@@ -35,7 +35,6 @@ class ODataCategory
         $this
             ->setTerm($term)
             ->setScheme($scheme);
-
     }
 
     /**
@@ -47,7 +46,7 @@ class ODataCategory
     }
 
     /**
-     * @param string $term
+     * @param  string        $term
      * @return ODataCategory
      */
     public function setTerm(string $term): ODataCategory
@@ -65,7 +64,7 @@ class ODataCategory
     }
 
     /**
-     * @param string $scheme
+     * @param  string        $scheme
      * @return ODataCategory
      */
     public function setScheme(string $scheme): ODataCategory

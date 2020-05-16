@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace POData\ObjectModel;
-
 
 abstract class ODataContainerBase
 {
@@ -43,7 +44,7 @@ abstract class ODataContainerBase
     /**
      * ODataContainerBase constructor.
      * @param string|null $id
-     * @param ODataTitle $title
+     * @param ODataTitle  $title
      * @param string|null $updated
      * @param string|null $baseURI
      */
@@ -67,7 +68,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @param string|null $id
+     * @param  string|null $id
      * @return self
      */
     public function setId(?string $id): self
@@ -85,7 +86,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @param ODataTitle|null $title
+     * @param  ODataTitle|null $title
      * @return self
      */
     public function setTitle(?ODataTitle $title): self
@@ -103,7 +104,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @param string|null $selfLink
+     * @param  string|null $selfLink
      * @return ODataEntry
      */
     public function setSelfLink(?ODataLink $selfLink): self
@@ -120,7 +121,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @param string|null $updated
+     * @param  string|null $updated
      * @return ODataEntry
      */
     public function setUpdated(?string $updated): self
@@ -138,7 +139,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @param string|null $baseURI
+     * @param  string|null $baseURI
      * @return self
      */
     public function setBaseURI(?string $baseURI): self

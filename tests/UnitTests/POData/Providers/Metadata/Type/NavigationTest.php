@@ -138,8 +138,8 @@ class NavigationTest extends TestCase
 
     public function testValidate()
     {
-        $foo = $this->getAsIType();
-        $value = 'value';
+        $foo      = $this->getAsIType();
+        $value    = 'value';
         $outValue = null;
         $this->assertTrue($foo->validate($value, $outValue));
         $this->assertEquals($value, $outValue);

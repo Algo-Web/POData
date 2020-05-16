@@ -396,7 +396,8 @@ class JsonODataV1WriterTest extends TestCase
 
         //entry 2 links
         //link1
-        $link1        = new ODataLink('Products',
+        $link1        = new ODataLink(
+            'Products',
             'Products',
             null,
             'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products'
@@ -1477,7 +1478,7 @@ class JsonODataV1WriterTest extends TestCase
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
-        $feed->setSelfLink( new ODataLink(
+        $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
             null,

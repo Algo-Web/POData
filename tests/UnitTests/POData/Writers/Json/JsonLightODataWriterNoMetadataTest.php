@@ -451,7 +451,8 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $selfLink            = new ODataLink(
             'Products',
             'Products',
-            null,'Categories(0)/Products'
+            null,
+            'Categories(0)/Products'
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
@@ -1219,7 +1220,8 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedFeed->title   = new ODataTitle('SubCollection');
         $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
 
-        $expandedFeedSelfLink        = new ODataLink('self',
+        $expandedFeedSelfLink        = new ODataLink(
+            'self',
             'SubCollection',
             null,
             'SubCollection Self URL'
@@ -1384,7 +1386,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
-        null,
+            null,
             'feedID'
         ));
 

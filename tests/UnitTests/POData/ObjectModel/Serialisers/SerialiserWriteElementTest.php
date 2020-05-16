@@ -232,7 +232,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkRawResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\','
                              . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $linkRawResult->title           = new ODataTitle('Orders');
-        $linkRawResult->setSelfLink(new ODataLink('self',  'Orders', null, 'Customers(CustomerID=\'1\','
+        $linkRawResult->setSelfLink(new ODataLink('self', 'Orders', null, 'Customers(CustomerID=\'1\','
             . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders'));
 
 
@@ -282,7 +282,6 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                 true,
                 new ODataExpandedResult($linkFeedResult),
                 true
-
             )
         ];
 
@@ -597,8 +596,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $ironicResult = $ironic->writeTopLevelElement($result);
 
         // flatten, remove and zero out etags - haven't yet figured out how to freeze etag generation
-        $ironicResult->mediaLinks[0]->eTag                           = '';
-        $ironicResult->mediaLink->eTag                               = '';
+        $ironicResult->mediaLinks[0]->eTag                                            = '';
+        $ironicResult->mediaLink->eTag                                                = '';
         $ironicResult->links[0]->getExpandedResult()->getEntry()->mediaLinks[0]->eTag = '';
         $ironicResult->links[0]->getExpandedResult()->getEntry()->mediaLink->eTag     = '';
 

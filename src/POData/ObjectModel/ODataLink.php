@@ -9,7 +9,7 @@ namespace POData\ObjectModel;
  */
 class ODataLink
 {
-      /**
+    /**
      * Name of the link. This becomes last segment of rel attribute value.
      *
      * @var string
@@ -55,11 +55,11 @@ class ODataLink
 
     /**
      * ODataLink constructor.
-     * @param string $name
-     * @param string $title
-     * @param string $type
-     * @param string $url
-     * @param bool $isCollection
+     * @param string                   $name
+     * @param string                   $title
+     * @param string                   $type
+     * @param string                   $url
+     * @param bool                     $isCollection
      * @param ODataExpandedResult|null $expandedResult
      * @param bool|null $isExpanded
      */
@@ -90,7 +90,7 @@ class ODataLink
     }
 
     /**
-     * @param string $name
+     * @param  string    $name
      * @return ODataLink
      */
     public function setName(?string $name): ODataLink
@@ -108,7 +108,7 @@ class ODataLink
     }
 
     /**
-     * @param string $title
+     * @param  string    $title
      * @return ODataLink
      */
     public function setTitle(?string $title): ODataLink
@@ -126,7 +126,7 @@ class ODataLink
     }
 
     /**
-     * @param string $type
+     * @param  string    $type
      * @return ODataLink
      */
     public function setType(?string $type): ODataLink
@@ -144,7 +144,7 @@ class ODataLink
     }
 
     /**
-     * @param string $url
+     * @param  string    $url
      * @return ODataLink
      */
     public function setUrl(?string $url): ODataLink
@@ -162,7 +162,7 @@ class ODataLink
     }
 
     /**
-     * @param bool $isCollection
+     * @param  bool      $isCollection
      * @return ODataLink
      */
     public function setIsCollection(?bool $isCollection): ODataLink
@@ -180,7 +180,7 @@ class ODataLink
     }
 
     /**
-     * @param bool $isExpanded
+     * @param  bool      $isExpanded
      * @return ODataLink
      */
     public function setIsExpanded(?bool $isExpanded): ODataLink

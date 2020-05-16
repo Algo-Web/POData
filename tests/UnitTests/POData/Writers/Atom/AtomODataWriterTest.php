@@ -154,7 +154,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media Content Type',
             'Media ETag'
         )];
-        $link        = new ODataLink('Link Name','Link Title', 'Link Type','Link URL');
+        $link        = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL');
 
         $entry1->links            = [];
         $entry1->eTag             = 'Entry ETag';
@@ -355,7 +355,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                 'Media ETag2'
             ), ];
 
-        $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL', null,null);
+        $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL', null, null);
         $link->setIsExpanded(false);
 
         $entry1->links = [$link];
@@ -607,7 +607,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->title = new ODataTitle('Entry Title');
         $entry->type  = new ODataCategory('');
 
-        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type',  'Edit Link URL');
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
 
         $entry->editLink = $editLink;
@@ -638,11 +638,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->id    = 'Entry 1';
         $odataExpandEntry->title = new ODataTitle('Entry Title');
 
-        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type',  'Edit Link URL');
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
         $odataExpandEntry->editLink = $editLink;
 
-        $selfLink        = new ODataLink('self', 'self Link Title', '',  'Self Link URL');
+        $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
         $odataExpandEntry->setSelfLink($selfLink);
 

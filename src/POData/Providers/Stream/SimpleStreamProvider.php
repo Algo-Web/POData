@@ -58,8 +58,8 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param  object $entity
-     * @param  IOperationContext $operationContext
+     * @param  object                  $entity
+     * @param  IOperationContext       $operationContext
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @return string
      */
@@ -67,7 +67,7 @@ class SimpleStreamProvider implements IStreamProvider2
         $entity,
         IOperationContext $operationContext,
         ResourceStreamInfo $resourceStreamInfo = null
-    ):string {
+    ): string {
         if (null == $resourceStreamInfo) {
             return '*/*';
         }
@@ -75,8 +75,8 @@ class SimpleStreamProvider implements IStreamProvider2
     }
 
     /**
-     * @param  object $entity
-     * @param  IOperationContext $operationContext
+     * @param  object                  $entity
+     * @param  IOperationContext       $operationContext
      * @param  ResourceStreamInfo|null $resourceStreamInfo
      * @return string
      */

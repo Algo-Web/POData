@@ -212,7 +212,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult                  = new ODataEntry();
         $objectResult->title           = new ODataTitle('Order');
         $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink('edit','Order', null, 'Orders(OrderID=1)');
+        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
         $objectResult->resourceSetName = 'Orders';

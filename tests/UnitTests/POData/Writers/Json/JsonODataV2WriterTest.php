@@ -297,7 +297,8 @@ class JsonODataV2WriterTest extends TestCase
 
         //entry 1 links
         //link1
-        $link1        = new ODataLink('Products',
+        $link1        = new ODataLink(
+            'Products',
             'Products',
             null,
             'http://services.odata.org/OData/OData.svc/Suppliers(0)/Products'
@@ -382,7 +383,8 @@ class JsonODataV2WriterTest extends TestCase
 
         //entry 2 links
         //link1
-        $link1        = new ODataLink('Products',
+        $link1        = new ODataLink(
+            'Products',
             'Products',
             null,
             'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products'

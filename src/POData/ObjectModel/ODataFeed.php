@@ -55,7 +55,7 @@ class ODataFeed extends ODataContainerBase
     }
 
     /**
-     * @param ODataLink $nextPageLink
+     * @param  ODataLink $nextPageLink
      * @return ODataFeed
      */
     public function setNextPageLink(?ODataLink $nextPageLink): self
@@ -73,7 +73,7 @@ class ODataFeed extends ODataContainerBase
     }
 
     /**
-     * @param ODataEntry[] $entries
+     * @param  ODataEntry[] $entries
      * @return ODataFeed
      */
     public function setEntries(?array $entries): self

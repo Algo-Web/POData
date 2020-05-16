@@ -114,7 +114,7 @@ Content-Length: ###
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(-2, $result));
 
-        $firstRequest = $result[-1]->incomingRequest();
+        $firstRequest  = $result[-1]->incomingRequest();
         $secondRequest = $result[-2]->incomingRequest();
         $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
         $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);
@@ -205,7 +205,7 @@ Content-ID: 2
         $this->assertTrue(array_key_exists(-1, $result));
         $this->assertTrue(array_key_exists(2, $result));
 
-        $firstRequest = $result[-1]->incomingRequest();
+        $firstRequest  = $result[-1]->incomingRequest();
         $secondRequest = $result[2]->incomingRequest();
         $this->assertInstanceOf(IncomingChangeSetRequest::class, $firstRequest);
         $this->assertInstanceOf(IncomingChangeSetRequest::class, $secondRequest);

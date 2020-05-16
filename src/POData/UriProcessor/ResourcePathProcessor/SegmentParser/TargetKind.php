@@ -23,7 +23,7 @@ use MyCLabs\Enum\Enum;
  */
 class TargetKind extends Enum
 {
-    protected const TERMINAL_VALUES = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
+    protected const TERMINAL_VALUES       = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
     protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
     protected const NON_FILTERABLE_VALUES = [3 => true, 4 => true];
 

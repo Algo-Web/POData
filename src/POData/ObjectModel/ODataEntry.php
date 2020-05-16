@@ -80,20 +80,20 @@ class ODataEntry extends ODataContainerBase
 
     /**
      * ODataEntry constructor.
-     * @param string|null $id
-     * @param string|null $selfLink
-     * @param ODataTitle|null $title
-     * @param ODataLink|null $editLink
-     * @param ODataCategory|null $type
+     * @param string|null               $id
+     * @param string|null               $selfLink
+     * @param ODataTitle|null           $title
+     * @param ODataLink|null            $editLink
+     * @param ODataCategory|null        $type
      * @param ODataPropertyContent|null $propertyContent
-     * @param array $mediaLinks
-     * @param ODataMediaLink|null $mediaLink
-     * @param array $links
-     * @param string|null $eTag
-     * @param bool|null $isMediaLinkEntry
-     * @param string|null $resourceSetName
-     * @param string|null $updated
-     * @param string|null $baseURI
+     * @param array                     $mediaLinks
+     * @param ODataMediaLink|null       $mediaLink
+     * @param array                     $links
+     * @param string|null               $eTag
+     * @param bool|null                 $isMediaLinkEntry
+     * @param string|null               $resourceSetName
+     * @param string|null               $updated
+     * @param string|null               $baseURI
      */
     public function __construct(
         ?string $id = null,
@@ -120,7 +120,7 @@ class ODataEntry extends ODataContainerBase
             ->setETag($eTag)
             ->setIsMediaLinkEntry($isMediaLinkEntry)
             ->setResourceSetName($resourceSetName);
-        $this->editLink = $editLink;
+        $this->editLink  = $editLink;
         $this->mediaLink = $mediaLink;
     }
 
@@ -134,7 +134,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param string|null $eTag
+     * @param  string|null $eTag
      * @return ODataEntry
      */
     public function setETag(?string $eTag): ODataEntry
@@ -152,7 +152,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param bool|null $isMediaLinkEntry
+     * @param  bool|null  $isMediaLinkEntry
      * @return ODataEntry
      */
     public function setIsMediaLinkEntry(?bool $isMediaLinkEntry): ODataEntry
@@ -170,7 +170,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param string|null $resourceSetName
+     * @param  string|null $resourceSetName
      * @return ODataEntry
      */
     public function setResourceSetName(?string $resourceSetName): ODataEntry
@@ -195,7 +195,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param AtomContent $atomContent
+     * @param  AtomContent $atomContent
      * @return ODataEntry
      */
     public function setAtomContent(AtomObjectModel\AtomContent $atomContent): self
@@ -224,7 +224,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param ODataPropertyContent|null $oDataPropertyContent
+     * @param  ODataPropertyContent|null $oDataPropertyContent
      * @return ODataEntry
      */
     public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null): self
@@ -250,7 +250,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param ODataCategory|null $type
+     * @param  ODataCategory|null $type
      * @return ODataEntry
      */
     public function setType(ODataCategory $type = null): self
@@ -304,7 +304,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param ODataMediaLink[] $mediaLinks
+     * @param  ODataMediaLink[] $mediaLinks
      * @return ODataEntry
      */
     public function setMediaLinks(array $mediaLinks): self

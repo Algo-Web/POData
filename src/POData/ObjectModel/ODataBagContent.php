@@ -27,7 +27,7 @@ class ODataBagContent
 
     /**
      * ODataBagContent constructor.
-     * @param string $type
+     * @param string                          $type
      * @param ODataPropertyContent[]|string[] $propertyContents
      */
     public function __construct(string $type = null, array $propertyContents = null)
@@ -46,7 +46,7 @@ class ODataBagContent
     }
 
     /**
-     * @param string|null $type
+     * @param  string|null     $type
      * @return ODataBagContent
      */
     public function setType(?string $type): ODataBagContent
@@ -64,7 +64,7 @@ class ODataBagContent
     }
 
     /**
-     * @param ODataPropertyContent[]|string[] $propertyContents
+     * @param  ODataPropertyContent[]|string[] $propertyContents
      * @return ODataBagContent
      */
     public function setPropertyContents(?array $propertyContents): ODataBagContent

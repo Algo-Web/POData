@@ -1,17 +1,18 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 15/05/20
- * Time: 5:33 PM
+ * Time: 5:33 PM.
  */
-
 namespace UnitTests\POData;
 
 use POData\Pluralizer;
 
 /**
- * Class PluralizerTest
+ * Class PluralizerTest.
  * @package UnitTests\POData
  */
 class PluralizerTest extends TestCase

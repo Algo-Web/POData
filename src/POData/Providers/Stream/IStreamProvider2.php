@@ -183,8 +183,8 @@ interface IStreamProvider2
      * @param ResourceStreamInfo|null $resourceStreamInfo The ResourceStreamInfo instance that describes
      *                                                    the named stream
      *
-     * @return string|null            The URI clients should use when making retrieve (ie. GET) requests to
-     *                                the stream(ie. Media Resource)
+     * @return string|null The URI clients should use when making retrieve (ie. GET) requests to
+     *                     the stream(ie. Media Resource)
      */
     public function getReadStreamUri2(
         $entity,

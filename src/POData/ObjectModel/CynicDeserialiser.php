@@ -333,7 +333,7 @@ class CynicDeserialiser
             for ($i = 0; $i < $numEntries; $i++) {
                 $targEntityInstance = $bulkResult[$i];
                 $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $key                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
+                $key                                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
                 $link->getExpandedResult()->getFeed()->entries[$i]->id = $key;
             }
         }

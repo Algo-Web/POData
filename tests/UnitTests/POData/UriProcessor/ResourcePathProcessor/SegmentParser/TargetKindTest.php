@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 11/05/20
- * Time: 12:44 PM
+ * Time: 12:44 PM.
  */
-
 namespace UnitTests\POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
@@ -15,7 +16,7 @@ class TargetKindTest extends TestCase
 {
     public function terminalProvider(): array
     {
-        $result = [];
+        $result   = [];
         $result[] = [TargetKind::NOTHING(), false];
         $result[] = [TargetKind::SERVICE_DIRECTORY(), false];
         $result[] = [TargetKind::RESOURCE(), false];
@@ -37,7 +38,7 @@ class TargetKindTest extends TestCase
      * @dataProvider terminalProvider
      *
      * @param TargetKind $targ
-     * @param bool $expected
+     * @param bool       $expected
      */
     public function testIsTerminal(TargetKind $targ, bool $expected)
     {
@@ -47,7 +48,7 @@ class TargetKindTest extends TestCase
 
     public function directProcessProvider(): array
     {
-        $result = [];
+        $result   = [];
         $result[] = [TargetKind::NOTHING(), false];
         $result[] = [TargetKind::SERVICE_DIRECTORY(), true];
         $result[] = [TargetKind::RESOURCE(), false];
@@ -69,7 +70,7 @@ class TargetKindTest extends TestCase
      * @dataProvider directProcessProvider
      *
      * @param TargetKind $targ
-     * @param bool $expected
+     * @param bool       $expected
      */
     public function testIsDirectProcess(TargetKind $targ, bool $expected)
     {
@@ -79,7 +80,7 @@ class TargetKindTest extends TestCase
 
     public function isFilterableProvider(): array
     {
-        $result = [];
+        $result   = [];
         $result[] = [TargetKind::NOTHING(), false];
         $result[] = [TargetKind::SERVICE_DIRECTORY(), false];
         $result[] = [TargetKind::RESOURCE(), true];
@@ -101,7 +102,7 @@ class TargetKindTest extends TestCase
      * @dataProvider isFilterableProvider
      *
      * @param TargetKind $targ
-     * @param bool $expected
+     * @param bool       $expected
      */
     public function testIsFilterable(TargetKind $targ, bool $expected)
     {

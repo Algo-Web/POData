@@ -88,7 +88,7 @@ class CynicSerialiser implements IObjectSerialiser
     private $lightStack = [];
 
     /**
-     * Update time to insert into ODataEntry/ODataFeed fields
+     * Update time to insert into ODataEntry/ODataFeed fields.
      * @var \DateTime;
      */
     private $updated;
@@ -100,8 +100,8 @@ class CynicSerialiser implements IObjectSerialiser
     private $isBaseWritten = false;
 
     /**
-     * @param IService                $service Reference to the data service instance
-     * @param RequestDescription|null $request Type instance describing the client submitted request
+     * @param  IService                $service Reference to the data service instance
+     * @param  RequestDescription|null $request Type instance describing the client submitted request
      * @throws \Exception
      */
     public function __construct(IService $service, RequestDescription $request = null)
@@ -328,7 +328,7 @@ class CynicSerialiser implements IObjectSerialiser
             $propTail             = ResourcePropertyKind::RESOURCE_REFERENCE() == $propKind ? 'entry' : 'feed';
             $propType             = 'application/atom+xml;type=' . $propTail;
             $propName             = $prop->getName();
-            $nuLink   = new ODataLink(
+            $nuLink               = new ODataLink(
                 ODataConstants::ODATA_RELATED_NAMESPACE . $propName,
                 $propName,
                 $propType,
@@ -356,7 +356,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata->type             = new ODataCategory($type);
         $odata->propertyContent  = $propertyContent;
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink         = new ODataLink('edit',$title, null, $relativeUri);
+        $odata->editLink         = new ODataLink('edit', $title, null, $relativeUri);
         $odata->mediaLink        = $mediaLink;
         $odata->mediaLinks       = $mediaLinks;
         $odata->links            = $links;
@@ -934,11 +934,12 @@ class CynicSerialiser implements IObjectSerialiser
                 $stackSegment       = $this->getRequest()->getTargetResourceSetWrapper()->getName();
                 $lastObject         = end($entryObjects->results);
                 $segment            = $this->getNextLinkUri($lastObject);
-                $nextLink           = new ODataLink(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                $nextLink           = new ODataLink(
+                    ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
                     null,
                     null,
                     ltrim(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment, '/')
-                    );
+                );
                 $urls->nextPageLink = $nextLink;
             }
         }

@@ -34,7 +34,7 @@ class ResponseWriter
         $entityModel,
         $responseContentType
     ) {
-        $targetKind = $request->getTargetKind();
+        $targetKind   = $request->getTargetKind();
         $responseBody = null;
 
         if (TargetKind::METADATA() == $targetKind) {

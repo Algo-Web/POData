@@ -360,7 +360,7 @@ class ProvidersWrapper
      * @param ResourceEntityType $resourceType Resource to get derived resource types from
      *
      * @throws ODataException
-     * @throws \TypeError when the meat provider doesn't return an array
+     * @throws \TypeError     when the meat provider doesn't return an array
      * @return ResourceType[]
      */
     public function getDerivedTypes(ResourceEntityType $resourceType)

@@ -597,7 +597,7 @@ class UriProcessorNewTest extends TestCase
 
         $setWrapper = m::mock(ResourceSetWrapper::class);
 
-        $rawSkip = m::mock(SkipTokenInfo::class);
+        $rawSkip   = m::mock(SkipTokenInfo::class);
         $skipToken = m::mock(InternalSkipTokenInfo::class);
         $skipToken->shouldReceive('getIndexOfFirstEntryInTheNextPage')->andReturn(1)->once();
         $skipToken->shouldReceive('getSkipTokenInfo')->andReturn($rawSkip)->once();

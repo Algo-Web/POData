@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 13/05/20
- * Time: 6:36 PM
+ * Time: 6:36 PM.
  */
-
 namespace UnitTests\POData\UriProcessor\QueryProcessor\ExpressionParser;
 
 use POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionLexer;

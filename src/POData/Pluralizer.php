@@ -1,17 +1,18 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 9/05/20
- * Time: 4:00 AM
+ * Time: 4:00 AM.
  */
-
 namespace POData;
 
 use AlgoWeb\ODataMetadata\MetadataManager;
 
 /**
- * Class Pluralizer - hoisted from Laravel to support string pluralisation
+ * Class Pluralizer - hoisted from Laravel to support string pluralisation.
  * @package POData
  */
 class Pluralizer
@@ -70,8 +71,8 @@ class Pluralizer
     /**
      * Get the plural form of an English word.
      *
-     * @param  string  $value
-     * @param  int     $count
+     * @param  string $value
+     * @param  int    $count
      * @return string
      */
     public static function plural(string $value, $count = 2)
@@ -88,7 +89,7 @@ class Pluralizer
     /**
      * Determine if the given value is uncountable.
      *
-     * @param  string  $value
+     * @param  string $value
      * @return bool
      */
     protected static function uncountable($value)
@@ -99,8 +100,8 @@ class Pluralizer
     /**
      * Attempt to match the case on two strings.
      *
-     * @param  string  $value
-     * @param  string  $comparison
+     * @param  string $value
+     * @param  string $comparison
      * @return string
      */
     protected static function matchCase($value, $comparison)

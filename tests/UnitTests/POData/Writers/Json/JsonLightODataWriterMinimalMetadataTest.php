@@ -1035,7 +1035,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
             null,
             'Expanded Property',
             null,
-             'ExpandedURL',
+            'ExpandedURL',
             false,
             null, //<--key part
             true
@@ -1238,7 +1238,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         $expandedFeedSelfLink        = new ODataLink('self', 'SubCollection', null, 'SubCollection Self URL');
 
-        $expandedFeed->setSelfLink( $expandedFeedSelfLink);
+        $expandedFeed->setSelfLink($expandedFeedSelfLink);
 
         //Now link the expanded entry to the main entry
         $expandLink                 = new ODataLink(
@@ -1397,9 +1397,10 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $feed->title           = 'title';
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
-        'Feed Title',
-        null,
-            'feedID'));
+            'Feed Title',
+            null,
+            'feedID'
+        ));
 
         $foo      = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::MINIMAL(), 'http://localhost/odata.svc');
         $expected = '{' . PHP_EOL

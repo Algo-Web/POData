@@ -833,7 +833,7 @@ class ExpressionParser
 
     /**
      * Check the current token is of a specific kind.
-     * TODO: Figure out why rest of code is passing a string instead of an object
+     * TODO: Figure out why rest of code is passing a string instead of an object.
      *
      * @param ExpressionTokenId $expressionTokenId Token to check with current token
      *

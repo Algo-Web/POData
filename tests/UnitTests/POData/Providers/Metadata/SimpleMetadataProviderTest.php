@@ -212,8 +212,8 @@ class SimpleMetadataProviderTest extends TestCase
 
     public function testGetResourceAssociationSetWhenEmpty()
     {
-        $set     = m::mock(ResourceSet::class);
-        $targSet = m::mock(ResourceSet::class);
+        $set      = m::mock(ResourceSet::class);
+        $targSet  = m::mock(ResourceSet::class);
         $targType = m::mock(ResourceEntityType::class)->makePartial();
         $targType->shouldReceive('getName')->andReturn('M.C.');
         $targSet->shouldReceive('getResourceType')->andReturn($targType);

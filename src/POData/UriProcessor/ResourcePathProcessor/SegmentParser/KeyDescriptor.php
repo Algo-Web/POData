@@ -216,7 +216,7 @@ class KeyDescriptor
                 }
 
                 //expecting keyName=keyValue, verify it
-                $identifier = $currentToken->getIdentifier();
+                $identifier   = $currentToken->getIdentifier();
                 $currentToken = self::toNextLexerToken($expressionLexer);
                 if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
@@ -369,9 +369,9 @@ class KeyDescriptor
     }
 
     /**
-     * @param ExpressionLexer $expressionLexer
-     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
+     * @param  ExpressionLexer                                                      $expressionLexer
      * @throws ODataException
+     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
      */
     private static function toNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
     {
@@ -543,7 +543,7 @@ class KeyDescriptor
         $keys         = $resourceType->getKeyProperties();
 
         $namedKeys = $this->getNamedValues();
-        $keys = array_intersect_key($keys, $namedKeys);
+        $keys      = array_intersect_key($keys, $namedKeys);
         if (0 == count($keys) || count($keys) !== count($namedKeys)) {
             $msg = 'Mismatch between supplied key predicates and keys defined on resource set';
             throw new InvalidArgumentException($msg);
