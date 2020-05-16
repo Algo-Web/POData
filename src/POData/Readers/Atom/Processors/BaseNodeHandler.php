@@ -22,7 +22,7 @@ abstract class BaseNodeHandler
     private $charData = '';
 
     /**
-     * @var SplStack|callable
+     * @var SplStack|callable[]
      */
     private $tagEndQueue;
 
@@ -102,6 +102,7 @@ abstract class BaseNodeHandler
     {
         assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
         $endMethod = $this->tagEndQueue->pop();
+        /** @var callable $endMethod */
         $endMethod();
     }
 
