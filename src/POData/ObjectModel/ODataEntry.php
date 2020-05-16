@@ -15,26 +15,15 @@ use POData\ObjectModel\AtomObjectModel\AtomContent;
  * TODO: the methods should be rearranged to match theorder of the properties.
  * TODO: the properties are still public needs a lot of unpicking to work out as type hints maybe wrong.
  */
-class ODataEntry
+class ODataEntry extends ODataContainerBase
 {
-    /**
-     * Entry id.
-     *
-     * @var string|null
-     */
-    public $id;
+
     /**
      * Entry Self Link.
      *
      * @var string|null
      */
     public $selfLink;
-    /**
-     * Entry title.
-     *
-     * @var ODataTitle|null
-     */
-    public $title;
     /**
      * Entry Edit Link.
      *
@@ -94,19 +83,7 @@ class ODataEntry
      */
     public $resourceSetName;
 
-    /**
-     * Last updated timestamp.
-     *
-     * @var string|null
-     */
-    public $updated;
 
-    /**
-     * Service Base URI.
-     *
-     * @var string|null
-     */
-    public $baseURI;
 
     /**
      * ODataEntry constructor.
@@ -160,24 +137,6 @@ class ODataEntry
     /**
      * @return string|null
      */
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string|null $id
-     * @return ODataEntry
-     */
-    public function setId(?string $id): ODataEntry
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getSelfLink(): ?string
     {
         return $this->selfLink;
@@ -190,24 +149,6 @@ class ODataEntry
     public function setSelfLink(?string $selfLink): ODataEntry
     {
         $this->selfLink = $selfLink;
-        return $this;
-    }
-
-    /**
-     * @return ODataTitle|null
-     */
-    public function getTitle(): ?ODataTitle
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param ODataTitle|null $title
-     * @return ODataEntry
-     */
-    public function setTitle(?ODataTitle $title): ODataEntry
-    {
-        $this->title = $title;
         return $this;
     }
 
@@ -265,41 +206,6 @@ class ODataEntry
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getUpdated(): ?string
-    {
-        return $this->updated;
-    }
-
-    /**
-     * @param string|null $updated
-     * @return ODataEntry
-     */
-    public function setUpdated(?string $updated): ODataEntry
-    {
-        $this->updated = $updated;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBaseURI(): ?string
-    {
-        return $this->baseURI;
-    }
-
-    /**
-     * @param string|null $baseURI
-     * @return ODataEntry
-     */
-    public function setBaseURI(?string $baseURI): ODataEntry
-    {
-        $this->baseURI = $baseURI;
-        return $this;
-    }
     /**
      * @return AtomContent
      */

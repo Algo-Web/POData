@@ -7,20 +7,9 @@ namespace POData\ObjectModel;
 /**
  * Class ODataFeed.
  */
-class ODataFeed
+class ODataFeed extends ODataContainerBase
 {
-    /**
-     * Feed iD.
-     *
-     * @var string
-     */
-    public $id;
-    /**
-     * Feed title.
-     *
-     * @var ODataTitle
-     */
-    public $title;
+
     /**
      * Feed self link.
      *
@@ -47,20 +36,6 @@ class ODataFeed
     public $entries = [];
 
     /**
-     * Last updated timestamp.
-     *
-     * @var string
-     */
-    public $updated;
-
-    /**
-     * Service Base URI.
-     *
-     * @var string
-     */
-    public $baseURI;
-
-    /**
      * ODataFeed constructor.
      * @param string       $id
      * @param ODataTitle   $title
@@ -73,14 +48,11 @@ class ODataFeed
      */
     public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
-        $this->id           = $id;
-        $this->title        = $title;
+        parent::__construct($id, $title, $updated, $baseURI);
         $this->selfLink     = $selfLink;
         $this->rowCount     = $rowCount;
         $this->nextPageLink = $nextPageLink;
         $this->entries      = $entries;
-        $this->updated      = $updated;
-        $this->baseURI      = $baseURI;
     }
 
     /**
