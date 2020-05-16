@@ -135,7 +135,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult           = new ODataFeed();
         $objectResult->id       = 'http://localhost/odata.svc/Customers';
         $objectResult->title    = new ODataTitle('Customers');
-        $objectResult->selfLink = $selfLink;
+        $objectResult->setSelfLink($selfLink);
         $objectResult->entries  = $entry;
         $objectResult->updated  = '2017-01-01T00:00:00+00:00';
         $objectResult->baseURI  = 'http://localhost/odata.svc/';
@@ -208,7 +208,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult               = new ODataFeed();
         $objectResult->id           = 'http://localhost/odata.svc/Customers';
         $objectResult->title        = new ODataTitle('Customers');
-        $objectResult->selfLink     = $selfLink;
+        $objectResult->setSelfLink($selfLink);
         $objectResult->nextPageLink = $nextLink;
         $objectResult->entries      = $entries;
         $objectResult->updated      = '2017-01-01T00:00:00+00:00';
@@ -291,7 +291,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult           = new ODataFeed();
         $objectResult->id       = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
         $objectResult->title    = new ODataTitle('Order_Details');
-        $objectResult->selfLink = $selfLink;
+        $objectResult->setSelfLink($selfLink);
         $objectResult->entries  = $entries;
         $objectResult->updated  = '2017-01-01T00:00:00+00:00';
         $objectResult->baseURI  = 'http://localhost/odata.svc/';
@@ -351,7 +351,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $detailsFeed                  = new ODataFeed();
         $detailsFeed->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
         $detailsFeed->title           = new ODataTitle('Order_Details');
-        $detailsFeed->selfLink        = new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details');
+        $detailsFeed->setSelfLink(new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'));
 
         $customerEntry                  = new ODataEntry();
         $customerEntry->resourceSetName = 'Customer';
@@ -394,7 +394,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subFeed->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                        . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $subFeed->title    = new ODataTitle('Orders');
-        $subFeed->selfLink = $subSelf;
+        $subFeed->setSelfLink($subSelf);
         $subFeed->entries  = [$subEntry];
         $subFeed->updated  = '2017-01-01T00:00:00+00:00';
 
@@ -425,7 +425,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult           = new ODataFeed();
         $objectResult->id       = 'http://localhost/odata.svc/Customers';
         $objectResult->title    = new ODataTitle('Customers');
-        $objectResult->selfLink = $selfLink;
+        $objectResult->setSelfLink($selfLink);
         $objectResult->entries  = [$entry, $entry];
         $objectResult->updated  = '2017-01-01T00:00:00+00:00';
         $objectResult->baseURI  = 'http://localhost/odata.svc/';
@@ -661,7 +661,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $objectResult           = new ODataFeed();
         $objectResult->id       = 'http://localhost/odata.svc/Employees';
         $objectResult->title    = new ODataTitle('Employees');
-        $objectResult->selfLink = $selfLink;
+        $objectResult->setSelfLink($selfLink);
         $objectResult->entries  = $entries;
         $objectResult->updated  = '2017-01-01T00:00:00+00:00';
         $objectResult->baseURI  = 'http://localhost/odata.svc/';

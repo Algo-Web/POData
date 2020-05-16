@@ -200,16 +200,16 @@ class ObjectModelSerializerTest extends TestCase
 
         $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
-        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+        $this->assertTrue($ret->getSelfLink() instanceof \POData\ObjectModel\ODataLink);
 
         $this->assertTrue(is_array($ret->entries));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
         $this->assertEquals(new ODataTitle('data'), $ret->title);
 
-        $this->assertEquals('self', $ret->selfLink->getName());
-        $this->assertEquals('data', $ret->selfLink->getTitle());
-        $this->assertEquals('Entity', $ret->selfLink->getUrl());
+        $this->assertEquals('self', $ret->getSelfLink()->getName());
+        $this->assertEquals('data', $ret->getSelfLink()->getTitle());
+        $this->assertEquals('Entity', $ret->getSelfLink()->getUrl());
 
         $this->assertEquals(2, count($ret->entries));
 
@@ -298,16 +298,16 @@ class ObjectModelSerializerTest extends TestCase
 
         $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
-        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+        $this->assertTrue($ret->getSelfLink() instanceof \POData\ObjectModel\ODataLink);
 
         $this->assertTrue(is_array($ret->entries));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
         $this->assertEquals(new ODataTitle('data'), $ret->title);
 
-        $this->assertEquals('self', $ret->selfLink->getName());
-        $this->assertEquals('data', $ret->selfLink->getTitle());
-        $this->assertEquals('Entity', $ret->selfLink->getUrl());
+        $this->assertEquals('self', $ret->getSelfLink()->getName());
+        $this->assertEquals('data', $ret->getSelfLink()->getTitle());
+        $this->assertEquals('Entity', $ret->getSelfLink()->getUrl());
 
         $this->assertEquals(2, count($ret->entries));
 
@@ -417,7 +417,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $ret = $foo->writeTopLevelElements($queryResult);
         $this->assertTrue($ret instanceof \POData\ObjectModel\ODataFeed);
-        $this->assertTrue($ret->selfLink instanceof \POData\ObjectModel\ODataLink);
+        $this->assertTrue($ret->getSelfLink() instanceof \POData\ObjectModel\ODataLink);
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
     }
 

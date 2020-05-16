@@ -126,7 +126,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $selfLink        = new ODataLink('Self Link Name', '', '', 'Self Link Url');
 
-        $feed->selfLink = $selfLink;
+        $feed->setSelfLink($selfLink);
 
         $nextPageLink        = new ODataLink('Next', '', '', 'Next Link Url');
 
@@ -145,7 +145,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
-        $entry1->selfLink = $selfLink;
+        $entry1->setSelfLink($selfLink);
 
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
@@ -284,7 +284,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
-        $entry1->selfLink   = $selfLink;
+        $entry1->setSelfLink($selfLink);
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
@@ -338,7 +338,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
-        $entry1->selfLink   = $selfLink;
+        $entry1->setSelfLink($selfLink);
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
@@ -615,7 +615,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
 
-        $entry->selfLink   = $selfLink;
+        $entry->setSelfLink($selfLink);
         $entry->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -644,7 +644,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $selfLink        = new ODataLink('self', 'self Link Title', '',  'Self Link URL');
 
-        $odataExpandEntry->selfLink = $selfLink;
+        $odataExpandEntry->setSelfLink($selfLink);
 
         $odataExpandEntry->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
@@ -916,7 +916,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         //entry
         $entry           = new ODataEntry();
         $entry->id       = 'http://host/service.svc/Customers(1)';
-        $entry->selfLink = 'entry2 self link';
+        $entry->setSelfLink(new ODataLink('entry2 self link'));
         $entry->title    = new ODataTitle('title of entry 2');
         $entry->editLink = 'edit link of entry 2';
         $entry->type     = 'SampleModel.Customer';
@@ -1333,12 +1333,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
-        $feed->selfLink        = new ODataLink(
+        $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
             null,
             'feedID'
-        );
+        ));
 
         $foo      = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $expected = '<link rel="self" title="Feed Title" href="feedID"/>';

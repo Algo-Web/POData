@@ -24,7 +24,7 @@ abstract class ODataContainerBase
      *
      * @var ODataLink|null
      */
-    public $selfLink;
+    private $selfLink;
 
     /**
      * Last updated timestamp.
@@ -47,7 +47,7 @@ abstract class ODataContainerBase
      * @param string|null $updated
      * @param string|null $baseURI
      */
-    public function __construct(?string $id, ?ODataTitle $title, ?string $selfLink, ?string $updated, ?string $baseURI)
+    public function __construct(?string $id, ?ODataTitle $title, ?ODataLink $selfLink, ?string $updated, ?string $baseURI)
     {
         $this
             ->setId($id)
@@ -97,7 +97,7 @@ abstract class ODataContainerBase
     /**
      * @return ODataLink|null
      */
-    public function getSelfLink(): ?string
+    public function getSelfLink(): ?ODataLink
     {
         return $this->selfLink;
     }
@@ -106,7 +106,7 @@ abstract class ODataContainerBase
      * @param string|null $selfLink
      * @return ODataEntry
      */
-    public function setSelfLink(?string $selfLink): self
+    public function setSelfLink(?ODataLink $selfLink): self
     {
         $this->selfLink = $selfLink;
         return $this;

@@ -474,7 +474,7 @@ class AtomODataWriter implements IODataWriter
             )
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM))
-            ->writeLinkNode($feed->selfLink, false);
+            ->writeLinkNode($feed->getSelfLink(), false);
 
         if ($feed->rowCount != null) {
             $this->xmlWriter->startElementNs(

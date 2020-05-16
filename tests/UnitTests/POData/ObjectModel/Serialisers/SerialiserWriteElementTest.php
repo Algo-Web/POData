@@ -232,8 +232,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkRawResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\','
                              . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $linkRawResult->title           = new ODataTitle('Orders');
-        $linkRawResult->selfLink        = new ODataLink('self',  'Orders', null, 'Customers(CustomerID=\'1\','
-            . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders');
+        $linkRawResult->setSelfLink(new ODataLink('self',  'Orders', null, 'Customers(CustomerID=\'1\','
+            . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders'));
 
 
         $linkResult     = new ODataEntry();
@@ -262,7 +262,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkFeedResult                  = new ODataFeed();
         $linkFeedResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
         $linkFeedResult->title           = new ODataTitle('Order_Details');
-        $linkFeedResult->selfLink        = new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details');
+        $linkFeedResult->setSelfLink(new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'));
 
         $links                    = [
             new ODataLink(

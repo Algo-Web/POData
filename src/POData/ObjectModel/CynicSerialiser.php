@@ -147,7 +147,7 @@ class CynicSerialiser implements IObjectSerialiser
         $odata               = new ODataFeed();
         $odata->title        = new ODataTitle($title);
         $odata->id           = $absoluteUri;
-        $odata->selfLink     = $selfLink;
+        $odata->setSelfLink($selfLink);
         $odata->updated      = $this->getUpdated()->format(DATE_ATOM);
         $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
         $this->isBaseWritten = true;
@@ -817,13 +817,13 @@ class CynicSerialiser implements IObjectSerialiser
                 $result->resourceSetName = $type->getName();
             } else {
                 $result                 = new ODataFeed();
-                $result->selfLink       = new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
+                $result->setSelfLink(new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE));
             }
             $nuLink->setExpandedResult(new ODataExpandedResult($result));
         }
-        if (null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData() && null !== $nuLink->getExpandedResult()->getData()->selfLink) {
-            $nuLink->getExpandedResult()->getData()->selfLink->setTitle($propName);
-            $nuLink->getExpandedResult()->getData()->selfLink->setUrl($nuLink->getUrl());
+        if (null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData() && null !== $nuLink->getExpandedResult()->getData()->getSelfLink()) {
+            $nuLink->getExpandedResult()->getData()->getSelfLink()->setTitle($propName);
+            $nuLink->getExpandedResult()->getData()->getSelfLink()->setUrl($nuLink->getUrl());
             $nuLink->getExpandedResult()->getData()->title           = new ODataTitle($propName);
             $nuLink->getExpandedResult()->getData()->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }

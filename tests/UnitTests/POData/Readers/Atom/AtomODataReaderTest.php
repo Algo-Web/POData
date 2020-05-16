@@ -46,15 +46,15 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'ProductDetails',
-            $data->selfLink->getTitle(),
+            $data->getSelfLink()->getTitle(),
             'the Feed Self Link Title Failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails',
-            $data->selfLink->getUrl(),
+            $data->getSelfLink()->getUrl(),
             'the Feed Self Link href Failed to deserialise correctly'
         );
-        $this->assertEquals('self', $data->selfLink->getName(), 'the Feed Self Link Title Failed to deseralize correctly');
+        $this->assertEquals('self', $data->getSelfLink()->getName(), 'the Feed Self Link Title Failed to deseralize correctly');
         $this->assertEquals(4, count($data->getEntries()), 'The Feed Deseralized the wrong number of entries');
         $this->assertInstanceOf(
             ODataEntry::class,

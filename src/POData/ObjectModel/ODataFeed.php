@@ -41,8 +41,7 @@ class ODataFeed extends ODataContainerBase
      */
     public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
-        parent::__construct($id, $title, null, $updated, $baseURI);
-        $this->selfLink     = $selfLink;
+        parent::__construct($id, $title, $selfLink, $updated, $baseURI);
         $this->rowCount     = $rowCount;
         $this->nextPageLink = $nextPageLink;
         $this->entries      = $entries;

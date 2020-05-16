@@ -84,13 +84,13 @@ class FeedProcessor extends BaseNodeHandler
             ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
             ''
         );
-        $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
-        $this->oDataFeed->{$prop} = new ODataLink(
+        $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'setSelfLink' : 'setNextPageLink';
+        $this->oDataFeed->{$prop}(new ODataLink(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, '')
-        );
+        ));
         $this->enqueueEnd($this->doNothing());
     }
 

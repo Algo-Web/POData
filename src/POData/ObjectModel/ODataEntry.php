@@ -97,7 +97,7 @@ class ODataEntry extends ODataContainerBase
      */
     public function __construct(
         ?string $id = null,
-        ?string $selfLink = null,
+        ?ODataLink $selfLink = null,
         ?ODataTitle $title = null,
         ?ODataLink $editLink = null,
         ?ODataCategory $type = null,
@@ -112,7 +112,7 @@ class ODataEntry extends ODataContainerBase
         ?string $baseURI = null
     ) {
         $this->id = $id;
-        $this->selfLink = $selfLink;
+        $this->setSelfLink($selfLink);
         $this->title = $title;
         $this->editLink = $editLink;
         $this->type = $type;
