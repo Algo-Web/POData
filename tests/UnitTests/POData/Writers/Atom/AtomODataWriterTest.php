@@ -630,8 +630,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         )];
 
         $odataLink               = new ODataLink();
-        $odataLink->isCollection = false;
-        $odataLink->isExpanded   = true;
+        $odataLink->setIsCollection(false);
+        $odataLink->setIsExpanded(true);
         $odataExpandEntry        = new ODataEntry();
 
         $odataExpandEntry->id    = 'Entry 1';

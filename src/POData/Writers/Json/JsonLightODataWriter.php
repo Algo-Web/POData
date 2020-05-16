@@ -295,7 +295,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
      */
     protected function writeExpandedLink(ODataLink $link)
     {
-        if ($link->isCollection) {
+        if ($link->isCollection()) {
             $this->writer->startArrayScope();
             $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
         } else {

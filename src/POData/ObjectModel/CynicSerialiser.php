@@ -344,7 +344,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
             $nuLink->setIsExpanded(isset($nuLink->expandedResult));
-            assert(null !== $nuLink->isCollection);
+            assert(null !== $nuLink->isCollection());
 
             $links[] = $nuLink;
         }
@@ -788,7 +788,7 @@ class CynicSerialiser implements IObjectSerialiser
         $nuLink->isExpanded   = true;
         $value                = $entryObject->results->{$propName};
         $isCollection         = ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind;
-        $nuLink->isCollection = $isCollection;
+        $nuLink->setIsCollection($isCollection);
         $nullResult           = null === $value;
         $object               = (is_object($value));
         $resultCount          = ($nullResult) ? 0 : ($object ? 1 : count($value));

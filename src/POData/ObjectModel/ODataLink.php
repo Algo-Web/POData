@@ -39,7 +39,7 @@ class ODataLink
      *
      * @var bool
      */
-    public $isCollection;
+    private $isCollection;
     /**
      * The expanded result. This becomes the inline content of the link.
      *

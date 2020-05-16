@@ -174,7 +174,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
         //Difference from v1 is that expanded collection have a result: wrapper to allow for metadata to exist
         $this->writer->startObjectScope();
 
-        if ($link->isCollection) {
+        if ($link->isCollection()) {
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();

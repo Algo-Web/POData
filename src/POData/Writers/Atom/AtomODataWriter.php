@@ -731,7 +731,7 @@ class AtomODataWriter implements IODataWriter
             );
 
             if (null !== $link->expandedResult) {
-                if ($link->isCollection) {
+                if ($link->isCollection()) {
                     $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
                 } else {
                     $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);

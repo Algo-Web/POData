@@ -11,6 +11,7 @@ use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
@@ -437,11 +438,11 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'application/atom+xml;type=feed',
             'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders',
-            false
+            false,
+            new ODataExpandedResult($feed),
+            true
         );
-        $link->isCollection   = false;
-        $link->isExpanded     = true;
-        $link->expandedResult = $feed;
+
 
         $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
