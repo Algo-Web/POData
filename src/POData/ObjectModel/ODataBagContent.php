@@ -32,8 +32,9 @@ class ODataBagContent
      */
     public function __construct(string $type = null, array $propertyContents = null)
     {
-        $this->type = $type;
-        $this->propertyContents = $propertyContents;
+        $this
+            ->setType($type)
+            ->setPropertyContents($propertyContents);
     }
 
     /**
@@ -66,7 +67,7 @@ class ODataBagContent
      * @param ODataPropertyContent[]|string[] $propertyContents
      * @return ODataBagContent
      */
-    public function setPropertyContents(array $propertyContents): ODataBagContent
+    public function setPropertyContents(?array $propertyContents): ODataBagContent
     {
         $this->propertyContents = $propertyContents;
         return $this;

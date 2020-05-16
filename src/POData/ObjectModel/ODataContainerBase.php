@@ -22,7 +22,7 @@ abstract class ODataContainerBase
     /**
      * Entry Self Link.
      *
-     * @var string|null
+     * @var ODataLink|null
      */
     public $selfLink;
 
@@ -47,11 +47,12 @@ abstract class ODataContainerBase
      * @param string|null $updated
      * @param string|null $baseURI
      */
-    public function __construct(?string $id, ?ODataTitle $title, ?string $updated, ?string $baseURI)
+    public function __construct(?string $id, ?ODataTitle $title, ?string $selfLink, ?string $updated, ?string $baseURI)
     {
         $this
             ->setId($id)
             ->setTitle($title)
+            ->setSelfLink($selfLink)
             ->setUpdated($updated)
             ->setBaseURI($baseURI);
     }
@@ -94,7 +95,7 @@ abstract class ODataContainerBase
     }
 
     /**
-     * @return string|null
+     * @return ODataLink|null
      */
     public function getSelfLink(): ?string
     {
@@ -105,7 +106,7 @@ abstract class ODataContainerBase
      * @param string|null $selfLink
      * @return ODataEntry
      */
-    public function setSelfLink(?string $selfLink): ODataEntry
+    public function setSelfLink(?string $selfLink): self
     {
         $this->selfLink = $selfLink;
         return $this;
