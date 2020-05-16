@@ -307,7 +307,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $this->assertEquals('self', $ret->selfLink->getName());
         $this->assertEquals('data', $ret->selfLink->getTitle());
-        $this->assertEquals('Entity', $ret->selfLink->url);
+        $this->assertEquals('Entity', $ret->selfLink->getUrl());
 
         $this->assertEquals(2, count($ret->entries));
 
@@ -628,7 +628,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $odataLink       = new ODataLink();
         $odataLink->setName(ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING);
-        $odataLink->url  = 'https://www.example.org/odata.svc/customer?skipToken=200';
+        $odataLink->setUrl('https://www.example.org/odata.svc/customer?skipToken=200');
 
         $resourceWrap = m::mock(ResourceSetWrapper::class);
         $resourceWrap->shouldReceive('getName')->andReturn('');
@@ -656,10 +656,10 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('getStack->getSegmentWrappers')->andReturn([]);
         $foo->shouldReceive('getRequest')->andReturn($this->mockRequest);
         $foo->shouldReceive('needNextPageLink')->andReturn(true)->never();
-        $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink->url)->once();
+        $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink->getUrl())->once();
 
         $result      = $foo->writeUrlElements($queryResult);
-        $expectedUrl = $odataLink->url;
+        $expectedUrl = $odataLink->getUrl();
         $this->assertEquals($expectedUrl, $result->nextPageLink->url);
         $this->assertEquals(2, $result->count);
     }

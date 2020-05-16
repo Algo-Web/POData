@@ -425,7 +425,7 @@ class JsonODataV1Writer implements IODataWriter
                 ->writeName(ODataConstants::JSON_DEFERRED_STRING)
                 ->startObjectScope()
                 ->writeName($this->urlKey)
-                ->writeValue($link->url)
+                ->writeValue($link->getUrl())
                 ->endScope()
                 ->endScope();
         }

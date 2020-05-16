@@ -281,7 +281,7 @@ class AtomODataWriter implements IODataWriter
         }
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
-            $link->url ?? ''
+            $link->getUrl() ?? ''
         );
         if (!$isExpanded) {
             $this->xmlWriter->endElement();
@@ -642,7 +642,7 @@ class AtomODataWriter implements IODataWriter
         if (null === $entry->editLink || is_string($entry->editLink)) {
             $this->xmlWriter->text(strval($entry->editLink));
         } else {
-            $this->xmlWriter->text($entry->editLink->url);
+            $this->xmlWriter->text($entry->editLink->getUrl());
         }
         $this->xmlWriter->endAttribute();
 

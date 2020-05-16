@@ -303,7 +303,7 @@ class ODataEntry extends ODataContainerBase
         foreach ($links as $link) {
             if ('edit' == $link->getName()) {
                 $this->editLink        = $link;
-                $this->resourceSetName = explode('(', $link->url)[0];
+                $this->resourceSetName = explode('(', $link->getUrl())[0];
                 continue;
             }
             if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->getName(), 0, 61)

@@ -130,7 +130,7 @@ class ODataEntryTest extends TestCase
         $foo->setLinks([$link1, $link2]);
 
         $editLink = $foo->getEditLink();
-        $this->assertEquals('Piecez', $editLink->url);
+        $this->assertEquals('Piecez', $editLink->getUrl());
         $this->assertEquals('Piecez', $foo->resourceSetName);
     }
 

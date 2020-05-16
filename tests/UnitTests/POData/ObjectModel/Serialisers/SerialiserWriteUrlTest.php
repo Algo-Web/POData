@@ -115,8 +115,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
 
         $nextLink       = new ODataLink();
         $nextLink->setName('next');
-        $nextLink->url  = 'http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
-                         . 'guid\'123e4567-e89b-12d3-a456-426655440000\'';
+        $nextLink->setUrl('http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
+                         . 'guid\'123e4567-e89b-12d3-a456-426655440000\'');
 
         $objectResult               = new ODataURLCollection();
         $objectResult->urls[]       = $url;

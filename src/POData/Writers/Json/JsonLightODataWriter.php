@@ -246,7 +246,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         }
 
         $typeValue = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
-        $linkValue = $entry->editLink instanceof ODataLink ? $entry->editLink->url : $entry->editLink;
+        $linkValue = $entry->editLink instanceof ODataLink ? $entry->editLink->getUrl() : $entry->editLink;
 
         $this->writer
             ->writeName(ODataConstants::JSON_LIGHT_METADATA_TYPE_STRING)
@@ -273,7 +273,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             //Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
             $this->writer
                 ->writeName($link->getTitle() . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
-                ->writeValue($link->url);
+                ->writeValue($link->getUrl());
         }
 
         if ($link->isExpanded) {

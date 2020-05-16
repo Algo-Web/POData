@@ -51,30 +51,6 @@ class ObjectDeserialiserOKTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testBadLinkUrl()
-    {
-        $meta    = m::mock(IMetadataProvider::class);
-        $wrapper = m::mock(ProvidersWrapper::class);
-
-        $foo = new CynicDeserialiser($meta, $wrapper);
-
-        $link             = new ODataLink();
-        $link->url        = new \DateTime();
-        $payload          = new ODataEntry();
-        $payload->links[] = $link;
-
-        $expected = 'Url must be either string or null';
-        $actual   = null;
-
-        try {
-            $foo->processPayload($payload);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testBadExpandedResult()
     {
         $resource = m::mock(ResourceSet::class);

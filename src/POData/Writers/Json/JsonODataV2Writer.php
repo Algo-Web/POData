@@ -157,7 +157,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
         if (null !== $nextPageLinkUri) {
             $this->writer
                 ->writeName($this->nextLinkName)
-                ->writeValue($nextPageLinkUri->url);
+                ->writeValue($nextPageLinkUri->getUrl());
         }
 
         return $this;

@@ -823,7 +823,7 @@ class CynicSerialiser implements IObjectSerialiser
         }
         if (isset($nuLink->expandedResult->selfLink)) {
             $nuLink->expandedResult->selfLink->setTitle($propName);
-            $nuLink->expandedResult->selfLink->setUrl($nuLink->url);
+            $nuLink->expandedResult->selfLink->setUrl($nuLink->getUrl());
             $nuLink->expandedResult->title           = new ODataTitle($propName);
             $nuLink->expandedResult->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }
