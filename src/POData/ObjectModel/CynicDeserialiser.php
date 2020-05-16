@@ -88,17 +88,10 @@ class CynicDeserialiser
         // check links
         foreach ($payload->links as $link) {
             $hasUrl      = null !== $link->getUrl();
-            $hasExpanded = isset($link->expandedResult);
+            $hasExpanded = null !== $link->getExpandedResult();
             if ($hasUrl) {
                 if (!is_string($link->getUrl())) {
                     $msg = 'Url must be either string or null';
-                    throw new InvalidArgumentException($msg);
-                }
-            }
-            if ($hasExpanded) {
-                $isGood = $link->expandedResult instanceof ODataEntry || $link->expandedResult instanceof ODataFeed;
-                if (!$isGood) {
-                    $msg = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
                     throw new InvalidArgumentException($msg);
                 }
             }
@@ -106,9 +99,9 @@ class CynicDeserialiser
 
             if ($hasExpanded) {
                 if ($isEntry) {
-                    $this->isEntryOK($link->expandedResult);
+                    $this->isEntryOK($link->getExpandedResult()->getEntry());
                 } else {
-                    foreach ($link->expandedResult->entries as $expanded) {
+                    foreach ($link->getExpandedResult()->getFeed()->entries as $expanded) {
                         $this->isEntryOK($expanded);
                     }
                 }
