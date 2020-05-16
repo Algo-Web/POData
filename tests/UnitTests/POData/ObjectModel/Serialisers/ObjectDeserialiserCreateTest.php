@@ -196,25 +196,22 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
-        $links[0]->title          = 'Customer';
-        $links[0]->type           = 'application/atom+xml;type=entry';
+        $links[0]->setTitle('Customer');
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $links[0]->isCollection   = false;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = null;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
-        $links[1]->title          = 'Order_Details';
-        $links[1]->type           = 'application/atom+xml;type=feed';
+        $links[1]->setTitle('Order_Details');
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url            = null;
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
         $objectResult->title           = new ODataTitle('Order');
         $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink();
-        $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->setName('edit');
-        $objectResult->editLink->title = 'Order';
+        $objectResult->editLink        = new ODataLink('edit','Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
         $objectResult->resourceSetName = 'Orders';
@@ -311,24 +308,21 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
-        $links[0]->title          = 'Customer';
-        $links[0]->type           = 'application/atom+xml;type=entry';
+        $links[0]->setTitle('Customer');
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = $linkResult;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
-        $links[1]->title          = 'Order_Details';
-        $links[1]->type           = 'application/atom+xml;type=feed';
+        $links[1]->setTitle('Order_Details');
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url            = null;
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
         $objectResult->title           = new ODataTitle('Order');
         $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink();
-        $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->setName('edit');
-        $objectResult->editLink->title = 'Order';
+        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
         $objectResult->resourceSetName = 'Orders';
@@ -424,14 +418,14 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
-        $links[0]->title          = 'Customer';
-        $links[0]->type           = 'application/atom+xml;type=entry';
+        $links[0]->setTitle('Customer');
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = $linkResult;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
-        $links[1]->title          = 'Order_Details';
-        $links[1]->type           = 'application/atom+xml;type=feed';
+        $links[1]->setTitle('Order_Details');
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url            = null;
         $links[1]->expandedResult = null;
 
@@ -439,10 +433,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $objectResult->title           = new ODataTitle('Order');
         $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink();
-        $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->setName('edit');
-        $objectResult->editLink->title = 'Order';
+        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
         $objectResult->resourceSetName = 'Orders';
@@ -540,15 +531,15 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
-        $links[0]->title          = 'Customer';
-        $links[0]->type           = 'application/atom+xml;type=entry';
+        $links[0]->setTitle('Customer');
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
         $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $links[0]->expandedResult = $linkResult;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
-        $links[1]->title          = 'Order_Details';
-        $links[1]->type           = 'application/atom+xml;type=feed';
+        $links[1]->setTitle('Order_Details');
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url            = null;
         $links[1]->expandedResult = null;
 
@@ -556,10 +547,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
         $objectResult->title           = new ODataTitle('Order');
         $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink();
-        $objectResult->editLink->url   = 'Orders(OrderID=1)';
-        $objectResult->editLink->setName('edit');
-        $objectResult->editLink->title = 'Order';
+        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
         $objectResult->links           = $links;
         $objectResult->resourceSetName = 'Orders';

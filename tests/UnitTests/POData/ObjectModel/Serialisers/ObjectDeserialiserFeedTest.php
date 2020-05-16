@@ -73,7 +73,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $link                 = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $link->title          = 'Order';
-        $link->type           = 'application/atom+xml;type=feed';
+        $link->setType('application/atom+xml;type=feed');
         $link->url            = null;
         $link->isCollection   = false;
         $link->isExpanded     = true;
@@ -148,7 +148,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $link                 = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $link->title          = 'Order';
-        $link->type           = 'application/atom+xml;type=feed';
+        $link->setType('application/atom+xml;type=feed');
         $link->url            = null;
         $link->isCollection   = false;
         $link->isExpanded     = true;
@@ -264,7 +264,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $orderLink                 = new ODataLink();
         $orderLink->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $orderLink->title          = 'Order';
-        $orderLink->type           = 'application/atom+xml;type=feed';
+        $orderLink->setType('application/atom+xml;type=feed');
         $orderLink->url            = null;
         $orderLink->isCollection   = true;
         $orderLink->isExpanded     = true;
@@ -306,7 +306,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $link                 = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $link->title          = 'Order';
-        $link->type           = 'application/atom+xml;type=feed';
+        $link->setType('application/atom+xml;type=feed');
         $link->url            = null;
         $link->isCollection   = false;
         $link->isExpanded     = true;
@@ -385,7 +385,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $orderLink                 = new ODataLink();
         $orderLink->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $orderLink->title          = 'Order';
-        $orderLink->type           = 'application/atom+xml;type=feed';
+        $orderLink->setType('application/atom+xml;type=feed');
         $orderLink->url            = null;
         $orderLink->isCollection   = true;
         $orderLink->isExpanded     = true;
@@ -428,7 +428,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $link        = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order');
         $link->title = 'Order';
-        $link->type  = 'application/atom+xml;type=feed';
+        $link->setType('application/atom+xml;type=feed');
         $link->url   = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                      . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $link->isCollection   = false;

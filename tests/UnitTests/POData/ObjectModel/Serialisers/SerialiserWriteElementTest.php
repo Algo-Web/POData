@@ -61,7 +61,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $link               = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
-        $link->type         = 'application/atom+xml;type=feed';
+        $link->setType('application/atom+xml;type=feed');
         $link->title        = 'Orders';
         $link->url          = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
         $link->isCollection = true;
@@ -253,7 +253,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult->links           = [new ODataLink()];
         $linkResult->links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders');
         $linkResult->links[0]->title = 'Orders';
-        $linkResult->links[0]->type  = 'application/atom+xml;type=feed';
+        $linkResult->links[0]->setType('application/atom+xml;type=feed');
         $linkResult->links[0]->url   = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
                                      . '-e89b-12d3-a456-426655440000\')/Orders';
         $linkResult->links[0]->isCollection   = true;
@@ -274,14 +274,14 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->title          = 'Customer';
-        $links[0]->type           = 'application/atom+xml;type=entry';
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->url            = 'Orders(OrderID=1)/Customer';
         $links[0]->isCollection   = false;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = $linkResult;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->title          = 'Order_Details';
-        $links[1]->type           = 'application/atom+xml;type=feed';
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url            = 'Orders(OrderID=1)/Order_Details';
         $links[1]->isCollection   = true;
         $links[1]->isExpanded     = true;
@@ -370,11 +370,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $links                  = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
         $links[0]->title        = 'Manager';
-        $links[0]->type         = 'application/atom+xml;type=entry';
+        $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->url          = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates');
         $links[1]->title        = 'Subordinates';
-        $links[1]->type         = 'application/atom+xml;type=feed';
+        $links[1]->setType('application/atom+xml;type=feed');
         $links[1]->url          = 'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates';
         $links[1]->isCollection = true;
         $links[1]->isExpanded   = false;
@@ -535,7 +535,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink1                 = new ODataLink();
         $managerLink1->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
         $managerLink1->title          = 'Manager';
-        $managerLink1->type           = 'application/atom+xml;type=entry';
+        $managerLink1->setType('application/atom+xml;type=entry');
         $managerLink1->url            = 'Employees(EmployeeID=\'Cave+Johnson\')/Manager';
         $managerLink1->isCollection   = false;
         $managerLink1->isExpanded     = true;
@@ -543,7 +543,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink2                 = new ODataLink();
         $managerLink2->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates');
         $managerLink2->title          = 'Subordinates';
-        $managerLink2->type           = 'application/atom+xml;type=feed';
+        $managerLink2->setType('application/atom+xml;type=feed');
         $managerLink2->url            = 'Employees(EmployeeID=\'Cave+Johnson\')/Subordinates';
         $managerLink2->isCollection   = true;
         $managerLink2->isExpanded     = false;
@@ -568,7 +568,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $link                 = new ODataLink();
         $link->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager');
         $link->title          = 'Manager';
-        $link->type           = 'application/atom+xml;type=entry';
+        $link->setType('application/atom+xml;type=entry');
         $link->url            = 'Employees(EmployeeID=\'Bruce\')/Manager';
         $link->isCollection   = false;
         $link->isExpanded     = true;

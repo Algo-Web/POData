@@ -145,7 +145,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'application/atom+xml;type=entry',
-            $relatedLink->type,
+            $relatedLink->getType(),
             'the type of the related link failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -166,7 +166,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'application/xml',
-            $associatedLink->type,
+            $associatedLink->getType(),
             'the type of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(

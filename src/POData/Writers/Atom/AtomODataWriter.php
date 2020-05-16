@@ -267,10 +267,10 @@ class AtomODataWriter implements IODataWriter
             ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
             $link->getName() ?? ''
         );
-        if ($link->type != null) {
+        if ($link->getType() != null) {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                $link->type ?? ''
+                $link->getType() ?? ''
             );
         }
         if ($link->title != null) {

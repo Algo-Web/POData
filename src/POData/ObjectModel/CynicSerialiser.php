@@ -801,10 +801,10 @@ class CynicSerialiser implements IObjectSerialiser
                 array_push($this->lightStack, $newStackLine);
                 if (isset($value)) {
                     if (!$isCollection) {
-                        $nuLink->type   = 'application/atom+xml;type=entry';
+                        $nuLink->setType('application/atom+xml;type=entry');
                         $expandedResult = $this->writeTopLevelElement($result);
                     } else {
-                        $nuLink->type   = 'application/atom+xml;type=feed';
+                        $nuLink->setType('application/atom+xml;type=feed');
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
                     $nuLink->expandedResult = $expandedResult;

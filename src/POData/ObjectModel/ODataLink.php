@@ -26,7 +26,7 @@ class ODataLink
      *
      * @var string
      */
-    public $type;
+    private $type;
     /**
      * Url to the navigation property. This become value of href attribute.
      *
@@ -108,9 +108,9 @@ class ODataLink
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }

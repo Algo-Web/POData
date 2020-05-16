@@ -88,11 +88,7 @@ class AtomODataWriterTest extends TestCase
         $urls       = new ODataURLCollection();
         $urls->urls = [$url1, $url2];
 
-        $nextPageLink        = new ODataLink();
-        $nextPageLink->setName('Next');
-        $nextPageLink->title = '';
-        $nextPageLink->type  = '';
-        $nextPageLink->url   = 'Next Link Url';
+        $nextPageLink        = new ODataLink('Next', '', '', 'Next Link Url');
 
         $urls->nextPageLink = $nextPageLink;
         $urls->count        = 10;
@@ -127,19 +123,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->id       = 'Feed Id';
         $feed->rowCount = 'Count';
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('Self Link Name');
-        $selfLink->tytle = 'Self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link Url';
+        $selfLink        = new ODataLink('Self Link Name', '', '', 'Self Link Url');
 
         $feed->selfLink = $selfLink;
 
-        $nextPageLink        = new ODataLink();
-        $nextPageLink->setName('Next');
-        $nextPageLink->tytle = '';
-        $nextPageLink->type  = '';
-        $nextPageLink->url   = 'Next Link Url';
+        $nextPageLink        = new ODataLink('Next', '', '', 'Next Link Url');
 
         $feed->nextPageLink = $nextPageLink;
         $feed->title        = new ODataTitle('Feed Title');
@@ -150,19 +138,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink        = new ODataLink();
-        $editLink->setName('edit');
-        $editLink->tytle = 'Edit Link Title';
-        $editLink->type  = 'Edit link type';
-        $editLink->url   = 'Edit Link URL';
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
         $entry1->editLink = $editLink;
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('self');
-        $selfLink->tytle = 'self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link URL';
+        $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
         $entry1->selfLink = $selfLink;
 
@@ -173,11 +153,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media Content Type',
             'Media ETag'
         )];
-        $link        = new ODataLink();
-        $link->setName('Link Name');
-        $link->tytle = 'Link Title';
-        $link->type  = 'Link Type';
-        $link->url   = 'Link URL';
+        $link        = new ODataLink('Link Name','Link Title', 'Link Type','Link URL');
 
         $entry1->links            = [];
         $entry1->eTag             = 'Entry ETag';
@@ -301,19 +277,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink        = new ODataLink();
-        $editLink->setName('edit');
-        $editLink->tytle = 'Edit Link Title';
-        $editLink->type  = 'Edit link type';
-        $editLink->url   = 'Edit Link URL';
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
         $entry1->editLink = $editLink;
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('self');
-        $selfLink->tytle = 'self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link URL';
+        $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
         $entry1->selfLink   = $selfLink;
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
@@ -363,19 +331,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->id    = 'Entry 1';
         $entry1->title = new ODataTitle('Entry Title');
 
-        $editLink        = new ODataLink();
-        $editLink->setName('edit');
-        $editLink->tytle = 'Edit Link Title';
-        $editLink->type  = 'Edit link type';
-        $editLink->url   = 'Edit Link URL';
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
         $entry1->editLink = $editLink;
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('self');
-        $selfLink->tytle = 'self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link URL';
+        $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
 
         $entry1->selfLink   = $selfLink;
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
@@ -394,11 +354,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                 'Media ETag2'
             ), ];
 
-        $link             = new ODataLink();
-        $link->setName('Link Name');
-        $link->tytle      = 'Link Title';
-        $link->type       = 'Link Type';
-        $link->url        = 'Link URL';
+        $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL', null,null);
         $link->isExpanded = false;
 
         $entry1->links = [$link];
@@ -650,19 +606,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->title = new ODataTitle('Entry Title');
         $entry->type  = new ODataCategory('');
 
-        $editLink        = new ODataLink();
-        $editLink->setName('edit');
-        $editLink->tytle = 'Edit Link Title';
-        $editLink->type  = 'Edit link type';
-        $editLink->url   = 'Edit Link URL';
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type',  'Edit Link URL');
+
 
         $entry->editLink = $editLink;
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('self');
-        $selfLink->tytle = 'self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link URL';
+        $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
+
 
         $entry->selfLink   = $selfLink;
         $entry->mediaLinks = [new ODataMediaLink(
@@ -687,19 +637,11 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->id    = 'Entry 1';
         $odataExpandEntry->title = new ODataTitle('Entry Title');
 
-        $editLink        = new ODataLink();
-        $editLink->setName('edit');
-        $editLink->tytle = 'Edit Link Title';
-        $editLink->type  = 'Edit link type';
-        $editLink->url   = 'Edit Link URL';
+        $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type',  'Edit Link URL');
 
         $odataExpandEntry->editLink = $editLink;
 
-        $selfLink        = new ODataLink();
-        $selfLink->setName('self');
-        $selfLink->tytle = 'self Link Title';
-        $selfLink->type  = '';
-        $selfLink->url   = 'Self Link URL';
+        $selfLink        = new ODataLink('self', 'self Link Title', '',  'Self Link URL');
 
         $odataExpandEntry->selfLink = $selfLink;
 
@@ -717,11 +659,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             'Media ETag2'
         )];
 
-        $link             = new ODataLink();
-        $link->setName('Link Name');
-        $link->tytle      = 'Link Title';
-        $link->type       = 'Link Type';
-        $link->url        = 'Link URL';
+        $link             = new ODataLink('Link Name', 'Link Title', 'Link Type', 'Link URL');
         $link->isExpanded = false;
 
         $odataExpandEntry->links            = [];
@@ -1364,9 +1302,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testWriteUnexpandedLinkNode()
     {
-        $link        = new ODataLink();
-        $link->type  = 'linkType';
-        $link->title = 'Title';
+        $link        = new ODataLink(null, 'Title', 'linkType');
 
         $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeLinkNode($link, false);
