@@ -42,12 +42,6 @@ class ODataMediaLink
      */
     public $eTag;
     /**
-     * Attribute extensions for Media Link.
-     *
-     * @var array<XMLAttribute>
-     */
-    public $AttributeExtensions;
-    /**
      * True if this is a MLE else (Named Stream) false.
      *
      * @var bool
