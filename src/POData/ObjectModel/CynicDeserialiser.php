@@ -87,10 +87,10 @@ class CynicDeserialiser
     {
         // check links
         foreach ($payload->links as $link) {
-            $hasUrl      = isset($link->url);
+            $hasUrl      = null !== $link->getUrl();
             $hasExpanded = isset($link->expandedResult);
             if ($hasUrl) {
-                if (!is_string($link->url)) {
+                if (!is_string($link->getUrl())) {
                     $msg = 'Url must be either string or null';
                     throw new InvalidArgumentException($msg);
                 }
@@ -246,7 +246,7 @@ class CynicDeserialiser
      */
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
-        $hasUrl     = isset($link->url);
+        $hasUrl     = null !== $link->getUrl();
         $result     = $link->expandedResult;
         $hasPayload = isset($result);
         assert(
@@ -377,22 +377,9 @@ class CynicDeserialiser
             null === $result || $result instanceof ODataEntry,
             (null === $result ? 'null' : get_class($result))
         );
-        // if link result has already been processed, bail out
-        if (null !== $result || null !== $link->url) {
-            $isUrlKey = $link->url instanceof KeyDescriptor;
-            $isIdKey  = $result instanceof ODataEntry &&
-                $result->id instanceof KeyDescriptor;
-            if ($isUrlKey || $isIdKey) {
-                if ($isIdKey) {
-                    $link->url = $result->id;
-                }
-                return;
-            }
-        }
-        assert(null === $result || !$result->id instanceof KeyDescriptor);
-        assert(null === $link->url || is_string($link->url));
+
         if ($hasUrl) {
-            $urlBitz      = explode('/', $link->url);
+            $urlBitz      = explode('/', $link->getUrl());
             $rawPredicate = $urlBitz[count($urlBitz) - 1];
             $rawPredicate = explode('(', $rawPredicate);
             $setName      = $rawPredicate[0];
@@ -403,6 +390,22 @@ class CynicDeserialiser
         } else {
             $type = $this->getMetaProvider()->resolveResourceType($result->type->getTerm());
         }
+
+        // if link result has already been processed, bail out
+        if (null !== $result || null !== $link->getUrl()) {
+            $isUrlKey = $link->getUrl() instanceof KeyDescriptor;
+            $isIdKey  = $result instanceof ODataEntry &&
+                $result->id instanceof KeyDescriptor;
+            if ($isUrlKey || $isIdKey) {
+                if ($isIdKey) {
+                    $link->setUrl($result->id->generateRelativeUri($targSet));
+                }
+                return;
+            }
+        }
+        assert(null === $result || !$result->id instanceof KeyDescriptor);
+        assert(null === $link->getUrl() || is_string($link->getUrl()));
+
         assert($type instanceof ResourceEntityType, get_class($type));
         $propName = $link->getTitle();
 
@@ -423,7 +426,7 @@ class CynicDeserialiser
             $target = $this->getWrapper()->getResourceFromResourceSet($targSet, $keyDesc);
             assert(isset($target));
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
-            $link->url = $keyDesc;
+            $link->setUrl($keyDesc->generateRelativeUri($targSet));
             return;
         }
         // creating new resource
@@ -431,7 +434,7 @@ class CynicDeserialiser
             list($targSet, $target) = $this->processEntryContent($result);
             assert(isset($target));
             $key        = $this->generateKeyDescriptor($type, $result->propertyContent);
-            $link->url  = $key;
+            $link->setUrl($key->generateRelativeUri($targSet));
             $result->id = $key;
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
             return;
@@ -439,7 +442,7 @@ class CynicDeserialiser
         // updating existing resource and connecting to it
         list($targSet, $target) = $this->processEntryContent($result);
         assert(isset($target));
-        $link->url  = $keyDesc;
+        $link->setUrl($keyDesc);
         $result->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
         return;
