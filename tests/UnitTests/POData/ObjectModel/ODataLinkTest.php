@@ -30,7 +30,7 @@ class ODataLinkTest extends TestCase
     public function testSetGetODataFeedAsExpandedResult()
     {
         $entry  = new ODataFeed();
-        $expand = new ODataExpandedResult(null, $entry);
+        $expand = new ODataExpandedResult($entry);
 
         $foo = new ODataLink();
         $foo->setExpandResult($expand);

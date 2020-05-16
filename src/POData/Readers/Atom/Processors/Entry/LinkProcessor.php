@@ -81,10 +81,10 @@ class LinkProcessor extends BaseNodeHandler
     {
         assert(!$this->link instanceof ODataMediaLink);
         if ($objectModel instanceof ODataFeed) {
-            $expandResult = new ODataExpandedResult(null, $objectModel);
+            $expandResult = new ODataExpandedResult($objectModel);
         } else {
             assert($objectModel instanceof ODataEntry); // its an assumption but lets check it
-            $expandResult = new ODataExpandedResult($objectModel, null);
+            $expandResult = new ODataExpandedResult($objectModel);
         }
         $this->link->setExpandResult($expandResult);
     }

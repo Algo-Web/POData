@@ -18,16 +18,9 @@ class ODataExpandedResult
     /**
      * Term.
      *
-     * @var ODataEntry|null
+     * @var ODataContainerBase|null
      */
-    private $entry;
-
-    /**
-     * Scheme.
-     *
-     * @var ODataFeed|null
-     */
-    private $feed;
+    private $data;
 
     /**
      * ODataExpandedResult constructor.
@@ -35,10 +28,9 @@ class ODataExpandedResult
      * @param ODataEntry|null $entry
      * @param ODataFeed|null  $feed
      */
-    public function __construct(ODataEntry $entry = null, ODataFeed $feed = null)
+    public function __construct(ODataContainerBase $data = null)
     {
-        $this->entry = $entry;
-        $this->feed  = $feed;
+        $this->data = $data;
     }
 
     /**
@@ -46,7 +38,7 @@ class ODataExpandedResult
      */
     public function getEntry(): ?ODataEntry
     {
-        return $this->entry;
+        return $this->data instanceof ODataEntry ? $this->data : null;
     }
 
     /**
@@ -64,7 +56,7 @@ class ODataExpandedResult
      */
     public function getFeed(): ?ODataFeed
     {
-        return $this->feed;
+        return $this->data instanceof ODataFeed ? $this->data : null;
     }
 
     /**
