@@ -660,7 +660,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result      = $foo->writeUrlElements($queryResult);
         $expectedUrl = $odataLink->getUrl();
-        $this->assertEquals($expectedUrl, $result->nextPageLink->url);
+        $this->assertEquals($expectedUrl, $result->nextPageLink->getUrl());
         $this->assertEquals(2, $result->count);
     }
 

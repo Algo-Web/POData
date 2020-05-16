@@ -32,7 +32,7 @@ class ODataLink
      *
      * @var string
      */
-    public $url;
+    private $url;
     /**
      * Checks is Expand result contains single entity or collection of
      * entities i.e. feed.
@@ -224,5 +224,19 @@ class ODataLink
             $this->expandedResult = $eResult->getEntry();
         }
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return !array_reduce(
+            ['isExpanded', 'isCollection', 'expandedResult', 'title', 'type', 'name', 'url'],
+            function ($carry, $value) {
+                return $carry || isset($this->{$value});
+            },
+            false
+        );
     }
 }

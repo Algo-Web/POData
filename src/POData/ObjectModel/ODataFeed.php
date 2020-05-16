@@ -68,12 +68,7 @@ class ODataFeed extends ODataContainerBase
      */
     public function setNextPageLink(ODataLink $nextPageLink)
     {
-        foreach (get_object_vars($nextPageLink) as $property) {
-            if (null !== $property) {
-                $this->nextPageLink = $nextPageLink;
-                return;
-            }
-        }
+        $this->nextPageLink = $nextPageLink->isEmpty() ? null : $nextPageLink;
     }
 
     /**

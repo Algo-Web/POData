@@ -115,7 +115,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertNull($objectResult->links[0]->url);
+        $this->assertNull($objectResult->links[0]->getUrl());
     }
 
     public function testResourceSetMismatch()
@@ -351,7 +351,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertNull($objectResult->links[0]->url);
+        $this->assertNull($objectResult->links[0]->getUrl());
         $this->assertTrue($objectResult->links[0]->expandedResult->entries[0]->id instanceof KeyDescriptor);
     }
 
@@ -479,7 +479,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertNotNull($objectResult->links[0]->url);
+        $this->assertNotNull($objectResult->links[0]->getUrl());
         $this->assertTrue($objectResult->links[0]->expandedResult->entries[0]->id instanceof KeyDescriptor);
     }
 

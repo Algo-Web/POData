@@ -198,14 +198,14 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
         $links[0]->setTitle('Customer');
         $links[0]->setType('application/atom+xml;type=entry');
-        $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $links[0]->setUrl('Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $links[0]->isCollection   = false;
         $links[0]->isExpanded     = true;
         $links[0]->expandedResult = null;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
-        $links[1]->url            = null;
+        $links[1]->setUrl(null);
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
@@ -220,7 +220,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertTrue(!($objectResult->links[0]->url instanceof KeyDescriptor));
+        $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
     }
 
     public function testCreateSimpleOrderModelAndAddReferenceToNewCustomer()
@@ -316,7 +316,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
-        $links[1]->url            = null;
+        $links[1]->setUrl(null);
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
@@ -331,7 +331,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertTrue(!($objectResult->links[0]->url instanceof KeyDescriptor));
+        $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
         $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
     }
 
@@ -426,7 +426,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
-        $links[1]->url            = null;
+        $links[1]->setUrl(null);
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
@@ -442,7 +442,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertTrue(!($objectResult->links[0]->url instanceof KeyDescriptor));
+        $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
         $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
     }
 
@@ -535,12 +535,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[0]->setType('application/atom+xml;type=entry');
         $links[0]->isCollection   = true;
         $links[0]->isExpanded     = true;
-        $links[0]->url            = 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $links[0]->setUrl('Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $links[0]->expandedResult = $linkResult;
         $links[1]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order_Details');
         $links[1]->setTitle('Order_Details');
         $links[1]->setType('application/atom+xml;type=feed');
-        $links[1]->url            = null;
+        $links[1]->setUrl(null);
         $links[1]->expandedResult = null;
 
         $objectResult                  = new ODataEntry();
@@ -556,7 +556,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
-        $this->assertTrue(!($objectResult->links[0]->url instanceof KeyDescriptor));
+        $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
         $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
     }
 
