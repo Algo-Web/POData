@@ -539,7 +539,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             false
         );
         $managerLink1->isExpanded     = true;
-        $managerLink1->expandedResult = $managerResult;
+        $managerLink1->setExpandedResult(new ODataExpandedResult($managerResult));
         $managerLink2                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Subordinates',
             'Subordinates',
@@ -568,10 +568,10 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             'Manager',
             'application/atom+xml;type=entry',
             'Employees(EmployeeID=\'Bruce\')/Manager',
-            false
+            false,
+            new ODataExpandedResult($manager),
+            true
         );
-        $link->isExpanded     = true;
-        $link->expandedResult = $manager;
 
         $objContentProperty           = new ODataProperty();
         $objContentProperty->name     = 'Emails';

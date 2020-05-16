@@ -50,30 +50,4 @@ class ObjectDeserialiserOKTest extends TestCase
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
     }
-
-    public function testBadExpandedResult()
-    {
-        $resource = m::mock(ResourceSet::class);
-
-        $meta    = m::mock(IMetadataProvider::class);
-        $wrapper = m::mock(ProvidersWrapper::class);
-
-        $foo = new CynicDeserialiser($meta, $wrapper);
-
-        $link                 = new ODataLink();
-        $link->expandedResult = new \DateTime();
-        $payload              = new ODataEntry();
-        $payload->links[]     = $link;
-
-        $expected = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
-        $actual   = null;
-
-        try {
-            $foo->processPayload($payload);
-        } catch (\Exception $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
 }

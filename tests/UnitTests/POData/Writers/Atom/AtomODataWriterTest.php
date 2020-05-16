@@ -14,6 +14,7 @@ use POData\Configuration\ServiceConfiguration;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
@@ -706,7 +707,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->propertyContent = $propCon;
         $odataExpandEntry->type            = new ODataCategory('');
 
-        $odataLink->expandedResult = $odataExpandEntry;
+        $odataLink->setExpandedResult(new ODataExpandedResult($odataExpandEntry));
 
         $entry->links            = [$odataLink];
         $entry->eTag             = 'Entry ETag';

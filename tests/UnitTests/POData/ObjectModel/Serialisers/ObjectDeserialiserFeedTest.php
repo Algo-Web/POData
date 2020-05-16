@@ -76,11 +76,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'Order',
             'application/atom+xml;type=feed',
             null,
-            false
+            false,
+            new ODataExpandedResult($feed),
+            true
         );
-
-        $link->isExpanded     = true;
-        $link->expandedResult = $feed;
 
         $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
@@ -153,10 +152,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'Order',
             'application/atom+xml;type=feed',
             null,
-            false
+            false,
+            new ODataExpandedResult($feed),
+            true
         );
-        $link->isExpanded     = true;
-        $link->expandedResult = $feed;
 
         $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
@@ -270,10 +269,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'Order',
             'application/atom+xml;type=feed',
             null,
+            true,
+            new ODataExpandedResult($orderFeed),
             true
         );
-        $orderLink->isExpanded     = true;
-        $orderLink->expandedResult = $orderFeed;
 
         $linkContent             = new ODataPropertyContent();
         $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
@@ -313,10 +312,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'Order',
             'application/atom+xml;type=feed',
             null,
-            false
+            false,
+            new ODataExpandedResult($feed),
+            true
         );
-        $link->isExpanded     = true;
-        $link->expandedResult = $feed;
 
         $propContent             = new ODataPropertyContent();
         $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
@@ -393,10 +392,10 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             'Order',
             'application/atom+xml;type=feed',
             null,
+            true,
+            new ODataExpandedResult($orderFeed),
             true
         );
-        $orderLink->isExpanded     = true;
-        $orderLink->expandedResult = $orderFeed;
 
         $linkContent             = new ODataPropertyContent();
         $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),

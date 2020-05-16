@@ -403,11 +403,11 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             'Orders',
             'application/atom+xml;type=feed',
             'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders',
+            true,
+            new ODataExpandedResult($subFeed),
             true
 
         );
-        $link->isExpanded     = true;
-        $link->expandedResult = $subFeed;
 
         $entry     = new ODataEntry();
         $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'

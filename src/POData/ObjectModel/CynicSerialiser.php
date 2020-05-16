@@ -807,7 +807,7 @@ class CynicSerialiser implements IObjectSerialiser
                         $nuLink->setType('application/atom+xml;type=feed');
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
-                    $nuLink->expandedResult = $expandedResult;
+                    $nuLink->setExpandedResult(new ODataExpandedResult($expandedResult));
                 }
             }
         } else {
@@ -819,7 +819,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $result                 = new ODataFeed();
                 $result->selfLink       = new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
             }
-            $nuLink->expandedResult = $result;
+            $nuLink->setExpandedResult(new ODataExpandedResult($result));
         }
         if (isset($nuLink->expandedResult->selfLink)) {
             $nuLink->expandedResult->selfLink->setTitle($propName);
