@@ -272,12 +272,12 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($this->metadataLevel == JsonLightMetadataLevel::FULL()) {
             //Interestingly the fullmetadata outputs this metadata..even if the thing is expanded
             $this->writer
-                ->writeName($link->title . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
+                ->writeName($link->getTitle() . ODataConstants::JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING)
                 ->writeValue($link->url);
         }
 
         if ($link->isExpanded) {
-            $this->writer->writeName($link->title);
+            $this->writer->writeName($link->getTitle());
 
             if (null === $link->expandedResult) {
                 $this->writer->writeValue('null');

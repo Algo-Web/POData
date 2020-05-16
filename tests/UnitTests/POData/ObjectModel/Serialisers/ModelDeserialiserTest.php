@@ -110,11 +110,9 @@ class ModelDeserialiserTest extends SerialiserTestBase
                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
         $objectResult->title         = new ODataTitle('Customer');
         $objectResult->type          = new ODataCategory('Customer');
-        $objectResult->editLink      = new ODataLink();
-        $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
-                                       . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->editLink->setName('edit');
-        $objectResult->editLink->title = 'Customer';
+        $objectResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
+
         $objectResult->propertyContent = $propContent;
         $objectResult->resourceSetName = 'Customers';
         $objectResult->updated         = '2017-01-01T00:00:00+00:00';

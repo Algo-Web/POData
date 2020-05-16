@@ -1332,10 +1332,12 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
-        $feed->selfLink        = new ODataLink();
-        $feed->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
-        $feed->selfLink->title = 'Feed Title';
-        $feed->selfLink->url   = 'feedID';
+        $feed->selfLink        = new ODataLink(
+            ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
+            'Feed Title',
+            null,
+            'feedID'
+        );
 
         $foo      = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $expected = '<link rel="self" title="Feed Title" href="feedID"/>';

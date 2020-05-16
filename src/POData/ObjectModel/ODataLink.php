@@ -20,7 +20,7 @@ class ODataLink
      *
      * @var string
      */
-    public $title;
+    private $title;
     /**
      * Type of link.
      *
@@ -61,15 +61,25 @@ class ODataLink
      * @param string $url
      * @param bool $isCollection
      * @param ODataExpandedResult|null $expandedResult
+     * @param bool|null $isExpanded
      */
-    public function __construct(string $name = null, string $title = null, string $type = null, string $url = null, bool $isCollection = null, ODataExpandedResult $expandedResult = null)
-    {
-        $this->name           = $name;
-        $this->title          = $title;
-        $this->type           = $type;
-        $this->url            = $url;
-        $this->isCollection   = $isCollection;
-        $this->expandedResult = $expandedResult;
+    public function __construct(
+        string $name = null,
+        string $title = null,
+        string $type = null,
+        string $url = null,
+        bool $isCollection = null,
+        ODataExpandedResult $expandedResult = null,
+        bool $isExpanded = null
+    ) {
+        $this
+            ->setName($name)
+            ->setTitle($title)
+            ->setType($type)
+            ->setUrl($url)
+            ->setIsCollection($isCollection)
+            ->setExpandResult($expandedResult)
+            ->setIsExpanded($isExpanded);
     }
     /**
      * @return string
@@ -83,7 +93,7 @@ class ODataLink
      * @param string $name
      * @return ODataLink
      */
-    public function setName(string $name): ODataLink
+    public function setName(?string $name): ODataLink
     {
         $this->name = $name;
         return $this;
@@ -92,7 +102,7 @@ class ODataLink
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -101,7 +111,7 @@ class ODataLink
      * @param string $title
      * @return ODataLink
      */
-    public function setTitle(string $title): ODataLink
+    public function setTitle(?string $title): ODataLink
     {
         $this->title = $title;
         return $this;
@@ -119,7 +129,7 @@ class ODataLink
      * @param string $type
      * @return ODataLink
      */
-    public function setType(string $type): ODataLink
+    public function setType(?string $type): ODataLink
     {
         $this->type = $type;
         return $this;
@@ -128,7 +138,7 @@ class ODataLink
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -137,7 +147,7 @@ class ODataLink
      * @param string $url
      * @return ODataLink
      */
-    public function setUrl(string $url): ODataLink
+    public function setUrl(?string $url): ODataLink
     {
         $this->url = $url;
         return $this;
@@ -146,7 +156,7 @@ class ODataLink
     /**
      * @return bool
      */
-    public function isCollection(): bool
+    public function isCollection(): ?bool
     {
         return $this->isCollection;
     }
@@ -155,34 +165,16 @@ class ODataLink
      * @param bool $isCollection
      * @return ODataLink
      */
-    public function setIsCollection(bool $isCollection): ODataLink
+    public function setIsCollection(?bool $isCollection): ODataLink
     {
         $this->isCollection = $isCollection;
         return $this;
     }
 
     /**
-     * @return ODataEntry|ODataFeed
-     */
-    public function getExpandedResult()
-    {
-        return $this->expandedResult;
-    }
-
-    /**
-     * @param ODataEntry|ODataFeed $expandedResult
-     * @return ODataLink
-     */
-    public function setExpandedResult($expandedResult)
-    {
-        $this->expandedResult = $expandedResult;
-        return $this;
-    }
-
-    /**
      * @return bool
      */
-    public function isExpanded(): bool
+    public function isExpanded(): ?bool
     {
         return $this->isExpanded;
     }
@@ -191,7 +183,7 @@ class ODataLink
      * @param bool $isExpanded
      * @return ODataLink
      */
-    public function setIsExpanded(bool $isExpanded): ODataLink
+    public function setIsExpanded(?bool $isExpanded): ODataLink
     {
         $this->isExpanded = $isExpanded;
         return $this;
@@ -216,8 +208,11 @@ class ODataLink
     /**
      * @param ODataExpandedResult $eResult
      */
-    public function setExpandResult(ODataExpandedResult $eResult)
+    public function setExpandResult(?ODataExpandedResult $eResult)
     {
+        if(null === $eResult){
+            return $this;
+        }
         if (null !== $eResult->getFeed()) {
             $this->isExpanded     = true;
             $this->isCollection   = true;
@@ -228,5 +223,6 @@ class ODataLink
             $this->isCollection   = false;
             $this->expandedResult = $eResult->getEntry();
         }
+        return $this;
     }
 }

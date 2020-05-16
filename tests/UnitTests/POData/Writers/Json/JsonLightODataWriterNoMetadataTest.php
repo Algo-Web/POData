@@ -10,6 +10,7 @@ use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
@@ -176,10 +177,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
 
         //entry 1 links NOTE nometadata means this won't be output
         //link1
-        $link1        = new ODataLink();
-        $link1->setName('http://services.odata.org/OData/OData.svc/Products(0)/Categories');
-        $link1->title = 'Categories';
-        $link1->url   = 'http://services.odata.org/OData/OData.svc/Products(0)/Categories';
+        $link1        = new ODataLink(
+            'http://services.odata.org/OData/OData.svc/Products(0)/Categories',
+            'Categories',
+            null,
+            'http://services.odata.org/OData/OData.svc/Products(0)/Categories'
+        );
 
         $entry1->links = [$link1];
         //entry 1 links end
@@ -190,18 +193,22 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $oDataFeed->id    = 'FEED ID';
         $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
-        $selfLink            = new ODataLink();
-        $selfLink->setName('Products');
-        $selfLink->title     = 'Products';
-        $selfLink->url       = 'Categories(0)/Products';
+        $selfLink            = new ODataLink(
+            'Products',
+            'Products',
+            null,
+            'Categories(0)/Products'
+        );
         $oDataFeed->selfLink = $selfLink;
         //self link end
 
         //next page link: NOTE nometadata means this won't be output
-        $nextPageLink            = new ODataLink();
-        $nextPageLink->setName('Next Page Link');
-        $nextPageLink->title     = 'Next Page';
-        $nextPageLink->url       = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
+        $nextPageLink            = new ODataLink(
+            'Next Page Link',
+            'Next Page',
+            null,
+            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        );
         $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
         $oDataFeed->entries = [$entry1];
@@ -339,10 +346,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
 
         //entry 1 links
         //link1
-        $link1        = new ODataLink();
-        $link1->setName('Products');
-        $link1->title = 'Products';
-        $link1->url   = 'http://services.odata.org/OData/OData.svc/Suppliers(0)/Products';
+        $link1        = new ODataLink(
+            'Products',
+            'Products',
+            null,
+            'http://services.odata.org/OData/OData.svc/Suppliers(0)/Products'
+        );
 
         $entry1->links = [$link1];
         //entry 1 links end
@@ -423,10 +432,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
 
         //entry 2 links
         //link1
-        $link1        = new ODataLink();
-        $link1->setName('Products');
-        $link1->title = 'Products';
-        $link1->url   = 'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products';
+        $link1        = new ODataLink(
+            'Products',
+            'Products',
+            null,
+            'http://services.odata.org/OData/OData.svc/Suppliers(1)/Products'
+        );
 
         $entry2->links = [$link1];
         //entry 2 links end
@@ -437,18 +448,21 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $oDataFeed->id    = 'FEED ID';
         $oDataFeed->title = new ODataTitle('FEED TITLE');
         //self link
-        $selfLink            = new ODataLink();
-        $selfLink->setName('Products');
-        $selfLink->title     = 'Products';
-        $selfLink->url       = 'Categories(0)/Products';
+        $selfLink            = new ODataLink(
+            'Products',
+            'Products',
+            null,'Categories(0)/Products'
+        );
         $oDataFeed->selfLink = $selfLink;
         //self link end
 
         //next page
-        $nextPageLink            = new ODataLink();
-        $nextPageLink->setName('Next Page Link');
-        $nextPageLink->title     = 'Next Page';
-        $nextPageLink->url       = 'http://services.odata.org/OData/OData.svc$skiptoken=12';
+        $nextPageLink            = new ODataLink(
+            'Next Page Link',
+            'Next Page',
+            null,
+            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        );
         $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
 
@@ -567,10 +581,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry->propertyContent = $entryPropContent;
 
         //links
-        $link        = new ODataLink();
-        $link->setName('Products');
-        $link->title = 'Products';
-        $link->url   = 'http://services.odata.org/OData/OData.svc/Categories(0)/Products';
+        $link        = new ODataLink(
+            'Products',
+            'Products',
+            null,
+            'http://services.odata.org/OData/OData.svc/Categories(0)/Products'
+        );
 
         $entry->links = [$link];
 
@@ -918,12 +934,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         //End of main entry
 
         //Now link the expanded entry to the main entry
-        $expandLink                 = new ODataLink();
-        $expandLink->isCollection   = false;
-        $expandLink->isExpanded     = true;
-        $expandLink->title          = 'Expanded Property';
-        $expandLink->url            = 'ExpandedURL';
-        $expandLink->expandedResult = $expandedEntry;
+        $expandLink                 = new ODataLink(
+            null,
+            'Expanded Property',
+            null,
+            'ExpandedURL',
+            false,
+            new ODataExpandedResult($expandedEntry),
+            true
+        );
         $entry->links               = [$expandLink];
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
@@ -996,12 +1015,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         //End of main entry
 
         //Now link the expanded entry to the main entry
-        $expandLink                 = new ODataLink();
-        $expandLink->isCollection   = false;
-        $expandLink->isExpanded     = true;
-        $expandLink->title          = 'Expanded Property';
-        $expandLink->url            = 'ExpandedURL';
-        $expandLink->expandedResult = null; //<--key part
+        $expandLink                 = new ODataLink(
+            null,
+            'Expanded Property',
+            null,
+            'ExpandedURL',
+            false,
+            null, //<--key part
+            true
+        );
         $entry->links               = [$expandLink];
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
@@ -1197,20 +1219,25 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedFeed->title   = new ODataTitle('SubCollection');
         $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
 
-        $expandedFeedSelfLink        = new ODataLink();
-        $expandedFeedSelfLink->setName('self');
-        $expandedFeedSelfLink->title = 'SubCollection';
-        $expandedFeedSelfLink->url   = 'SubCollection Self URL';
+        $expandedFeedSelfLink        = new ODataLink('self',
+            'SubCollection',
+            null,
+            'SubCollection Self URL'
+        );
 
         $expandedFeed->selfLink = $expandedFeedSelfLink;
 
         //Now link the expanded entry to the main entry
-        $expandLink                 = new ODataLink();
-        $expandLink->isCollection   = true;
-        $expandLink->isExpanded     = true;
-        $expandLink->title          = 'SubCollection';
-        $expandLink->url            = 'SubCollectionURL';
-        $expandLink->expandedResult = $expandedFeed;
+        $expandLink                 = new ODataLink(
+            null,
+            'SubCollection',
+            null,
+            'SubCollectionURL',
+            true,
+            new ODataExpandedResult($expandedFeed),
+            true
+        );
+
         $entry->links               = [$expandLink];
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
@@ -1354,10 +1381,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
         $feed->title           = 'title';
-        $feed->selfLink        = new ODataLink();
-        $feed->selfLink->setName(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE);
-        $feed->selfLink->title = 'Feed Title';
-        $feed->selfLink->url   = 'feedID';
+        $feed->selfLink        = new ODataLink(
+            ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
+            'Feed Title',
+        null,
+            'feedID'
+        );
 
         $foo      = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), 'http://localhost/odata.svc');
         $expected = '{' . PHP_EOL . '    "value":[' . PHP_EOL . PHP_EOL . '    ]' . PHP_EOL . '}';

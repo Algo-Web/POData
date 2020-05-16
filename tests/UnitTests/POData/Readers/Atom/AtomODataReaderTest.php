@@ -46,7 +46,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'ProductDetails',
-            $data->selfLink->title,
+            $data->selfLink->getTitle(),
             'the Feed Self Link Title Failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -91,7 +91,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'ProductDetail',
-            $entry->editLink->title,
+            $entry->editLink->getTitle(),
             'The title of the edit link failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -140,7 +140,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'Product',
-            $relatedLink->title,
+            $relatedLink->getTitle(),
             'the title of the related link failed to deserialise correctly'
         );
         $this->assertEquals(
@@ -161,7 +161,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'Product',
-            $associatedLink->title,
+            $associatedLink->getTitle(),
             'the title of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(

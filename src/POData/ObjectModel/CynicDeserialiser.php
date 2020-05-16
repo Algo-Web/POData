@@ -285,7 +285,7 @@ class CynicDeserialiser
             $link->expandedResult instanceof ODataFeed,
             get_class($link->expandedResult)
         );
-        $propName = $link->title;
+        $propName = $link->getTitle();
 
         // if entries is empty, bail out - nothing to do
         $numEntries = count($link->expandedResult->entries);
@@ -404,7 +404,7 @@ class CynicDeserialiser
             $type = $this->getMetaProvider()->resolveResourceType($result->type->getTerm());
         }
         assert($type instanceof ResourceEntityType, get_class($type));
-        $propName = $link->title;
+        $propName = $link->getTitle();
 
         /** @var KeyDescriptor|null $keyDesc */
         $keyDesc = null;
