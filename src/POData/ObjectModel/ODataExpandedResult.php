@@ -46,7 +46,7 @@ class ODataExpandedResult
      */
     public function setEntry(?ODataEntry $entry): ODataExpandedResult
     {
-        $this->entry = $entry;
+        $this->data = $entry;
         return $this;
     }
 
@@ -64,7 +64,7 @@ class ODataExpandedResult
      */
     public function setFeed(?ODataFeed $feed): ODataExpandedResult
     {
-        $this->feed = $feed;
+        $this->data = $feed;
         return $this;
     }
 

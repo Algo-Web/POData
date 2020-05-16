@@ -43,7 +43,7 @@ class ODataLink
     /**
      * The expanded result. This becomes the inline content of the link.
      *
-     * @var ODataEntry|ODataFeed
+     * @var ODataExpandedResult|null
      */
     private $expandedResult;
     /**
