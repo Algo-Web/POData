@@ -599,8 +599,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         // flatten, remove and zero out etags - haven't yet figured out how to freeze etag generation
         $ironicResult->mediaLinks[0]->eTag                           = '';
         $ironicResult->mediaLink->eTag                               = '';
-        $ironicResult->links[0]->expandedResult->mediaLinks[0]->eTag = '';
-        $ironicResult->links[0]->expandedResult->mediaLink->eTag     = '';
+        $ironicResult->links[0]->getExpandedResult()->getEntry()->mediaLinks[0]->eTag = '';
+        $ironicResult->links[0]->getExpandedResult()->getEntry()->mediaLink->eTag     = '';
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);

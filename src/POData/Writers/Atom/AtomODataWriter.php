@@ -730,11 +730,11 @@ class AtomODataWriter implements IODataWriter
                 null
             );
 
-            if (null !== $link->expandedResult) {
+            if (null !== $link->getExpandedResult() && null != $link->getExpandedResult()->getData()) {
                 if ($link->isCollection()) {
-                    $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+                    $this->writeFeed($link->getExpandedResult()->getFeed());
                 } else {
-                    $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+                    $this->writeEntry($link->getExpandedResult()->getEntry());
                 }
             }
 

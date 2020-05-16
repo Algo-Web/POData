@@ -279,7 +279,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($link->isExpanded) {
             $this->writer->writeName($link->getTitle());
 
-            if (null === $link->expandedResult) {
+            if (null === $link->getExpandedResult() || null === $link->getExpandedResult()->getData()) {
                 $this->writer->writeValue('null');
             } else {
                 $this->writeExpandedLink($link);
@@ -297,10 +297,10 @@ class JsonLightODataWriter extends JsonODataV2Writer
     {
         if ($link->isCollection()) {
             $this->writer->startArrayScope();
-            $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeFeed(/* @scrutinizer ignore-type */ $link->getExpandedResult()->getFeed());
         } else {
             $this->writer->startObjectScope();
-            $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeEntry(/* @scrutinizer ignore-type */ $link->getExpandedResult()->getEntry());
         }
 
         $this->writer->endScope();

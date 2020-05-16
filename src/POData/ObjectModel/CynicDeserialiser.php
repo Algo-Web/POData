@@ -102,7 +102,7 @@ class CynicDeserialiser
                     throw new InvalidArgumentException($msg);
                 }
             }
-            $isEntry = $link->expandedResult instanceof ODataEntry;
+            $isEntry = ($link->getExpandedResult() ? $link->getExpandedResult()->getData() : null) instanceof ODataEntry;
 
             if ($hasExpanded) {
                 if ($isEntry) {
@@ -247,13 +247,13 @@ class CynicDeserialiser
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
         $hasUrl     = null !== $link->getUrl();
-        $result     = $link->expandedResult;
+        $result     = $link->getExpandedResult() ? $link->getExpandedResult()->getData() : null;
         $hasPayload = isset($result);
         assert(
             null == $result || $result instanceof ODataEntry || $result instanceof ODataFeed,
             (null === $result ? 'null' : get_class($result))
         );
-        $isFeed = $link->expandedResult instanceof ODataFeed;
+        $isFeed = ($link->getExpandedResult() ? $link->getExpandedResult()->getData() : null) instanceof ODataFeed;
 
         // if nothing to hook up, bail out now
         if (!$hasUrl && !$hasPayload) {
@@ -282,23 +282,23 @@ class CynicDeserialiser
     protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         assert(
-            $link->expandedResult instanceof ODataFeed,
-            get_class($link->expandedResult)
+            $link->getExpandedResult()->getData() instanceof ODataFeed,
+            get_class($link->getExpandedResult()->getData())
         );
         $propName = $link->getTitle();
 
         // if entries is empty, bail out - nothing to do
-        $numEntries = count($link->expandedResult->entries);
+        $numEntries = count($link->getExpandedResult()->getFeed()->entries);
         if (0 === $numEntries) {
             return;
         }
         // check that each entry is of consistent resource set after checking it hasn't been processed
-        $first = $link->expandedResult->entries[0]->resourceSetName;
-        if ($link->expandedResult->entries[0]->id instanceof KeyDescriptor) {
+        $first = $link->getExpandedResult()->getFeed()->entries[0]->resourceSetName;
+        if ($link->getExpandedResult()->getFeed()->entries[0]->id instanceof KeyDescriptor) {
             return;
         }
         for ($i = 1; $i < $numEntries; $i++) {
-            if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
+            if ($first !== $link->getExpandedResult()->getFeed()->entries[$i]->resourceSetName) {
                 $msg = 'All entries in given feed must have same resource set';
                 throw new InvalidArgumentException($msg);
             }
@@ -318,11 +318,11 @@ class CynicDeserialiser
         for ($i = 0; $i < $numEntries; $i++) {
             $data[] = $this->getDeserialiser()->bulkDeserialise(
                 $targType,
-                $link->expandedResult->entries[$i]
+                $link->getExpandedResult()->getFeed()->entries[$i]
             );
             $keys[] = $hasUrl ? $this->generateKeyDescriptor(
                 $targType,
-                $link->expandedResult->entries[$i]->propertyContent
+                $link->getExpandedResult()->getFeed()->entries[$i]->propertyContent
             ) : null;
         }
 
@@ -334,7 +334,7 @@ class CynicDeserialiser
                 $targEntityInstance = $bulkResult[$i];
                 $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
                 $key                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
-                $link->expandedResult->entries[$i]->id = $key;
+                $link->getExpandedResult()->getFeed()->entries[$i]->id = $key;
             }
         }
         // update
@@ -343,16 +343,16 @@ class CynicDeserialiser
             for ($i = 0; $i < $numEntries; $i++) {
                 $targEntityInstance = $bulkResult[$i];
                 $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $link->expandedResult->entries[$i]->id = $keys[$i];
+                $link->getExpandedResult()->getFeed()->entries[$i]->id = $keys[$i];
             }
         }
         assert(isset($bulkResult) && is_array($bulkResult));
 
         for ($i = 0; $i < $numEntries; $i++) {
-            assert($link->expandedResult->entries[$i]->id instanceof KeyDescriptor);
-            $numLinks = count($link->expandedResult->entries[$i]->links);
+            assert($link->getExpandedResult()->getFeed()->entries[$i]->id instanceof KeyDescriptor);
+            $numLinks = count($link->getExpandedResult()->getFeed()->entries[$i]->links);
             for ($j = 0; $j < $numLinks; $j++) {
-                $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
+                $this->processLink($link->getExpandedResult()->getFeed()->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
             }
         }
 
@@ -372,7 +372,7 @@ class CynicDeserialiser
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         /** @var ODataEntry|null $result */
-        $result = $link->expandedResult;
+        $result = $link->getExpandedResult() ? $link->getExpandedResult()->getEntry() : null;
         assert(
             null === $result || $result instanceof ODataEntry,
             (null === $result ? 'null' : get_class($result))
@@ -457,7 +457,7 @@ class CynicDeserialiser
             return false;
         }
         foreach ($payload->links as $link) {
-            $expand = $link->expandedResult;
+            $expand = $link->getExpandedResult() ? $link->getExpandedResult()->getData() : null;
             if (null === $expand) {
                 continue;
             }

@@ -343,7 +343,7 @@ class CynicSerialiser implements IObjectSerialiser
             if ($navProp->expanded) {
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
-            $nuLink->setIsExpanded(isset($nuLink->expandedResult));
+            $nuLink->setIsExpanded(null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData());
             assert(null !== $nuLink->isCollection());
 
             $links[] = $nuLink;
@@ -821,11 +821,11 @@ class CynicSerialiser implements IObjectSerialiser
             }
             $nuLink->setExpandedResult(new ODataExpandedResult($result));
         }
-        if (isset($nuLink->expandedResult->selfLink)) {
-            $nuLink->expandedResult->selfLink->setTitle($propName);
-            $nuLink->expandedResult->selfLink->setUrl($nuLink->getUrl());
-            $nuLink->expandedResult->title           = new ODataTitle($propName);
-            $nuLink->expandedResult->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
+        if (null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData() && null !== $nuLink->getExpandedResult()->getData()->selfLink) {
+            $nuLink->getExpandedResult()->getData()->selfLink->setTitle($propName);
+            $nuLink->getExpandedResult()->getData()->selfLink->setUrl($nuLink->getUrl());
+            $nuLink->getExpandedResult()->getData()->title           = new ODataTitle($propName);
+            $nuLink->getExpandedResult()->getData()->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }
     }
 

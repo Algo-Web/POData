@@ -67,4 +67,9 @@ class ODataExpandedResult
         $this->feed = $feed;
         return $this;
     }
+
+    public function getData(): ODataContainerBase
+    {
+        return $this->data;
+    }
 }

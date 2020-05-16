@@ -9,13 +9,6 @@ namespace POData\ObjectModel;
  */
 class ODataFeed extends ODataContainerBase
 {
-
-    /**
-     * Feed self link.
-     *
-     * @var ODataLink
-     */
-    public $selfLink;
     /**
      * Row count, in case of $inlinecount option.
      *

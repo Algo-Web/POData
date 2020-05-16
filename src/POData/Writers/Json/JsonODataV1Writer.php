@@ -414,7 +414,7 @@ class JsonODataV1Writer implements IODataWriter
         $this->writer->writeName($link->getTitle());
 
         if ($link->isExpanded) {
-            if (null === $link->expandedResult) {
+            if (null === $link->getExpandedResult() || null === $link->getExpandedResult()->getData()) {
                 $this->writer->writeValue('null');
             } else {
                 $this->writeExpandedLink($link);
@@ -441,10 +441,10 @@ class JsonODataV1Writer implements IODataWriter
     {
         if ($link->isCollection()) {
             $this->writer->startArrayScope();
-            $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeFeed($link->getExpandedResult()->getFeed());
         } else {
             $this->writer->startObjectScope();
-            $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeEntry($link->getExpandedResult()->getEntry());
         }
 
         $this->writer->endScope();

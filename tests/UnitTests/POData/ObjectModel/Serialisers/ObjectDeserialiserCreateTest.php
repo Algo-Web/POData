@@ -333,7 +333,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
         $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
-        $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
+        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getData()->id instanceof KeyDescriptor);
     }
 
     public function testUpdateSimpleCustomerModelAndAddNewOrderModel()
@@ -444,7 +444,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
         $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
-        $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
+        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getData()->id instanceof KeyDescriptor);
     }
 
     public function testUpdateSimpleCustomerModelAndUpdateAndAttachOrderModel()
@@ -558,7 +558,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
         $this->assertTrue(!($objectResult->links[0]->getUrl() instanceof KeyDescriptor));
-        $this->assertTrue($objectResult->links[0]->expandedResult->id instanceof KeyDescriptor);
+        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getData()->id instanceof KeyDescriptor);
     }
 
     /**

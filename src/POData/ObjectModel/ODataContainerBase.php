@@ -20,6 +20,13 @@ abstract class ODataContainerBase
     public $title;
 
     /**
+     * Entry Self Link.
+     *
+     * @var string|null
+     */
+    public $selfLink;
+
+    /**
      * Last updated timestamp.
      *
      * @var string|null
@@ -86,6 +93,23 @@ abstract class ODataContainerBase
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getSelfLink(): ?string
+    {
+        return $this->selfLink;
+    }
+
+    /**
+     * @param string|null $selfLink
+     * @return ODataEntry
+     */
+    public function setSelfLink(?string $selfLink): ODataEntry
+    {
+        $this->selfLink = $selfLink;
+        return $this;
+    }
     /**
      * @return string|null
      */

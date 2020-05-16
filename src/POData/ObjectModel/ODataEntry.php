@@ -17,13 +17,6 @@ use POData\ObjectModel\AtomObjectModel\AtomContent;
  */
 class ODataEntry extends ODataContainerBase
 {
-
-    /**
-     * Entry Self Link.
-     *
-     * @var string|null
-     */
-    public $selfLink;
     /**
      * Entry Edit Link.
      *
@@ -134,23 +127,6 @@ class ODataEntry extends ODataContainerBase
         $this->baseURI = $baseURI;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getSelfLink(): ?string
-    {
-        return $this->selfLink;
-    }
-
-    /**
-     * @param string|null $selfLink
-     * @return ODataEntry
-     */
-    public function setSelfLink(?string $selfLink): ODataEntry
-    {
-        $this->selfLink = $selfLink;
-        return $this;
-    }
 
     /**
      * @return string|null
