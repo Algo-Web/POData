@@ -48,17 +48,15 @@ class JsonODataV2WriterTest extends TestCase
     {
         //see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=verbose
 
-        $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
-        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
-        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
-        $oDataUrlCollection->urls = [
-            $oDataUrl1,
-            $oDataUrl2,
-            $oDataUrl3,
-        ];
-
-        $oDataUrlCollection->count = 3;
+        $oDataUrlCollection       = new ODataURLCollection(
+            [
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)')
+            ],
+            null,
+            3
+        );
         $writer                    = new JsonODataV2Writer(PHP_EOL, true);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);

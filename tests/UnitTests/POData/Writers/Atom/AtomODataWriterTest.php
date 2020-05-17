@@ -83,13 +83,11 @@ class AtomODataWriterTest extends TestCase
         $url1      = new ODataURL('http://www.odata.org/developers/protocols/atom-format');
         $url2      = new ODataURL('http://www.odata.org/developers/protocols/json-format');
 
-        $urls       = new ODataURLCollection();
-        $urls->urls = [$url1, $url2];
-
-        $nextPageLink        = new ODataLink('Next', '', '', 'Next Link Url');
-
-        $urls->nextPageLink = $nextPageLink;
-        $urls->count        = 10;
+        $urls       = new ODataURLCollection(
+            [$url1, $url2],
+            new ODataLink('Next', '', '', 'Next Link Url'),
+        10
+        );
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($urls);

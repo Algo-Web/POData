@@ -54,16 +54,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
     {
         // see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=nometadata
 
-        $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
-        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
-        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
-        $oDataUrlCollection->urls = [$oDataUrl1,
-            $oDataUrl2,
-            $oDataUrl3,
-        ];
-
-        $oDataUrlCollection->count = null; //simulate no $inlinecount
+        $oDataUrlCollection       = new ODataURLCollection(
+            [
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)')
+            ],
+            null,
+            null //simulate no $inlinecount
+        );
         $writer                    = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);

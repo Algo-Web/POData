@@ -60,16 +60,16 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         $this->markTestSkipped("see #80 ODataURL doesn't have enough context to get the meta data return result");
         // see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=minimalmetadata
 
-        $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
-        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
-        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
-        $oDataUrlCollection->urls = [$oDataUrl1,
-            $oDataUrl2,
-            $oDataUrl3,
-        ];
+        $oDataUrlCollection       = new ODataURLCollection(
+            [
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)')
+            ],
+            null,
+            null //simulate no $inlinecount
+        );
 
-        $oDataUrlCollection->count = null; //simulate no $inlinecount
         $writer                    = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);

@@ -916,7 +916,9 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeUrlElements(QueryResult $entryObjects)
     {
-        $urls = new ODataURLCollection();
+        $urls = [];
+        $count = null;
+        $nextPageLink = null;
         if (!empty($entryObjects->results)) {
             $i = 0;
             foreach ($entryObjects->results as $entryObject) {
@@ -926,7 +928,7 @@ class CynicSerialiser implements IObjectSerialiser
                 } else {
                     $query = $entryObject;
                 }
-                $urls->urls[$i] = $this->writeUrlElement($query);
+                $urls[$i] = $this->writeUrlElement($query);
                 ++$i;
             }
 
@@ -940,15 +942,15 @@ class CynicSerialiser implements IObjectSerialiser
                     null,
                     ltrim(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment, '/')
                 );
-                $urls->nextPageLink = $nextLink;
+                $nextPageLink = $nextLink;
             }
         }
 
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $urls->count = $this->getRequest()->getCountValue();
+            $count = $this->getRequest()->getCountValue();
         }
 
-        return $urls;
+        return new ODataURLCollection($urls, $nextPageLink, $count);
     }
 
     /**

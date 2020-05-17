@@ -50,15 +50,15 @@ class JsonODataV1WriterTest extends TestCase
 
     public function testWriteURLCollection()
     {
-        $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
-        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
-        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
-        $oDataUrlCollection->urls = [$oDataUrl1,
-            $oDataUrl2,
-            $oDataUrl3,
-        ];
-        $oDataUrlCollection->count = 3;
+        $oDataUrlCollection       = new ODataURLCollection(
+            [
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)'),
+                new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)')
+            ],
+            null,
+            3
+        );
         $writer                    = new JsonODataV1Writer(PHP_EOL, true);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);
