@@ -30,7 +30,7 @@ class ODataLink
     /**
      * Url to the navigation property. This become value of href attribute.
      *
-     * @var string
+     * @var string|null
      */
     private $url;
     /**
