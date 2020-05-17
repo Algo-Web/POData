@@ -1071,7 +1071,6 @@ class CynicSerialiser implements IObjectSerialiser
             throw new InvalidOperationException('Resource property must not be null');
         }
         $name = $resourceProperty->getName();
-        $typeName = null;
         $value = null;
         $iType = $resourceProperty->getInstanceType();
         if (!$iType instanceof IType) {
