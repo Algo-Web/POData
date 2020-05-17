@@ -613,7 +613,7 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult->results = null;
 
         $result = $foo->writeUrlElements($queryResult);
-        $this->assertEquals(0, count($result->urls));
+        $this->assertEquals(0, count($result->getUrls()));
         $this->assertNull($result->nextPageLink);
         $this->assertEquals(1, $result->count);
     }

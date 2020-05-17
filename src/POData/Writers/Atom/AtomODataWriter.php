@@ -223,7 +223,7 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->text(strval($urls->count));
             $this->xmlWriter->endElement();
         }
-        foreach ($urls->urls as $url) {
+        foreach ($urls->getUrls() as $url) {
             $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->getUrl());
         }
 

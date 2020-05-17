@@ -165,7 +165,7 @@ class JsonODataV1Writer implements IODataWriter
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        foreach ($urls->urls as $url) {
+        foreach ($urls->getUrls() as $url) {
             $this->writer->startObjectScope();
             $this->writeUrl($url);
             $this->writer->endScope();
