@@ -155,14 +155,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry1Prop5->typeName = 'Edm.Double';
         $entry1Prop5->value    = 2.5;
 
-        $entry1PropContent             = new ODataPropertyContent();
-        $entry1PropContent->properties = [
-            $entry1Prop1,
-            $entry1Prop2,
-            $entry1Prop3,
-            $entry1Prop4,
-            $entry1Prop5,
-        ];
+        $entry1PropContent             = new ODataPropertyContent(
+            [
+                $entry1Prop1,
+                $entry1Prop2,
+                $entry1Prop3,
+                $entry1Prop4,
+                $entry1Prop5,
+            ]
+        );
         //entry 1 property content end
 
         $entry1->propertyContent = $entry1PropContent;
@@ -276,7 +277,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry1->type     = 'ODataDemo.Supplier';
         $entry1->eTag     = 'W/"0"';
         //entry 1 property content
-        $entry1PropContent = new ODataPropertyContent();
 
         $entry1Prop1           = new ODataProperty();
         $entry1Prop1->name     = 'ID';
@@ -288,7 +288,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry1Prop2->typeName = 'Edm.String';
         $entry1Prop2->value    = 'Exotic Liquids';
         //complex type
-        $compForEntry1Prop3 = new ODataPropertyContent();
 
         $compForEntry1Prop3Prop1           = new ODataProperty();
         $compForEntry1Prop3Prop1->name     = 'Street';
@@ -315,11 +314,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $compForEntry1Prop3Prop5->typeName = 'Edm.String';
         $compForEntry1Prop3Prop5->value    = 'USA';
 
-        $compForEntry1Prop3->properties = [$compForEntry1Prop3Prop1,
-            $compForEntry1Prop3Prop2,
-            $compForEntry1Prop3Prop3,
-            $compForEntry1Prop3Prop4,
-            $compForEntry1Prop3Prop5, ];
+        $compForEntry1Prop3 = new ODataPropertyContent(
+            [
+                $compForEntry1Prop3Prop1,
+                $compForEntry1Prop3Prop2,
+                $compForEntry1Prop3Prop3,
+                $compForEntry1Prop3Prop4,
+                $compForEntry1Prop3Prop5
+            ]
+        );
 
         $entry1Prop3           = new ODataProperty();
         $entry1Prop3->name     = 'Address';
@@ -331,7 +334,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry1Prop4->typeName = 'Edm.Int16';
         $entry1Prop4->value    = (string) 0;
 
-        $entry1PropContent->properties = [$entry1Prop1, $entry1Prop2, $entry1Prop3, $entry1Prop4];
+        $entry1PropContent = new ODataPropertyContent(
+            [
+                $entry1Prop1,
+                $entry1Prop2,
+                $entry1Prop3,
+                $entry1Prop4
+            ]
+        );
+
         //entry 1 property content end
 
         $entry1->propertyContent = $entry1PropContent;
@@ -362,7 +373,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry2->type     = 'ODataDemo.Supplier';
         $entry2->eTag     = 'W/"0"';
         //entry 2 property content
-        $entry2PropContent = new ODataPropertyContent();
 
         $entry2Prop1           = new ODataProperty();
         $entry2Prop1->name     = 'ID';
@@ -374,7 +384,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry2Prop2->typeName = 'Edm.String';
         $entry2Prop2->value    = 'Tokyo Traders';
         //complex type
-        $compForEntry2Prop3 = new ODataPropertyContent();
 
         $compForEntry2Prop3Prop1           = new ODataProperty();
         $compForEntry2Prop3Prop1->name     = 'Street';
@@ -401,11 +410,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $compForEntry2Prop3Prop5->typeName = 'Edm.String';
         $compForEntry2Prop3Prop5->value    = 'USA';
 
-        $compForEntry2Prop3->properties = [$compForEntry2Prop3Prop1,
-            $compForEntry2Prop3Prop2,
-            $compForEntry2Prop3Prop3,
-            $compForEntry2Prop3Prop4,
-            $compForEntry2Prop3Prop5, ];
+        $compForEntry2Prop3 = new ODataPropertyContent(
+            [
+                $compForEntry2Prop3Prop1,
+                $compForEntry2Prop3Prop2,
+                $compForEntry2Prop3Prop3,
+                $compForEntry2Prop3Prop4,
+                $compForEntry2Prop3Prop5
+            ]
+        );
 
         $entry2Prop3           = new ODataProperty();
         $entry2Prop3->name     = 'Address';
@@ -417,7 +430,14 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry2Prop4->typeName = 'Edm.Int16';
         $entry2Prop4->value    = (string) 0;
 
-        $entry2PropContent->properties = [$entry2Prop1, $entry2Prop2, $entry2Prop3, $entry2Prop4];
+        $entry2PropContent = new ODataPropertyContent(
+            [
+                $entry2Prop1,
+                $entry2Prop2,
+                $entry2Prop3,
+                $entry2Prop4
+            ]
+        );
         //entry 2 property content end
 
         $entry2->propertyContent = $entry2PropContent;
@@ -560,7 +580,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry->type     = 'ODataDemo.Category';
         $entry->eTag     = '';
 
-        $entryPropContent = new ODataPropertyContent();
         //entry property
         $entryProp1           = new ODataProperty();
         $entryProp1->name     = 'ID';
@@ -572,7 +591,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entryProp2->typeName = 'Edm.String';
         $entryProp2->value    = 'Food';
 
-        $entryPropContent->properties = [$entryProp1, $entryProp2];
+        $entryPropContent = new ODataPropertyContent(
+            [
+                $entryProp1,
+                $entryProp2
+            ]
+        );
 
         $entry->propertyContent = $entryPropContent;
 
@@ -606,10 +630,8 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
     {
         //see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address?$format=application/json;odata=nometadata
 
-        $propContent = new ODataPropertyContent();
 
         //property
-        $compProp = new ODataPropertyContent();
 
         $compProp1           = new ODataProperty();
         $compProp1->name     = 'Street';
@@ -636,20 +658,23 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $compProp5->typeName = 'Edm.String';
         $compProp5->value    = 'USA';
 
-        $compProp->properties = [
-            $compProp1,
-            $compProp2,
-            $compProp3,
-            $compProp4,
-            $compProp5,
-        ];
+
+        $compProp = new ODataPropertyContent(
+            [
+                $compProp1,
+                $compProp2,
+                $compProp3,
+                $compProp4,
+                $compProp5,
+            ]
+        );
 
         $prop1           = new ODataProperty();
         $prop1->name     = 'Address';
         $prop1->typeName = 'ODataDemo.Address';
         $prop1->value    = $compProp;
+        $propContent = new ODataPropertyContent([$prop1]);
 
-        $propContent->properties = [$prop1];
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
         $result = $writer->write($propContent);
@@ -686,7 +711,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entry->type     = 'SampleModel.Customer';
         $entry->eTag     = '';
 
-        $entryPropContent = new ODataPropertyContent();
         //entry property
         $entryProp1           = new ODataProperty();
         $entryProp1->name     = 'ID';
@@ -717,7 +741,6 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $bagEntryProp4 = new ODataBagContent();
 
         //property content for bagEntryProp4ContentProp1
-        $bagEntryProp4ContentProp1Content = new ODataPropertyContent();
 
         $bagEntryProp4ContentProp1ContentProp1           = new ODataProperty();
         $bagEntryProp4ContentProp1ContentProp1->name     = 'Street';
@@ -729,13 +752,16 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
         $bagEntryProp4ContentProp1ContentProp2->value    = '508';
 
-        $bagEntryProp4ContentProp1Content->properties = [$bagEntryProp4ContentProp1ContentProp1,
-            $bagEntryProp4ContentProp1ContentProp2, ];
+        $bagEntryProp4ContentProp1Content = new ODataPropertyContent(
+            [
+                $bagEntryProp4ContentProp1ContentProp1,
+                $bagEntryProp4ContentProp1ContentProp2
+            ]
+        );
 
         //end property content for bagEntryProp4ContentProp1
 
         //property content2 for bagEntryProp4ContentProp1
-        $bagEntryProp4ContentProp1Content2 = new ODataPropertyContent();
 
         $bagEntryProp4ContentProp1Content2Prop1           = new ODataProperty();
         $bagEntryProp4ContentProp1Content2Prop1->name     = 'Street';
@@ -747,8 +773,13 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
         $bagEntryProp4ContentProp1Content2Prop2->value    = '102';
 
-        $bagEntryProp4ContentProp1Content2->properties = [$bagEntryProp4ContentProp1Content2Prop1,
-            $bagEntryProp4ContentProp1Content2Prop2, ];
+        $bagEntryProp4ContentProp1Content2 = new ODataPropertyContent(
+            [
+                $bagEntryProp4ContentProp1Content2Prop1,
+                $bagEntryProp4ContentProp1Content2Prop2
+            ]
+        );
+
 
         //end property content for bagEntryProp4ContentProp1
 
@@ -762,8 +793,15 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entryProp4->typeName = 'Bag(SampleModel.Address)';
         $entryProp4->value    = $bagEntryProp4;
         //property 4 ends
+        $entryPropContent = new ODataPropertyContent(
+            [
+                $entryProp1,
+                $entryProp2,
+                $entryProp3,
+                $entryProp4
+            ]
+        );
 
-        $entryPropContent->properties = [$entryProp1, $entryProp2, $entryProp3, $entryProp4];
 
         $entry->propertyContent = $entryPropContent;
 
@@ -804,8 +842,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $property->typeName = 'Edm.Int16';
         $property->value    = 56;
 
-        $content             = new ODataPropertyContent();
-        $content->properties = [$property];
+        $content             = new ODataPropertyContent([$property]);
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);
         $result = $writer->write($content);
@@ -861,8 +898,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $pr2->typeName = 'string';
         $pr2->value    = 'Kothari';
 
-        $propCon1             = new ODataPropertyContent();
-        $propCon1->properties = [$pr1, $pr2];
+        $propCon1             = new ODataPropertyContent([$pr1, $pr2]);
 
         $expandedEntryComplexProperty           = new ODataProperty();
         $expandedEntryComplexProperty->name     = 'Expanded Entry Complex Property';
@@ -879,12 +915,13 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedEntryProperty2->typeName = 'string';
         $expandedEntryProperty2->value    = 'Gujarat';
 
-        $expandedEntry->propertyContent             = new ODataPropertyContent();
-        $expandedEntry->propertyContent->properties = [
-            $expandedEntryComplexProperty,
-            $expandedEntryProperty1,
-            $expandedEntryProperty2,
-        ];
+        $expandedEntry->propertyContent             = new ODataPropertyContent(
+            [
+                $expandedEntryComplexProperty,
+                $expandedEntryProperty1,
+                $expandedEntryProperty2,
+            ]
+        );
         //End the expanded entry
 
         //build up the main entry
@@ -925,8 +962,12 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entryProperty2->typeName = 'string';
         $entryProperty2->value    = 'Kothari';
 
-        $entry->propertyContent             = new ODataPropertyContent();
-        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
+        $entry->propertyContent             = new ODataPropertyContent(
+            [
+                $entryProperty1,
+                $entryProperty2
+            ]
+        );
         //End of main entry
 
         //Now link the expanded entry to the main entry
@@ -1006,8 +1047,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entryProperty2->typeName = 'string';
         $entryProperty2->value    = 'Kothari';
 
-        $entry->propertyContent             = new ODataPropertyContent();
-        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
+        $entry->propertyContent             = new ODataPropertyContent([$entryProperty1, $entryProperty2]);
         //End of main entry
 
         //Now link the expanded entry to the main entry
@@ -1083,8 +1123,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedEntry1ComplexProperty                    = new ODataProperty();
         $expandedEntry1ComplexProperty->name              = 'Expanded Entry Complex Property';
         $expandedEntry1ComplexProperty->typeName          = 'Full Name';
-        $expandedEntry1ComplexProperty->value             = new ODataPropertyContent();
-        $expandedEntry1ComplexProperty->value->properties = [$pr1, $pr2];
+        $expandedEntry1ComplexProperty->value             = new ODataPropertyContent([$pr1, $pr2]);
 
         $expandedEntry1Property1           = new ODataProperty();
         $expandedEntry1Property1->name     = 'Expanded Entry City Property';
@@ -1096,12 +1135,13 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedEntry1Property2->typeName = 'string';
         $expandedEntry1Property2->value    = 'Entry 1 State Value';
 
-        $expandedEntry1->propertyContent             = new ODataPropertyContent();
-        $expandedEntry1->propertyContent->properties = [
-            $expandedEntry1ComplexProperty,
-            $expandedEntry1Property1,
-            $expandedEntry1Property2,
-        ];
+        $expandedEntry1->propertyContent             = new ODataPropertyContent(
+            [
+                $expandedEntry1ComplexProperty,
+                $expandedEntry1Property1,
+                $expandedEntry1Property2,
+            ]
+        );
         //End the expanded entry 1
 
         //First build up the expanded entry 2
@@ -1146,8 +1186,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedEntry2ComplexProperty                    = new ODataProperty();
         $expandedEntry2ComplexProperty->name              = 'Expanded Entry Complex Property';
         $expandedEntry2ComplexProperty->typeName          = 'Full Name';
-        $expandedEntry2ComplexProperty->value             = new ODataPropertyContent();
-        $expandedEntry2ComplexProperty->value->properties = [$pr1, $pr2];
+        $expandedEntry2ComplexProperty->value             = new ODataPropertyContent([$pr1, $pr2]);
 
         $expandedEntry2Property1           = new ODataProperty();
         $expandedEntry2Property1->name     = 'Expanded Entry City Property';
@@ -1159,12 +1198,13 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $expandedEntry2Property2->typeName = 'string';
         $expandedEntry2Property2->value    = 'Entry 2 State Value';
 
-        $expandedEntry2->propertyContent             = new ODataPropertyContent();
-        $expandedEntry2->propertyContent->properties = [
-            $expandedEntry2ComplexProperty,
-            $expandedEntry2Property1,
-            $expandedEntry2Property2,
-        ];
+        $expandedEntry2->propertyContent             = new ODataPropertyContent(
+            [
+                $expandedEntry2ComplexProperty,
+                $expandedEntry2Property1,
+                $expandedEntry2Property2,
+            ]
+        );
         //End the expanded entry 2
 
         //build up the main entry
@@ -1205,8 +1245,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $entryProperty2->typeName = 'string';
         $entryProperty2->value    = 'Kothari';
 
-        $entry->propertyContent             = new ODataPropertyContent();
-        $entry->propertyContent->properties = [$entryProperty1, $entryProperty2];
+        $entry->propertyContent             = new ODataPropertyContent([$entryProperty1, $entryProperty2]);
         //End of main entry
 
         //Create a the expanded feed

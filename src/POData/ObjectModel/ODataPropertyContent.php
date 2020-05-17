@@ -20,7 +20,7 @@ class ODataPropertyContent
      * ODataPropertyContent constructor.
      * @param ODataProperty[] $properties
      */
-    public function __construct(array $properties = [])
+    public function __construct(array $properties)
     {
         $this->setPropertys($properties);
     }
@@ -39,10 +39,6 @@ class ODataPropertyContent
      */
     public function setPropertys(array $newProperties): self
     {
-
-        foreach ($newProperties as $key => $property) {
-            $property->name = $key;
-        }
         $this->properties = $newProperties;
         return $this;
     }

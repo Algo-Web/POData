@@ -226,10 +226,17 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $addressContent->properties['Address2']->name        = 'Address2';
         $addressContent->properties['Address2']->typeName    = 'Address2';
 
-        $linkPropContent             = new ODataPropertyContent();
-        $linkPropContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $linkPropContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
         $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
         $linkPropContent->properties['CustomerID']->value      = '1';
