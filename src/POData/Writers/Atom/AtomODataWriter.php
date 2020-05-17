@@ -227,8 +227,8 @@ class AtomODataWriter implements IODataWriter
             $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->getUrl());
         }
 
-        if ($urls->nextPageLink != null) {
-            $this->writeLinkNode($urls->nextPageLink, false);
+        if ($urls->getNextPageLink() != null) {
+            $this->writeLinkNode($urls->getNextPageLink(), false);
         }
         $this->xmlWriter->endElement();
 

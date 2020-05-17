@@ -20,7 +20,7 @@ class ODataURLCollection
      *
      * @var ODataLink|null
      */
-    public $nextPageLink = null;
+    private $nextPageLink = null;
     /**
      * Enter url Count if inlineCount is requested.
      *

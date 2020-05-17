@@ -83,7 +83,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
             // Json Format V2:
             // "results":
             $this->writeRowCount($model->rowCount);
-            $this->writeNextPageLink($model->nextPageLink);
+            $this->writeNextPageLink($model->getNextPageLink());
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
@@ -110,7 +110,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
     public function writeUrlCollection(ODataURLCollection $urls)
     {
         $this->writeRowCount($urls->count);
-        $this->writeNextPageLink($urls->nextPageLink);
+        $this->writeNextPageLink($urls->getNextPageLink());
 
         // Json Format V2:
         // "results":

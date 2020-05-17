@@ -19,6 +19,7 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
+use POData\ObjectModel\ODataURLCollection;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceEntityType;
@@ -614,7 +615,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeUrlElements($queryResult);
         $this->assertEquals(0, count($result->getUrls()));
-        $this->assertNull($result->nextPageLink);
+        $this->assertNull($result->getNextPageLink());
         $this->assertEquals(1, $result->count);
     }
 
@@ -649,6 +650,7 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult          = new QueryResult();
         $queryResult->results = [$supplier, $customer];
         $queryResult->hasMore = true;
+        /** @var ObjectModelSerializer|m\Mock $foo */
 
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('writeUrlElement')->withArgs([$supplier])->andReturn('/supplier')->once();
@@ -658,9 +660,10 @@ class ObjectModelSerializerTest extends TestCase
         $foo->shouldReceive('needNextPageLink')->andReturn(true)->never();
         $foo->shouldReceive('getNextLinkUri')->andReturn($odataLink->getUrl())->once();
 
+        /** @var ODataURLCollection $result */
         $result      = $foo->writeUrlElements($queryResult);
         $expectedUrl = $odataLink->getUrl();
-        $this->assertEquals($expectedUrl, $result->nextPageLink->getUrl());
+        $this->assertEquals($expectedUrl, $result->getNextPageLink()->getUrl());
         $this->assertEquals(2, $result->count);
     }
 
