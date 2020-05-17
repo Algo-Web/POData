@@ -24,7 +24,7 @@ class ODataTitle
      *
      * @var string
      */
-    public $type;
+    private $type;
 
     /**
      * ODataTitle constructor.
