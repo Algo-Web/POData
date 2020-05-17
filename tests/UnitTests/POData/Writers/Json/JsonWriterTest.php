@@ -6,9 +6,9 @@ namespace UnitTests\POData\Writers\Json;
 
 use POData\Providers\Metadata\Type\Guid;
 use POData\Writers\Json\JsonWriter;
-use UnitTests\POData\TestCase;
+use UnitTests\POData\Writers\BaseWriterTest;
 
-class JsonWriterTest extends TestCase
+class JsonWriterTest extends BaseWriterTest
 {
     public function testWriteValueNoType()
     {

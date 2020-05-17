@@ -1,0 +1,802 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: alex
+ * Date: 17/05/20
+ * Time: 10:37 PM
+ */
+
+namespace UnitTests\POData\Writers;
+
+use Mockery as m;
+use POData\ObjectModel\ODataBagContent;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataExpandedResult;
+use POData\ObjectModel\ODataFeed;
+use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataMediaLink;
+use POData\ObjectModel\ODataProperty;
+use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
+use POData\Providers\ProvidersWrapper;
+use UnitTests\POData\TestCase;
+use UnitTests\POData\Writers\Atom\AtomODataWriterTest;
+
+/**
+ * Class BaseWriterTest
+ * @package UnitTests\POData\Writers
+ */
+class BaseWriterTest extends TestCase
+{
+    protected $mockProvider;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->mockProvider = m::mock(ProvidersWrapper::class)->makePartial();
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildSingleEntry(): ODataEntry
+    {
+        $entry1 = new ODataEntry();
+        $entry1->id = 'http://services.odata.org/OData/OData.svc/Products(0)';
+        $entry1->setSelfLink(new ODataLink('entry1 self link'));
+        $entry1->title = 'title of entry 1';
+        $entry1->editLink = 'edit link of entry 1';
+        $entry1->type = 'DataServiceProviderDemo.Product';
+        $entry1->eTag = '';
+        //entry 1 property content
+        $entry1Prop1 = new ODataProperty();
+        $entry1Prop1->name = 'ID';
+        $entry1Prop1->typeName = 'Edm.Int16';
+        $entry1Prop1->value = (string)100;
+
+        $entry1Prop2 = new ODataProperty();
+        $entry1Prop2->name = 'Name';
+        $entry1Prop2->typeName = 'Edm.String';
+        $entry1Prop2->value = 'Bread';
+
+        $entry1Prop3 = new ODataProperty();
+        $entry1Prop3->name = 'ReleaseDate';
+        $entry1Prop3->typeName = 'Edm.DateTime';
+        $entry1Prop3->value = '2012-09-07T04:07:03';
+
+        $entry1Prop4 = new ODataProperty();
+        $entry1Prop4->name = 'DiscontinuedDate';
+        $entry1Prop4->typeName = 'Edm.DateTime';
+        $entry1Prop4->value = null;
+
+        $entry1Prop5 = new ODataProperty();
+        $entry1Prop5->name = 'Price';
+        $entry1Prop5->typeName = 'Edm.Double';
+        $entry1Prop5->value = 2.5;
+
+        $entry1PropContent = new ODataPropertyContent(
+            [
+                $entry1Prop1,
+                $entry1Prop2,
+                $entry1Prop3,
+                $entry1Prop4,
+                $entry1Prop5,
+            ]
+        );
+
+        //entry 1 property content end
+
+        $entry1->propertyContent = $entry1PropContent;
+        return $entry1;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildEntryWithComplexProperties(): ODataEntry
+    {
+        $entry1 = new ODataEntry();
+        $entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
+        $entry1->setSelfLink(new ODataLink('entry1 self link'));
+        $entry1->title = new ODataTitle('title of entry 1');
+        $entry1->editLink = 'edit link of entry 1';
+        $entry1->type = 'ODataDemo.Supplier';
+        $entry1->eTag = 'W/"0"';
+        //entry 1 property content
+
+        $entry1Prop1 = new ODataProperty();
+        $entry1Prop1->name = 'ID';
+        $entry1Prop1->typeName = 'Edm.Int16';
+        $entry1Prop1->value = (string)0;
+
+        $entry1Prop2 = new ODataProperty();
+        $entry1Prop2->name = 'Name';
+        $entry1Prop2->typeName = 'Edm.String';
+        $entry1Prop2->value = 'Exotic Liquids';
+        //complex type
+
+        $compForEntry1Prop3Prop1 = new ODataProperty();
+        $compForEntry1Prop3Prop1->name = 'Street';
+        $compForEntry1Prop3Prop1->typeName = 'Edm.String';
+        $compForEntry1Prop3Prop1->value = 'NE 228th';
+
+        $compForEntry1Prop3Prop2 = new ODataProperty();
+        $compForEntry1Prop3Prop2->name = 'City';
+        $compForEntry1Prop3Prop2->typeName = 'Edm.String';
+        $compForEntry1Prop3Prop2->value = 'Sammamish';
+
+        $compForEntry1Prop3Prop3 = new ODataProperty();
+        $compForEntry1Prop3Prop3->name = 'State';
+        $compForEntry1Prop3Prop3->typeName = 'Edm.String';
+        $compForEntry1Prop3Prop3->value = 'WA';
+
+        $compForEntry1Prop3Prop4 = new ODataProperty();
+        $compForEntry1Prop3Prop4->name = 'ZipCode';
+        $compForEntry1Prop3Prop4->typeName = 'Edm.String';
+        $compForEntry1Prop3Prop4->value = '98074';
+
+        $compForEntry1Prop3Prop5 = new ODataProperty();
+        $compForEntry1Prop3Prop5->name = 'Country';
+        $compForEntry1Prop3Prop5->typeName = 'Edm.String';
+        $compForEntry1Prop3Prop5->value = 'USA';
+
+        $compForEntry1Prop3 = new ODataPropertyContent(
+            [
+                $compForEntry1Prop3Prop1,
+                $compForEntry1Prop3Prop2,
+                $compForEntry1Prop3Prop3,
+                $compForEntry1Prop3Prop4,
+                $compForEntry1Prop3Prop5
+            ]
+        );
+
+        $entry1Prop3 = new ODataProperty();
+        $entry1Prop3->name = 'Address';
+        $entry1Prop3->typeName = 'ODataDemo.Address';
+        $entry1Prop3->value = $compForEntry1Prop3;
+
+        $entry1Prop4 = new ODataProperty();
+        $entry1Prop4->name = 'Concurrency';
+        $entry1Prop4->typeName = 'Edm.Int16';
+        $entry1Prop4->value = (string)0;
+
+        $entry1PropContent = new ODataPropertyContent(
+            [
+                $entry1Prop1,
+                $entry1Prop2,
+                $entry1Prop3,
+                $entry1Prop4
+            ]
+        );
+
+        //entry 1 property content end
+
+        $entry1->propertyContent = $entry1PropContent;
+        return $entry1;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildSecondEntryWithComplexProperties(): ODataEntry
+    {
+        $entry2 = new ODataEntry();
+        $entry2->id = 'http://services.odata.org/OData/OData.svc/Suppliers(1)';
+        $entry2->setSelfLink(new ODataLink('entry2 self link'));
+        $entry2->title = 'title of entry 2';
+        $entry2->editLink = 'edit link of entry 2';
+        $entry2->type = 'ODataDemo.Supplier';
+        $entry2->eTag = 'W/"0"';
+        //entry 2 property content
+
+        $entry2Prop1 = new ODataProperty();
+        $entry2Prop1->name = 'ID';
+        $entry2Prop1->typeName = 'Edm.Int16';
+        $entry2Prop1->value = 1;
+
+        $entry2Prop2 = new ODataProperty();
+        $entry2Prop2->name = 'Name';
+        $entry2Prop2->typeName = 'Edm.String';
+        $entry2Prop2->value = 'Tokyo Traders';
+        //complex type
+
+        $compForEntry2Prop3Prop1 = new ODataProperty();
+        $compForEntry2Prop3Prop1->name = 'Street';
+        $compForEntry2Prop3Prop1->typeName = 'Edm.String';
+        $compForEntry2Prop3Prop1->value = 'NE 40th';
+
+        $compForEntry2Prop3Prop2 = new ODataProperty();
+        $compForEntry2Prop3Prop2->name = 'City';
+        $compForEntry2Prop3Prop2->typeName = 'Edm.String';
+        $compForEntry2Prop3Prop2->value = 'Redmond';
+
+        $compForEntry2Prop3Prop3 = new ODataProperty();
+        $compForEntry2Prop3Prop3->name = 'State';
+        $compForEntry2Prop3Prop3->typeName = 'Edm.String';
+        $compForEntry2Prop3Prop3->value = 'WA';
+
+        $compForEntry2Prop3Prop4 = new ODataProperty();
+        $compForEntry2Prop3Prop4->name = 'ZipCode';
+        $compForEntry2Prop3Prop4->typeName = 'Edm.String';
+        $compForEntry2Prop3Prop4->value = '98052';
+
+        $compForEntry2Prop3Prop5 = new ODataProperty();
+        $compForEntry2Prop3Prop5->name = 'Country';
+        $compForEntry2Prop3Prop5->typeName = 'Edm.String';
+        $compForEntry2Prop3Prop5->value = 'USA';
+
+        $compForEntry2Prop3 = new ODataPropertyContent(
+            [
+                $compForEntry2Prop3Prop1,
+                $compForEntry2Prop3Prop2,
+                $compForEntry2Prop3Prop3,
+                $compForEntry2Prop3Prop4,
+                $compForEntry2Prop3Prop5
+            ]
+        );
+
+        $entry2Prop3 = new ODataProperty();
+        $entry2Prop3->name = 'Address';
+        $entry2Prop3->typeName = 'ODataDemo.Address';
+        $entry2Prop3->value = $compForEntry2Prop3;
+
+        $entry2Prop4 = new ODataProperty();
+        $entry2Prop4->name = 'Concurrency';
+        $entry2Prop4->typeName = 'Edm.Int16';
+        $entry2Prop4->value = (string)0;
+
+        $entry2PropContent = new ODataPropertyContent(
+            [
+                $entry2Prop1,
+                $entry2Prop2,
+                $entry2Prop3,
+                $entry2Prop4
+            ]
+        );
+
+        //entry 2 property content end
+
+        $entry2->propertyContent = $entry2PropContent;
+        return $entry2;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildTestEntry(): ODataEntry
+    {
+        $entry = new ODataEntry();
+        $entry->id = 'http://services.odata.org/OData/OData.svc/Categories(0)';
+        $entry->setSelfLink(new ODataLink('entry2 self link'));
+        $entry->title = new ODataTitle('title of entry 2');
+        $entry->editLink = 'edit link of entry 2';
+        $entry->type = 'ODataDemo.Category';
+        $entry->eTag = '';
+        $entry->resourceSetName = 'resource set name';
+
+        //entry property
+        $entryProp1 = new ODataProperty();
+        $entryProp1->name = 'ID';
+        $entryProp1->typeName = 'Edm.Int16';
+        $entryProp1->value = (string)0;
+
+        $entryProp2 = new ODataProperty();
+        $entryProp2->name = 'Name';
+        $entryProp2->typeName = 'Edm.String';
+        $entryProp2->value = 'Food';
+
+        $entryPropContent = new ODataPropertyContent(
+            [
+                $entryProp1,
+                $entryProp2
+            ]
+        );
+
+        $entry->propertyContent = $entryPropContent;
+
+        //links
+        $link = new ODataLink(
+            'Products',
+            'Products',
+            null,
+            'http://services.odata.org/OData/OData.svc/Categories(0)/Products'
+        );
+        $entry->links = [$link];
+        return $entry;
+    }
+
+    /**
+     * @return ODataPropertyContent
+     */
+    protected function buildComplexProperty(): ODataPropertyContent
+    {
+        $compProp1 = new ODataProperty();
+        $compProp1->name = 'Street';
+        $compProp1->typeName = 'Edm.String';
+        $compProp1->value = 'NE 228th';
+
+        $compProp2 = new ODataProperty();
+        $compProp2->name = 'City';
+        $compProp2->typeName = 'Edm.String';
+        $compProp2->value = 'Sammamish';
+
+        $compProp3 = new ODataProperty();
+        $compProp3->name = 'State';
+        $compProp3->typeName = 'Edm.String';
+        $compProp3->value = 'WA';
+
+        $compProp4 = new ODataProperty();
+        $compProp4->name = 'ZipCode';
+        $compProp4->typeName = 'Edm.String';
+        $compProp4->value = '98074';
+
+        $compProp5 = new ODataProperty();
+        $compProp5->name = 'Country';
+        $compProp5->typeName = 'Edm.String';
+        $compProp5->value = 'USA';
+
+        $compProp = new ODataPropertyContent(
+            [
+                $compProp1,
+                $compProp2,
+                $compProp3,
+                $compProp4,
+                $compProp5
+            ]
+        );
+
+        $prop1 = new ODataProperty();
+        $prop1->name = 'Address';
+        $prop1->typeName = 'ODataDemo.Address';
+        $prop1->value = $compProp;
+
+        $propContent = new ODataPropertyContent([$prop1]);
+        return $propContent;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildEntryWithBagProperty(): ODataEntry
+    {
+        $entry = new ODataEntry();
+        $entry->id = 'http://host/service.svc/Customers(1)';
+        $entry->setSelfLink(new ODataLink('entry1 self link'));
+        $entry->title = new ODataTitle('title of entry 1');
+        $entry->editLink = 'edit link of entry 1';
+        $entry->type = 'SampleModel.Customer';
+        $entry->eTag = 'some eTag';
+        $entry->resourceSetName = 'resource set name';
+
+        //entry property
+        $entryProp1 = new ODataProperty();
+        $entryProp1->name = 'ID';
+        $entryProp1->typeName = 'Edm.Int16';
+        $entryProp1->value = 1;
+
+        $entryProp2 = new ODataProperty();
+        $entryProp2->name = 'Name';
+        $entryProp2->typeName = 'Edm.String';
+        $entryProp2->value = 'mike';
+
+        //property 3 starts
+        //bag property for property 3
+        $bagEntryProp3 = new ODataBagContent();
+
+        $bagEntryProp3->setPropertyContents(
+            [
+                'mike@foo.com',
+                'mike2@foo.com',
+            ]
+        );
+        $bagEntryProp3->setType('Bag(Edm.String)'); //TODO: this might not be what really happens in the code..#61
+
+        $entryProp3 = new ODataProperty();
+        $entryProp3->name = 'EmailAddresses';
+        $entryProp3->typeName = 'Bag(Edm.String)';
+        $entryProp3->value = $bagEntryProp3;
+        //property 3 ends
+
+        //property 4 starts
+        $bagEntryProp4 = new ODataBagContent();
+
+        //property content for bagEntryProp4ContentProp1
+
+        $bagEntryProp4ContentProp1ContentProp1 = new ODataProperty();
+        $bagEntryProp4ContentProp1ContentProp1->name = 'Street';
+        $bagEntryProp4ContentProp1ContentProp1->typeName = 'Edm.String';
+        $bagEntryProp4ContentProp1ContentProp1->value = '123 contoso street';
+
+        $bagEntryProp4ContentProp1ContentProp2 = new ODataProperty();
+        $bagEntryProp4ContentProp1ContentProp2->name = 'Apartment';
+        $bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
+        $bagEntryProp4ContentProp1ContentProp2->value = '508';
+
+        $bagEntryProp4ContentProp1Content = new ODataPropertyContent(
+            [
+                $bagEntryProp4ContentProp1ContentProp1,
+                $bagEntryProp4ContentProp1ContentProp2
+            ]
+        );
+
+        //end property content for bagEntryProp4ContentProp1
+
+        //property content2 for bagEntryProp4ContentProp1
+
+        $bagEntryProp4ContentProp1Content2Prop1 = new ODataProperty();
+        $bagEntryProp4ContentProp1Content2Prop1->name = 'Street';
+        $bagEntryProp4ContentProp1Content2Prop1->typeName = 'Edm.String';
+        $bagEntryProp4ContentProp1Content2Prop1->value = '834 foo street';
+
+        $bagEntryProp4ContentProp1Content2Prop2 = new ODataProperty();
+        $bagEntryProp4ContentProp1Content2Prop2->name = 'Apartment';
+        $bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
+        $bagEntryProp4ContentProp1Content2Prop2->value = '102';
+
+        $bagEntryProp4ContentProp1Content2 = new ODataPropertyContent(
+            [
+                $bagEntryProp4ContentProp1Content2Prop1,
+                $bagEntryProp4ContentProp1Content2Prop2
+            ]
+        );
+
+        //end property content for bagEntryProp4ContentProp1
+
+        $bagEntryProp4->setPropertyContents(
+            [
+                $bagEntryProp4ContentProp1Content,
+                $bagEntryProp4ContentProp1Content2,
+            ]
+        );
+        $bagEntryProp4->setType(
+            'Bag(SampleModel.Address)'
+        ); //TODO: this might not be what really happens in the code..#61
+
+        $entryProp4 = new ODataProperty();
+        $entryProp4->name = 'Addresses';
+        $entryProp4->typeName = 'Bag(SampleModel.Address)';
+        $entryProp4->value = $bagEntryProp4;
+        //property 4 ends
+
+        $entryPropContent = new ODataPropertyContent(
+            [
+                $entryProp1,
+                $entryProp2,
+                $entryProp3,
+                $entryProp4
+            ]
+        );
+
+        $entry->propertyContent = $entryPropContent;
+        return $entry;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildEntryWithExpandedFeed(): ODataEntry
+    {
+        $expandedEntry1 = new ODataEntry();
+        $expandedEntry1->id = 'Expanded Entry 1';
+        $expandedEntry1->title = new ODataTitle('Expanded Entry 1 Title');
+        $expandedEntry1->type = 'Expanded.Type';
+        $expandedEntry1->editLink = 'Edit Link URL';
+        $expandedEntry1->setSelfLink(new ODataLink('Self Link URL'));
+
+        $expandedEntry1->mediaLinks = [
+            new ODataMediaLink(
+                'Media Link Name',
+                'Edit Media link',
+                'Src Media Link',
+                'Media Content Type',
+                'Media ETag'
+            ),
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ),
+        ];
+
+        $expandedEntry1->links = [];
+        $expandedEntry1->eTag = 'Entry ETag';
+        $expandedEntry1->isMediaLinkEntry = false;
+
+        $pr1 = new ODataProperty();
+        $pr1->name = 'first';
+        $pr1->typeName = 'string';
+        $pr1->value = 'Entry 1 Name First';
+
+        $pr2 = new ODataProperty();
+        $pr2->name = 'last';
+        $pr2->typeName = 'string';
+        $pr2->value = 'Entry 1 Name Last';
+
+        $expandedEntry1ComplexProperty = new ODataProperty();
+        $expandedEntry1ComplexProperty->name = 'Expanded Entry Complex Property';
+        $expandedEntry1ComplexProperty->typeName = 'Full Name';
+        $expandedEntry1ComplexProperty->value = new ODataPropertyContent([$pr1, $pr2]);
+
+        $expandedEntry1Property1 = new ODataProperty();
+        $expandedEntry1Property1->name = 'Expanded Entry City Property';
+        $expandedEntry1Property1->typeName = 'string';
+        $expandedEntry1Property1->value = 'Entry 1 City Value';
+
+        $expandedEntry1Property2 = new ODataProperty();
+        $expandedEntry1Property2->name = 'Expanded Entry State Property';
+        $expandedEntry1Property2->typeName = 'string';
+        $expandedEntry1Property2->value = 'Entry 1 State Value';
+
+        $expandedEntry1->propertyContent = new ODataPropertyContent(
+            [
+                $expandedEntry1ComplexProperty,
+                $expandedEntry1Property1,
+                $expandedEntry1Property2,
+            ]
+        );
+        //End the expanded entry 1
+
+        //First build up the expanded entry 2
+        $expandedEntry2 = new ODataEntry();
+        $expandedEntry2->id = 'Expanded Entry 2';
+        $expandedEntry2->title = new ODataTitle('Expanded Entry 2 Title');
+        $expandedEntry2->type = 'Expanded.Type';
+        $expandedEntry2->editLink = 'Edit Link URL';
+        $expandedEntry2->setSelfLink(new ODataLink('Self Link URL'));
+
+        $expandedEntry2->mediaLinks = [
+            new ODataMediaLink(
+                'Media Link Name',
+                'Edit Media link',
+                'Src Media Link',
+                'Media Content Type',
+                'Media ETag'
+            ),
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ),
+        ];
+
+        $expandedEntry2->links = [];
+        $expandedEntry2->eTag = 'Entry ETag';
+        $expandedEntry2->isMediaLinkEntry = false;
+
+        $pr1 = new ODataProperty();
+        $pr1->name = 'first';
+        $pr1->typeName = 'string';
+        $pr1->value = 'Entry 2 Name First';
+
+        $pr2 = new ODataProperty();
+        $pr2->name = 'last';
+        $pr2->typeName = 'string';
+        $pr2->value = 'Entry 2 Name Last';
+
+        $expandedEntry2ComplexProperty = new ODataProperty();
+        $expandedEntry2ComplexProperty->name = 'Expanded Entry Complex Property';
+        $expandedEntry2ComplexProperty->typeName = 'Full Name';
+        $expandedEntry2ComplexProperty->value = new ODataPropertyContent([$pr1, $pr2]);
+
+        $expandedEntry2Property1 = new ODataProperty();
+        $expandedEntry2Property1->name = 'Expanded Entry City Property';
+        $expandedEntry2Property1->typeName = 'string';
+        $expandedEntry2Property1->value = 'Entry 2 City Value';
+
+        $expandedEntry2Property2 = new ODataProperty();
+        $expandedEntry2Property2->name = 'Expanded Entry State Property';
+        $expandedEntry2Property2->typeName = 'string';
+        $expandedEntry2Property2->value = 'Entry 2 State Value';
+
+        $expandedEntry2->propertyContent = new ODataPropertyContent(
+            [
+                $expandedEntry2ComplexProperty,
+                $expandedEntry2Property1,
+                $expandedEntry2Property2,
+            ]
+        );
+        //End the expanded entry 2
+
+        //build up the main entry
+
+        $entry = new ODataEntry();
+        $entry->id = 'Main Entry';
+        $entry->title = new ODataTitle('Entry Title');
+        $entry->type = 'Main.Type';
+        $entry->editLink = 'Edit Link URL';
+        $entry->setSelfLink(new ODataLink('Self Link URL'));
+        $entry->mediaLinks = [
+            new ODataMediaLink(
+                'Media Link Name',
+                'Edit Media link',
+                'Src Media Link',
+                'Media Content Type',
+                'Media ETag'
+            ),
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ),
+        ];
+
+        $entry->eTag = 'Entry ETag';
+        $entry->isMediaLinkEntry = false;
+
+        $entryProperty1 = new ODataProperty();
+        $entryProperty1->name = 'Main Entry Property 1';
+        $entryProperty1->typeName = 'string';
+        $entryProperty1->value = 'Yash';
+
+        $entryProperty2 = new ODataProperty();
+        $entryProperty2->name = 'Main Entry Property 2';
+        $entryProperty2->typeName = 'string';
+        $entryProperty2->value = 'Kothari';
+
+        $entry->propertyContent = new ODataPropertyContent(
+            [
+                $entryProperty1,
+                $entryProperty2
+            ]
+        );
+        //End of main entry
+
+        //Create a the expanded feed
+        $expandedFeed = new ODataFeed();
+        $expandedFeed->id = 'expanded feed id';
+        $expandedFeed->title = new ODataTitle('SubCollection');
+        $expandedFeed->entries = [$expandedEntry1, $expandedEntry2];
+
+        $expandedFeedSelfLink = new ODataLink('self', 'SubCollection', null, 'SubCollection Self URL');
+
+        $expandedFeed->setSelfLink($expandedFeedSelfLink);
+
+        //Now link the expanded entry to the main entry
+        $expandLink = new ODataLink(
+            null,
+            'SubCollection',
+            null,
+            'SubCollectionURL',
+            true,
+            new ODataExpandedResult($expandedFeed),
+            true
+        );
+        $entry->links = [$expandLink];
+        return $entry;
+    }
+
+    /**
+     * @return ODataEntry
+     */
+    protected function buildEntryWithExpandedEntry(): ODataEntry
+    {
+        $expandedEntry = new ODataEntry();
+        $expandedEntry->id = 'Expanded Entry 1';
+        $expandedEntry->title = 'Expanded Entry Title';
+        $expandedEntry->type = 'Expanded.Type';
+        $expandedEntry->editLink = 'Edit Link URL';
+        $expandedEntry->setSelfLink(new ODataLink('Self Link URL'));
+
+        $expandedEntry->mediaLinks = [
+            new ODataMediaLink(
+                'Media Link Name',
+                'Edit Media link',
+                'Src Media Link',
+                'Media Content Type',
+                'Media ETag'
+            ),
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ),
+        ];
+
+        $expandedEntry->links = [];
+        $expandedEntry->eTag = 'Entry ETag';
+        $expandedEntry->isMediaLinkEntry = false;
+
+        $pr1 = new ODataProperty();
+        $pr1->name = 'fname';
+        $pr1->typeName = 'string';
+        $pr1->value = 'Yash';
+
+        $pr2 = new ODataProperty();
+        $pr2->name = 'lname';
+        $pr2->typeName = 'string';
+        $pr2->value = 'Kothari';
+
+        $propCon1 = new ODataPropertyContent([$pr1, $pr2]);
+
+        $expandedEntryComplexProperty = new ODataProperty();
+        $expandedEntryComplexProperty->name = 'Expanded Entry Complex Property';
+        $expandedEntryComplexProperty->typeName = 'Full Name';
+        $expandedEntryComplexProperty->value = $propCon1;
+
+        $expandedEntryProperty1 = new ODataProperty();
+        $expandedEntryProperty1->name = 'Expanded Entry City Property';
+        $expandedEntryProperty1->typeName = 'string';
+        $expandedEntryProperty1->value = 'Ahmedabad';
+
+        $expandedEntryProperty2 = new ODataProperty();
+        $expandedEntryProperty2->name = 'Expanded Entry State Property';
+        $expandedEntryProperty2->typeName = 'string';
+        $expandedEntryProperty2->value = 'Gujarat';
+
+        $expandedEntry->propertyContent = new ODataPropertyContent(
+            [
+                $expandedEntryComplexProperty,
+                $expandedEntryProperty1,
+                $expandedEntryProperty2,
+            ]
+        );
+        //End the expanded entry
+
+        //build up the main entry
+
+        $entry = new ODataEntry();
+        $entry->id = 'Main Entry';
+        $entry->title = 'Entry Title';
+        $entry->type = 'Main.Type';
+        $entry->editLink = 'Edit Link URL';
+        $entry->setSelfLink(new ODataLink('Self Link URL'));
+        $entry->mediaLinks = [
+            new ODataMediaLink(
+                'Media Link Name',
+                'Edit Media link',
+                'Src Media Link',
+                'Media Content Type',
+                'Media ETag'
+            ),
+            new ODataMediaLink(
+                'Media Link Name2',
+                'Edit Media link2',
+                'Src Media Link2',
+                'Media Content Type2',
+                'Media ETag2'
+            ),
+        ];
+
+        $entry->eTag = 'Entry ETag';
+        $entry->isMediaLinkEntry = false;
+
+        $entryProperty1 = new ODataProperty();
+        $entryProperty1->name = 'Main Entry Property 1';
+        $entryProperty1->typeName = 'string';
+        $entryProperty1->value = 'Yash';
+
+        $entryProperty2 = new ODataProperty();
+        $entryProperty2->name = 'Main Entry Property 2';
+        $entryProperty2->typeName = 'string';
+        $entryProperty2->value = 'Kothari';
+
+        $entry->propertyContent = new ODataPropertyContent(
+            [
+                $entryProperty1,
+                $entryProperty2
+            ]
+        );
+        //End of main entry
+
+        //Now link the expanded entry to the main entry
+        $expandLink = new ODataLink(
+            null,
+            'Expanded Property',
+            null,
+            'ExpandedURL',
+            false,
+            new ODataExpandedResult($expandedEntry),
+            true
+        );
+        $entry->links = [$expandLink];
+        return $entry;
+    }
+}

@@ -28,16 +28,14 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\Atom\AtomODataWriter;
-use UnitTests\POData\TestCase;
+use UnitTests\POData\Writers\BaseWriterTest;
 
-class AtomODataWriterTest extends TestCase
+/**
+ * Class AtomODataWriterTest
+ * @package UnitTests\POData\Writers\Atom
+ */
+class AtomODataWriterTest extends BaseWriterTest
 {
-    public function setUp()
-    {
-        parent::setUp();
-        $this->mockProvider = m::mock(ProvidersWrapper::class)->makePartial();
-    }
-
     /**
      * Removes the updated tag from an XML string
      * IE <updated>2013-09-17T19:22:33-06:00</updated>.
