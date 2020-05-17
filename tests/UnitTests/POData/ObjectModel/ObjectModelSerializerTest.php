@@ -616,7 +616,7 @@ class ObjectModelSerializerTest extends TestCase
         $result = $foo->writeUrlElements($queryResult);
         $this->assertEquals(0, count($result->getUrls()));
         $this->assertNull($result->getNextPageLink());
-        $this->assertEquals(1, $result->count);
+        $this->assertEquals(1, $result->getCount());
     }
 
     /**
@@ -664,7 +664,7 @@ class ObjectModelSerializerTest extends TestCase
         $result      = $foo->writeUrlElements($queryResult);
         $expectedUrl = $odataLink->getUrl();
         $this->assertEquals($expectedUrl, $result->getNextPageLink()->getUrl());
-        $this->assertEquals(2, $result->count);
+        $this->assertEquals(2, $result->getCount());
     }
 
     public function testWriteNullComplexValue()

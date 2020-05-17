@@ -99,7 +99,7 @@ class JsonLightODataWriterFullMetadataTest extends TestCase
 
         $this->assertEquals([$expected], [$actual], 'raw JSON is: ' . $writer->getOutput());
 
-        $oDataUrlCollection->count = 44; //simulate an $inlinecount
+        $oDataUrlCollection->setCount(44); //simulate an $inlinecount
         $writer                    = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result                    = $writer->write($oDataUrlCollection);
         $this->assertSame($writer, $result);

@@ -109,7 +109,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        $this->writeRowCount($urls->count);
+        $this->writeRowCount($urls->getCount());
         $this->writeNextPageLink($urls->getNextPageLink());
 
         // Json Format V2:

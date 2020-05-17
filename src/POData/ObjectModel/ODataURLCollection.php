@@ -26,7 +26,7 @@ class ODataURLCollection
      *
      * @var int|null
      */
-    public $count = null;
+    private $count = null;
 
     /**
      * ODataURLCollection constructor.
@@ -36,9 +36,10 @@ class ODataURLCollection
      */
     public function __construct(array $urls = [], ODataLink $nextPageLink = null, int $count = null)
     {
-        $this->urls = $urls;
-        $this->nextPageLink = $nextPageLink;
-        $this->count = $count;
+        $this
+            ->setUrls($urls)
+            ->setNextPageLink($nextPageLink)
+            ->setCount($count);
     }
     /**
      * @return ODataURL[]

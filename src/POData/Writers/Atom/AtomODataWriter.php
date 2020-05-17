@@ -207,7 +207,7 @@ class AtomODataWriter implements IODataWriter
             ODataConstants::ODATA_NAMESPACE
         );
         $this->xmlWriter->endAttribute();
-        if ($urls->count != null) {
+        if ($urls->getCount() != null) {
             $this->xmlWriter->writeAttributeNs(
                 ODataConstants::XMLNS_NAMESPACE_PREFIX,
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
@@ -220,7 +220,7 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ROWCOUNT_ELEMENT,
                 null
             );
-            $this->xmlWriter->text(strval($urls->count));
+            $this->xmlWriter->text(strval($urls->getCount()));
             $this->xmlWriter->endElement();
         }
         foreach ($urls->getUrls() as $url) {
