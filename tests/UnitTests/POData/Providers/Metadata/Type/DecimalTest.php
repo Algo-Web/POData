@@ -89,7 +89,13 @@ class DecimalTest extends TestCase
 
     public function testValidateSuccess()
     {
-        $this->markTestSkipped('Too lazy see #66');
+        $type  = $this->getAsIType();
+        $value = '-3434.0m';
+        $out   = '';
+
+        $expected = '-3434.0';
+        $this->assertTrue($type->validate($value, $out));
+        $this->assertEquals($expected, $out);
     }
 
     public function testValidateFailure()

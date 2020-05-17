@@ -89,15 +89,13 @@ class GuidTest extends TestCase
 
     public function testValidateSuccess()
     {
-        $this->markTestSkipped('Too lazy for now see #62');
-
         $type = $this->getAsIType();
 
-        $in  = '';
-        $out = null;
+        $in  = 'guid\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'';
+        $out = '';
         $this->assertTrue($type->validate($in, $out));
 
-        $this->assertSame('', $out);
+        $this->assertSame('\'15b242e7-52eb-46bd-8f0e-6568b72cd9a6\'', $out);
     }
 
     public function testValidateFailureTooShort()
