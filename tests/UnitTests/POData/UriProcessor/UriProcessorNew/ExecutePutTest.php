@@ -207,10 +207,10 @@ class ExecutePutTest extends TestCase
         $requestPayload->id                                                = 'http://localhost/odata.svc/customers(CustomerID=42)';
         $requestPayload->type                                              = new ODataCategory('Customer');
         $requestPayload->propertyContent                                   = new ODataPropertyContent([]);
-        $requestPayload->propertyContent->properties['otherNumber']        = new ODataProperty();
-        $requestPayload->propertyContent->properties['otherNumber']->value = 42;
-        $requestPayload->propertyContent->properties['CustomerID']         = new ODataProperty();
-        $requestPayload->propertyContent->properties['CustomerID']->value  = 42;
+        $requestPayload->propertyContent['otherNumber']        = new ODataProperty();
+        $requestPayload->propertyContent['otherNumber']->value = 42;
+        $requestPayload->propertyContent['CustomerID']         = new ODataProperty();
+        $requestPayload->propertyContent['CustomerID']->value  = 42;
         $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);

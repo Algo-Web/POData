@@ -14,7 +14,7 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
      *
      * @var ODataProperty[]
      */
-    public $properties = [];
+    private $properties = [];
 
     /**
      * ODataPropertyContent constructor.

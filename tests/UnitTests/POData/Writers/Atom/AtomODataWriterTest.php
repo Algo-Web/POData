@@ -552,7 +552,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
             ]
         );
 
-        $propCont6_1_1->properties = [$pr21, $pr22];
+        $propCont6_1_1->setPropertys([$pr21, $pr22]);
 
         $pr23           = new ODataProperty();
         $pr23->name     = 'Street';

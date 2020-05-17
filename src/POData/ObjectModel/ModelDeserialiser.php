@@ -72,7 +72,7 @@ class ModelDeserialiser
 
         // assemble data array
         $data = [];
-        foreach ($payload->propertyContent->properties as $propName => $propSpec) {
+        foreach ($payload->propertyContent as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
                 /** @var string $rawVal */
                 $rawVal = $propSpec->value;

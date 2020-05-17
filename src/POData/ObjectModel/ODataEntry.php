@@ -371,7 +371,7 @@ class ODataEntry extends ODataContainerBase
             $msg = 'Property content must be instanceof ODataPropertyContent.';
             return false;
         }
-        if (0 === count($this->propertyContent->properties)) {
+        if (0 === count($this->propertyContent)) {
             $msg = 'Must have at least one property present.';
             return false;
         }

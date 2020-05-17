@@ -95,8 +95,8 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeTopLevelMeta('urlCollection');
             $this->writeUrlCollection($model);
         } elseif ($model instanceof ODataPropertyContent) {
-            $this->writeTopLevelMeta($model->properties[0]->typeName);
-            $this->writeTopLevelProperty($model->properties[0]);
+            $this->writeTopLevelMeta($model[0]->typeName);
+            $this->writeTopLevelProperty($model[0]);
         } elseif ($model instanceof ODataFeed) {
             $effectiveTitle = $model->title instanceof ODataTitle ? $model->title->getTitle() : $model->title;
             $this->writeTopLevelMeta($effectiveTitle);

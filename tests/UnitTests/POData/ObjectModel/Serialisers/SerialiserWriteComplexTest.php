@@ -336,7 +336,6 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
                 'makeItPhunkee' => $objProp
             ]
         );
-        $objectResult->properties;
         $ironicResult                              = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));

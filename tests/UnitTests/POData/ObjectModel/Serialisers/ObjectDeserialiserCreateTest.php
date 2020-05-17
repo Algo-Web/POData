@@ -57,25 +57,25 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $propContent->properties['CustomerID']->name       = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $propContent->properties['CustomerID']->value      = '1';
-        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name     = 'CustomerName';
-        $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value    = 'CustomerName';
-        $propContent->properties['Country']->name          = 'Country';
-        $propContent->properties['Country']->typeName      = 'Edm.String';
-        $propContent->properties['Country']->value         = 'STRAYA';
-        $propContent->properties['Rating']->name           = 'Rating';
-        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $propContent->properties['Rating']->value          = 11;
-        $propContent->properties['Photo']->name            = 'Photo';
-        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $propContent->properties['Address']->name          = 'Address';
-        $propContent->properties['Address']->typeName      = 'Address';
+        $propContent['CustomerID']->name       = 'CustomerID';
+        $propContent['CustomerID']->typeName   = 'Edm.String';
+        $propContent['CustomerID']->value      = '1';
+        $propContent['CustomerGuid']->name     = 'CustomerGuid';
+        $propContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $propContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent['CustomerName']->name     = 'CustomerName';
+        $propContent['CustomerName']->typeName = 'Edm.String';
+        $propContent['CustomerName']->value    = 'CustomerName';
+        $propContent['Country']->name          = 'Country';
+        $propContent['Country']->typeName      = 'Edm.String';
+        $propContent['Country']->value         = 'STRAYA';
+        $propContent['Rating']->name           = 'Rating';
+        $propContent['Rating']->typeName       = 'Edm.Int32';
+        $propContent['Rating']->value          = 11;
+        $propContent['Photo']->name            = 'Photo';
+        $propContent['Photo']->typeName        = 'Edm.Binary';
+        $propContent['Address']->name          = 'Address';
+        $propContent['Address']->typeName      = 'Address';
 
         $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
@@ -122,25 +122,25 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $propContent->properties['CustomerID']->name       = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $propContent->properties['CustomerID']->value      = '1';
-        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name     = 'CustomerName';
-        $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value    = 'CustomerName';
-        $propContent->properties['Country']->name          = 'Country';
-        $propContent->properties['Country']->typeName      = 'Edm.String';
-        $propContent->properties['Country']->value         = 'STRAYA';
-        $propContent->properties['Rating']->name           = 'Rating';
-        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $propContent->properties['Rating']->value          = 11;
-        $propContent->properties['Photo']->name            = 'Photo';
-        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $propContent->properties['Address']->name          = 'Address';
-        $propContent->properties['Address']->typeName      = 'Address';
+        $propContent['CustomerID']->name       = 'CustomerID';
+        $propContent['CustomerID']->typeName   = 'Edm.String';
+        $propContent['CustomerID']->value      = '1';
+        $propContent['CustomerGuid']->name     = 'CustomerGuid';
+        $propContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $propContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent['CustomerName']->name     = 'CustomerName';
+        $propContent['CustomerName']->typeName = 'Edm.String';
+        $propContent['CustomerName']->value    = 'CustomerName';
+        $propContent['Country']->name          = 'Country';
+        $propContent['Country']->typeName      = 'Edm.String';
+        $propContent['Country']->value         = 'STRAYA';
+        $propContent['Rating']->name           = 'Rating';
+        $propContent['Rating']->typeName       = 'Edm.Int32';
+        $propContent['Rating']->value          = 11;
+        $propContent['Photo']->name            = 'Photo';
+        $propContent['Photo']->typeName        = 'Edm.Binary';
+        $propContent['Address']->name          = 'Address';
+        $propContent['Address']->typeName      = 'Address';
 
         $objectResult                  = new ODataEntry();
         $objectResult->propertyContent = $propContent;
@@ -197,23 +197,23 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Price' => new ODataProperty()
             ]
         );
-        $propContent->properties['OrderID']->name          = 'OrderID';
-        $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
-        $propContent->properties['OrderDate']->name        = 'OrderDate';
-        $propContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
-        $propContent->properties['DeliveryDate']->name     = 'DeliveryDate';
-        $propContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $propContent->properties['ShipName']->name         = 'ShipName';
-        $propContent->properties['ShipName']->typeName     = 'Edm.String';
-        $propContent->properties['ShipName']->value        = 'Ship';
-        $propContent->properties['ItemCount']->name        = 'ItemCount';
-        $propContent->properties['ItemCount']->typeName    = 'Edm.Int32';
-        $propContent->properties['ItemCount']->value       = 11;
-        $propContent->properties['QualityRate']->name      = 'QualityRate';
-        $propContent->properties['QualityRate']->typeName  = 'Edm.Int32';
-        $propContent->properties['Price']->name            = 'Price';
-        $propContent->properties['Price']->typeName        = 'Edm.Double';
-        $propContent->properties['Price']->value           = 42;
+        $propContent['OrderID']->name          = 'OrderID';
+        $propContent['OrderID']->typeName      = 'Edm.Int32';
+        $propContent['OrderDate']->name        = 'OrderDate';
+        $propContent['OrderDate']->typeName    = 'Edm.DateTime';
+        $propContent['DeliveryDate']->name     = 'DeliveryDate';
+        $propContent['DeliveryDate']->typeName = 'Edm.DateTime';
+        $propContent['ShipName']->name         = 'ShipName';
+        $propContent['ShipName']->typeName     = 'Edm.String';
+        $propContent['ShipName']->value        = 'Ship';
+        $propContent['ItemCount']->name        = 'ItemCount';
+        $propContent['ItemCount']->typeName    = 'Edm.Int32';
+        $propContent['ItemCount']->value       = 11;
+        $propContent['QualityRate']->name      = 'QualityRate';
+        $propContent['QualityRate']->typeName  = 'Edm.Int32';
+        $propContent['Price']->name            = 'Price';
+        $propContent['Price']->typeName        = 'Edm.Double';
+        $propContent['Price']->value           = 42;
 
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
@@ -287,24 +287,24 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
-        $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $linkPropContent->properties['CustomerID']->value      = '1';
-        $linkPropContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $linkPropContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $linkPropContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $linkPropContent->properties['CustomerName']->name     = 'CustomerName';
-        $linkPropContent->properties['CustomerName']->typeName = 'Edm.String';
-        $linkPropContent->properties['Country']->name          = 'Country';
-        $linkPropContent->properties['Country']->typeName      = 'Edm.String';
-        $linkPropContent->properties['Country']->value         = 'STRAYA';
-        $linkPropContent->properties['Rating']->name           = 'Rating';
-        $linkPropContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $linkPropContent->properties['Rating']->value          = 11;
-        $linkPropContent->properties['Photo']->name            = 'Photo';
-        $linkPropContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $linkPropContent->properties['Address']->name          = 'Address';
-        $linkPropContent->properties['Address']->typeName      = 'Address';
+        $linkPropContent['CustomerID']->name       = 'CustomerID';
+        $linkPropContent['CustomerID']->typeName   = 'Edm.String';
+        $linkPropContent['CustomerID']->value      = '1';
+        $linkPropContent['CustomerGuid']->name     = 'CustomerGuid';
+        $linkPropContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $linkPropContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $linkPropContent['CustomerName']->name     = 'CustomerName';
+        $linkPropContent['CustomerName']->typeName = 'Edm.String';
+        $linkPropContent['Country']->name          = 'Country';
+        $linkPropContent['Country']->typeName      = 'Edm.String';
+        $linkPropContent['Country']->value         = 'STRAYA';
+        $linkPropContent['Rating']->name           = 'Rating';
+        $linkPropContent['Rating']->typeName       = 'Edm.Int32';
+        $linkPropContent['Rating']->value          = 11;
+        $linkPropContent['Photo']->name            = 'Photo';
+        $linkPropContent['Photo']->typeName        = 'Edm.Binary';
+        $linkPropContent['Address']->name          = 'Address';
+        $linkPropContent['Address']->typeName      = 'Address';
 
         $linkResult                  = new ODataEntry();
         $linkResult->title           = new ODataTitle('Customer');
@@ -323,23 +323,23 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Price' => new ODataProperty()
             ]
         );
-        $propContent->properties['OrderID']->name          = 'OrderID';
-        $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
-        $propContent->properties['OrderDate']->name        = 'OrderDate';
-        $propContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
-        $propContent->properties['DeliveryDate']->name     = 'DeliveryDate';
-        $propContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $propContent->properties['ShipName']->name         = 'ShipName';
-        $propContent->properties['ShipName']->typeName     = 'Edm.String';
-        $propContent->properties['ShipName']->value        = 'Ship';
-        $propContent->properties['ItemCount']->name        = 'ItemCount';
-        $propContent->properties['ItemCount']->typeName    = 'Edm.Int32';
-        $propContent->properties['ItemCount']->value       = 11;
-        $propContent->properties['QualityRate']->name      = 'QualityRate';
-        $propContent->properties['QualityRate']->typeName  = 'Edm.Int32';
-        $propContent->properties['Price']->name            = 'Price';
-        $propContent->properties['Price']->typeName        = 'Edm.Double';
-        $propContent->properties['Price']->value           = 42;
+        $propContent['OrderID']->name          = 'OrderID';
+        $propContent['OrderID']->typeName      = 'Edm.Int32';
+        $propContent['OrderDate']->name        = 'OrderDate';
+        $propContent['OrderDate']->typeName    = 'Edm.DateTime';
+        $propContent['DeliveryDate']->name     = 'DeliveryDate';
+        $propContent['DeliveryDate']->typeName = 'Edm.DateTime';
+        $propContent['ShipName']->name         = 'ShipName';
+        $propContent['ShipName']->typeName     = 'Edm.String';
+        $propContent['ShipName']->value        = 'Ship';
+        $propContent['ItemCount']->name        = 'ItemCount';
+        $propContent['ItemCount']->typeName    = 'Edm.Int32';
+        $propContent['ItemCount']->value       = 11;
+        $propContent['QualityRate']->name      = 'QualityRate';
+        $propContent['QualityRate']->typeName  = 'Edm.Int32';
+        $propContent['Price']->name            = 'Price';
+        $propContent['Price']->typeName        = 'Edm.Double';
+        $propContent['Price']->value           = 42;
 
         // hook up to existing customer, and not hooking up to any order details
         $links                    = [new ODataLink(), new ODataLink()];
@@ -411,24 +411,24 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
-        $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $linkPropContent->properties['CustomerID']->value      = '1';
-        $linkPropContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $linkPropContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $linkPropContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $linkPropContent->properties['CustomerName']->name     = 'CustomerName';
-        $linkPropContent->properties['CustomerName']->typeName = 'Edm.String';
-        $linkPropContent->properties['Country']->name          = 'Country';
-        $linkPropContent->properties['Country']->typeName      = 'Edm.String';
-        $linkPropContent->properties['Country']->value         = 'STRAYA';
-        $linkPropContent->properties['Rating']->name           = 'Rating';
-        $linkPropContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $linkPropContent->properties['Rating']->value          = 11;
-        $linkPropContent->properties['Photo']->name            = 'Photo';
-        $linkPropContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $linkPropContent->properties['Address']->name          = 'Address';
-        $linkPropContent->properties['Address']->typeName      = 'Address';
+        $linkPropContent['CustomerID']->name       = 'CustomerID';
+        $linkPropContent['CustomerID']->typeName   = 'Edm.String';
+        $linkPropContent['CustomerID']->value      = '1';
+        $linkPropContent['CustomerGuid']->name     = 'CustomerGuid';
+        $linkPropContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $linkPropContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $linkPropContent['CustomerName']->name     = 'CustomerName';
+        $linkPropContent['CustomerName']->typeName = 'Edm.String';
+        $linkPropContent['Country']->name          = 'Country';
+        $linkPropContent['Country']->typeName      = 'Edm.String';
+        $linkPropContent['Country']->value         = 'STRAYA';
+        $linkPropContent['Rating']->name           = 'Rating';
+        $linkPropContent['Rating']->typeName       = 'Edm.Int32';
+        $linkPropContent['Rating']->value          = 11;
+        $linkPropContent['Photo']->name            = 'Photo';
+        $linkPropContent['Photo']->typeName        = 'Edm.Binary';
+        $linkPropContent['Address']->name          = 'Address';
+        $linkPropContent['Address']->typeName      = 'Address';
 
         $linkResult                  = new ODataEntry();
         $linkResult->title           = new ODataTitle('Customer');
@@ -447,24 +447,24 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Price' => new ODataProperty()
             ]
         );
-        $propContent->properties['OrderID']->name          = 'OrderID';
-        $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
-        $propContent->properties['OrderID']->value         = 1;
-        $propContent->properties['OrderDate']->name        = 'OrderDate';
-        $propContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
-        $propContent->properties['DeliveryDate']->name     = 'DeliveryDate';
-        $propContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $propContent->properties['ShipName']->name         = 'ShipName';
-        $propContent->properties['ShipName']->typeName     = 'Edm.String';
-        $propContent->properties['ShipName']->value        = 'Ship';
-        $propContent->properties['ItemCount']->name        = 'ItemCount';
-        $propContent->properties['ItemCount']->typeName    = 'Edm.Int32';
-        $propContent->properties['ItemCount']->value       = 11;
-        $propContent->properties['QualityRate']->name      = 'QualityRate';
-        $propContent->properties['QualityRate']->typeName  = 'Edm.Int32';
-        $propContent->properties['Price']->name            = 'Price';
-        $propContent->properties['Price']->typeName        = 'Edm.Double';
-        $propContent->properties['Price']->value           = 42;
+        $propContent['OrderID']->name          = 'OrderID';
+        $propContent['OrderID']->typeName      = 'Edm.Int32';
+        $propContent['OrderID']->value         = 1;
+        $propContent['OrderDate']->name        = 'OrderDate';
+        $propContent['OrderDate']->typeName    = 'Edm.DateTime';
+        $propContent['DeliveryDate']->name     = 'DeliveryDate';
+        $propContent['DeliveryDate']->typeName = 'Edm.DateTime';
+        $propContent['ShipName']->name         = 'ShipName';
+        $propContent['ShipName']->typeName     = 'Edm.String';
+        $propContent['ShipName']->value        = 'Ship';
+        $propContent['ItemCount']->name        = 'ItemCount';
+        $propContent['ItemCount']->typeName    = 'Edm.Int32';
+        $propContent['ItemCount']->value       = 11;
+        $propContent['QualityRate']->name      = 'QualityRate';
+        $propContent['QualityRate']->typeName  = 'Edm.Int32';
+        $propContent['Price']->name            = 'Price';
+        $propContent['Price']->typeName        = 'Edm.Double';
+        $propContent['Price']->value           = 42;
 
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');
@@ -536,24 +536,24 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
-        $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $linkPropContent->properties['CustomerID']->value      = '1';
-        $linkPropContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $linkPropContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $linkPropContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $linkPropContent->properties['CustomerName']->name     = 'CustomerName';
-        $linkPropContent->properties['CustomerName']->typeName = 'Edm.String';
-        $linkPropContent->properties['Country']->name          = 'Country';
-        $linkPropContent->properties['Country']->typeName      = 'Edm.String';
-        $linkPropContent->properties['Country']->value         = 'STRAYA';
-        $linkPropContent->properties['Rating']->name           = 'Rating';
-        $linkPropContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $linkPropContent->properties['Rating']->value          = 11;
-        $linkPropContent->properties['Photo']->name            = 'Photo';
-        $linkPropContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $linkPropContent->properties['Address']->name          = 'Address';
-        $linkPropContent->properties['Address']->typeName      = 'Address';
+        $linkPropContent['CustomerID']->name       = 'CustomerID';
+        $linkPropContent['CustomerID']->typeName   = 'Edm.String';
+        $linkPropContent['CustomerID']->value      = '1';
+        $linkPropContent['CustomerGuid']->name     = 'CustomerGuid';
+        $linkPropContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $linkPropContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $linkPropContent['CustomerName']->name     = 'CustomerName';
+        $linkPropContent['CustomerName']->typeName = 'Edm.String';
+        $linkPropContent['Country']->name          = 'Country';
+        $linkPropContent['Country']->typeName      = 'Edm.String';
+        $linkPropContent['Country']->value         = 'STRAYA';
+        $linkPropContent['Rating']->name           = 'Rating';
+        $linkPropContent['Rating']->typeName       = 'Edm.Int32';
+        $linkPropContent['Rating']->value          = 11;
+        $linkPropContent['Photo']->name            = 'Photo';
+        $linkPropContent['Photo']->typeName        = 'Edm.Binary';
+        $linkPropContent['Address']->name          = 'Address';
+        $linkPropContent['Address']->typeName      = 'Address';
 
         $linkResult                  = new ODataEntry();
         $linkResult->title           = new ODataTitle('Customer');
@@ -574,24 +574,24 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'Price' => new ODataProperty()
             ]
         );
-        $propContent->properties['OrderID']->name          = 'OrderID';
-        $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
-        $propContent->properties['OrderID']->value         = 1;
-        $propContent->properties['OrderDate']->name        = 'OrderDate';
-        $propContent->properties['OrderDate']->typeName    = 'Edm.DateTime';
-        $propContent->properties['DeliveryDate']->name     = 'DeliveryDate';
-        $propContent->properties['DeliveryDate']->typeName = 'Edm.DateTime';
-        $propContent->properties['ShipName']->name         = 'ShipName';
-        $propContent->properties['ShipName']->typeName     = 'Edm.String';
-        $propContent->properties['ShipName']->value        = 'Ship';
-        $propContent->properties['ItemCount']->name        = 'ItemCount';
-        $propContent->properties['ItemCount']->typeName    = 'Edm.Int32';
-        $propContent->properties['ItemCount']->value       = 11;
-        $propContent->properties['QualityRate']->name      = 'QualityRate';
-        $propContent->properties['QualityRate']->typeName  = 'Edm.Int32';
-        $propContent->properties['Price']->name            = 'Price';
-        $propContent->properties['Price']->typeName        = 'Edm.Double';
-        $propContent->properties['Price']->value           = 42;
+        $propContent['OrderID']->name          = 'OrderID';
+        $propContent['OrderID']->typeName      = 'Edm.Int32';
+        $propContent['OrderID']->value         = 1;
+        $propContent['OrderDate']->name        = 'OrderDate';
+        $propContent['OrderDate']->typeName    = 'Edm.DateTime';
+        $propContent['DeliveryDate']->name     = 'DeliveryDate';
+        $propContent['DeliveryDate']->typeName = 'Edm.DateTime';
+        $propContent['ShipName']->name         = 'ShipName';
+        $propContent['ShipName']->typeName     = 'Edm.String';
+        $propContent['ShipName']->value        = 'Ship';
+        $propContent['ItemCount']->name        = 'ItemCount';
+        $propContent['ItemCount']->typeName    = 'Edm.Int32';
+        $propContent['ItemCount']->value       = 11;
+        $propContent['QualityRate']->name      = 'QualityRate';
+        $propContent['QualityRate']->typeName  = 'Edm.Int32';
+        $propContent['Price']->name            = 'Price';
+        $propContent['Price']->typeName        = 'Edm.Double';
+        $propContent['Price']->value           = 42;
 
         $links                    = [new ODataLink(), new ODataLink()];
         $links[0]->setName('http://schemas.microsoft.com/ado/2007/08/dataservices/related/Customer');

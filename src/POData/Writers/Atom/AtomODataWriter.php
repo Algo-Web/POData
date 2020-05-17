@@ -303,7 +303,7 @@ class AtomODataWriter implements IODataWriter
     protected function writeProperties(ODataPropertyContent $properties = null, $topLevel = false)
     {
         if (null !== $properties) {
-            foreach ($properties->properties as $property) {
+            foreach ($properties as $property) {
                 $this->beginWriteProperty($property, $topLevel);
 
                 if ($property->value == null) {

@@ -93,24 +93,24 @@ class ModelDeserialiserTest extends SerialiserTestBase
                 'Address' => new ODataProperty()
             ]
         );
-        $propContent->properties['CustomerID']->name       = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $propContent->properties['CustomerID']->value      = '1';
-        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name     = 'CustomerName';
-        $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value    = ' MakeItPhunkee ';
-        $propContent->properties['country']->name          = 'country';
-        $propContent->properties['country']->typeName      = 'Edm.String';
-        $propContent->properties['country']->value         = ' Oop North ';
-        $propContent->properties['Rating']->name           = 'Rating';
-        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $propContent->properties['Photo']->name            = 'Photo';
-        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $propContent->properties['Address']->name          = 'Address';
-        $propContent->properties['Address']->typeName      = 'Address';
+        $propContent['CustomerID']->name       = 'CustomerID';
+        $propContent['CustomerID']->typeName   = 'Edm.String';
+        $propContent['CustomerID']->value      = '1';
+        $propContent['CustomerGuid']->name     = 'CustomerGuid';
+        $propContent['CustomerGuid']->typeName = 'Edm.Guid';
+        $propContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
+        $propContent['CustomerName']->name     = 'CustomerName';
+        $propContent['CustomerName']->typeName = 'Edm.String';
+        $propContent['CustomerName']->value    = ' MakeItPhunkee ';
+        $propContent['country']->name          = 'country';
+        $propContent['country']->typeName      = 'Edm.String';
+        $propContent['country']->value         = ' Oop North ';
+        $propContent['Rating']->name           = 'Rating';
+        $propContent['Rating']->typeName       = 'Edm.Int32';
+        $propContent['Photo']->name            = 'Photo';
+        $propContent['Photo']->typeName        = 'Edm.Binary';
+        $propContent['Address']->name          = 'Address';
+        $propContent['Address']->typeName      = 'Address';
 
         $objectResult     = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'

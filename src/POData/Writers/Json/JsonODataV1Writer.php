@@ -186,7 +186,7 @@ class JsonODataV1Writer implements IODataWriter
     protected function writeProperties(ODataPropertyContent $properties = null)
     {
         if (null !== $properties) {
-            foreach ($properties->properties as $property) {
+            foreach ($properties as $property) {
                 $this->writePropertyMeta($property);
                 $this->writer->writeName($property->name);
 

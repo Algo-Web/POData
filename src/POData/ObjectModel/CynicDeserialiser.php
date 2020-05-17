@@ -145,7 +145,7 @@ class CynicDeserialiser
             $key     = $this->generateKeyDescriptor($type, $result);
             $keyProp = $key->getODataProperties();
             foreach ($keyProp as $keyName => $payload) {
-                $content->propertyContent->properties[$keyName] = $payload;
+                $content->propertyContent[$keyName] = $payload;
             }
         } else {
             $key = $this->generateKeyDescriptor($type, $content->propertyContent, $content->id);
@@ -201,7 +201,7 @@ class CynicDeserialiser
                 $iType = $prop->getInstanceType();
                 assert($iType instanceof IType, get_class($iType));
                 $keyName = $prop->getName();
-                $rawKey  = $isOData ? $result->properties[$keyName]->value : $result->{$keyName};
+                $rawKey  = $isOData ? $result[$keyName]->value : $result->{$keyName};
                 $keyVal  = $iType->convertToOData(strval($rawKey));
                 assert(isset($keyVal), 'Key property ' . $keyName . ' must not be null');
                 $keyPredicate .= $keyName . '=' . $keyVal . ', ';

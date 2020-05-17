@@ -439,9 +439,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals(null, $result->properties['name']->value);
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals(null, $result['name']->value);
     }
 
     public function testWriteBooleanPrimitive()
@@ -465,9 +465,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('true', $result->properties['name']->value);
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals('true', $result['name']->value);
     }
 
     public function testWriteBinaryPrimitive()
@@ -491,9 +491,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('YXliYWJ0dQ==', $result->properties['name']->value);
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals('YXliYWJ0dQ==', $result['name']->value);
     }
 
     public function testWriteDateTimePrimitive()
@@ -517,9 +517,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('2016-01-01T', substr($result->properties['name']->value, 0, 11));
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals('2016-01-01T', substr($result['name']->value, 0, 11));
     }
 
     public function testWriteStringPrimitive()
@@ -543,9 +543,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('Börk, börk, börk!', $result->properties['name']->value);
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals('Börk, börk, börk!', $result['name']->value);
     }
 
     public function testWriteNullTypePrimitive()
@@ -569,9 +569,9 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result->properties['name']->name);
-        $this->assertEquals('typeName', $result->properties['name']->typeName);
-        $this->assertEquals('Börk, börk, börk!', $result->properties['name']->value);
+        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('typeName', $result['name']->typeName);
+        $this->assertEquals('Börk, börk, börk!', $result['name']->value);
     }
 
     public function testWriteNullUrlElement()
@@ -680,11 +680,11 @@ class ObjectModelSerializerTest extends TestCase
         $foo    = $this->Construct();
         $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties[$propertyName] instanceof ODataProperty);
-        $this->assertNull($result->properties[$propertyName]->value);
-        $this->assertNull($result->properties[$propertyName]->attributeExtensions);
-        $this->assertEquals('property', $result->properties[$propertyName]->name);
-        $this->assertEquals('typeName', $result->properties[$propertyName]->typeName);
+        $this->assertTrue($result[$propertyName] instanceof ODataProperty);
+        $this->assertNull($result[$propertyName]->value);
+        $this->assertNull($result[$propertyName]->attributeExtensions);
+        $this->assertEquals('property', $result[$propertyName]->name);
+        $this->assertEquals('typeName', $result[$propertyName]->typeName);
     }
 
     public function testWriteNonNullComplexValue()
@@ -716,13 +716,13 @@ class ObjectModelSerializerTest extends TestCase
         $foo    = $this->Construct();
         $result = $foo->writeTopLevelComplexObject($queryResult, $propertyName, $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties[$propertyName] instanceof ODataProperty);
-        $this->assertNull($result->properties[$propertyName]->attributeExtensions);
+        $this->assertTrue($result[$propertyName] instanceof ODataProperty);
+        $this->assertNull($result[$propertyName]->attributeExtensions);
         //$this->assertNull($result->properties[0]->value);
-        $this->assertTrue($result->properties[$propertyName]->value instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties[$propertyName]->value->properties['name'] instanceof ODataProperty);
-        $this->assertEquals('name', $result->properties[$propertyName]->value->properties['name']->name);
-        $this->assertEquals('fullName', $result->properties[$propertyName]->value->properties['name']->typeName);
+        $this->assertTrue($result[$propertyName]->value instanceof ODataPropertyContent);
+        $this->assertTrue($result[$propertyName]->value['name'] instanceof ODataProperty);
+        $this->assertEquals('name', $result[$propertyName]->value['name']->name);
+        $this->assertEquals('fullName', $result[$propertyName]->value['name']->typeName);
     }
 
     public function testWriteTopLevelBagObjectTripAssertion()
@@ -767,11 +767,11 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties['property'] instanceof ODataProperty);
-        $this->assertNull($result->properties['property']->attributeExtensions);
-        $this->assertNull($result->properties['property']->value);
-        $this->assertEquals('property', $result->properties['property']->name);
-        $this->assertEquals('Collection(fullName)', $result->properties['property']->typeName);
+        $this->assertTrue($result['property'] instanceof ODataProperty);
+        $this->assertNull($result['property']->attributeExtensions);
+        $this->assertNull($result['property']->value);
+        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
     public function testWriteTopLevelBagObjectEmptyArray()
@@ -789,11 +789,11 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties['property'] instanceof ODataProperty);
-        $this->assertNull($result->properties['property']->attributeExtensions);
-        $this->assertNull($result->properties['property']->value);
-        $this->assertEquals('property', $result->properties['property']->name);
-        $this->assertEquals('Collection(fullName)', $result->properties['property']->typeName);
+        $this->assertTrue($result['property'] instanceof ODataProperty);
+        $this->assertNull($result['property']->attributeExtensions);
+        $this->assertNull($result['property']->value);
+        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
     public function testWriteTopLevelBagObjectArrayOfNulls()
@@ -811,13 +811,13 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties['property'] instanceof ODataProperty);
-        $this->assertNull($result->properties['property']->attributeExtensions);
-        $this->assertTrue($result->properties['property']->value instanceof ODataBagContent);
-        $this->assertNull($result->properties['property']->value->getType());
-        $this->assertNull($result->properties['property']->value->getPropertyContents());
-        $this->assertEquals('property', $result->properties['property']->name);
-        $this->assertEquals('Collection(fullName)', $result->properties['property']->typeName);
+        $this->assertTrue($result['property'] instanceof ODataProperty);
+        $this->assertNull($result['property']->attributeExtensions);
+        $this->assertTrue($result['property']->value instanceof ODataBagContent);
+        $this->assertNull($result['property']->value->getType());
+        $this->assertNull($result['property']->value->getPropertyContents());
+        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
     public function testWriteTopLevelBagObjectActualObject()
@@ -863,14 +863,14 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelBagObject($queryResult, 'property', $type);
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertTrue($result->properties['property'] instanceof ODataProperty);
-        $this->assertNull($result->properties['property']->attributeExtensions);
-        $this->assertTrue($result->properties['property']->value instanceof ODataBagContent);
-        $this->assertNull($result->properties['property']->value->getType());
-        $this->assertTrue(is_array($result->properties['property']->value->getPropertyContents()));
-        $this->assertEquals($expected, $result->properties['property']->value->getPropertyContents());
-        $this->assertEquals('property', $result->properties['property']->name);
-        $this->assertEquals('Collection(fullName)', $result->properties['property']->typeName);
+        $this->assertTrue($result['property'] instanceof ODataProperty);
+        $this->assertNull($result['property']->attributeExtensions);
+        $this->assertTrue($result['property']->value instanceof ODataBagContent);
+        $this->assertNull($result['property']->value->getType());
+        $this->assertTrue(is_array($result['property']->value->getPropertyContents()));
+        $this->assertEquals($expected, $result['property']->value->getPropertyContents());
+        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
     public function testWriteTopLevelElementWithExpandedProjectionNodes()
@@ -977,10 +977,10 @@ class ObjectModelSerializerTest extends TestCase
                 'type' => new ODataProperty()
             ]
         );
-        $expectedProp->properties['name']->name     = 'name';
-        $expectedProp->properties['name']->typeName = '';
-        $expectedProp->properties['type']->name     = 'type';
-        $expectedProp->properties['type']->typeName = '';
+        $expectedProp['name']->name     = 'name';
+        $expectedProp['name']->typeName = '';
+        $expectedProp['type']->name     = 'type';
+        $expectedProp['type']->typeName = '';
 
         $editLink        = new ODataLink('edit', 'customers', null, 'customer');
 
