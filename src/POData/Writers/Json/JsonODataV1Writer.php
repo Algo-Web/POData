@@ -334,29 +334,27 @@ class JsonODataV1Writer implements IODataWriter
         // __metadata : { uri: "Uri", type: "Type" [Media Link Properties] }
         $hasId   = !empty($entry->id);
         $hasType = !empty($entry->type);
-        $hasEtag = (null != $entry->eTag);
-        if ($hasId || $hasType || $hasEtag) {
-            // Write uri value only for entity types
-            if ($hasId) {
-                $this->writer
-                    ->writeName($this->urlKey)
-                    ->writeValue($entry->id);
-            }
+        $hasEtag = !empty($entry->eTag);
+        // Write uri value only for entity types
+        if ($hasId) {
+            $this->writer
+                ->writeName($this->urlKey)
+                ->writeValue($entry->id);
+        }
 
-            // Write the etag property, if the entry has etag properties.
-            if ($hasEtag) {
-                $this->writer
-                    ->writeName(ODataConstants::JSON_ETAG_STRING)
-                    ->writeValue($entry->eTag);
-            }
+        // Write the etag property, if the entry has etag properties.
+        if ($hasEtag) {
+            $this->writer
+                ->writeName(ODataConstants::JSON_ETAG_STRING)
+                ->writeValue($entry->eTag);
+        }
 
-            // Write the type property, if the entry has type properties.
-            if ($hasType) {
-                $value = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
-                $this->writer
-                    ->writeName(ODataConstants::JSON_TYPE_STRING)
-                    ->writeValue($value);
-            }
+        // Write the type property, if the entry has type properties.
+        if ($hasType) {
+            $value = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
+            $this->writer
+                ->writeName(ODataConstants::JSON_TYPE_STRING)
+                ->writeValue($value);
         }
 
         // Media links.
