@@ -1258,7 +1258,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testWriteEmptyODataEntry()
     {
-        $entry                  = new ODataEntry();
+        $entry                  = new ODataEntry(null, null, new ODataTitle(''));
         $entry->resourceSetName = 'Foobars';
 
         $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
@@ -1274,7 +1274,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
-        $feed->title           = 'title';
+        $feed->title           = new ODataTitle('title');
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
