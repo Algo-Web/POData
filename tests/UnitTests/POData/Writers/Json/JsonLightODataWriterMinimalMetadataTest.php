@@ -39,8 +39,7 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
 
         //IE: http://services.odata.org/v3/OData/OData.svc/Products(0)/$links/Supplier?$format=application/json;odata=minimalmetadata
 
-        $oDataUrl      = new ODataURL();
-        $oDataUrl->url = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
+        $oDataUrl      = new ODataURL('http://services.odata.org/OData/OData.svc/Suppliers(0)');
         $writer        = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::MINIMAL(), $this->serviceBase);
         $result        = $writer->write($oDataUrl);
         $this->assertSame($writer, $result);
@@ -62,12 +61,9 @@ class JsonLightODataWriterMinimalMetadataTest extends TestCase
         // see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=minimalmetadata
 
         $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL();
-        $oDataUrl1->url           = 'http://services.odata.org/OData/OData.svc/Products(0)';
-        $oDataUrl2                = new ODataURL();
-        $oDataUrl2->url           = 'http://services.odata.org/OData/OData.svc/Products(7)';
-        $oDataUrl3                = new ODataURL();
-        $oDataUrl3->url           = 'http://services.odata.org/OData/OData.svc/Products(8)';
+        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
+        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
+        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
         $oDataUrlCollection->urls = [$oDataUrl1,
             $oDataUrl2,
             $oDataUrl3,

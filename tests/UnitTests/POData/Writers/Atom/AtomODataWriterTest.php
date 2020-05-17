@@ -61,8 +61,7 @@ class AtomODataWriterTest extends TestCase
      */
     public function testODataURLItem()
     {
-        $url      = new ODataURL();
-        $url->url = 'http://www.odata.org/developers/protocols/atom-format';
+        $url      = new ODataURL('http://www.odata.org/developers/protocols/atom-format');
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($url);
@@ -81,10 +80,8 @@ class AtomODataWriterTest extends TestCase
      */
     public function testODataURLCollectionItem()
     {
-        $url1      = new ODataURL();
-        $url1->url = 'http://www.odata.org/developers/protocols/atom-format';
-        $url2      = new ODataURL();
-        $url2->url = 'http://www.odata.org/developers/protocols/json-format';
+        $url1      = new ODataURL('http://www.odata.org/developers/protocols/atom-format');
+        $url2      = new ODataURL('http://www.odata.org/developers/protocols/json-format');
 
         $urls       = new ODataURLCollection();
         $urls->urls = [$url1, $url2];

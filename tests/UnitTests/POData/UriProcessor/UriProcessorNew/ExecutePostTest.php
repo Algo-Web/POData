@@ -280,8 +280,7 @@ class ExecutePostTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
         $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet)->twice();
 
-        $payload      = new ODataURL();
-        $payload->url = 'http://localhost/odata.svc/customers(CustomerID=42)/orders';
+        $payload      = new ODataURL('http://localhost/odata.svc/customers(CustomerID=42)/orders');
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getAbsoluteServiceUri')->andReturn($reqUrl);

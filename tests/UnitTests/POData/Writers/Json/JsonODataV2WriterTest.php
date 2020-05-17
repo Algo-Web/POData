@@ -31,8 +31,7 @@ class JsonODataV2WriterTest extends TestCase
 
     public function testWriteURL()
     {
-        $oDataUrl      = new ODataURL();
-        $oDataUrl->url = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
+        $oDataUrl      = new ODataURL('http://services.odata.org/OData/OData.svc/Suppliers(0)');
         $writer        = new JsonODataV2Writer(PHP_EOL, true);
         $result        = $writer->write($oDataUrl);
         $this->assertSame($writer, $result);
@@ -50,12 +49,9 @@ class JsonODataV2WriterTest extends TestCase
         //see http://services.odata.org/v3/OData/OData.svc/Categories(1)/$links/Products?$format=application/json;odata=verbose
 
         $oDataUrlCollection       = new ODataURLCollection();
-        $oDataUrl1                = new ODataURL();
-        $oDataUrl1->url           = 'http://services.odata.org/OData/OData.svc/Products(0)';
-        $oDataUrl2                = new ODataURL();
-        $oDataUrl2->url           = 'http://services.odata.org/OData/OData.svc/Products(7)';
-        $oDataUrl3                = new ODataURL();
-        $oDataUrl3->url           = 'http://services.odata.org/OData/OData.svc/Products(8)';
+        $oDataUrl1                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(0)');
+        $oDataUrl2                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(7)');
+        $oDataUrl3                = new ODataURL('http://services.odata.org/OData/OData.svc/Products(8)');
         $oDataUrlCollection->urls = [
             $oDataUrl1,
             $oDataUrl2,

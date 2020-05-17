@@ -9,12 +9,41 @@ namespace POData\ObjectModel;
  */
 class ODataURL
 {
+
     /**
      * contains the url value.
      *
      * @var string
      */
     public $url;
+
+    /**
+     * ODataURL constructor.
+     * @param string $url
+     */
+    public function __construct(string $url)
+    {
+        $this
+            ->setUrl($url);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     * @return ODataURL
+     */
+    public function setUrl(string $url): ODataURL
+    {
+        $this->url = $url;
+        return $this;
+    }
 
     /**
      * @param  string|null $msg

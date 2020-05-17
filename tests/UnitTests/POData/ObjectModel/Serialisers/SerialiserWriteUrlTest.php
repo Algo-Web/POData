@@ -45,9 +45,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $result          = new QueryResult();
         $result->results = $model;
 
-        $objectResult      = new ODataURL();
-        $objectResult->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $objectResult      = new ODataURL('http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $ironicResult = $ironic->writeUrlElement($result);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
@@ -74,9 +73,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [$result, $model];
 
-        $url      = new ODataURL();
-        $url->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                    . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $url      = new ODataURL('http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
 
         $objectResult         = new ODataURLCollection();
         $objectResult->urls[] = $url;
@@ -109,9 +107,8 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $collection->results = [$result];
         $collection->hasMore = true;
 
-        $url      = new ODataURL();
-        $url->url = 'http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
-                    . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $url      = new ODataURL('http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
 
         $nextLink       = new ODataLink();
         $nextLink->setName('next');

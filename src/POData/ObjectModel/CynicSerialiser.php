@@ -962,7 +962,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeUrlElement(QueryResult $entryObject)
     {
-        $url = new ODataURL();
+        $url = null;
 
         /** @var object|null $results */
         $results = $entryObject->results;
@@ -974,7 +974,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $this->getCurrentResourceSetWrapper()->getName()
             );
 
-            $url->url = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
+            $url = new ODataURL(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri);
         }
 
         return $url;
