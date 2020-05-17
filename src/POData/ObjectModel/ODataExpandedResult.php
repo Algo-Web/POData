@@ -18,16 +18,16 @@ class ODataExpandedResult
     /**
      * Term.
      *
-     * @var ODataContainerBase|null
+     * @var ODataContainerBase
      */
     private $data;
 
     /**
      * ODataExpandedResult constructor.
      *
-     * @param ODataContainerBase|null $data
+     * @param ODataContainerBase $data
      */
-    public function __construct(ODataContainerBase $data = null)
+    public function __construct(ODataContainerBase $data)
     {
         $this->{$data instanceof ODataEntry ? 'setEntry' : 'setFeed'}($data);
     }
@@ -44,7 +44,7 @@ class ODataExpandedResult
      * @param  ODataEntry|null     $entry
      * @return ODataExpandedResult
      */
-    public function setEntry(?ODataEntry $entry): ODataExpandedResult
+    public function setEntry(ODataEntry $entry): ODataExpandedResult
     {
         $this->data = $entry;
         return $this;
@@ -62,13 +62,13 @@ class ODataExpandedResult
      * @param  ODataFeed|null      $feed
      * @return ODataExpandedResult
      */
-    public function setFeed(?ODataFeed $feed): ODataExpandedResult
+    public function setFeed(ODataFeed $feed): ODataExpandedResult
     {
         $this->data = $feed;
         return $this;
     }
 
-    public function getData(): ODataContainerBase
+    public function getData(): ?ODataContainerBase
     {
         return $this->data;
     }
