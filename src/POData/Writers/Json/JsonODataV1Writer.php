@@ -332,23 +332,26 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)
             ->startObjectScope();
         // __metadata : { uri: "Uri", type: "Type" [Media Link Properties] }
-        if ($entry->id != null || $entry->type != null || $entry->eTag != null) {
+        $hasId   = !empty($entry->id);
+        $hasType = !empty($entry->type);
+        $hasEtag = (null != $entry->eTag);
+        if ($hasId || $hasType || $hasEtag) {
             // Write uri value only for entity types
-            if ($entry->id != null) {
+            if ($hasId) {
                 $this->writer
                     ->writeName($this->urlKey)
                     ->writeValue($entry->id);
             }
 
             // Write the etag property, if the entry has etag properties.
-            if ($entry->eTag != null) {
+            if ($hasEtag) {
                 $this->writer
                     ->writeName(ODataConstants::JSON_ETAG_STRING)
                     ->writeValue($entry->eTag);
             }
 
             // Write the type property, if the entry has type properties.
-            if ($entry->type != null) {
+            if ($hasType) {
                 $value = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
                 $this->writer
                     ->writeName(ODataConstants::JSON_TYPE_STRING)

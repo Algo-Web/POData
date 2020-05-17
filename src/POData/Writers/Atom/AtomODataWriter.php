@@ -67,7 +67,7 @@ class AtomODataWriter implements IODataWriter
      *
      * @param string $absoluteServiceUri The absolute service Uri
      */
-    public function     __construct(string $eol, bool $prettyPrint, $absoluteServiceUri = '')
+    public function __construct(string $eol, bool $prettyPrint, $absoluteServiceUri = '')
     {
         $final = substr($absoluteServiceUri, -1);
         if ('/' != $final) {
@@ -754,7 +754,7 @@ class AtomODataWriter implements IODataWriter
      */
     public function postWriteProperties(ODataEntry $entry)
     {
-        if (!$entry->isMediaLinkEntry) {
+        if (true !== $entry->isMediaLinkEntry) {
             $this->xmlWriter->endElement();
         }
         $this->xmlWriter->endElement();

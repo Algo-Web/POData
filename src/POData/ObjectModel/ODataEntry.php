@@ -185,7 +185,7 @@ class ODataEntry extends ODataContainerBase
      */
     public function getAtomContent()
     {
-        if (!$this->isMediaLinkEntry) {
+        if (true !== $this->isMediaLinkEntry) {
             return new AtomObjectModel\AtomContent(
                 MimeTypes::MIME_APPLICATION_XML,
                 null,
@@ -218,7 +218,7 @@ class ODataEntry extends ODataContainerBase
      */
     public function getPropertyContent(): ?ODataPropertyContent
     {
-        if (!$this->isMediaLinkEntry) {
+        if (true !== $this->isMediaLinkEntry) {
             return null;
         }
         return $this->propertyContent;
@@ -235,15 +235,15 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @return ODataLink
+     * @return ODataLink|null
      */
-    public function getEditLink(): ODataLink
+    public function getEditLink(): ?ODataLink
     {
         return $this->editLink;
     }
 
     /**
-     * @return ODataCategory
+     * @return ODataCategory|null
      */
     public function getType(): ?ODataCategory
     {
@@ -354,9 +354,9 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @return ODataMediaLink
+     * @return ODataMediaLink|null
      */
-    public function getMediaLink(): ODataMediaLink
+    public function getMediaLink(): ?ODataMediaLink
     {
         return $this->mediaLink;
     }
