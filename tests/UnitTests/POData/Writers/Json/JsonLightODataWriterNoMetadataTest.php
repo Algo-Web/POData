@@ -1416,7 +1416,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
     {
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
-        $feed->title           = 'title';
+        $feed->title           = new ODataTitle('title');
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
