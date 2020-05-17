@@ -972,14 +972,10 @@ class ObjectModelSerializerTest extends TestCase
 
         $expectedProp                               = new ODataPropertyContent(
             [
-                'name' => new ODataProperty(),
-                'type' => new ODataProperty()
+                'name' => new ODataProperty( 'name', ''),
+                'type' => new ODataProperty('type', '')
             ]
         );
-        $expectedProp['name']->name     = 'name';
-        $expectedProp['name']->typeName = '';
-        $expectedProp['type']->name     = 'type';
-        $expectedProp['type']->typeName = '';
 
         $editLink        = new ODataLink('edit', 'customers', null, 'customer');
 

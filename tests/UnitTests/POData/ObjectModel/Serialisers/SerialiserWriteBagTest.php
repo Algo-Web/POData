@@ -53,12 +53,9 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = null;
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)')
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
@@ -162,12 +159,9 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [];
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', null)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
@@ -201,13 +195,9 @@ class SerialiserWriteBagTest extends SerialiserTestBase
 
         $bag                                       = new ODataBagContent();
         $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
@@ -241,13 +231,9 @@ class SerialiserWriteBagTest extends SerialiserTestBase
 
         $bag                                       = new ODataBagContent();
         $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
@@ -299,31 +285,18 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [$model];
 
-        $comp1           = new ODataProperty();
-        $comp1->name     = 'name';
-        $comp1->typeName = 'Edm.String';
-        $comp1->value    = 'name';
-        $comp2           = new ODataProperty();
-        $comp2->name     = 'type';
-        $comp2->typeName = 'Edm.String';
-        $comp2->value    = 'type';
-
         $complex             = new ODataPropertyContent(
             [
-                'name' => $comp1,
-                'type' => $comp2
+                'name' => new ODataProperty('name', 'Edm.String', 'name'),
+                'type' => new ODataProperty('type', 'Edm.String', 'type')
             ]
         );
 
         $bag                                       = new ODataBagContent();
         $bag->setPropertyContents([$complex]);
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);

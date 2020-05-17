@@ -91,12 +91,9 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getName')->andReturn('DesertWithNoName');
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp                                      = new ODataProperty();
-        $objProp->name                                = 'DesertWithNoName';
-        $objProp->typeName                            = 'String';
         $objectResult                                 = new ODataPropertyContent(
             [
-                'DesertWithNoName' => $objProp
+                'DesertWithNoName' => new ODataProperty('DesertWithNoName', 'String', null)
             ]
         );
         $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
@@ -137,13 +134,9 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp                                      = new ODataProperty();
-        $objProp->name                                = 'DesertWithNoName';
-        $objProp->typeName                            = 'String';
-        $objProp->value                               = 'MakeItPhunkee';
         $objectResult                                 = new ODataPropertyContent(
             [
-                'DesertWithNoName' => $objProp
+                'DesertWithNoName' => new ODataProperty('DesertWithNoName', 'String', 'MakeItPhunkee')
             ]
         );
         $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
@@ -184,13 +177,9 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp                                      = new ODataProperty();
-        $objProp->name                                = 'DesertWithNoName';
-        $objProp->typeName                            = 'String';
-        $objProp->value                               = '2017-07-02T11:10:09-06:00';
         $objectResult                                 = new ODataPropertyContent(
             [
-                'DesertWithNoName' => $objProp
+                'DesertWithNoName' => new ODataProperty('DesertWithNoName','String', '2017-07-02T11:10:09-06:00')
             ]
         );
         $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
@@ -231,13 +220,9 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp                                      = new ODataProperty();
-        $objProp->name                                = 'DesertWithNoName';
-        $objProp->typeName                            = 'String';
-        $objProp->value                               = 'U3RhcnRUaGVEYW5jZQ==';
-        $objectResult                                 = new ODataPropertyContent(
+        $objectResult = new ODataPropertyContent(
             [
-                'DesertWithNoName' => $objProp
+                'DesertWithNoName' => new ODataProperty('DesertWithNoName', 'String', 'U3RhcnRUaGVEYW5jZQ==')
             ]
         );
         $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);
@@ -278,13 +263,10 @@ class SerialiserWritePrimitiveTest extends SerialiserTestBase
         $resProp->shouldReceive('getResourceType')->andReturn($rType);
         $resProp->shouldReceive('getInstanceType')->andReturn($iType);
 
-        $objProp                                      = new ODataProperty();
-        $objProp->name                                = 'DesertWithNoName';
-        $objProp->typeName                            = 'String';
-        $objProp->value                               = '311';
+
         $objectResult                                 = new ODataPropertyContent(
             [
-                'DesertWithNoName' => $objProp
+                'DesertWithNoName' =>  new ODataProperty('DesertWithNoName', 'String', '311')
             ]
         );
         $ironicResult                                 = $ironic->writeTopLevelPrimitive($collection, $resProp);

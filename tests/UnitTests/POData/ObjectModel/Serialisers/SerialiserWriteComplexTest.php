@@ -50,14 +50,12 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = null;
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'stopHammerTime';
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'stopHammerTime', null)
             ]
         );
+        /** @var IronicSerialiser $ironic */
         $ironicResult                              = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -200,30 +198,19 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = $model;
 
-        $comp1           = new ODataProperty();
-        $comp1->name     = 'name';
-        $comp1->typeName = 'Edm.String';
-        $comp1->value    = 'name';
-        $comp2           = new ODataProperty();
-        $comp2->name     = 'type';
-        $comp2->typeName = 'Edm.String';
-        $comp2->value    = 'type';
-
         $complex             = new ODataPropertyContent(
             [
-                'name' => $comp1,
-                'type' => $comp2
+                'name' => new ODataProperty('name', 'Edm.String', 'name'),
+                'type' =>  new ODataProperty('type', 'Edm.String', 'type')
             ]
         );
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'stopHammerTime';
-        $objProp->value                            = $complex;
+
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'stopHammerTime', $complex)
             ]
         );
+        /** @var IronicSerialiser $ironic */
         $ironicResult                              = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -232,6 +219,8 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
 
     public function testWriteEloquentComplexObjectWithNonEloquentComplexProperty()
     {
+        /** @var m\Mock $request */
+
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
         $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');
@@ -239,6 +228,7 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $rTypeBase = m::mock(ResourceType::class);
@@ -295,45 +285,23 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = $model;
 
-        $zoid1           = new ODataProperty();
-        $zoid1->name     = 'name';
-        $zoid1->typeName = 'Edm.String';
-        $zoid1->value    = 'name';
-        $zoid2           = new ODataProperty();
-        $zoid2->name     = 'type';
-        $zoid2->typeName = 'Edm.String';
-        $zoid2->value    = 'type';
-
         $zoidContent             = new ODataPropertyContent(
             [
-                'name' => $zoid1,
-                'type' => $zoid2
+                'name' => new ODataProperty('name', 'Edm.String', 'name'),
+                'type' => new ODataProperty('type', 'Edm.String', 'type')
             ]
         );
-
-        $comp1           = new ODataProperty();
-        $comp1->name     = 'name';
-        $comp1->typeName = 'Edm.String';
-        $comp1->value    = '11';
-        $comp2           = new ODataProperty();
-        $comp2->name     = 'type';
-        $comp2->typeName = 'paintItBlack';
-        $comp2->value    = $zoidContent;
 
         $complex             = new ODataPropertyContent(
             [
-                'name' => $comp1,
-                'type' => $comp2
+                'name' => new ODataProperty('name', 'Edm.String', '11'),
+                'type' => new ODataProperty('type', 'paintItBlack', $zoidContent)
             ]
         );
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'stopHammerTime';
-        $objProp->value                            = $complex;
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' => $objProp
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'stopHammerTime', $complex)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelComplexObject($collection, $propName, $rType);

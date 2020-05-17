@@ -156,57 +156,49 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $link->setIsExpanded(false);
         $entry1->isMediaLinkEntry = false;
 
-        $bagProp1 = new ODataBagContent();
 
-
-        $pr1           = new ODataProperty();
-        $pr1->name     = 'fname';
-        $pr1->typeName = 'string';
-        $pr1->value    = 'Yash';
-
-        $pr2           = new ODataProperty();
-        $pr2->name     = 'lname';
-        $pr2->typeName = 'string';
-        $pr2->value    = 'Kothari';
-
-        $propCont1_1 = new ODataPropertyContent([$pr1, $pr2]);
-
-        $pr3           = new ODataProperty();
-        $pr3->name     = 'fname';
-        $pr3->typeName = 'string';
-        $pr3->value    = 'Anu';
-
-        $pr4           = new ODataProperty();
-        $pr4->name     = 'lname';
-        $pr4->typeName = 'string';
-        $pr4->value    = 'Chandy';
-
-        $pr5           = new ODataProperty();
-        $pr5->name     = 'name';
-        $pr5->typeName = null;
-        $pr5->value    = $propCont1_1;
-
-        $pr6           = new ODataProperty();
-        $pr6->name     = 'name';
-        $pr6->typeName = null;
-        $pr6->value    = $propCont1_1;
-        $propCont1     = new ODataPropertyContent([$pr5, $pr6]);
-
-        $bagProp1->setPropertyContents([$propCont1]);
-
-        $pr7           = new ODataProperty();
-        $pr7->name     = 'name';
-        $pr7->typeName = 'Bag(Name)';
-        $pr7->value    = $bagProp1;
-
-        $prop1 = $pr7;
-
-        $propCont                = new ODataPropertyContent(
+        $propCont1_1 = new ODataPropertyContent(
             [
-                $prop1
+                new ODataProperty(
+                    'fname',
+                    'string',
+                    'Yash'
+                ),
+                new ODataProperty(
+                    'lname',
+                    'string',
+                    'Kothari'
+                )
             ]
         );
-        $entry1->propertyContent = $propCont;
+
+        $entry1->propertyContent =  new ODataPropertyContent(
+            [
+                new ODataProperty(
+                    'name',
+                    'Bag(Name)',
+                    new ODataBagContent(
+                        '',
+                        [
+                            new ODataPropertyContent(
+                                [
+                                    new ODataProperty(
+                                        'name',
+                                        null,
+                                        $propCont1_1
+                                    ),
+                                    new ODataProperty(
+                                        'name',
+                                        null,
+                                        $propCont1_1
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                )
+            ]
+        );
         $entry1->type            = new ODataCategory('');
 
         $feed->entries = [
@@ -355,266 +347,207 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->eTag             = 'Entry ETag';
         $entry1->isMediaLinkEntry = true;
 
-        $bagProp1 = new ODataBagContent();
-
-
-        $pr1           = new ODataProperty();
-        $pr1->name     = 'fname';
-        $pr1->typeName = 'string';
-        $pr1->value    = 'Yash';
-
-        $pr2           = new ODataProperty();
-        $pr2->name     = 'lname';
-        $pr2->typeName = 'string';
-        $pr2->value    = 'Kothari';
-
-        $propCont3_1 = new ODataPropertyContent(
-            [
-                'fname' => $pr1,
-                'lname' =>$pr2
-            ]
+        $prop1 = new ODataProperty(
+            'name',
+            'Bag(Name)',
+            new ODataBagContent(
+                '',
+                [
+                    new ODataPropertyContent(
+                        [
+                            'name' => new ODataProperty(
+                                'name',
+                                null,
+                                new ODataPropertyContent(
+                                    [
+                                        'fname' => new ODataProperty(
+                                            'fname',
+                                            'string',
+                                            'Yash'
+                                        ),
+                                        'lname' =>new ODataProperty(
+                                            'lname',
+                                            'string',
+                                            'Kothari'
+                                        )
+                                    ]
+                                )
+                            ),
+                            'name1' => new ODataProperty(
+                                'name1',
+                                null,
+                                new ODataPropertyContent(
+                                    [
+                                        'fname' => new ODataProperty(
+                                            'fname',
+                                            'string',
+                                            'Anu'
+                                        ),
+                                        'lname' => new ODataProperty(
+                                            'lname',
+                                            'string',
+                                            'Chandy'
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
         );
 
-
-        $pr3           = new ODataProperty();
-        $pr3->name     = 'fname';
-        $pr3->typeName = 'string';
-        $pr3->value    = 'Anu';
-
-        $pr4           = new ODataProperty();
-        $pr4->name     = 'lname';
-        $pr4->typeName = 'string';
-        $pr4->value    = 'Chandy';
-
-        $propCont3_2             = new ODataPropertyContent(
-            [
-                'fname' => $pr3,
-                'lname' => $pr4
-            ]
+        $prop3 = new ODataProperty(
+            'Address',
+            'Address',
+            new ODataPropertyContent(
+                [
+                    'House_num' => new ODataProperty(
+                        'House_num',
+                        'Int',
+                        '31'
+                    ),
+                    'Street_name' => new ODataProperty(
+                        'Street_name',
+                        'String',
+                        'Ankur Road'
+                    )
+                ]
+            )
+        );
+        $prop4 =  new ODataProperty(
+            'Pin_Num',
+            'Int',
+            '380013'
         );
 
-        $pr5           = new ODataProperty();
-        $pr5->name     = 'name';
-        $pr5->typeName = null;
-        $pr5->value    = $propCont3_1;
-
-        $pr6           = new ODataProperty();
-        $pr6->name     = 'name1';
-        $pr6->typeName = null;
-        $pr6->value    = $propCont3_2;
-
-        $propCont3   = new ODataPropertyContent(
-            [
-                'name' => $pr5,
-                'name1' => $pr6
-            ]
-        );
-        $bagProp1->setPropertyContents([$propCont3]);
-
-        $pr7           = new ODataProperty();
-        $pr7->name     = 'name';
-        $pr7->typeName = 'Bag(Name)';
-        $pr7->value    = $bagProp1;
-
-        $prop1 = $pr7;
-
-
-        $pr8           = new ODataProperty();
-        $pr8->name     = 'House_num';
-        $pr8->typeName = 'Int';
-        $pr8->value    = '31';
-
-        $pr9           = new ODataProperty();
-        $pr9->name     = 'Street_name';
-        $pr9->typeName = 'String';
-        $pr9->value    = 'Ankur Road';
-
-        $propCont4 = new ODataPropertyContent(
-            [
-                'House_num' => $pr8,
-                'Street_name' => $pr9
-            ]
+        $prop5 = new ODataProperty(
+            'Phon_num',
+            'Int',
+            '9665-043-347'
         );
 
-        $pr9           = new ODataProperty();
-        $pr9->name     = 'Address';
-        $pr9->typeName = 'Address';
-        $pr9->value    = $propCont4;
-
-        $prop3 = $pr9;
-
-        $pr10           = new ODataProperty();
-        $pr10->name     = 'Pin_Num';
-        $pr10->typeName = 'Int';
-        $pr10->value    = '380013';
-
-        $prop4 = $pr10;
-
-        $pr11           = new ODataProperty();
-        $pr11->name     = 'Phon_num';
-        $pr11->typeName = 'Int';
-        $pr11->value    = '9665-043-347';
-
-        $prop5 = $pr11;
-
-        $bagProp3 = new ODataBagContent();
-
-
-        $pr12           = new ODataProperty();
-        $pr12->name     = 'Flat_no';
-        $pr12->typeName = '';
-        $pr12->value    = '31';
-
-        $pr13           = new ODataProperty();
-        $pr13->name     = 'Street_name';
-        $pr13->typeName = '';
-        $pr13->value    = 'Ankur';
-
-        $pr14           = new ODataProperty();
-        $pr14->name     = 'City';
-        $pr14->typeName = '';
-        $pr14->value    = 'Ahmedabad';
-
-
-        $propCont5_1 = new ODataPropertyContent(
-            [
-                'Flat_no' => $pr12,
-                'Street_name' => $pr13,
-                'City' => $pr14
-            ]
+        $prop6 = new ODataProperty(
+            'Addresses',
+            'Bag(Address)',
+            new ODataBagContent(
+                '',
+                [
+                    new ODataPropertyContent(
+                        [
+                            'Address' => new ODataProperty(
+                                'Address',
+                                '',
+                                new ODataPropertyContent(
+                                    [
+                                        'Flat_no' => new ODataProperty(
+                                            'Flat_no',
+                                            '',
+                                            '31'),
+                                        'Street_name' => new ODataProperty(
+                                            'Street_name',
+                                            '',
+                                            'Ankur'
+                                        ),
+                                        'City' => new ODataProperty(
+                                            'City',
+                                            '',
+                                            'Ahmedabad'
+                                        )
+                                    ]
+                                )
+                            ),
+                            'Address1' => new ODataProperty(
+                                'Address1',
+                                '',
+                                new ODataPropertyContent(
+                                    [
+                                        'Flat_no' => new ODataProperty(
+                                            'Flat_no',
+                                            '',
+                                            '101'
+                                        ),
+                                        'Street_name' => new ODataProperty(
+                                            'Street_name',
+                                            '',
+                                            'Nal Stop'
+                                        ),
+                                        'City' => new ODataProperty(
+                                            'City',
+                                            '',
+                                            'Pune'
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
         );
 
-        $pr15           = new ODataProperty();
-        $pr15->name     = 'Flat_no';
-        $pr15->typeName = '';
-        $pr15->value    = '101';
-
-        $pr16           = new ODataProperty();
-        $pr16->name     = 'Street_name';
-        $pr16->typeName = '';
-        $pr16->value    = 'Nal Stop';
-
-        $pr17           = new ODataProperty();
-        $pr17->name     = 'City';
-        $pr17->typeName = '';
-        $pr17->value    = 'Pune';
-
-        $propCont5_2 = new ODataPropertyContent(
-            [
-                'Flat_no' => $pr15,
-                'Street_name' => $pr16,
-                'City' => $pr17
-            ]
+        $prop_address = new ODataProperty(
+            'Addressess',
+            'Bag(SampleModel.Address)',
+            new ODataBagContent(
+                '',
+                [
+                    new ODataPropertyContent(
+                        [
+                            'Addresses' => new ODataProperty(
+                                'Addresses',
+                                '',
+                                new ODataPropertyContent(
+                                    [
+                                        'Street' => new ODataProperty(
+                                            'Street',
+                                            'String',
+                                            '123 contoso street'
+                                        ),
+                                        'Appartments' => new ODataProperty(
+                                            'Appartments',
+                                            '',
+                                            new ODataPropertyContent(
+                                                [
+                                                    'apartment1' => new ODataProperty(
+                                                        'apartment1',
+                                                        'String',
+                                                        'taj residency'
+                                                    ),
+                                                    'apartment2' => new ODataProperty(
+                                                        'apartment2',
+                                                        'String',
+                                                        'le-merdian'
+                                                    )
+                                                ]
+                                            )
+                                        )
+                                    ]
+                                )
+                            ),
+                            'Address' => new ODataProperty(
+                                'Address',
+                                '',
+                                new ODataPropertyContent(
+                                    [
+                                        'Street' => new ODataProperty(
+                                            'Street',
+                                            'String',
+                                            '834 foo street'
+                                        ),
+                                        'Appartment' => new ODataProperty(
+                                            'Appartment',
+                                            '',
+                                            ''
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
         );
-
-        $pr18           = new ODataProperty();
-        $pr18->name     = 'Address';
-        $pr18->typeName = '';
-        $pr18->value    = $propCont5_1;
-
-        $pr19           = new ODataProperty();
-        $pr19->name     = 'Address1';
-        $pr19->typeName = '';
-        $pr19->value    = $propCont5_2;
-
-        $propCont5   = new ODataPropertyContent(
-            [
-                'Address' => $pr18,
-                'Address1' => $pr19
-            ]
-        );
-        $bagProp3->setPropertyContents([$propCont5]);
-
-        $pr20           = new ODataProperty();
-        $pr20->name     = 'Addresses';
-        $pr20->typeName = 'Bag(Address)';
-        $pr20->value    = $bagProp3;
-
-        $prop6 = $pr20;
-
-        $bagProp4 = new ODataBagContent();
-
-
-        $pr21           = new ODataProperty();
-        $pr21->name     = 'apartment1';
-        $pr21->typeName = 'String';
-        $pr21->value    = 'taj residency';
-
-        $pr22           = new ODataProperty();
-        $pr22->name     = 'apartment2';
-        $pr22->typeName = 'String';
-        $pr22->value    = 'le-merdian';
-
-        $propCont6_1_1 = new ODataPropertyContent(
-            [
-                'apartment1' => $pr21,
-                'apartment2' => $pr22
-            ]
-        );
-
-        $propCont6_1_1->setPropertys([$pr21, $pr22]);
-
-        $pr23           = new ODataProperty();
-        $pr23->name     = 'Street';
-        $pr23->typeName = 'String';
-        $pr23->value    = '123 contoso street';
-
-        $pr24           = new ODataProperty();
-        $pr24->name     = 'Appartments';
-        $pr24->typeName = '';
-        $pr24->value    = $propCont6_1_1;
-
-        $propCont6_1   = new ODataPropertyContent(
-            [
-                'Street' => $pr23,
-                'Appartments' => $pr24
-            ]
-        );
-
-
-        $pr25           = new ODataProperty();
-        $pr25->name     = 'Street';
-        $pr25->typeName = 'String';
-        $pr25->value    = '834 foo street';
-
-        $pr26           = new ODataProperty();
-        $pr26->name     = 'Appartment';
-        $pr26->typeName = '';
-        $pr26->value    = '';
-
-        $propCont6_2             = new ODataPropertyContent(
-            [
-                'Street' => $pr25,
-                'Appartment' => $pr26
-            ]
-        );
-
-
-        $pr27           = new ODataProperty();
-        $pr27->name     = 'Addresses';
-        $pr27->typeName = '';
-        $pr27->value    = $propCont6_1;
-
-        $pr28           = new ODataProperty();
-        $pr28->name     = 'Address';
-        $pr28->typeName = '';
-        $pr28->value    = $propCont6_2;
-
-        $propCont6     = new ODataPropertyContent(
-            [
-                'Addresses' => $pr27,
-                'Address' => $pr28
-            ]
-        );
-
-        $bagProp4->setPropertyContents([$propCont6]);
-
-        $pr29           = new ODataProperty();
-        $pr29->name     = 'Addressess';
-        $pr29->typeName = 'Bag(SampleModel.Address)';
-        $pr29->value    = $bagProp4;
-
-        $prop_address = $pr29;
 
         $propCont             = new ODataPropertyContent(
             [
@@ -712,49 +645,38 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry->eTag             = 'Entry ETag';
         $odataExpandEntry->isMediaLinkEntry = false;
 
-
-        $pr1           = new ODataProperty();
-        $pr1->name     = 'fname';
-        $pr1->typeName = 'string';
-        $pr1->value    = 'Yash';
-
-        $pr2           = new ODataProperty();
-        $pr2->name     = 'lname';
-        $pr2->typeName = 'string';
-        $pr2->value    = 'Kothari';
-
-        $propCon1 = new ODataPropertyContent(
+        $odataExpandEntry->propertyContent = new ODataPropertyContent(
             [
-                'fname' => $pr1,
-                'lname' => $pr2
+                'name' => new ODataProperty(
+                    'name',
+                    'string',
+                    new ODataPropertyContent(
+                        [
+                            'fname' => new ODataProperty(
+                                'fname',
+                                'string',
+                                'Yash'
+                            ),
+                            'lname' => new ODataProperty(
+                                'lname',
+                                'string',
+                                'Kothari'
+                            )
+                        ]
+                    )
+                ),
+                'city' => new ODataProperty(
+                    'city',
+                    'string',
+                    'Ahmedabad'
+                ),
+                'state' => new ODataProperty(
+                    'state',
+                    'string',
+                    'Gujarat'
+                ),
             ]
         );
-
-        $pr3           = new ODataProperty();
-        $pr3->name     = 'name';
-        $pr3->typeName = 'string';
-        $pr3->value    = $propCon1;
-
-        $prop3 = $pr3;
-
-        $prop4           = new ODataProperty();
-        $prop4->name     = 'city';
-        $prop4->typeName = 'string';
-        $prop4->value    = 'Ahmedabad';
-
-        $prop5           = new ODataProperty();
-        $prop5->name     = 'state';
-        $prop5->typeName = 'string';
-        $prop5->value    = 'Gujarat';
-
-        $propCon             = new ODataPropertyContent(
-            [
-                'name' => $prop3,
-                'city' => $prop4,
-                'state' => $prop5,
-            ]
-        );
-        $odataExpandEntry->propertyContent = $propCon;
         $odataExpandEntry->type            = new ODataCategory('');
 
         $odataLink->setExpandedResult(new ODataExpandedResult($odataExpandEntry));
@@ -763,77 +685,60 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
 
-        $bagProp1 = new ODataBagContent();
 
-
-        $pr6           = new ODataProperty();
-        $pr6->name     = 'fname';
-        $pr6->typeName = 'string';
-        $pr6->value    = 'Yash';
-
-        $pr7           = new ODataProperty();
-        $pr7->name     = 'lname';
-        $pr7->typeName = 'string';
-        $pr7->value    = 'Kothari';
-
-        $propCont1_1 = new ODataPropertyContent(
+        $entry->propertyContent = new ODataPropertyContent(
             [
-                'fname' => $pr6,
-                'lname' => $pr7
+                'name' => new ODataProperty(
+                    'name',
+                    'Bag(Name)',
+                    new ODataBagContent(
+                        '',
+                        [
+                            new ODataPropertyContent(
+                                [
+                                    new ODataProperty(
+                                        'name',
+                                        null,
+                                        new ODataPropertyContent(
+                                            [
+                                                'fname' => new ODataProperty(
+                                                    'fname',
+                                                    'string',
+                                                    'Yash'
+                                                ),
+                                                'lname' => new ODataProperty(
+                                                    'lname',
+                                                    'string',
+                                                    'Kothari'
+                                                )
+                                            ]
+                                        )
+                                    ),
+                                    new ODataProperty(
+                                        'name',
+                                        null,
+                                        new ODataPropertyContent(
+                                            [
+                                                'fname' => new ODataProperty(
+                                                    'fname',
+                                                    'string',
+                                                    'Anu'
+                                                ),
+                                                'lname' => new ODataProperty(
+                                                    'lname',
+                                                    'string',
+                                                    'Chandy'
+                                                )
+                                            ]
+                                        )
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                )
             ]
         );
-
-
-        $pr8           = new ODataProperty();
-        $pr8->name     = 'fname';
-        $pr8->typeName = 'string';
-        $pr8->value    = 'Anu';
-
-        $pr9           = new ODataProperty();
-        $pr9->name     = 'lname';
-        $pr9->typeName = 'string';
-        $pr9->value    = 'Chandy';
-
-        $propCont1_2 = new ODataPropertyContent(
-            [
-                'fname' => $pr8,
-                'lname' => $pr9
-            ]
-        );
-
-        $pr10           = new ODataProperty();
-        $pr10->name     = 'name';
-        $pr10->typeName = null;
-        $pr10->value    = $propCont1_1;
-
-        $pr11           = new ODataProperty();
-        $pr11->name     = 'name';
-        $pr11->typeName = null;
-        $pr11->value    = $propCont1_2;
-
-        $propCont1   = new ODataPropertyContent(
-            [
-                $pr10,
-                $pr11
-            ]
-        );
-
-        $bagProp1->setPropertyContents([$propCont1]);
-
-        $pr12           = new ODataProperty();
-        $pr12->name     = 'name';
-        $pr12->typeName = 'Bag(Name)';
-        $pr12->value    = $bagProp1;
-
-        $prop1 = $pr12;
-
-        $propCont             = new ODataPropertyContent(
-            [
-                'name' => $prop1
-            ]
-        );
-
-        $entry->propertyContent = $propCont;
         $entry->type            = new ODataCategory('');
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
@@ -905,14 +810,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testPrimitiveProperty()
     {
-        $prop           = new ODataProperty();
-        $prop->name     = 'Count';
-        $prop->typeName = null;
-        $prop->value    = '56';
-
         $propCont             = new ODataPropertyContent(
             [
-                'Count'=>$prop
+                'Count'=> new ODataProperty('Count', null, '56')
             ]
         );
 
@@ -934,37 +834,20 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
      */
     public function testComplexProperty()
     {
-        $pr1           = new ODataProperty();
-        $pr1->name     = 'FlatNo.';
-        $pr1->typeName = null;
-        $pr1->value    = '31';
-
-        $pr2           = new ODataProperty();
-        $pr2->name     = 'StreetName';
-        $pr2->typeName = null;
-        $pr2->value    = 'Ankur';
-
-        $pr3           = new ODataProperty();
-        $pr3->name     = 'City';
-        $pr3->typeName = null;
-        $pr3->value    = 'Ahmedabad';
-
-        $propCont1             = new ODataPropertyContent(
-            [
-                'FlatNo.' => $pr1,
-                'StreetName' => $pr2,
-                'City' => $pr3
-            ]
-        );
-
-        $prop           = new ODataProperty();
-        $prop->name     = 'Address';
-        $prop->typeName = 'Complex.Address';
-        $prop->value    = $propCont1;
 
         $propCont             = new ODataPropertyContent(
             [
-                'Address' => $prop
+                'Address' => new ODataProperty(
+                    'Address',
+                    'Complex.Address',
+                    new ODataPropertyContent(
+                        [
+                            'FlatNo.' => new ODataProperty('FlatNo.', null, '31'),
+                            'StreetName' => new ODataProperty('StreetName', null, 'Ankur'),
+                            'City' => new ODataProperty('City', null, 'Ahmedabad')
+                        ]
+                    )
+                )
             ]
         );
 
@@ -999,97 +882,66 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->type     = 'SampleModel.Customer';
         $entry->eTag     = '';
 
-        //entry property
-        $entryProp1           = new ODataProperty();
-        $entryProp1->name     = 'ID';
-        $entryProp1->typeName = 'Edm.Int16';
-        $entryProp1->value    = 1;
-
-        $entryProp2           = new ODataProperty();
-        $entryProp2->name     = 'Name';
-        $entryProp2->typeName = 'Edm.String';
-        $entryProp2->value    = 'mike';
-
-        //property 3 starts
-        //bag property for property 3
-        $bagEntryProp3 = new ODataBagContent();
-
-        $bagEntryProp3->setPropertyContents([
-            'mike@foo.com',
-            'mike2@foo.com', ]);
-
-        $entryProp3           = new ODataProperty();
-        $entryProp3->name     = 'EmailAddresses';
-        $entryProp3->typeName = 'Bag(Edm.String)';
-        $entryProp3->value    = $bagEntryProp3;
-        //property 3 ends
-
-        //property 4 starts
-        $bagEntryProp4 = new ODataBagContent();
-
-        //property content for bagEntryProp4ContentProp1
-
-        $bagEntryProp4ContentProp1ContentProp1           = new ODataProperty();
-        $bagEntryProp4ContentProp1ContentProp1->name     = 'Street';
-        $bagEntryProp4ContentProp1ContentProp1->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1ContentProp1->value    = '123 contoso street';
-
-        $bagEntryProp4ContentProp1ContentProp2           = new ODataProperty();
-        $bagEntryProp4ContentProp1ContentProp2->name     = 'Apartment';
-        $bagEntryProp4ContentProp1ContentProp2->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1ContentProp2->value    = '508';
-
-        $bagEntryProp4ContentProp1Content = new ODataPropertyContent(
-            [
-                'Street' => $bagEntryProp4ContentProp1ContentProp1,
-                'Apartment' => $bagEntryProp4ContentProp1ContentProp2
-            ]
-        );
-
-        //end property content for bagEntryProp4ContentProp1
-
-        //property content2 for bagEntryProp4ContentProp1
-        $bagEntryProp4ContentProp1Content2Prop1           = new ODataProperty();
-        $bagEntryProp4ContentProp1Content2Prop1->name     = 'Street';
-        $bagEntryProp4ContentProp1Content2Prop1->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1Content2Prop1->value    = '834 foo street';
-
-        $bagEntryProp4ContentProp1Content2Prop2           = new ODataProperty();
-        $bagEntryProp4ContentProp1Content2Prop2->name     = 'Apartment';
-        $bagEntryProp4ContentProp1Content2Prop2->typeName = 'Edm.String';
-        $bagEntryProp4ContentProp1Content2Prop2->value    = '102';
-
-        $bagEntryProp4ContentProp1Content2 = new ODataPropertyContent(
-            [
-                'Street' => $bagEntryProp4ContentProp1Content2Prop1,
-                'Apartment' => $bagEntryProp4ContentProp1Content2Prop2
-            ]
-        );
-
-
-        //end property content for bagEntryProp4ContentProp1
-
-        $bagEntryProp4->setPropertyContents([$bagEntryProp4ContentProp1Content,
-            $bagEntryProp4ContentProp1Content2,
-        ]);
-
-        $entryProp4           = new ODataProperty();
-        $entryProp4->name     = 'Addresses';
-        $entryProp4->typeName = 'Bag(SampleModel.Address)';
-        $entryProp4->value    = $bagEntryProp4;
-        //property 4 ends
-        $entryPropContent = new ODataPropertyContent(
-            [
-                'ID' => $entryProp1,
-                'Name' => $entryProp2,
-                'EmailAddresses' => $entryProp3,
-                'Addresses' => $entryProp4
-            ]
-        );
-
 
         $entry->type            = new ODataCategory('SampleModel.Customer');
-        $entry->propertyContent = $entryPropContent;
+        $entry->propertyContent = new ODataPropertyContent(
+            [
+                'ID' => new ODataProperty(
+                    'ID',
+                    'Edm.Int16',
+                    1
+                ),
+                'Name' => new ODataProperty(
+                    'Name',
+                    'Edm.String',
+                    'mike'
+                ),
+                'EmailAddresses' => new ODataProperty(
+                    'EmailAddresses',
+                    'Bag(Edm.String)',
+                    new ODataBagContent('', [
+                            'mike@foo.com',
+                            'mike2@foo.com'
+                        ]
+                    )
+                ),
+                'Addresses' => new ODataProperty(
+                    'Addresses', 'Bag(SampleModel.Address)', new ODataBagContent(
+                        '',
+                        [
+                            new ODataPropertyContent(
+                                [
+                                    'Street' => new ODataProperty(
+                                        'Street',
+                                        'Edm.String',
+                                        '123 contoso street'
+                                    ),
+                                    'Apartment' =>  new ODataProperty(
+                                        'Apartment',
+                                        'Edm.String',
+                                        '508'
+                                    )
+                                ]
+                            ),
+                            new ODataPropertyContent(
+                                [
+                                    'Street' => new ODataProperty(
+                                        'Street',
+                                        'Edm.String',
+                                        '834 foo street'
+                                    ),
+                                    'Apartment' =>  new ODataProperty(
+                                        'Apartment',
+                                        'Edm.String',
+                                        '102'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                )
+            ]
+        );
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry);
@@ -1141,23 +993,21 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
      */
     public function testPrimitiveBagProperty()
     {
-        $odataProperty = new ODataProperty();
-
-        $odataBag = new ODataBagContent();
-
-        $odataProperty->name     = 'Emails';
-        $odataProperty->typeName = 'Bag(edm.String)';
-        $odataProperty->value    = $odataBag;
-
-        $odataBag->setPropertyContents([
-            'yash_kothari@persistent.co.in',
-            'v-yashk@microsoft.com',
-            'yash2712@gmail.com',
-            'y2k2712@yahoo.com', ]);
-
         $propCont             = new ODataPropertyContent(
             [
-                'Emails' => $odataProperty
+                'Emails' => new ODataProperty(
+                    'Emails',
+                    'Bag(edm.String)',
+                    new ODataBagContent(
+                        '',
+                        [
+                            'yash_kothari@persistent.co.in',
+                            'v-yashk@microsoft.com',
+                            'yash2712@gmail.com',
+                            'y2k2712@yahoo.com'
+                        ]
+                    )
+                )
             ]
         );
 

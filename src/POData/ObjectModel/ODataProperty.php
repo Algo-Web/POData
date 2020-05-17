@@ -37,6 +37,21 @@ class ODataProperty
     public $value;
 
     /**
+     * ODataProperty constructor.
+     * @param string $name
+     * @param string $typeName
+     * @param XMLAttribute[] $attributeExtensions
+     * @param ODataBagContent|ODataPropertyContent|string $value
+     */
+    public function __construct(string $name = null, ?string $typeName = null, $value = null, array $attributeExtensions = null)
+    {
+        $this->name = $name;
+        $this->typeName = $typeName;
+        $this->attributeExtensions = $attributeExtensions;
+        $this->value = $value;
+    }
+
+    /**
      * @return bool|null
      */
     public function isNull(): ?bool

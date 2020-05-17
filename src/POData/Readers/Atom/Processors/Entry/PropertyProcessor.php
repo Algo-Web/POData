@@ -50,13 +50,15 @@ class PropertyProcessor extends BaseNodeHandler
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE ||
             $tagNamespace === ODataConstants::ODATA_METADATA_NAMESPACE);
 
-        $property           = new ODataProperty();
-        $property->name     = $tagName;
-        $property->typeName = $this->arrayKeyOrDefault(
-            $attributes,
-            ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-            null
-        );
+        $property           = new ODataProperty(
+            $tagName,
+            $this->arrayKeyOrDefault(
+                $attributes,
+                ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+                null
+            ),
+            null);
+
         $this->properties->push($property);
         $this->propertyContent->push(new ODataPropertyContent([]));
     }

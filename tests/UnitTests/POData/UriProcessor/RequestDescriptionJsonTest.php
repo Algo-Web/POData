@@ -15,7 +15,6 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
-use POData\OperationContext\Web\Illuminate\IncomingIlluminateRequest;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceStreamInfo;
 use POData\UriProcessor\RequestDescription;
@@ -101,32 +100,15 @@ class RequestDescriptionJsonTest extends TestCase
     {
         $propContent             = new ODataPropertyContent(
             [
-                'CustomerID' => new ODataProperty(),
-                'CustomerGuid' => new ODataProperty(),
-                'CustomerName' => new ODataProperty(),
-                'country' => new ODataProperty(),
-                'Rating' => new ODataProperty(),
-                'Photo' => new ODataProperty(),
-                'Address' => new ODataProperty()]
+                'CustomerID' => new ODataProperty('CustomerID', 'Edm.String', '1'),
+                'CustomerGuid' => new ODataProperty('CustomerGuid', 'Edm.Guid', '123e4567-e89b-12d3-a456-426655440000'),
+                'CustomerName' => new ODataProperty('CustomerName', 'Edm.String', ' MakeItPhunkee '),
+                'country' => new ODataProperty('country', 'Edm.String', ' Oop North '),
+                'Rating' => new ODataProperty('Rating', 'Edm.Int32', null),
+                'Photo' => new ODataProperty('Photo', 'Edm.Binary', null),
+                'Address' => new ODataProperty('Address', 'Address', null)
+            ]
         );
-        $propContent['CustomerID']->name       = 'CustomerID';
-        $propContent['CustomerID']->typeName   = 'Edm.String';
-        $propContent['CustomerID']->value      = '1';
-        $propContent['CustomerGuid']->name     = 'CustomerGuid';
-        $propContent['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent['CustomerName']->name     = 'CustomerName';
-        $propContent['CustomerName']->typeName = 'Edm.String';
-        $propContent['CustomerName']->value    = ' MakeItPhunkee ';
-        $propContent['country']->name          = 'country';
-        $propContent['country']->typeName      = 'Edm.String';
-        $propContent['country']->value         = ' Oop North ';
-        $propContent['Rating']->name           = 'Rating';
-        $propContent['Rating']->typeName       = 'Edm.Int32';
-        $propContent['Photo']->name            = 'Photo';
-        $propContent['Photo']->typeName        = 'Edm.Binary';
-        $propContent['Address']->name          = 'Address';
-        $propContent['Address']->typeName      = 'Address';
 
         $objectResult     = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'

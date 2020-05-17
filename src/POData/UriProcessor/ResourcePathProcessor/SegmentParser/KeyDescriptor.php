@@ -590,10 +590,12 @@ class KeyDescriptor
         foreach ($values as $propName => $propDeets) {
             assert(2 == count($propDeets));
             assert($propDeets[1] instanceof IType);
-            $property           = new ODataProperty();
-            $property->name     = strval($propName);
-            $property->value    = $propDeets[1]->convert($propDeets[0]);
-            $property->typeName = $propDeets[1]->getFullTypeName();
+            $property           = new ODataProperty(
+                strval($propName),
+                $propDeets[1]->getFullTypeName(),
+                $propDeets[1]->convert($propDeets[0])
+
+            );
             $result[$propName]  = $property;
         }
 
