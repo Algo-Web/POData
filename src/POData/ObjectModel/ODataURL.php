@@ -15,7 +15,7 @@ class ODataURL
      *
      * @var string
      */
-    public $url;
+    private $url;
 
     /**
      * ODataURL constructor.

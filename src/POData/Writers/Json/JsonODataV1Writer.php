@@ -150,7 +150,7 @@ class JsonODataV1Writer implements IODataWriter
     {
         $this->writer
             ->writeName($this->urlKey)
-            ->writeValue($url->url);
+            ->writeValue($url->getUrl());
 
         return $this;
     }

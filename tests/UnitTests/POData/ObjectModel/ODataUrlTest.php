@@ -15,7 +15,6 @@ class ODataUrlTest extends TestCase
     public function testNotOkWhenEmptyUrl()
     {
         $foo      = new ODataURL('');
-        $foo->url = '';
         $expected = 'Url value must be non-empty';
         $actual   = null;
 

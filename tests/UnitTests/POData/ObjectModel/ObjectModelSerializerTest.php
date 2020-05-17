@@ -600,7 +600,7 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult->results = 'bar';
 
         $result = $foo->writeUrlElement($queryResult);
-        $this->assertEquals('/customer', $result->url);
+        $this->assertEquals('/customer', $result->getUrl());
     }
 
     public function testWriteNullUrlCollection()
