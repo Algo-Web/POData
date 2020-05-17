@@ -297,7 +297,7 @@ class JsonODataV1WriterTest extends TestCase
         $entry1Prop4->name     = 'Concurrency';
         $entry1Prop4->typeName = 'Edm.Int16';
         $entry1Prop4->value    = (string) 0;
-        $entry1PropContent = new ODataPropertyContent(
+        $entry1PropContent     = new ODataPropertyContent(
             [
                 $entry1Prop1,
                 $entry1Prop2,
@@ -556,7 +556,6 @@ class JsonODataV1WriterTest extends TestCase
 
     public function testWriteComplexProperty()
     {
-
         $compProp1           = new ODataProperty();
         $compProp1->name     = 'Street';
         $compProp1->typeName = 'Edm.String';

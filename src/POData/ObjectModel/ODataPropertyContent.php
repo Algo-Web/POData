@@ -48,7 +48,7 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
         return array_key_exists($offset, $this->properties);
     }
 
-    public function offsetGet($offset) : ODataProperty
+    public function offsetGet($offset): ODataProperty
     {
         return $this->properties[$offset];
     }
@@ -57,7 +57,6 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
     {
         assert($value instanceof ODataProperty);
         null === $offset ? $this->properties[] = $value : $this->properties[$offset] = $value;
-
     }
 
     public function offsetUnset($offset)
@@ -91,12 +90,12 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * Count elements of an object
-     * @link https://php.net/manual/en/countable.count.php
+     * Count elements of an object.
+     * @see https://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     *             </p>
+     *             <p>
+     *             The return value is cast to an integer.
      * @since 5.1.0
      */
     public function count()

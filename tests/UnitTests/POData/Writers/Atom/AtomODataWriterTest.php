@@ -86,7 +86,7 @@ class AtomODataWriterTest extends TestCase
         $urls       = new ODataURLCollection(
             [$url1, $url2],
             new ODataLink('Next', '', '', 'Next Link Url'),
-        10
+            10
         );
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
@@ -190,7 +190,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $pr6->name     = 'name';
         $pr6->typeName = null;
         $pr6->value    = $propCont1_1;
-        $propCont1   = new ODataPropertyContent([$pr5, $pr6]);
+        $propCont1     = new ODataPropertyContent([$pr5, $pr6]);
 
         $bagProp1->setPropertyContents([$propCont1]);
 
@@ -964,7 +964,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
 
         $propCont             = new ODataPropertyContent(
             [
-                "Address" => $prop
+                'Address' => $prop
             ]
         );
 

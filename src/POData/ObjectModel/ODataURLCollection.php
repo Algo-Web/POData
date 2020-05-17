@@ -31,8 +31,8 @@ class ODataURLCollection
     /**
      * ODataURLCollection constructor.
      * @param ODataURL[] $urls
-     * @param ODataLink $nextPageLink
-     * @param int $count
+     * @param ODataLink  $nextPageLink
+     * @param int        $count
      */
     public function __construct(array $urls = [], ODataLink $nextPageLink = null, int $count = null)
     {
@@ -50,7 +50,7 @@ class ODataURLCollection
     }
 
     /**
-     * @param ODataURL[] $urls
+     * @param  ODataURL[]         $urls
      * @return ODataURLCollection
      */
     public function setUrls(array $urls): ODataURLCollection
@@ -68,7 +68,7 @@ class ODataURLCollection
     }
 
     /**
-     * @param ODataLink|null $nextPageLink
+     * @param  ODataLink|null     $nextPageLink
      * @return ODataURLCollection
      */
     public function setNextPageLink(?ODataLink $nextPageLink): ODataURLCollection
@@ -86,7 +86,7 @@ class ODataURLCollection
     }
 
     /**
-     * @param int|null $count
+     * @param  int|null           $count
      * @return ODataURLCollection
      */
     public function setCount(?int $count): ODataURLCollection

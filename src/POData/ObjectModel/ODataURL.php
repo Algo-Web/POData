@@ -36,7 +36,7 @@ class ODataURL
     }
 
     /**
-     * @param string $url
+     * @param  string   $url
      * @return ODataURL
      */
     public function setUrl(string $url): ODataURL

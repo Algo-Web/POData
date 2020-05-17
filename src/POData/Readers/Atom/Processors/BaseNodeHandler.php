@@ -102,7 +102,7 @@ abstract class BaseNodeHandler
     {
         assert(!$this->tagEndQueue->isEmpty(), 'every node that opens should register a end tag');
         $endMethod = $this->tagEndQueue->pop();
-        /** @var callable $endMethod */
+        /* @var callable $endMethod */
         $endMethod();
     }
 

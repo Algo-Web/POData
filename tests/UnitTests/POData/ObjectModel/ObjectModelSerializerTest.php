@@ -651,7 +651,6 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult->results = [$supplier, $customer];
         $queryResult->hasMore = true;
         /** @var ObjectModelSerializer|m\Mock $foo */
-
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('writeUrlElement')->withArgs([$supplier])->andReturn('/supplier')->once();
         $foo->shouldReceive('writeUrlElement')->withArgs([$customer])->andReturn('/customer')->once();

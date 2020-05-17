@@ -567,9 +567,9 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
             [
                 'OrderID' => new ODataProperty(),
                 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
                 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
                 'QualityRate' => new ODataProperty(),
                 'Price' => new ODataProperty()
             ]

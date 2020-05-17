@@ -234,9 +234,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = 'etag';
+        $etag     = 'etag';
         $expected = 'etag';
-        $actual = $foo->setETag($etag)->getETag();
+        $actual   = $foo->setETag($etag)->getETag();
         $this->assertEquals($expected, $actual);
     }
 
@@ -245,7 +245,7 @@ class ODataEntryTest extends TestCase
         $foo = new ODataEntry();
 
         $expected = true;
-        $actual = $foo->setIsMediaLinkEntry(true)->getIsMediaLinkEntry();
+        $actual   = $foo->setIsMediaLinkEntry(true)->getIsMediaLinkEntry();
         $this->assertEquals($expected, $actual);
     }
 
@@ -253,9 +253,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = 'rSet';
+        $etag     = 'rSet';
         $expected = 'rSet';
-        $actual = $foo->setResourceSetName($etag)->getResourceSetName();
+        $actual   = $foo->setResourceSetName($etag)->getResourceSetName();
         $this->assertEquals($expected, $actual);
     }
 
@@ -263,9 +263,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = 'id';
+        $etag     = 'id';
         $expected = 'id';
-        $actual = $foo->setId($etag)->getId();
+        $actual   = $foo->setId($etag)->getId();
         $this->assertEquals($expected, $actual);
     }
 
@@ -273,9 +273,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = new ODataTitle('title');
+        $etag     = new ODataTitle('title');
         $expected = new ODataTitle('title');
-        $actual = $foo->setTitle($etag)->getTitle();
+        $actual   = $foo->setTitle($etag)->getTitle();
         $this->assertEquals($expected, $actual);
     }
 
@@ -283,9 +283,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = 'update';
+        $etag     = 'update';
         $expected = 'update';
-        $actual = $foo->setUpdated($etag)->getUpdated();
+        $actual   = $foo->setUpdated($etag)->getUpdated();
         $this->assertEquals($expected, $actual);
     }
 
@@ -293,9 +293,9 @@ class ODataEntryTest extends TestCase
     {
         $foo = new ODataEntry();
 
-        $etag = 'baseURI';
+        $etag     = 'baseURI';
         $expected = 'baseURI';
-        $actual = $foo->setBaseURI($etag)->getBaseURI();
+        $actual   = $foo->setBaseURI($etag)->getBaseURI();
         $this->assertEquals($expected, $actual);
     }
 }

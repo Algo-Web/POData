@@ -48,7 +48,7 @@ class ODataTitle
     }
 
     /**
-     * @param string $title
+     * @param  string     $title
      * @return ODataTitle
      */
     public function setTitle(string $title): ODataTitle
@@ -66,7 +66,7 @@ class ODataTitle
     }
 
     /**
-     * @param string $type
+     * @param  string     $type
      * @return ODataTitle
      */
     public function setType(string $type): ODataTitle

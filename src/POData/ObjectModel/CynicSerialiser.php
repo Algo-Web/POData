@@ -688,7 +688,7 @@ class CynicSerialiser implements IObjectSerialiser
 
         $this->complexTypeInstanceCollection[$count] = &$result;
 
-        $properties = [];
+        $properties         = [];
         $resourceProperties = $resourceType->getAllProperties();
         // first up, handle primitive properties
         foreach ($resourceProperties as $prop) {
@@ -916,8 +916,8 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeUrlElements(QueryResult $entryObjects)
     {
-        $urls = [];
-        $count = null;
+        $urls         = [];
+        $count        = null;
         $nextPageLink = null;
         if (!empty($entryObjects->results)) {
             $i = 0;

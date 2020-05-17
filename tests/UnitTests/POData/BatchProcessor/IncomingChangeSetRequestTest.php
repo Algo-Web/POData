@@ -19,7 +19,7 @@ class IncomingChangeSetRequestTest extends TestCase
     {
         $foo = m::mock(IncomingChangeSetRequestDummy::class)->makePartial();
 
-        $contentId      = "1";
+        $contentId      = '1';
         $contentIdValue = 'WTF';
 
         $foo->setRawUrl('$1/Orders');

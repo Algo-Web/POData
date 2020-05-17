@@ -77,7 +77,9 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
 
         $objectResult         = new ODataURLCollection(
-            [$url,$url],null,2
+            [$url,$url],
+            null,
+            2
         );
         $ironicResult         = $ironic->writeUrlElements($collection);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -114,7 +116,7 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $nextLink->setUrl('http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
                          . 'guid\'123e4567-e89b-12d3-a456-426655440000\'');
 
-        $objectResult               = new ODataURLCollection([$url],$nextLink,1);
+        $objectResult               = new ODataURLCollection([$url], $nextLink, 1);
         $ironicResult               = $ironic->writeUrlElements($collection);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);

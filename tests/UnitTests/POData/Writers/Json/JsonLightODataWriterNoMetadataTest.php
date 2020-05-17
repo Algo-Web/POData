@@ -673,7 +673,7 @@ class JsonLightODataWriterNoMetadataTest extends TestCase
         $prop1->name     = 'Address';
         $prop1->typeName = 'ODataDemo.Address';
         $prop1->value    = $compProp;
-        $propContent = new ODataPropertyContent([$prop1]);
+        $propContent     = new ODataPropertyContent([$prop1]);
 
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::NONE(), $this->serviceBase);

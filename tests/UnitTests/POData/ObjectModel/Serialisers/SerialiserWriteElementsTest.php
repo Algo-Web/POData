@@ -190,8 +190,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $cand->title                                              = new ODataTitle('Customer');
             $cand->type                                               = new ODataCategory('NorthWind.Customer');
             $cand->propertyContent                                    = $this->generateCustomerProperties();
-            $cand->propertyContent['CustomerID']->value   = strval($i);
-            $cand->propertyContent['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
+            $cand->propertyContent['CustomerID']->value               = strval($i);
+            $cand->propertyContent['CustomerGuid']->value             = '123e4567-e89b-12d3-a456-426655440000';
             $cand->links                                              = [$link];
             $cand->resourceSetName                                    = 'Customers';
             $cand->updated                                            = '2017-01-01T00:00:00+00:00';
@@ -272,8 +272,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[0]->editLink                                        = new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=1,OrderID=1)');
         $entries[0]->type                                            = new ODataCategory('NorthWind.Order_Details');
         $entries[0]->propertyContent                                 = $this->generateOrderDetailsProperties();
-        $entries[0]->propertyContent['ProductID']->value = '1';
-        $entries[0]->propertyContent['OrderID']->value   = '1';
+        $entries[0]->propertyContent['ProductID']->value             = '1';
+        $entries[0]->propertyContent['OrderID']->value               = '1';
         $entries[0]->links                                           = $links[0];
         $entries[0]->resourceSetName                                 = 'Order_Details';
         $entries[0]->updated                                         = '2017-01-01T00:00:00+00:00';
@@ -282,8 +282,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entries[1]->editLink                                        = new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=2,OrderID=1)');
         $entries[1]->type                                            = new ODataCategory('NorthWind.Order_Details');
         $entries[1]->propertyContent                                 = $this->generateOrderDetailsProperties();
-        $entries[1]->propertyContent['ProductID']->value = '2';
-        $entries[1]->propertyContent['OrderID']->value   = '1';
+        $entries[1]->propertyContent['ProductID']->value             = '2';
+        $entries[1]->propertyContent['OrderID']->value               = '1';
         $entries[1]->links                                           = $links[1];
         $entries[1]->resourceSetName                                 = 'Order_Details';
         $entries[1]->updated                                         = '2017-01-01T00:00:00+00:00';
@@ -384,7 +384,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subEntry->type                                          = new ODataCategory('NorthWind.Order');
         $subEntry->resourceSetName                               = 'Orders';
         $subEntry->propertyContent                               = $this->generateOrderProperties();
-        $subEntry->propertyContent['OrderID']->value = '1';
+        $subEntry->propertyContent['OrderID']->value             = '1';
         $subEntry->links                                         = $subLinks;
         $subEntry->updated                                       = '2017-01-01T00:00:00+00:00';
 
@@ -416,8 +416,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry->type                                               = new ODataCategory('NorthWind.Customer');
         $entry->resourceSetName                                    = 'Customers';
         $entry->propertyContent                                    = $this->generateCustomerProperties();
-        $entry->propertyContent['CustomerID']->value   = '1';
-        $entry->propertyContent['CustomerGuid']->value = '123e4567-e89b-12d3-a456-426655440000';
+        $entry->propertyContent['CustomerID']->value               = '1';
+        $entry->propertyContent['CustomerGuid']->value             = '123e4567-e89b-12d3-a456-426655440000';
         $entry->links                                              = [$link];
         $entry->updated                                            = '2017-01-01T00:00:00+00:00';
 

@@ -261,7 +261,7 @@ class JsonODataV2WriterTest extends TestCase
         $compForEntry1Prop3Prop5->name     = 'Country';
         $compForEntry1Prop3Prop5->typeName = 'Edm.String';
         $compForEntry1Prop3Prop5->value    = 'USA';
-        $compForEntry1Prop3 = new ODataPropertyContent(
+        $compForEntry1Prop3                = new ODataPropertyContent(
             [
                 $compForEntry1Prop3Prop1,
                 $compForEntry1Prop3Prop2,
