@@ -619,7 +619,7 @@ class BaseWriterTest extends TestCase
         $expandedEntry->links = [];
         $expandedEntry->eTag = 'Entry ETag';
         $expandedEntry->isMediaLinkEntry = false;
-        
+
         $expandedEntry->propertyContent = new ODataPropertyContent(
             [
                 new ODataProperty(

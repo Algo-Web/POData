@@ -972,8 +972,8 @@ class ObjectModelSerializerTest extends TestCase
 
         $expectedProp                               = new ODataPropertyContent(
             [
-                'name' => new ODataProperty( 'name', ''),
-                'type' => new ODataProperty('type', '')
+                'name' => new ODataProperty( 'name', '', null),
+                'type' => new ODataProperty('type', '', null)
             ]
         );
 

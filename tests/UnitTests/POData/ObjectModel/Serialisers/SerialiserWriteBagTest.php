@@ -55,7 +55,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
 
         $objectResult                              = new ODataPropertyContent(
             [
-                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)')
+                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', null)
             ]
         );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);

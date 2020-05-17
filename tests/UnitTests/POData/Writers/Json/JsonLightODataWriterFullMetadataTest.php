@@ -511,12 +511,15 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         //NOTE: there is no different between minimalmetadata and fullmetadata for primitive properties
 
         //see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address/City?$format=application/json;odata=fullmetadata
-        $property           = new ODataProperty();
-        $property->name     = 'Count';
-        $property->typeName = 'Edm.Int16';
-        $property->value    = 56;
-
-        $content             = new ODataPropertyContent([$property]);
+        $content             = new ODataPropertyContent(
+            [
+                new ODataProperty(
+                    'Count',
+                    'Edm.Int16',
+                    56
+                )
+            ]
+        );
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($content);
@@ -604,21 +607,18 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
 
         $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
-
-        $entryProperty1           = new ODataProperty();
-        $entryProperty1->name     = 'Main Entry Property 1';
-        $entryProperty1->typeName = 'string';
-        $entryProperty1->value    = 'Yash';
-
-        $entryProperty2           = new ODataProperty();
-        $entryProperty2->name     = 'Main Entry Property 2';
-        $entryProperty2->typeName = 'string';
-        $entryProperty2->value    = 'Kothari';
-
         $entry->propertyContent             = new ODataPropertyContent(
             [
-                $entryProperty1,
-                $entryProperty2
+                new ODataProperty(
+                    'Main Entry Property 1',
+                    'string',
+                    'Yash'
+                ),
+                new ODataProperty(
+                    'Main Entry Property 2',
+                    'string',
+                    'Kothari'
+                )
             ]
         );
         //End of main entry
@@ -827,9 +827,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
 
         $foo = new JsonLightODataWriter(PHP_EOL, true, $level, $serviceUri);
 
-        $property           = new ODataProperty();
-        $property->value    = null;
-        $property->typeName = 'Edm.String';
+        $property           = new ODataProperty('','Edm.String', null);
 
         $model               = new ODataPropertyContent([$property]);
 
@@ -853,8 +851,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $bag                   = new ODataBagContent();
         $bag->setPropertyContents([]);
 
-        $property           = new ODataProperty();
-        $property->value    = $bag;
+        $property           = new ODataProperty('','Edm.String', $bag);
         $property->typeName = 'Edm.String';
 
         $model               = new ODataPropertyContent([$property]);

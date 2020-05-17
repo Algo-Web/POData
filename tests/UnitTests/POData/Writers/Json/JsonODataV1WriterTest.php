@@ -410,12 +410,15 @@ class JsonODataV1WriterTest extends BaseWriterTest
 
     public function testPrimitiveProperty()
     {
-        $property           = new ODataProperty();
-        $property->name     = 'Count';
-        $property->typeName = 'Edm.Int16';
-        $property->value    = 56;
-
-        $content             = new ODataPropertyContent([$property]);
+        $content             = new ODataPropertyContent(
+            [
+                new ODataProperty(
+                    'Count',
+                    'Edm.Int16',
+                    56
+                )
+            ]
+        );
 
         $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($content);
@@ -509,20 +512,18 @@ class JsonODataV1WriterTest extends BaseWriterTest
         $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
 
-        $entryProperty1           = new ODataProperty();
-        $entryProperty1->name     = 'Main Entry Property 1';
-        $entryProperty1->typeName = 'string';
-        $entryProperty1->value    = 'Yash';
-
-        $entryProperty2           = new ODataProperty();
-        $entryProperty2->name     = 'Main Entry Property 2';
-        $entryProperty2->typeName = 'string';
-        $entryProperty2->value    = 'Kothari';
-
         $entry->propertyContent             = new ODataPropertyContent(
             [
-                $entryProperty1,
-                $entryProperty2
+                new ODataProperty(
+                    'Main Entry Property 1',
+                    'string',
+                    'Yash'
+                ),
+                new ODataProperty(
+                    'Main Entry Property 2',
+                    'string',
+                    'Kothari'
+                )
             ]
         );
         //End of main entry
