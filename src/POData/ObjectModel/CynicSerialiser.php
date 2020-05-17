@@ -296,7 +296,6 @@ class CynicSerialiser implements IObjectSerialiser
 
         $resourceSet = $resourceType->getCustomState();
         assert($resourceSet instanceof ResourceSet);
-        $title = $resourceType->getName();
         $type  = $resourceType->getFullName();
 
         $relativeUri = $this->getEntryInstanceKey(
@@ -305,13 +304,14 @@ class CynicSerialiser implements IObjectSerialiser
             $resourceSet->getName()
         );
         $absoluteUri = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
-
-        list($mediaLink, $mediaLinks) = $this->writeMediaData(
+        $mediaLinks = $this->writeMediaData(
             $entryObject->results,
             $type,
             $relativeUri,
             $resourceType
         );
+        $mediaLink = array_shift($mediaLinks);
+
 
         $propertyContent = $this->writeProperties($entryObject->results, $nonRelProp);
 
@@ -352,11 +352,12 @@ class CynicSerialiser implements IObjectSerialiser
         $odata                   = new ODataEntry();
         $odata->resourceSetName  = $resourceSet->getName();
         $odata->id               = $absoluteUri;
-        $odata->title            = new ODataTitle($title);
+        $odata->title            = new ODataTitle($resourceType->getName());
         $odata->type             = new ODataCategory($type);
         $odata->propertyContent  = $propertyContent;
         $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink         = new ODataLink('edit', $title, null, $relativeUri);
+        $odata->editLink         = new ODataLink('edit', $resourceType->getName(), null, $relativeUri);
+        assert(!is_array($mediaLink));
         $odata->mediaLink        = $mediaLink;
         $odata->mediaLinks       = $mediaLinks;
         $odata->links            = $links;
@@ -510,7 +511,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $relativeUri
      * @param $resourceType
      *
-     * @return array<ODataMediaLink|array|null>
+     * @return ODataMediaLink[]|null
      */
     protected function writeMediaData($entryObject, $type, $relativeUri, ResourceType $resourceType)
     {
@@ -549,7 +550,7 @@ class CynicSerialiser implements IObjectSerialiser
             }
         }
 
-        return [$mediaLink, $mediaLinks];
+        return array_merge([$mediaLink], $mediaLinks);
     }
 
     /**
