@@ -645,7 +645,7 @@ class RequestDescription
     /**
      * Gets the name of the container for results.
      *
-     * @return string|null
+     * @return string
      */
     public function getContainerName()
     {

@@ -808,7 +808,9 @@ class CynicSerialiser implements IObjectSerialiser
                         $nuLink->setType('application/atom+xml;type=feed');
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
-                    $nuLink->setExpandedResult(new ODataExpandedResult($expandedResult));
+                    if(null !== $expandedResult) {
+                        $nuLink->setExpandedResult(new ODataExpandedResult($expandedResult));
+                    }
                 }
             }
         } else {
