@@ -511,7 +511,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $relativeUri
      * @param $resourceType
      *
-     * @return ODataMediaLink[]|null
+     * @return ODataMediaLink[]|null[]
      */
     protected function writeMediaData($entryObject, $type, $relativeUri, ResourceType $resourceType)
     {
