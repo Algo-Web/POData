@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace UnitTests\POData\Facets\NorthWind1;
 
 use POData\Common\ODataException;
+use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Query\IQueryProvider;
@@ -34,7 +35,7 @@ class NorthWindQueryProvider implements IQueryProvider
 
     public function getExpressionProvider()
     {
-        return new NorthWindExpressionProvider();
+        return new PHPExpressionProvider('$lt');
     }
 
     /**
