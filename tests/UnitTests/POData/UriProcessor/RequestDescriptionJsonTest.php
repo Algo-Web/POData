@@ -99,10 +99,16 @@ class RequestDescriptionJsonTest extends TestCase
 
     private function generateODataEntry()
     {
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';

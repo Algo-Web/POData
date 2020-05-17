@@ -82,10 +82,17 @@ class ModelDeserialiserTest extends SerialiserTestBase
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -150,8 +157,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $odataProp->typeName = 'Edm.Boolean';
         $odataProp->value    = 'true';
 
-        $content = new ODataPropertyContent();
-        $content->setPropertys(['gotFnord' => $odataProp]);
+        $content = new ODataPropertyContent(['gotFnord' => $odataProp]);
 
         $entry       = new ODataEntry();
         $entry->type = new ODataCategory('RockTheBlock');
@@ -186,8 +192,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $odataProp->typeName = 'Edm.DateTime';
         $odataProp->value    = '2017-12-18T18:22:11.3779297-08:00';
 
-        $content = new ODataPropertyContent();
-        $content->setPropertys(['startFnord' => $odataProp]);
+        $content = new ODataPropertyContent(['startFnord' => $odataProp]);
 
         $entry       = new ODataEntry();
         $entry->type = new ODataCategory('RockTheBlock');

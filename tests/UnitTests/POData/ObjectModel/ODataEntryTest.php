@@ -39,7 +39,7 @@ class ODataEntryTest extends TestCase
     public function testOkEmptyContent()
     {
         $foo                  = new ODataEntry();
-        $foo->propertyContent = new ODataPropertyContent();
+        $foo->propertyContent = new ODataPropertyContent([]);
         $expected             = 'Must have at least one property present.';
 
         $actual = null;
@@ -186,7 +186,7 @@ class ODataEntryTest extends TestCase
 
     public function testGetContentWhenIsMediaLinkEntry()
     {
-        $content = new ODataPropertyContent();
+        $content = new ODataPropertyContent([]);
 
         $foo = new ODataEntry();
         $foo->setPropertyContent($content);
@@ -201,8 +201,7 @@ class ODataEntryTest extends TestCase
     {
         $property = new ODataProperty();
 
-        $content               = new ODataPropertyContent();
-        $content->properties[] = $property;
+        $content               = new ODataPropertyContent([$property]);
 
         $foo = new ODataEntry();
         $foo->setPropertyContent($content);

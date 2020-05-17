@@ -46,10 +46,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
         $prov->shouldReceive('createResourceforResourceSet')->andReturn($model)->once();
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -104,10 +111,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $prov->shouldReceive('getResourceFromResourceSet')->andReturn($model)->once();
         $prov->shouldReceive('updateResource')->andReturn($model)->once();
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -172,10 +186,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $prov->shouldReceive('getResourceFromResourceSet')->andReturn($customer)->atLeast(1); //TODO: this used to have a once, is that right?
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->atLeast(1); //TODO: this used to have a once, is that right?
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $propContent->properties['OrderID']->name          = 'OrderID';
         $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $propContent->properties['OrderDate']->name        = 'OrderDate';
@@ -255,10 +276,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $prov->shouldReceive('getResourceFromResourceSet')->andReturn($customer)->never();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
 
-        $linkPropContent             = new ODataPropertyContent();
-        $linkPropContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $linkPropContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
         $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
         $linkPropContent->properties['CustomerID']->value      = '1';
@@ -284,10 +312,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $propContent->properties['OrderID']->name          = 'OrderID';
         $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $propContent->properties['OrderDate']->name        = 'OrderDate';
@@ -365,10 +400,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $prov->shouldReceive('updateResource')->andReturn(null)->once();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
 
-        $linkPropContent             = new ODataPropertyContent();
-        $linkPropContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $linkPropContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
         $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
         $linkPropContent->properties['CustomerID']->value      = '1';
@@ -394,10 +436,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $propContent->properties['OrderID']->name          = 'OrderID';
         $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $propContent->properties['OrderID']->value         = 1;
@@ -476,10 +525,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $prov->shouldReceive('updateResource')->andReturn($order, $customer)->twice();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
 
-        $linkPropContent             = new ODataPropertyContent();
-        $linkPropContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $linkPropContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $linkPropContent->properties['CustomerID']->name       = 'CustomerID';
         $linkPropContent->properties['CustomerID']->typeName   = 'Edm.String';
         $linkPropContent->properties['CustomerID']->value      = '1';
@@ -507,10 +563,17 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $linkResult->id              = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+            'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+            'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $propContent->properties['OrderID']->name          = 'OrderID';
         $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $propContent->properties['OrderID']->value         = 1;

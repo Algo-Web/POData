@@ -971,8 +971,12 @@ class ObjectModelSerializerTest extends TestCase
         $queryResult          = new QueryResult();
         $queryResult->results = $entity;
 
-        $expectedProp                               = new ODataPropertyContent();
-        $expectedProp->properties                   = ['name' => new ODataProperty(), 'type' => new ODataProperty()];
+        $expectedProp                               = new ODataPropertyContent(
+            [
+                'name' => new ODataProperty(),
+                'type' => new ODataProperty()
+            ]
+        );
         $expectedProp->properties['name']->name     = 'name';
         $expectedProp->properties['name']->typeName = '';
         $expectedProp->properties['type']->name     = 'type';

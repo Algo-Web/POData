@@ -68,10 +68,17 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             true
         );
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -168,10 +175,17 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $result          = new QueryResult();
         $result->results = $order;
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $propContent->properties['OrderID']->name          = 'OrderID';
         $propContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $propContent->properties['OrderID']->value         = '1';
@@ -188,10 +202,16 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $propContent->properties['Price']->name            = 'Price';
         $propContent->properties['Price']->typeName        = 'Edm.Double';
 
-        $addressContent             = new ODataPropertyContent();
-        $addressContent->properties = ['HouseNumber' => new ODataProperty(), 'LineNumber' => new ODataProperty(),
-            'LineNumber2' => new ODataProperty(), 'StreetName' => new ODataProperty(), 'IsValid' => new ODataProperty(),
-            'Address2' => new ODataProperty()];
+        $addressContent             = new ODataPropertyContent(
+            [
+                'HouseNumber' => new ODataProperty(),
+                'LineNumber' => new ODataProperty(),
+                'LineNumber2' => new ODataProperty(),
+                'StreetName' => new ODataProperty(),
+                'IsValid' => new ODataProperty(),
+                'Address2' => new ODataProperty()
+            ]
+        );
         $addressContent->properties['HouseNumber']->name     = 'HouseNumber';
         $addressContent->properties['HouseNumber']->typeName = 'Edm.String';
         $addressContent->properties['HouseNumber']->value    = '1';
@@ -329,9 +349,15 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $emailBag                   = new ODataBagContent();
         $emailBag->setPropertyContents(['foo', 'bar']);
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['EmployeeID' => new ODataProperty(), 'FirstName' => new ODataProperty(),
-            'LastName' => new ODataProperty(), 'ReportsTo' => new ODataProperty(), 'Emails' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'EmployeeID' => new ODataProperty(),
+                'FirstName' => new ODataProperty(),
+                'LastName' => new ODataProperty(),
+                'ReportsTo' => new ODataProperty(),
+                'Emails' => new ODataProperty()
+            ]
+        );
         $propContent->properties['EmployeeID']->name     = 'EmployeeID';
         $propContent->properties['EmployeeID']->typeName = 'Edm.String';
         $propContent->properties['EmployeeID']->value    = 'Cave Johnson';
@@ -504,12 +530,15 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $contentProp5->value                   = new ODataBagContent();
         $contentProp5->value->setPropertyContents(['foo', 'bar']);
 
-        $propContent                           = new ODataPropertyContent();
-        $propContent->properties['EmployeeID'] = $contentProp1;
-        $propContent->properties['FirstName']  = $contentProp2;
-        $propContent->properties['LastName']   = $contentProp3;
-        $propContent->properties['ReportsTo']  = $contentProp4;
-        $propContent->properties['Emails']     = $contentProp5;
+        $propContent                           = new ODataPropertyContent(
+            [
+                'EmployeeID' => $contentProp1,
+                'FirstName'  => $contentProp2,
+                'LastName'   => $contentProp3,
+                'ReportsTo'  => $contentProp4,
+                'Emails'     => $contentProp5
+            ]
+        );
 
         $managerMedia1 = new ODataMediaLink(
             'NorthWind.Employee',
@@ -576,8 +605,11 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objContentProperty->name     = 'Emails';
         $objContentProperty->typeName = 'Collection(Edm.String)';
 
-        $objContent                       = new ODataPropertyContent();
-        $objContent->properties['Emails'] = $objContentProperty;
+        $objContent                       = new ODataPropertyContent(
+            [
+                'Emails' => $objContentProperty
+            ]
+        );
 
         $objectResult                   = new ODataEntry();
         $objectResult->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')';

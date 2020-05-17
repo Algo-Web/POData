@@ -30,7 +30,7 @@ class PropertyProcessor extends BaseNodeHandler
     public function __construct()
     {
         $this->propertyContent = new SplStack();
-        $this->propertyContent->push(new ODataPropertyContent());
+        $this->propertyContent->push(new ODataPropertyContent([]));
         $this->properties = new SplStack();
     }
 
@@ -58,7 +58,7 @@ class PropertyProcessor extends BaseNodeHandler
             null
         );
         $this->properties->push($property);
-        $this->propertyContent->push(new ODataPropertyContent());
+        $this->propertyContent->push(new ODataPropertyContent([]));
     }
 
     /**

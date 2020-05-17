@@ -562,7 +562,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private function writeProperties($entryObject, $nonRelProp)
     {
-        $propertyContent = new ODataPropertyContent();
+        $properties = [];
         foreach ($nonRelProp as $corn => $flake) {
             /** @var ResourceType $resource */
             $resource = $nonRelProp[$corn]->getResourceType();
@@ -589,10 +589,10 @@ class CynicSerialiser implements IObjectSerialiser
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
                 $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());
             }
-            $propertyContent->properties[$corn] = $subProp;
+            $properties[$corn] = $subProp;
         }
 
-        return $propertyContent;
+        return new ODataPropertyContent($properties);
     }
 
     /**
@@ -688,7 +688,7 @@ class CynicSerialiser implements IObjectSerialiser
 
         $this->complexTypeInstanceCollection[$count] = &$result;
 
-        $internalContent    = new ODataPropertyContent();
+        $properties = [];
         $resourceProperties = $resourceType->getAllProperties();
         // first up, handle primitive properties
         foreach ($resourceProperties as $prop) {
@@ -719,12 +719,12 @@ class CynicSerialiser implements IObjectSerialiser
                     $internalProperty->value = $this->writeComplexValue($rType, $raw, $propName);
                 }
             }
-            $internalContent->properties[$propName] = $internalProperty;
+            $properties[$propName] = $internalProperty;
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
 
-        return $internalContent;
+        return new ODataPropertyContent($properties);
     }
 
     /**
@@ -1010,7 +1010,6 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $result = $complexValue->results;
 
-        $propertyContent         = new ODataPropertyContent();
         $odataProperty           = new ODataProperty();
         $odataProperty->name     = $propertyName;
         $odataProperty->typeName = $resourceType->getFullName();
@@ -1022,9 +1021,7 @@ class CynicSerialiser implements IObjectSerialiser
             $odataProperty->value = $internalContent;
         }
 
-        $propertyContent->properties[$propertyName] = $odataProperty;
-
-        return $propertyContent;
+        return new ODataPropertyContent([$propertyName => $odataProperty]);
     }
 
     /**
@@ -1042,15 +1039,12 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $result = $bagValue->results;
 
-        $propertyContent         = new ODataPropertyContent();
         $odataProperty           = new ODataProperty();
         $odataProperty->name     = $propertyName;
         $odataProperty->typeName = 'Collection(' . $resourceType->getFullName() . ')';
         $odataProperty->value    = $this->writeBagValue($resourceType, $result);
 
-        $propertyContent->properties[$propertyName] = $odataProperty;
-
-        return $propertyContent;
+        return new ODataPropertyContent([$propertyName => $odataProperty]);
     }
 
     /**
@@ -1068,7 +1062,6 @@ class CynicSerialiser implements IObjectSerialiser
         if (null === $resourceProperty) {
             throw new InvalidOperationException('Resource property must not be null');
         }
-        $result         = new ODataPropertyContent();
         $property       = new ODataProperty();
         $property->name = $resourceProperty->getName();
 
@@ -1085,9 +1078,7 @@ class CynicSerialiser implements IObjectSerialiser
             $property->value = $this->primitiveToString($rType, $primitiveValue->results);
         }
 
-        $result->properties[$property->name] = $property;
-
-        return $result;
+        return new ODataPropertyContent([$property->name => $property]);
     }
 
     /**

@@ -81,10 +81,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             true
         );
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -157,10 +164,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             true
         );
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -236,9 +250,15 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $prov->shouldReceive('createBulkResourceforResourceSet')->andReturn([$orderModel], [$orderDeet])->twice();
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->twice();
 
-        $deetContent             = new ODataPropertyContent();
-        $deetContent->properties = ['ProductID' => new ODataProperty(), 'OrderID' => new ODataProperty(),
-            'UnitPrice' => new ODataProperty(), 'Quantity' => new ODataProperty(), 'Discount' => new ODataProperty()];
+        $deetContent             = new ODataPropertyContent(
+            [
+                'ProductID' => new ODataProperty(),
+                'OrderID' => new ODataProperty(),
+                'UnitPrice' => new ODataProperty(),
+                'Quantity' => new ODataProperty(),
+                'Discount' => new ODataProperty()
+            ]
+        );
         $deetContent->properties['UnitPrice']->name     = 'UnitPrice';
         $deetContent->properties['UnitPrice']->typeName = 'Edm.Single';
         $deetContent->properties['UnitPrice']->value    = 42;
@@ -274,10 +294,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             true
         );
 
-        $linkContent             = new ODataPropertyContent();
-        $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $linkContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $linkContent->properties['OrderID']->name          = 'OrderID';
         $linkContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $linkContent->properties['OrderID']->value         = '1';
@@ -317,10 +344,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             true
         );
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
@@ -397,10 +431,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
             true
         );
 
-        $linkContent             = new ODataPropertyContent();
-        $linkContent->properties = ['OrderID' => new ODataProperty(), 'OrderDate' => new ODataProperty(),
-            'DeliveryDate' => new ODataProperty(), 'ShipName' => new ODataProperty(),
-            'ItemCount' => new ODataProperty(), 'QualityRate' => new ODataProperty(), 'Price' => new ODataProperty()];
+        $linkContent             = new ODataPropertyContent(
+            [
+                'OrderID' => new ODataProperty(),
+                'OrderDate' => new ODataProperty(),
+                'DeliveryDate' => new ODataProperty(),
+                'ShipName' => new ODataProperty(),
+                'ItemCount' => new ODataProperty(),
+                'QualityRate' => new ODataProperty(),
+                'Price' => new ODataProperty()
+            ]
+        );
         $linkContent->properties['OrderID']->name          = 'OrderID';
         $linkContent->properties['OrderID']->typeName      = 'Edm.Int32';
         $linkContent->properties['OrderID']->value         = '1';
@@ -443,10 +484,17 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         );
 
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'Country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
+        $propContent             = new ODataPropertyContent(
+            [
+                'CustomerID' => new ODataProperty(),
+                'CustomerGuid' => new ODataProperty(),
+                'CustomerName' => new ODataProperty(),
+                'Country' => new ODataProperty(),
+                'Rating' => new ODataProperty(),
+                'Photo' => new ODataProperty(),
+                'Address' => new ODataProperty()
+            ]
+        );
         $propContent->properties['CustomerID']->name       = 'CustomerID';
         $propContent->properties['CustomerID']->typeName   = 'Edm.String';
         $propContent->properties['CustomerID']->value      = '1';
