@@ -25,6 +25,7 @@ use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\Providers\Metadata\ResourceFunctionType;
 use POData\Providers\Metadata\ResourceSetWrapper;
+use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\ProvidersWrapper;
 use POData\Writers\Atom\AtomODataWriter;
 use UnitTests\POData\TestCase;
@@ -33,6 +34,7 @@ class AtomODataWriterTest extends TestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $this->mockProvider = m::mock(ProvidersWrapper::class)->makePartial();
     }
 
@@ -268,9 +270,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
-
+        $etag = time();
         $entry1->setSelfLink($selfLink);
-        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', time());
+        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', $etag);
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -294,17 +296,32 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont                = new ODataPropertyContent([]);
         $entry1->propertyContent = $propCont;
         $entry1->type            = new ODataCategory('');
-
+        $now = new Carbon('2020-05-17T08:03:24-06:00');
+        Carbon::setTestNow($now);
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
         $actual   = $writer->getOutput();
-        $expected = '<x/>';
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entry xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
+    <id>Entry 1</id>
+    <title type="text">Entry Title</title>
+    <updated>2020-05-17T08:03:24-06:00</updated>
+    <author>
+        <name/>
+    </author>
+    <link rel="edit" title="Entry Title" href="Edit Link URL"/>
+    <link m:etag="'.$etag.'" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
+    <link m:etag="Media ETag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name" type="Media Content Type" title="Media Link Name" href="Edit Media link"/>
+    <link m:etag="Media ETag2" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name2" type="Media Content Type2" title="Media Link Name2" href="Edit Media link2"/>
+    <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <content type="image/jpg" src="http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg"/>
+    <m:properties/>
+</entry>
+';
 
-        $this->markTestSkipped('see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2');
-
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
@@ -321,9 +338,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
-
+$etag = time();
         $entry1->setSelfLink($selfLink);
-        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', time());
+        $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', $etag);
         $entry1->mediaLinks = [new ODataMediaLink(
             'Media Link Name',
             'Edit Media link',
@@ -563,16 +580,81 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->propertyContent = $propCont;
         $entry1->type            = new ODataCategory('');
 
+        $now = new Carbon('2020-05-17T08:03:24-06:00');
+        Carbon::setTestNow($now);
+
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
         $this->assertSame($writer, $result);
 
         $actual   = $writer->getOutput();
-        $expected = '<x/>';
+        $expected = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entry xml:base="http://localhost/NorthWind.svc/" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom" m:etag="Entry ETag">
+    <id>Entry 1</id>
+    <title type="text">Entry Title</title>
+    <updated>2020-05-17T08:03:24-06:00</updated>
+    <author>
+        <name/>
+    </author>
+    <link rel="edit" title="Entry Title" href="Edit Link URL"/>
+    <link m:etag="'.$etag.'" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
+    <link m:etag="Media ETag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name" type="Media Content Type" title="Media Link Name" href="Edit Media link"/>
+    <link m:etag="Media ETag2" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name2" type="Media Content Type2" title="Media Link Name2" href="Edit Media link2"/>
+    <link rel="Link Name" type="Link Type" title="Link Title" href="Link URL"/>
+    <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <content type="image/jpg" src=""/>
+    <m:properties>
+        <d:name m:type="Bag(Name)">
+            <d:element>
+                <d:name>
+                    <d:fname m:type="string">Yash</d:fname>
+                    <d:lname m:type="string">Kothari</d:lname>
+                </d:name>
+                <d:name1>
+                    <d:fname m:type="string">Anu</d:fname>
+                    <d:lname m:type="string">Chandy</d:lname>
+                </d:name1>
+            </d:element>
+        </d:name>
+        <d:Address m:type="Address">
+            <d:House_num m:type="Int">31</d:House_num>
+            <d:Street_name m:type="String">Ankur Road</d:Street_name>
+        </d:Address>
+        <d:Pin_Num m:type="Int">380013</d:Pin_Num>
+        <d:Phon_num m:type="Int">9665-043-347</d:Phon_num>
+        <d:Addresses m:type="Bag(Address)">
+            <d:element>
+                <d:Address>
+                    <d:Flat_no>31</d:Flat_no>
+                    <d:Street_name>Ankur</d:Street_name>
+                    <d:City>Ahmedabad</d:City>
+                </d:Address>
+                <d:Address1>
+                    <d:Flat_no>101</d:Flat_no>
+                    <d:Street_name>Nal Stop</d:Street_name>
+                    <d:City>Pune</d:City>
+                </d:Address1>
+            </d:element>
+        </d:Addresses>
+        <d:Addressess m:type="Bag(SampleModel.Address)">
+            <d:element>
+                <d:Addresses>
+                    <d:Street m:type="String">123 contoso street</d:Street>
+                    <d:Appartments>
+                        <d:apartment1 m:type="String">taj residency</d:apartment1>
+                        <d:apartment2 m:type="String">le-merdian</d:apartment2>
+                    </d:Appartments>
+                </d:Addresses>
+                <d:Address>
+                    <d:Street m:type="String">834 foo street</d:Street>
+                    <d:Appartment m:null="true"/>
+                </d:Address>
+            </d:element>
+        </d:Addressess>
+    </m:properties>
+</entry>';
 
-        $this->markTestSkipped('see #75 DOMDocument::loadXML(): Namespace prefix m for etag on entry is not defined in Entity, line: 2');
-
-        $this->assertXmlStringEqualsXmlString($this->removeUpdatedTags($expected), $actual);
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
     }
 
     /**
