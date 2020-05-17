@@ -11,6 +11,7 @@ namespace POData\ObjectModel;
  */
 class ODataTitle
 {
+
     /**
      * Title.
      *
@@ -31,9 +32,46 @@ class ODataTitle
      * @param string $title
      * @param string $type
      */
-    public function __construct($title, $type = 'text')
+    public function __construct(string $title, string $type = 'text')
+    {
+        $this
+            ->setTitle($title)
+            ->setType($type);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     * @return ODataTitle
+     */
+    public function setTitle(string $title): ODataTitle
     {
         $this->title = $title;
-        $this->type  = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return ODataTitle
+     */
+    public function setType(string $type): ODataTitle
+    {
+        $this->type = $type;
+        return $this;
     }
 }
