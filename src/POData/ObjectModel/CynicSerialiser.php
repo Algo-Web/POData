@@ -339,8 +339,7 @@ class CynicSerialiser implements IObjectSerialiser
 
             $shouldExpand = $this->shouldExpandSegment($propName);
 
-            $navProp = new ODataNavigationPropertyInfo($prop, $shouldExpand);
-            if ($navProp->expanded) {
+            if ($shouldExpand) {
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
             $nuLink->setIsExpanded(null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData());
