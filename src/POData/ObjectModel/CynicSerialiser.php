@@ -339,20 +339,23 @@ class CynicSerialiser implements IObjectSerialiser
             $links[] = $nuLink;
         }
 
-        $odata                   = new ODataEntry();
-        $odata->resourceSetName  = $resourceSet->getName();
-        $odata->id               = $absoluteUri;
-        $odata->title            = new ODataTitle($resourceType->getName());
-        $odata->type             = new ODataCategory($type);
-        $odata->propertyContent  = $propertyContent;
-        $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink         = new ODataLink('edit', $resourceType->getName(), null, $relativeUri);
-        assert(!is_array($mediaLink));
-        $odata->mediaLink        = $mediaLink;
-        $odata->mediaLinks       = $mediaLinks;
-        $odata->links            = $links;
-        $odata->updated          = $this->getUpdated()->format(DATE_ATOM);
-        $odata->baseURI          = $baseURI;
+        $odata                   = new ODataEntry(
+            $absoluteUri,
+            null, // this is wrong. every entry needs a selflink.
+            new ODataTitle($resourceType->getName()),
+            new ODataLink('edit', $resourceType->getName(), null, $relativeUri),
+            new ODataCategory($type),
+            $propertyContent,
+            $mediaLinks,
+            $mediaLink,
+            $links,
+            null,
+            true === $resourceType->isMediaLinkEntry() ? true : null,
+            $resourceSet->getName(),
+            $this->getUpdated()->format(DATE_ATOM),
+            $baseURI
+
+        );
 
         $newCount = count($this->lightStack);
         assert(
@@ -816,7 +819,7 @@ class CynicSerialiser implements IObjectSerialiser
         if (null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData() && null !== $nuLink->getExpandedResult()->getData()->getSelfLink()) {
             $nuLink->getExpandedResult()->getData()->getSelfLink()->setTitle($propName);
             $nuLink->getExpandedResult()->getData()->getSelfLink()->setUrl($nuLink->getUrl());
-            $nuLink->getExpandedResult()->getData()->title           = new ODataTitle($propName);
+            $nuLink->getExpandedResult()->getData()->setTitle(new ODataTitle($propName));
             $nuLink->getExpandedResult()->getData()->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }
     }

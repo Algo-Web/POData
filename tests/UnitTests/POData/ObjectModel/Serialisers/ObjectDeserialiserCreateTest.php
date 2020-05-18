@@ -177,12 +177,12 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
-        $objectResult->title           = new ODataTitle('Order');
-        $objectResult->type            = new ODataCategory('Order');
+        $objectResult->setTitle(new ODataTitle('Order'));
+        $objectResult->setType(new ODataCategory('Order'));
         $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
-        $objectResult->propertyContent = $propContent;
-        $objectResult->links           = $links;
-        $objectResult->resourceSetName = 'Orders';
+        $objectResult->setPropertyContent($propContent);
+        $objectResult->setLinks($links);
+        $objectResult->setResourceSetName('Orders');
 
         $cereal = new CynicDeserialiser($meta, $prov);
 
@@ -325,10 +325,10 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         );
 
         $linkResult                  = new ODataEntry();
-        $linkResult->title           = new ODataTitle('Customer');
-        $linkResult->type            = new ODataCategory('Customer');
-        $linkResult->resourceSetName = 'Customers';
-        $linkResult->propertyContent = $linkPropContent;
+        $linkResult->setTitle(new ODataTitle('Customer'));
+        $linkResult->setType(new ODataCategory('Customer'));
+        $linkResult->setResourceSetName('Customers');
+        $linkResult->setPropertyContent($linkPropContent);
 
         $propContent             = new ODataPropertyContent(
             [
@@ -355,14 +355,21 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setUrl(null);
         $links[1]->setExpandedResult(null);
 
-        $objectResult                  = new ODataEntry();
-        $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $objectResult->title           = new ODataTitle('Order');
-        $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
-        $objectResult->propertyContent = $propContent;
-        $objectResult->links           = $links;
-        $objectResult->resourceSetName = 'Orders';
+        $objectResult = new ODataEntry(
+            'http://localhost/odata.svc/Orders(OrderID=1)',
+            null,
+            new ODataTitle('Order'),
+            new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
+            new ODataCategory('Order'),
+            $propContent,
+            [],
+            null,
+            $links,
+            null,
+            null,
+            'Orders'
+        );
+
 
         $cereal = new CynicDeserialiser($meta, $prov);
 

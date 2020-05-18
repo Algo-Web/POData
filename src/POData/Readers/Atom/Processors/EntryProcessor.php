@@ -109,7 +109,7 @@ class EntryProcessor extends BaseNodeHandler
             ''
         );
         $this->enqueueEnd(function () use ($titleType) {
-            $this->oDataEntry->title = new ODataTitle($this->popCharData(), $titleType);
+            $this->oDataEntry->setTitle(new ODataTitle($this->popCharData(), $titleType));
         });
     }
 

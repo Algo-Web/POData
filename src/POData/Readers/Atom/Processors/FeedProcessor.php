@@ -60,7 +60,7 @@ class FeedProcessor extends BaseNodeHandler
             ''
         );
         $this->enqueueEnd(function () {
-            $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
+            $this->oDataFeed->setTitle(new ODataTitle($this->popCharData(), $this->titleType));
             $this->titleType = null;
         });
     }

@@ -82,29 +82,35 @@ class ModelDeserialiserTest extends SerialiserTestBase
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
-        $propContent             = new ODataPropertyContent(
-            [
-                'CustomerID' => new ODataProperty('CustomerID', 'Edm.String', '1'),
-                'CustomerGuid' => new ODataProperty('CustomerGuid', 'Edm.Guid', '123e4567-e89b-12d3-a456-426655440000'),
-                'CustomerName' => new ODataProperty('CustomerName', 'Edm.String', ' MakeItPhunkee '),
-                'country' => new ODataProperty('country', 'Edm.String', ' Oop North '),
-                'Rating' => new ODataProperty('Rating', 'Edm.Int32', null),
-                'Photo' => new ODataProperty('Photo', 'Edm.Binary', null),
-                'Address' => new ODataProperty('Address', 'Address', null)
-            ]
+        $objectResult     = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            new ODataLink('self', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataTitle('Customer'),
+            new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataCategory('Customer'),
+            new ODataPropertyContent(
+                [
+                    'CustomerID' => new ODataProperty('CustomerID', 'Edm.String', '1'),
+                    'CustomerGuid' => new ODataProperty('CustomerGuid', 'Edm.Guid', '123e4567-e89b-12d3-a456-426655440000'),
+                    'CustomerName' => new ODataProperty('CustomerName', 'Edm.String', ' MakeItPhunkee '),
+                    'country' => new ODataProperty('country', 'Edm.String', ' Oop North '),
+                    'Rating' => new ODataProperty('Rating', 'Edm.Int32', null),
+                    'Photo' => new ODataProperty('Photo', 'Edm.Binary', null),
+                    'Address' => new ODataProperty('Address', 'Address', null)
+                ]
+            ),
+            [],
+            null,
+            [],
+            null,
+            null,
+            'Customers',
+            '2017-01-01T00:00:00+00:00',
+            null
         );
-
-        $objectResult     = new ODataEntry();
-        $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->title         = new ODataTitle('Customer');
-        $objectResult->type          = new ODataCategory('Customer');
-        $objectResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
-            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
-
-        $objectResult->propertyContent = $propContent;
-        $objectResult->resourceSetName = 'Customers';
-        $objectResult->updated         = '2017-01-01T00:00:00+00:00';
 
         $type = $meta->resolveResourceType('Customer');
 

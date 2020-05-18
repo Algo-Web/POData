@@ -37,8 +37,8 @@ class AtomODataReaderTest extends TestCase
             $data->id,
             'feed ID sailed to deserialize correctly'
         );
-        $this->assertEquals('text', $data->title->getType(), 'Feed-Title-Type Attribute failed to deserialize correctly');
-        $this->assertEquals('ProductDetails', $data->title->getTitle(), 'Feed-Title  failed to deserialize correctly');
+        $this->assertEquals('text', $data->getTitle()->getType(), 'Feed-Title-Type Attribute failed to deserialize correctly');
+        $this->assertEquals('ProductDetails', $data->getTitle()->getTitle(), 'Feed-Title  failed to deserialize correctly');
         $this->assertEquals(
             '2020-03-12T16:26:25Z',
             $data->updated,

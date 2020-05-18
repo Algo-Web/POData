@@ -206,7 +206,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue(is_array($ret->getEntries()));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
-        $this->assertEquals(new ODataTitle('data'), $ret->title);
+        $this->assertEquals(new ODataTitle('data'), $ret->getTitle());
 
         $this->assertEquals('self', $ret->getSelfLink()->getName());
         $this->assertEquals('data', $ret->getSelfLink()->getTitle());
@@ -304,7 +304,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue(is_array($ret->getEntries()));
 
         $this->assertEquals('http://192.168.2.1/abm-master/public/odata.svc/Entity(1)', $ret->id);
-        $this->assertEquals(new ODataTitle('data'), $ret->title);
+        $this->assertEquals(new ODataTitle('data'), $ret->getTitle());
 
         $this->assertEquals('self', $ret->getSelfLink()->getName());
         $this->assertEquals('data', $ret->getSelfLink()->getTitle());
