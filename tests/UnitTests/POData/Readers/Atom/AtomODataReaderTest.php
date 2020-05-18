@@ -209,7 +209,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'Edm.Int32',
-            $properties['ProductID']->typeName,
+            $properties['ProductID']->getTypeName(),
             'the property ProductID Deseralized the wrong TypeName'
         );
         $this->assertEquals(
@@ -225,7 +225,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             null,
-            $properties['Details']->typeName,
+            $properties['Details']->getTypeName(),
             'the property Details deserialised the wrong TypeName'
         );
         $this->assertEquals(

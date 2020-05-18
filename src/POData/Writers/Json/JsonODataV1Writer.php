@@ -197,7 +197,7 @@ class JsonODataV1Writer implements IODataWriter
                 } elseif ($property->value instanceof ODataBagContent) {
                     $this->writeBagContent($property->value);
                 } else {
-                    $this->writer->writeValue($property->value, $property->typeName);
+                    $this->writer->writeValue($property->value, $property->getTypeName());
                 }
             }
         }
@@ -231,7 +231,7 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)
             ->startObjectScope()
             ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($property->typeName)
+            ->writeValue($property->getTypeName())
             ->endScope();
 
         $this->writeProperties($property->value);

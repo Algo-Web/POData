@@ -852,7 +852,6 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $bag->setPropertyContents([]);
 
         $property           = new ODataProperty('','Edm.String', $bag);
-        $property->typeName = 'Edm.String';
 
         $model               = new ODataPropertyContent([$property]);
 

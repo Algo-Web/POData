@@ -23,7 +23,7 @@ class ODataProperty
      *
      * @var string|null
      */
-    public $typeName;
+    private $typeName;
     /**
      * The property attribute extensions.
      *

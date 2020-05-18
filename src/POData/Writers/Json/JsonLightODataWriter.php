@@ -95,7 +95,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeTopLevelMeta('urlCollection');
             $this->writeUrlCollection($model);
         } elseif ($model instanceof ODataPropertyContent) {
-            $this->writeTopLevelMeta($model[0]->typeName);
+            $this->writeTopLevelMeta($model[0]->getTypeName());
             $this->writeTopLevelProperty($model[0]);
         } elseif ($model instanceof ODataFeed) {
             $effectiveTitle = $model->getTitle()->getTitle();
@@ -153,7 +153,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             $this->writeBagContent($property->value);
         } else {
             $this->writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
-            $this->writer->writeValue($property->value, $property->typeName);
+            $this->writer->writeValue($property->value, $property->getTypeName());
         }
 
         return $this;
@@ -176,7 +176,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             return $this;
         }
 
-        switch ($property->typeName) {
+        switch ($property->getTypeName()) {
             //The type metadata is only included on certain types of properties
             //Note this also excludes Complex types
 
@@ -184,7 +184,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             case 'Edm.DateTime':
                 $this->writer
                     ->writeName($property->getName() . ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)
-                    ->writeValue($property->typeName);
+                    ->writeValue($property->getTypeName());
         }
 
         return $this;
@@ -200,7 +200,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         if ($this->metadataLevel == JsonLightMetadataLevel::FULL()) {
             $this->writer
                 ->writeName(ODataConstants::JSON_LIGHT_METADATA_TYPE_STRING)
-                ->writeValue($property->typeName);
+                ->writeValue($property->getTypeName());
         }
 
         return $this;
