@@ -44,7 +44,7 @@ class ODataProperty
      * @param XMLAttribute[] $attributeExtensions
      * @param ODataBagContent|ODataPropertyContent|string $value
      */
-    public function __construct(string $name, ?string $typeName, $value, array $attributeExtensions = null)
+    public function __construct(string $name, ?string $typeName, $value, array $attributeExtensions = [])
     {
         $this
             ->setName($name)
