@@ -306,14 +306,14 @@ class AtomODataWriter implements IODataWriter
             foreach ($properties as $property) {
                 $this->beginWriteProperty($property, $topLevel);
 
-                if ($property->value == null) {
+                if ($property->getValue() == null) {
                     $this->writeNullValue($property);
-                } elseif ($property->value instanceof ODataPropertyContent) {
-                    $this->writeProperties($property->value, false);
-                } elseif ($property->value instanceof ODataBagContent) {
-                    $this->writeBagContent($property->value);
+                } elseif ($property->getValue() instanceof ODataPropertyContent) {
+                    $this->writeProperties($property->getValue(), false);
+                } elseif ($property->getValue() instanceof ODataBagContent) {
+                    $this->writeBagContent($property->getValue());
                 } else {
-                    $value = $this->beforeWriteValue($property->value, $property->getTypeName());
+                    $value = $this->beforeWriteValue($property->getValue(), $property->getTypeName());
                     $this->xmlWriter->text(strval($value));
                 }
 

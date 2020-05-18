@@ -140,20 +140,20 @@ class JsonLightODataWriter extends JsonODataV2Writer
     protected function writeTopLevelProperty(ODataProperty $property)
     {
         $this->writePropertyMeta($property);
-        if ($property->value == null) {
+        if ($property->getValue() == null) {
             $this->writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
             $this->writer->writeValue('null');
-        } elseif ($property->value instanceof ODataPropertyContent) {
+        } elseif ($property->getValue() instanceof ODataPropertyContent) {
             //In the case of complex properties at the top level we don't write the name of the property,
             //just the sub properties.
             $this->writeComplexPropertyMeta($property)
-                ->writeProperties($property->value);
-        } elseif ($property->value instanceof ODataBagContent) {
+                ->writeProperties($property->getValue());
+        } elseif ($property->getValue() instanceof ODataBagContent) {
             $this->writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
-            $this->writeBagContent($property->value);
+            $this->writeBagContent($property->getValue());
         } else {
             $this->writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
-            $this->writer->writeValue($property->value, $property->getTypeName());
+            $this->writer->writeValue($property->getValue(), $property->getTypeName());
         }
 
         return $this;
@@ -171,7 +171,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             return $this;
         }
 
-        if (null === $property->value) {
+        if (null === $property->getValue()) {
             //it appears full metadata doesn't output types for nulls...
             return $this;
         }
@@ -331,7 +331,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
         $this->writer->startObjectScope();
 
         $this->writeComplexPropertyMeta($property)
-            ->writeProperties($property->value);
+            ->writeProperties($property->getValue());
 
         $this->writer->endScope();
 

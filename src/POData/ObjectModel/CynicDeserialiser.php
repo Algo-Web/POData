@@ -201,7 +201,7 @@ class CynicDeserialiser
                 $iType = $prop->getInstanceType();
                 assert($iType instanceof IType, get_class($iType));
                 $keyName = $prop->getName();
-                $rawKey  = $isOData ? $result[$keyName]->value : $result->{$keyName};
+                $rawKey  = $isOData ? $result[$keyName]->getValue() : $result->{$keyName};
                 $keyVal  = $iType->convertToOData(strval($rawKey));
                 assert(isset($keyVal), 'Key property ' . $keyName . ' must not be null');
                 $keyPredicate .= $keyName . '=' . $keyVal . ', ';

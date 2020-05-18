@@ -334,12 +334,13 @@ class KeyDescriptorTest extends TestCase
 
         $expected          = ['id' => new ODataProperty('id', 'Edm.Int32', 2)];
 
+        /** @var m\Mock|KeyDescriptor $keyDescriptor */
         $keyDescriptor = m::mock(KeyDescriptor::class)->makePartial();
         $keyDescriptor->shouldReceive('getValidatedNamedValues')->andReturn($validated)->once();
 
         $actual = $keyDescriptor->getODataProperties();
         $this->assertEquals($expected, $actual);
-        $this->assertTrue(2 === $actual['id']->value);
+        $this->assertTrue(2 === $actual['id']->getValue());
     }
 
     /**

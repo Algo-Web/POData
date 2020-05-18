@@ -214,7 +214,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             '1',
-            $properties['ProductID']->value,
+            $properties['ProductID']->getValue(),
             'the property ProductID deserialised the wrong value'
         );
 
@@ -230,7 +230,7 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'Details of product 1',
-            $properties['Details']->value,
+            $properties['Details']->getValue(),
             'the property Details deserialised the wrong value'
         );
     }

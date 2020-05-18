@@ -579,7 +579,7 @@ class KeyDescriptor
     /**
      * Convert validated named values into an array of ODataProperties.
      *
-     * return array[]
+     * return ODataProperty[]
      * @throws InvalidOperationException
      */
     public function getODataProperties(): array

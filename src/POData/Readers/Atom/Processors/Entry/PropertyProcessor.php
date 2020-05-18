@@ -82,9 +82,9 @@ class PropertyProcessor extends BaseNodeHandler
         $this->propertyContent->top()[$prop->getName()]        = $prop;
 
         if (count($propContent) == 0) {
-            $prop->value = $this->popCharData();
+            $prop->setValue($this->popCharData());
         } else {
-            $prop->value = $propContent;
+            $prop->setValue($propContent);
         }
     }
 

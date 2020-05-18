@@ -24,19 +24,19 @@ class ODataProperty
      * @var string|null
      */
     private $typeName;
+
+    /**
+     * The value of the property.
+     *
+     * @var mixed|ODataPropertyContent|ODataBagContent|null
+     */
+    private $value;
     /**
      * The property attribute extensions.
      *
      * @var XMLAttribute[]|null
      */
     public $attributeExtensions;
-    /**
-     * The value of the property.
-     *
-     * @var string|ODataPropertyContent|ODataBagContent
-     */
-    public $value;
-
     /**
      * ODataProperty constructor.
      * @param string $name

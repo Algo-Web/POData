@@ -24,7 +24,6 @@ class ODataPropertyTest extends TestCase
     public function testIsNotNull()
     {
         $foo        = new ODataProperty('','','var');
-        $foo->value = 'var';
 
         $this->assertNull($foo->isNull());
     }
