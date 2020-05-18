@@ -68,6 +68,9 @@ class ODataExpandedResult
         return $this;
     }
 
+    /**
+     * @return ODataContainerBase
+     */
     public function getData(): ODataContainerBase
     {
         return $this->data;
