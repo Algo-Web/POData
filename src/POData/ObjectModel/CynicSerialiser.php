@@ -805,12 +805,11 @@ class CynicSerialiser implements IObjectSerialiser
             }
         } else {
             $type = $this->getService()->getProvidersWrapper()->resolveResourceType($nextName);
-            if (!$isCollection) {
-                $result                  = new ODataEntry();
-                $result->resourceSetName = $type->getName();
+            if ($isCollection) {
+                $result = new ODataFeed(null, null, new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE));
             } else {
-                $result                 = new ODataFeed();
-                $result->setSelfLink(new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE));
+                $result = new ODataEntry();
+                $result->resourceSetName = $type->getName();
             }
             $nuLink->setExpandedResult(new ODataExpandedResult($result));
         }
