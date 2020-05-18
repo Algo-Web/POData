@@ -15,6 +15,7 @@ class ODataFeed extends ODataContainerBase
      * @var int
      */
     public $rowCount = null;
+
     /**
      * Enter URL to next page, if pagination is enabled.
      *
@@ -42,8 +43,29 @@ class ODataFeed extends ODataContainerBase
     public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
         parent::__construct($id, $title, $selfLink, $updated, $baseURI);
-        $this->setNextPageLink($nextPageLink)->setEntries($entries);
-        $this->rowCount     = $rowCount;
+        $this
+            ->setRowCount($rowCount)
+            ->setNextPageLink($nextPageLink)
+            ->setEntries($entries);
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getRowCount(): ?int
+    {
+        return $this->rowCount;
+    }
+
+    /**
+     * @param int $rowCount
+     * @return ODataFeed
+     */
+    public function setRowCount(?int $rowCount): ODataFeed
+    {
+        $this->rowCount = $rowCount;
+        return $this;
     }
 
     /**
@@ -55,7 +77,7 @@ class ODataFeed extends ODataContainerBase
     }
 
     /**
-     * @param  ODataLink $nextPageLink
+     * @param  ODataLink|null $nextPageLink
      * @return ODataFeed
      */
     public function setNextPageLink(?ODataLink $nextPageLink): self
@@ -67,7 +89,7 @@ class ODataFeed extends ODataContainerBase
     /**
      * @return ODataEntry[]
      */
-    public function getEntries(): ?array
+    public function getEntries(): array
     {
         return $this->entries;
     }
@@ -76,7 +98,7 @@ class ODataFeed extends ODataContainerBase
      * @param  ODataEntry[] $entries
      * @return ODataFeed
      */
-    public function setEntries(?array $entries): self
+    public function setEntries(array $entries): self
     {
         $this->entries = $entries;
         return $this;
