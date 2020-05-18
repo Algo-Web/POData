@@ -82,8 +82,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
         } elseif ($model instanceof ODataFeed) {
             // Json Format V2:
             // "results":
-            $this->writeRowCount($model->rowCount);
-            $this->writeNextPageLink($model->nextPageLink);
+            $this->writeRowCount($model->getRowCount());
+            $this->writeNextPageLink($model->getNextPageLink());
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
@@ -109,8 +109,8 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        $this->writeRowCount($urls->count);
-        $this->writeNextPageLink($urls->nextPageLink);
+        $this->writeRowCount($urls->getCount());
+        $this->writeNextPageLink($urls->getNextPageLink());
 
         // Json Format V2:
         // "results":
@@ -157,7 +157,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
         if (null !== $nextPageLinkUri) {
             $this->writer
                 ->writeName($this->nextLinkName)
-                ->writeValue($nextPageLinkUri->url);
+                ->writeValue($nextPageLinkUri->getUrl());
         }
 
         return $this;
@@ -174,14 +174,14 @@ class JsonODataV2Writer extends JsonODataV1Writer
         //Difference from v1 is that expanded collection have a result: wrapper to allow for metadata to exist
         $this->writer->startObjectScope();
 
-        if ($link->isCollection) {
+        if ($link->isCollection()) {
             $this->writer
                 ->writeName($this->dataArrayName)
                 ->startArrayScope();
-            $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeFeed($link->getExpandedResult()->getFeed());
             $this->writer->endScope();
         } else {
-            $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeEntry($link->getExpandedResult()->getEntry());
         }
 
         $this->writer->endScope();

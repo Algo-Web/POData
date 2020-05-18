@@ -24,7 +24,7 @@ class ODataFeedTest extends TestCase
     {
         $foo      = new ODataFeed();
         $bar      = new ODataLink();
-        $bar->url = 'http://localhost/odata.svc';
+        $bar->setUrl('http://localhost/odata.svc');
 
         $foo->setNextPageLink($bar);
         $this->assertNotNull($foo->getNextPageLink());

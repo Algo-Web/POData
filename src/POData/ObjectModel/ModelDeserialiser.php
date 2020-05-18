@@ -42,7 +42,8 @@ class ModelDeserialiser
             throw new InvalidArgumentException($msg);
         }
 
-        $payloadType = $payload->type->term;
+        /** @scrutinizer ignore-call */
+        $payloadType = $payload->type->getTerm();
         $pay         = explode('.', $payloadType);
         $payloadType = $pay[count($pay) - 1];
         $actualType  = $entityType->getName();
@@ -71,12 +72,12 @@ class ModelDeserialiser
 
         // assemble data array
         $data = [];
-        foreach ($payload->propertyContent->properties as $propName => $propSpec) {
+        foreach ($payload->propertyContent as $propName => $propSpec) {
             if (in_array($propName, $nonRelProp) || in_array(strtolower($propName), $nonRelProp)) {
                 /** @var string $rawVal */
-                $rawVal = $propSpec->value;
+                $rawVal = $propSpec->getValue();
                 $value  = null;
-                switch ($propSpec->typeName) {
+                switch ($propSpec->getTypeName()) {
                     case 'Edm.Boolean':
                         $rawVal = trim(strtolower(strval($rawVal)));
                         $value  = 'true' == $rawVal;

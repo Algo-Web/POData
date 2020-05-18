@@ -29,9 +29,9 @@ class LinkProcessorTest extends TestCase
 
         $foo->handleChildComplete($obj);
 
-        $result = $foo->getObjetModelObject()->getExpandResult();
-        $this->assertTrue($result->feed instanceof ODataFeed);
-        $this->assertNull($result->entry);
+        $result = $foo->getObjetModelObject()->getExpandedResult();
+        $this->assertTrue($result->getFeed() instanceof ODataFeed);
+        $this->assertNull($result->getEntry());
     }
 
     public function testConstructorWithEditMediaRelation()

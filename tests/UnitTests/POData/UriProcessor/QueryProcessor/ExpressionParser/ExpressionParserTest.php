@@ -806,7 +806,7 @@ class ExpressionParserTest extends TestCase
     public function testRecursionExhaustion()
     {
         $type = m::mock(ResourceType::class);
-        $foo = new ExpressionParser('text', $type, true);
+        $foo  = new ExpressionParser('text', $type, true);
 
         $reflec = new \ReflectionClass($foo);
         $method = $reflec->getMethod('recurseEnter');
@@ -828,8 +828,8 @@ class ExpressionParserTest extends TestCase
      */
     public function testBadPrimaryStart()
     {
-        $type = m::mock(ResourceType::class);
-        $id = m::mock(ExpressionTokenId::class);
+        $type  = m::mock(ResourceType::class);
+        $id    = m::mock(ExpressionTokenId::class);
         $token = m::mock(ExpressionToken::class)->makePartial();
         $token->shouldReceive('getId')->andReturn($id)->once();
         $lexer = m::mock(ExpressionLexer::class)->makePartial();

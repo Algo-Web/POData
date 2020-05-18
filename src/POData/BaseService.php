@@ -732,7 +732,7 @@ abstract class BaseService implements IRequestHandler, IService
                 );
 
             case TargetKind::MEDIA_RESOURCE():
-                if (!$request->isNamedStream() && !$request->getTargetResourceType()->isMediaLinkEntry()) {
+                if (!$request->isNamedStream() && true !== $request->getTargetResourceType()->isMediaLinkEntry()) {
                     throw ODataException::createBadRequestError(
                         Messages::badRequestInvalidUriForMediaResource(
                             $host->getAbsoluteRequestUri()->getUrlAsString()

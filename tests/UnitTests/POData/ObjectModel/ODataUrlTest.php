@@ -12,21 +12,9 @@ use UnitTests\POData\TestCase;
 
 class ODataUrlTest extends TestCase
 {
-    public function testNotOkWhenNullUrl()
-    {
-        $foo      = new ODataURL();
-        $expected = 'Url value must be non-empty';
-        $actual   = null;
-
-        $this->assertFalse($foo->isOk($actual));
-        $this->assertNotNull($actual);
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testNotOkWhenEmptyUrl()
     {
-        $foo      = new ODataURL();
-        $foo->url = '';
+        $foo      = new ODataURL('');
         $expected = 'Url value must be non-empty';
         $actual   = null;
 
@@ -37,8 +25,7 @@ class ODataUrlTest extends TestCase
 
     public function testOkWhenNonEmptyUrl()
     {
-        $foo      = new ODataURL();
-        $foo->url = 'url';
+        $foo      = new ODataURL('url');
         $expected = null;
         $actual   = null;
 

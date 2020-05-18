@@ -64,7 +64,7 @@ class ExecutePostTest extends TestCase
         $writer                          = new AtomODataWriter(PHP_EOL, true, $baseUrl->getUrlAsString());
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
         $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
@@ -143,9 +143,8 @@ class ExecutePostTest extends TestCase
 
         $requestPayload                                                    = new ODataEntry();
         $requestPayload->type                                              = new ODataCategory('Customer');
-        $requestPayload->propertyContent                                   = new ODataPropertyContent();
-        $requestPayload->propertyContent->properties['otherNumber']        = new ODataProperty();
-        $requestPayload->propertyContent->properties['otherNumber']->value = 42;
+        $requestPayload->propertyContent                                   = new ODataPropertyContent([]);
+        $requestPayload->propertyContent['otherNumber']                    = new ODataProperty('', '', 42);
         $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
@@ -280,8 +279,7 @@ class ExecutePostTest extends TestCase
         $segment->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE())->once();
         $segment->shouldReceive('getTargetResourceSetWrapper')->andReturn($resourceSet)->twice();
 
-        $payload      = new ODataURL();
-        $payload->url = 'http://localhost/odata.svc/customers(CustomerID=42)/orders';
+        $payload      = new ODataURL('http://localhost/odata.svc/customers(CustomerID=42)/orders');
 
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getAbsoluteServiceUri')->andReturn($reqUrl);

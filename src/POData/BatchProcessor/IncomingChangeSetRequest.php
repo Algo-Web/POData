@@ -42,7 +42,7 @@ class IncomingChangeSetRequest extends IncomingRequest
     }
 
     /**
-     * @param string $headerLine
+     * @param  string $headerLine
      * @return array
      */
     protected function setupHeaders(string $headerLine): array
@@ -50,9 +50,9 @@ class IncomingChangeSetRequest extends IncomingRequest
         $inboundRequestHeaders = [];
         while ($headerLine !== false) {
             list($key, $value) = explode(':', $headerLine);
-            $name = strtr(strtoupper(trim($key)), '-', '_');
-            $value = trim($value);
-            $name = substr($name, 0, 5) === 'HTTP_' || $name == 'CONTENT_TYPE' ? $name : 'HTTP_' . $name;
+            $name              = strtr(strtoupper(trim($key)), '-', '_');
+            $value             = trim($value);
+            $name              = substr($name, 0, 5) === 'HTTP_' || $name == 'CONTENT_TYPE' ? $name : 'HTTP_' . $name;
             if ('HTTP_CONTENT_ID' === $name) {
                 $this->contentID = $value;
             } else {

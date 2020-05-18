@@ -416,8 +416,8 @@ class ProvidersQueryWrapperTest extends TestCase
     public function testGetRelatedResourceReferenceResourceNonNullKey()
     {
         $keyProperties = ['foo' => 'bar'];
-        $data = new reusableEntityClass2('hammer', 'time!');
-        $type = m::mock(ResourceEntityType::class)->makePartial();
+        $data          = new reusableEntityClass2('hammer', 'time!');
+        $type          = m::mock(ResourceEntityType::class)->makePartial();
         $type->shouldReceive('getInstanceType->getName')->andReturn(get_class($data))->once();
         $type->shouldReceive('getPropertyValue')->andReturn('M.C.')->once();
         $type->shouldReceive('getKeyProperties')->andReturn($keyProperties);

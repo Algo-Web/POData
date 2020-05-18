@@ -89,7 +89,13 @@ class DoubleTest extends TestCase
 
     public function testValidateSuccess()
     {
-        $this->markTestSkipped('Too lazy see #64');
+        $type  = $this->getAsIType();
+        $value = '-3434.0D';
+        $out   = '';
+
+        $expected = '-3434.0';
+        $this->assertTrue($type->validate($value, $out));
+        $this->assertEquals($expected, $out);
     }
 
     public function testValidateFailure()

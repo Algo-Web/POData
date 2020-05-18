@@ -82,42 +82,40 @@ class ModelDeserialiserTest extends SerialiserTestBase
 
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
-        $propContent             = new ODataPropertyContent();
-        $propContent->properties = ['CustomerID' => new ODataProperty(), 'CustomerGuid' => new ODataProperty(),
-            'CustomerName' => new ODataProperty(), 'country' => new ODataProperty(), 'Rating' => new ODataProperty(),
-            'Photo' => new ODataProperty(), 'Address' => new ODataProperty()];
-        $propContent->properties['CustomerID']->name       = 'CustomerID';
-        $propContent->properties['CustomerID']->typeName   = 'Edm.String';
-        $propContent->properties['CustomerID']->value      = '1';
-        $propContent->properties['CustomerGuid']->name     = 'CustomerGuid';
-        $propContent->properties['CustomerGuid']->typeName = 'Edm.Guid';
-        $propContent->properties['CustomerGuid']->value    = '123e4567-e89b-12d3-a456-426655440000';
-        $propContent->properties['CustomerName']->name     = 'CustomerName';
-        $propContent->properties['CustomerName']->typeName = 'Edm.String';
-        $propContent->properties['CustomerName']->value    = ' MakeItPhunkee ';
-        $propContent->properties['country']->name          = 'country';
-        $propContent->properties['country']->typeName      = 'Edm.String';
-        $propContent->properties['country']->value         = ' Oop North ';
-        $propContent->properties['Rating']->name           = 'Rating';
-        $propContent->properties['Rating']->typeName       = 'Edm.Int32';
-        $propContent->properties['Photo']->name            = 'Photo';
-        $propContent->properties['Photo']->typeName        = 'Edm.Binary';
-        $propContent->properties['Address']->name          = 'Address';
-        $propContent->properties['Address']->typeName      = 'Address';
-
-        $objectResult     = new ODataEntry();
-        $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->title         = new ODataTitle('Customer');
-        $objectResult->type          = new ODataCategory('Customer');
-        $objectResult->editLink      = new ODataLink();
-        $objectResult->editLink->url = 'Customers(CustomerID=\'1\',CustomerGuid'
-                                       . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->editLink->name  = 'edit';
-        $objectResult->editLink->title = 'Customer';
-        $objectResult->propertyContent = $propContent;
-        $objectResult->resourceSetName = 'Customers';
-        $objectResult->updated         = '2017-01-01T00:00:00+00:00';
+        $objectResult     = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            new ODataLink(
+                'self',
+                'Customer',
+                null,
+                'Customers(CustomerID=\'1\',CustomerGuid'
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'
+            ),
+            new ODataTitle('Customer'),
+            new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataCategory('Customer'),
+            new ODataPropertyContent(
+                [
+                    'CustomerID' => new ODataProperty('CustomerID', 'Edm.String', '1'),
+                    'CustomerGuid' => new ODataProperty('CustomerGuid', 'Edm.Guid', '123e4567-e89b-12d3-a456-426655440000'),
+                    'CustomerName' => new ODataProperty('CustomerName', 'Edm.String', ' MakeItPhunkee '),
+                    'country' => new ODataProperty('country', 'Edm.String', ' Oop North '),
+                    'Rating' => new ODataProperty('Rating', 'Edm.Int32', null),
+                    'Photo' => new ODataProperty('Photo', 'Edm.Binary', null),
+                    'Address' => new ODataProperty('Address', 'Address', null)
+                ]
+            ),
+            [],
+            null,
+            [],
+            null,
+            false,
+            'Customers',
+            '2017-01-01T00:00:00+00:00',
+            null
+        );
 
         $type = $meta->resolveResourceType('Customer');
 
@@ -147,13 +145,9 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $resource->shouldReceive('getKeyProperties')->andReturn([]);
         $resource->shouldReceive('getAllProperties')->andReturn(['gotFnord' => $prop]);
 
-        $odataProp           = new ODataProperty();
-        $odataProp->name     = 'gotFnord';
-        $odataProp->typeName = 'Edm.Boolean';
-        $odataProp->value    = 'true';
+        $odataProp           = new ODataProperty('gotFnord', 'Edm.Boolean', 'true');
 
-        $content = new ODataPropertyContent();
-        $content->setPropertys(['gotFnord' => $odataProp]);
+        $content = new ODataPropertyContent(['gotFnord' => $odataProp]);
 
         $entry       = new ODataEntry();
         $entry->type = new ODataCategory('RockTheBlock');
@@ -183,13 +177,9 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $resource->shouldReceive('getKeyProperties')->andReturn([]);
         $resource->shouldReceive('getAllProperties')->andReturn(['startFnord' => $prop]);
 
-        $odataProp           = new ODataProperty();
-        $odataProp->name     = 'startFnord';
-        $odataProp->typeName = 'Edm.DateTime';
-        $odataProp->value    = '2017-12-18T18:22:11.3779297-08:00';
+        $odataProp           = new ODataProperty('startFnord', 'Edm.DateTime', '2017-12-18T18:22:11.3779297-08:00');
 
-        $content = new ODataPropertyContent();
-        $content->setPropertys(['startFnord' => $odataProp]);
+        $content = new ODataPropertyContent(['startFnord' => $odataProp]);
 
         $entry       = new ODataEntry();
         $entry->type = new ODataCategory('RockTheBlock');

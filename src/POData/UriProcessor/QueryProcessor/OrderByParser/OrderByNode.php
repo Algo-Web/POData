@@ -48,7 +48,7 @@ class OrderByNode extends OrderByBaseNode
     public function __construct(
         ?string $propertyName,
         ?ResourceProperty $resourceProperty,
-        ?ResourceSetWrapper$resourceSetWrapper
+        ?ResourceSetWrapper $resourceSetWrapper
     ) {
         // This must be the parameter state at this point, we won't check
         // these as this is an internal class

@@ -11,30 +11,119 @@ namespace POData\ObjectModel;
  */
 class ODataProperty
 {
+
     /**
      * The name of the property.
      *
      * @var string
      */
-    public $name;
+    private $name;
     /**
      * The property type name.
      *
-     * @var string
+     * @var string|null
      */
-    public $typeName;
-    /**
-     * The property attribute extensions.
-     *
-     * @var XMLAttribute[]
-     */
-    public $attributeExtensions;
+    private $typeName;
+
     /**
      * The value of the property.
      *
-     * @var string|ODataPropertyContent|ODataBagContent
+     * @var mixed|ODataPropertyContent|ODataBagContent|null
      */
-    public $value;
+    private $value;
+    /**
+     * The property attribute extensions.
+     *
+     * @var XMLAttribute[]|null
+     */
+    public $attributeExtensions;
+    /**
+     * ODataProperty constructor.
+     * @param string                                      $name
+     * @param string                                      $typeName
+     * @param XMLAttribute[]                              $attributeExtensions
+     * @param ODataBagContent|ODataPropertyContent|string $value
+     */
+    public function __construct(string $name, ?string $typeName, $value, array $attributeExtensions = [])
+    {
+        $this
+            ->setName($name)
+            ->setTypeName($typeName)
+            ->setValue($value)
+            ->setAttributeExtensions($attributeExtensions);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  string        $name
+     * @return ODataProperty
+     */
+    public function setName(string $name): ODataProperty
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeName(): string
+    {
+        return $this->typeName ?? '' ;
+    }
+
+    /**
+     * @param  string        $typeName
+     * @return ODataProperty
+     */
+    public function setTypeName(?string $typeName): ODataProperty
+    {
+        $this->typeName = $typeName;
+        return $this;
+    }
+
+    /**
+     * @return XMLAttribute[]|null
+     */
+    public function getAttributeExtensions(): ?array
+    {
+        return $this->attributeExtensions;
+    }
+
+    /**
+     * @param  XMLAttribute[]|null $attributeExtensions
+     * @return ODataProperty
+     */
+    public function setAttributeExtensions(?array $attributeExtensions): ODataProperty
+    {
+        $this->attributeExtensions = $attributeExtensions;
+        return $this;
+    }
+
+    /**
+     * @return ODataBagContent|ODataPropertyContent|mixed|null
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param  ODataBagContent|ODataPropertyContent|string $value
+     * @return ODataProperty
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
 
     /**
      * @return bool|null

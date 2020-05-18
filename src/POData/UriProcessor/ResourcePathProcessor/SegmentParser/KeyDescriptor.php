@@ -216,7 +216,7 @@ class KeyDescriptor
                 }
 
                 //expecting keyName=keyValue, verify it
-                $identifier = $currentToken->getIdentifier();
+                $identifier   = $currentToken->getIdentifier();
                 $currentToken = self::toNextLexerToken($expressionLexer);
                 if ($currentToken->getId() != ExpressionTokenId::EQUAL()) {
                     return false;
@@ -369,9 +369,9 @@ class KeyDescriptor
     }
 
     /**
-     * @param ExpressionLexer $expressionLexer
-     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
+     * @param  ExpressionLexer                                                      $expressionLexer
      * @throws ODataException
+     * @return \POData\UriProcessor\QueryProcessor\ExpressionParser\ExpressionToken
      */
     private static function toNextLexerToken(ExpressionLexer $expressionLexer): ExpressionToken
     {
@@ -543,7 +543,7 @@ class KeyDescriptor
         $keys         = $resourceType->getKeyProperties();
 
         $namedKeys = $this->getNamedValues();
-        $keys = array_intersect_key($keys, $namedKeys);
+        $keys      = array_intersect_key($keys, $namedKeys);
         if (0 == count($keys) || count($keys) !== count($namedKeys)) {
             $msg = 'Mismatch between supplied key predicates and keys defined on resource set';
             throw new InvalidArgumentException($msg);
@@ -579,7 +579,7 @@ class KeyDescriptor
     /**
      * Convert validated named values into an array of ODataProperties.
      *
-     * return array[]
+     * return ODataProperty[]
      * @throws InvalidOperationException
      */
     public function getODataProperties(): array
@@ -590,10 +590,11 @@ class KeyDescriptor
         foreach ($values as $propName => $propDeets) {
             assert(2 == count($propDeets));
             assert($propDeets[1] instanceof IType);
-            $property           = new ODataProperty();
-            $property->name     = strval($propName);
-            $property->value    = $propDeets[1]->convert($propDeets[0]);
-            $property->typeName = $propDeets[1]->getFullTypeName();
+            $property           = new ODataProperty(
+                strval($propName),
+                $propDeets[1]->getFullTypeName(),
+                $propDeets[1]->convert($propDeets[0])
+            );
             $result[$propName]  = $property;
         }
 

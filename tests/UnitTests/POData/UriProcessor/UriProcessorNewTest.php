@@ -129,7 +129,7 @@ class UriProcessorNewTest extends TestCase
 
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
 
         $cereal = m::mock(ModelDeserialiser::class);
         $cereal->shouldReceive('bulkDeserialise')->andReturn(null)->once();
@@ -414,7 +414,7 @@ class UriProcessorNewTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
 
         $resourceType = m::mock(ResourceEntityType::class);
         $resourceSet  = m::mock(ResourceSet::class);
@@ -515,7 +515,7 @@ class UriProcessorNewTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->id              = 'http://192.168.2.1/abm-master/public/odata.svc/Entity(1)';
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
         $requestPayload->resourceSetName = 'Customer';
 
         $model = new Customer2();
@@ -597,7 +597,7 @@ class UriProcessorNewTest extends TestCase
 
         $setWrapper = m::mock(ResourceSetWrapper::class);
 
-        $rawSkip = m::mock(SkipTokenInfo::class);
+        $rawSkip   = m::mock(SkipTokenInfo::class);
         $skipToken = m::mock(InternalSkipTokenInfo::class);
         $skipToken->shouldReceive('getIndexOfFirstEntryInTheNextPage')->andReturn(1)->once();
         $skipToken->shouldReceive('getSkipTokenInfo')->andReturn($rawSkip)->once();

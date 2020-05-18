@@ -30,7 +30,7 @@ class PropertyProcessor extends BaseNodeHandler
     public function __construct()
     {
         $this->propertyContent = new SplStack();
-        $this->propertyContent->push(new ODataPropertyContent());
+        $this->propertyContent->push(new ODataPropertyContent([]));
         $this->properties = new SplStack();
     }
 
@@ -50,15 +50,18 @@ class PropertyProcessor extends BaseNodeHandler
         assert($tagNamespace === ODataConstants::ODATA_NAMESPACE ||
             $tagNamespace === ODataConstants::ODATA_METADATA_NAMESPACE);
 
-        $property           = new ODataProperty();
-        $property->name     = $tagName;
-        $property->typeName = $this->arrayKeyOrDefault(
-            $attributes,
-            ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+        $property           = new ODataProperty(
+            $tagName,
+            $this->arrayKeyOrDefault(
+                $attributes,
+                ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
+                null
+            ),
             null
         );
+
         $this->properties->push($property);
-        $this->propertyContent->push(new ODataPropertyContent());
+        $this->propertyContent->push(new ODataPropertyContent([]));
     }
 
     /**
@@ -73,14 +76,16 @@ class PropertyProcessor extends BaseNodeHandler
             return;
         }
         // Pops a complex object off the stack
+        /** @var ODataProperty $prop */
         $prop                                                  = $this->properties->pop();
+        /** @var ODataPropertyContent $propContent */
         $propContent                                           = $this->propertyContent->pop();
-        $this->propertyContent->top()->properties[$prop->name] = $prop;
+        $this->propertyContent->top()[$prop->getName()]        = $prop;
 
-        if (count($propContent->properties) == 0) {
-            $prop->value = $this->popCharData();
+        if (count($propContent) == 0) {
+            $prop->setValue($this->popCharData());
         } else {
-            $prop->value = $propContent;
+            $prop->setValue($propContent);
         }
     }
 

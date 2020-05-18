@@ -18,26 +18,61 @@ class ODataExpandedResult
     /**
      * Term.
      *
-     * @var ODataEntry
+     * @var ODataContainerBase
      */
-    public $entry;
-
-    /**
-     * Scheme.
-     *
-     * @var ODataFeed
-     */
-    public $feed;
+    private $data;
 
     /**
      * ODataExpandedResult constructor.
      *
-     * @param ODataEntry|null $entry
-     * @param ODataFeed|null  $feed
+     * @param ODataContainerBase $data
      */
-    public function __construct(ODataEntry $entry = null, ODataFeed $feed = null)
+    public function __construct(ODataContainerBase $data)
     {
-        $this->entry = $entry;
-        $this->feed  = $feed;
+        $this->{$data instanceof ODataEntry ? 'setEntry' : 'setFeed'}($data);
+    }
+
+    /**
+     * @return ODataEntry|null
+     */
+    public function getEntry(): ?ODataEntry
+    {
+        return $this->data instanceof ODataEntry ? $this->data : null;
+    }
+
+    /**
+     * @param  ODataEntry          $entry
+     * @return ODataExpandedResult
+     */
+    public function setEntry(ODataEntry $entry): ODataExpandedResult
+    {
+        $this->data = $entry;
+        return $this;
+    }
+
+    /**
+     * @return ODataFeed|null
+     */
+    public function getFeed(): ?ODataFeed
+    {
+        return $this->data instanceof ODataFeed ? $this->data : null;
+    }
+
+    /**
+     * @param  ODataFeed           $feed
+     * @return ODataExpandedResult
+     */
+    public function setFeed(ODataFeed $feed): ODataExpandedResult
+    {
+        $this->data = $feed;
+        return $this;
+    }
+
+    /**
+     * @return ODataContainerBase
+     */
+    public function getData(): ODataContainerBase
+    {
+        return $this->data;
     }
 }

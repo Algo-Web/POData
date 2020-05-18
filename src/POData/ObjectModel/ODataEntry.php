@@ -12,37 +12,21 @@ use POData\ObjectModel\AtomObjectModel\AtomContent;
 
 /**
  * Class ODataEntry.
+ * TODO: the methods should be rearranged to match theorder of the properties.
+ * TODO: the properties are still public needs a lot of unpicking to work out as type hints maybe wrong.
  */
-class ODataEntry
+class ODataEntry extends ODataContainerBase
 {
-    /**
-     * Entry id.
-     *
-     * @var string
-     */
-    public $id;
-    /**
-     * Entry Self Link.
-     *
-     * @var string
-     */
-    public $selfLink;
-    /**
-     * Entry title.
-     *
-     * @var ODataTitle
-     */
-    public $title;
     /**
      * Entry Edit Link.
      *
-     * @var ODataLink
+     * @var ODataLink|null
      */
     public $editLink;
     /**
      * Entry Type. This become the value of term attribute of Category element.
      *
-     * @var ODataCategory
+     * @var ODataCategory|null
      */
     public $type;
     /**
@@ -50,7 +34,7 @@ class ODataEntry
      * Properties corresponding to "m:properties" under content element
      * in the case of Non-MLE. For MLE "m:properties" is direct child of entry.
      *
-     * @var ODataPropertyContent
+     * @var ODataPropertyContent|null
      */
     public $propertyContent;
     /**
@@ -62,7 +46,7 @@ class ODataEntry
     /**
      * media link entry (MLE Link).
      *
-     * @var ODataMediaLink
+     * @var ODataMediaLink|null
      */
     public $mediaLink;
     /**
@@ -71,10 +55,11 @@ class ODataEntry
      * @var array<ODataLink>
      */
     public $links = [];
+
     /**
      * Entry ETag.
      *
-     * @var string
+     * @var string|null
      */
     public $eTag;
 
@@ -88,39 +73,118 @@ class ODataEntry
     /**
      * The name of the resource set this entry belongs to, use in metadata output.
      *
-     * @var string
+     * @var string|null
      */
     public $resourceSetName;
 
-    /**
-     * Last updated timestamp.
-     *
-     * @var string
-     */
-    public $updated;
 
     /**
-     * Service Base URI.
-     *
-     * @var string
+     * ODataEntry constructor.
+     * @param string|null               $id
+     * @param ODataLink|null            $selfLink
+     * @param ODataTitle|null           $title
+     * @param ODataLink|null            $editLink
+     * @param ODataCategory|null        $type
+     * @param ODataPropertyContent|null $propertyContent
+     * @param array                     $mediaLinks
+     * @param ODataMediaLink|null       $mediaLink
+     * @param array                     $links
+     * @param string|null               $eTag
+     * @param bool                      $isMediaLinkEntry
+     * @param string|null               $resourceSetName
+     * @param string|null               $updated
+     * @param string|null               $baseURI
      */
-    public $baseURI;
+    public function __construct(
+        ?string $id = null,
+        ?ODataLink $selfLink = null,
+        ?ODataTitle $title = null,
+        ?ODataLink $editLink = null,
+        ?ODataCategory $type = null,
+        ?ODataPropertyContent $propertyContent = null,
+        array $mediaLinks = [],
+        ?ODataMediaLink $mediaLink = null,
+        array $links = [],
+        ?string $eTag = null,
+        bool $isMediaLinkEntry = false,
+        ?string $resourceSetName = null,
+        ?string $updated = null,
+        ?string $baseURI = null
+    ) {
+        parent::__construct($id, $title, $selfLink, $updated, $baseURI);
+        $this
+            ->setType($type)
+            ->setPropertyContent($propertyContent)
+            ->setMediaLinks($mediaLinks)
+            ->setLinks($links)
+            ->setETag($eTag)
+            ->setIsMediaLinkEntry($isMediaLinkEntry)
+            ->setResourceSetName($resourceSetName);
+        $this->editLink  = $editLink;
+        $this->mediaLink = $mediaLink;
+    }
+
 
     /**
-     * @var AtomObjectModel\AtomContent
+     * @return string|null
      */
-    public $atomContent;
+    public function getETag(): ?string
+    {
+        return $this->eTag;
+    }
+
     /**
-     * @var AtomObjectModel\AtomAuthor
+     * @param  string|null $eTag
+     * @return ODataEntry
      */
-    public $atomAuthor;
+    public function setETag(?string $eTag): ODataEntry
+    {
+        $this->eTag = $eTag;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsMediaLinkEntry(): bool
+    {
+        return $this->isMediaLinkEntry;
+    }
+
+    /**
+     * @param  bool       $isMediaLinkEntry
+     * @return ODataEntry
+     */
+    public function setIsMediaLinkEntry(bool $isMediaLinkEntry): ODataEntry
+    {
+        $this->isMediaLinkEntry = $isMediaLinkEntry;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getResourceSetName(): ?string
+    {
+        return $this->resourceSetName;
+    }
+
+    /**
+     * @param  string|null $resourceSetName
+     * @return ODataEntry
+     */
+    public function setResourceSetName(?string $resourceSetName): ODataEntry
+    {
+        $this->resourceSetName = $resourceSetName;
+        return $this;
+    }
 
     /**
      * @return AtomContent
      */
     public function getAtomContent()
     {
-        if (!$this->isMediaLinkEntry) {
+        if (true !== $this->isMediaLinkEntry) {
             return new AtomObjectModel\AtomContent(
                 MimeTypes::MIME_APPLICATION_XML,
                 null,
@@ -131,18 +195,19 @@ class ODataEntry
     }
 
     /**
-     * @param AtomContent $atomContent
+     * @param  AtomContent $atomContent
+     * @return ODataEntry
      */
-    public function setAtomContent(AtomObjectModel\AtomContent $atomContent)
+    public function setAtomContent(AtomObjectModel\AtomContent $atomContent): self
     {
         $this->setPropertyContent($atomContent->properties);
-        $this->atomContent = $atomContent;
+        return $this;
     }
 
     /**
      * @return AtomAuthor
      */
-    public function getAtomAuthor()
+    public function getAtomAuthor(): AtomAuthor
     {
         return new AtomObjectModel\AtomAuthor();
     }
@@ -150,92 +215,99 @@ class ODataEntry
     /**
      * @return null|ODataPropertyContent
      */
-    public function getPropertyContent()
+    public function getPropertyContent(): ?ODataPropertyContent
     {
-        if (!$this->isMediaLinkEntry) {
+        if (true !== $this->isMediaLinkEntry) {
             return null;
         }
         return $this->propertyContent;
     }
 
     /**
-     * @param ODataPropertyContent|null $oDataPropertyContent
+     * @param  ODataPropertyContent|null $oDataPropertyContent
+     * @return ODataEntry
      */
-    public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null)
+    public function setPropertyContent(ODataPropertyContent $oDataPropertyContent = null): self
     {
         $this->propertyContent = $oDataPropertyContent;
+        return $this;
     }
 
     /**
-     * @return ODataLink
+     * @return ODataLink|null
      */
-    public function getEditLink()
+    public function getEditLink(): ?ODataLink
     {
         return $this->editLink;
     }
 
     /**
-     * @return ODataCategory
+     * @return ODataCategory|null
      */
-    public function getType()
+    public function getType(): ?ODataCategory
     {
         return $this->type;
     }
 
     /**
-     * @param ODataCategory|null $type
+     * @param  ODataCategory|null $type
+     * @return ODataEntry
      */
-    public function setType(ODataCategory $type = null)
+    public function setType(ODataCategory $type = null): self
     {
         $this->type = $type;
         if (null !== $type) {
-            $rawTerm               = $type->term;
+            $rawTerm               = $type->getTerm();
             $termArray             = explode('.', $rawTerm);
             $final                 = $termArray[count($termArray) - 1];
             $this->resourceSetName = MetadataManager::getResourceSetNameFromResourceType($final);
         }
+        return $this;
     }
 
     /**
      * @return ODataLink[]
      */
-    public function getLinks()
+    public function getLinks(): array
     {
         return $this->links;
     }
 
     /**
      * @param $links ODataLink[]
+     * @return ODataEntry
      */
-    public function setLinks(array $links)
+    public function setLinks(array $links): self
     {
         $this->links = [];
         foreach ($links as $link) {
-            if ('edit' == $link->name) {
+            if ('edit' == $link->getName()) {
                 $this->editLink        = $link;
-                $this->resourceSetName = explode('(', $link->url)[0];
+                $this->resourceSetName = explode('(', $link->getUrl())[0];
                 continue;
             }
-            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->name, 0, 61)
+            if ('http://schemas.microsoft.com/ado/2007/08/dataservices/related' == substr($link->getName(), 0, 61)
             ) {
                 $this->links[] = $link;
                 continue;
             }
         }
+        return $this;
     }
 
     /**
      * @return ODataMediaLink[]
      */
-    public function getMediaLinks()
+    public function getMediaLinks(): array
     {
         return $this->mediaLinks;
     }
 
     /**
-     * @param ODataMediaLink[] $mediaLinks
+     * @param  ODataMediaLink[] $mediaLinks
+     * @return ODataEntry
      */
-    public function setMediaLinks(array $mediaLinks)
+    public function setMediaLinks(array $mediaLinks): self
     {
         $this->mediaLinks = [];
         $editLink         = null;
@@ -246,13 +318,14 @@ class ODataEntry
         if (null === $this->mediaLink) {
             $this->isMediaLinkEntry = false;
         }
+        return $this;
     }
 
     /**
      * @param ODataMediaLink      $mediaLink
      * @param ODataMediaLink|null $editLink
      */
-    private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null)
+    private function handleMediaLinkEntry(ODataMediaLink $mediaLink, ODataMediaLink &$editLink = null): void
     {
         if ('edit-media' == $mediaLink->rel) {
             $this->isMediaLinkEntry = true;
@@ -269,7 +342,7 @@ class ODataEntry
     /**
      * @param ODataMediaLink|null $editLink
      */
-    private function correctMediaLinkSrc(ODataMediaLink $editLink = null)
+    private function correctMediaLinkSrc(ODataMediaLink $editLink = null): void
     {
         if (null !== $this->mediaLink && null !== $editLink) {
             $this->mediaLink->srcLink = $editLink->editLink . $this->mediaLink->editLink;
@@ -280,9 +353,9 @@ class ODataEntry
     }
 
     /**
-     * @return ODataMediaLink
+     * @return ODataMediaLink|null
      */
-    public function getMediaLink()
+    public function getMediaLink(): ?ODataMediaLink
     {
         return $this->mediaLink;
     }
@@ -291,13 +364,13 @@ class ODataEntry
      * @param  string|null $msg
      * @return bool
      */
-    public function isOk(&$msg = null)
+    public function isOk(&$msg = null): bool
     {
         if (!$this->propertyContent instanceof ODataPropertyContent) {
             $msg = 'Property content must be instanceof ODataPropertyContent.';
             return false;
         }
-        if (0 === count($this->propertyContent->properties)) {
+        if (0 === count($this->propertyContent)) {
             $msg = 'Must have at least one property present.';
             return false;
         }

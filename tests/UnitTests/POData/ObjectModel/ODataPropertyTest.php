@@ -16,15 +16,14 @@ class ODataPropertyTest extends TestCase
 {
     public function testIsNull()
     {
-        $foo = new ODataProperty();
+        $foo = new ODataProperty('', '', null);
 
         $this->assertTrue($foo->isNull());
     }
 
     public function testIsNotNull()
     {
-        $foo        = new ODataProperty();
-        $foo->value = 'var';
+        $foo        = new ODataProperty('', '', 'var');
 
         $this->assertNull($foo->isNull());
     }

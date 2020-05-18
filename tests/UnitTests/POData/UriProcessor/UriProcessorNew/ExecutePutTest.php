@@ -52,7 +52,7 @@ class ExecutePutTest extends TestCase
 
         $requestPayload                  = new ODataEntry();
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
         $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
@@ -121,7 +121,7 @@ class ExecutePutTest extends TestCase
         $requestPayload                  = new ODataEntry();
         $requestPayload->id              = 'http://localhost/odata.svc/customers(id=1)';
         $requestPayload->type            = new ODataCategory('Customer');
-        $requestPayload->propertyContent = new ODataPropertyContent();
+        $requestPayload->propertyContent = new ODataPropertyContent([]);
         $requestPayload->resourceSetName = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);
@@ -206,11 +206,9 @@ class ExecutePutTest extends TestCase
         $requestPayload                                                    = new ODataEntry();
         $requestPayload->id                                                = 'http://localhost/odata.svc/customers(CustomerID=42)';
         $requestPayload->type                                              = new ODataCategory('Customer');
-        $requestPayload->propertyContent                                   = new ODataPropertyContent();
-        $requestPayload->propertyContent->properties['otherNumber']        = new ODataProperty();
-        $requestPayload->propertyContent->properties['otherNumber']->value = 42;
-        $requestPayload->propertyContent->properties['CustomerID']         = new ODataProperty();
-        $requestPayload->propertyContent->properties['CustomerID']->value  = 42;
+        $requestPayload->propertyContent                                   = new ODataPropertyContent([]);
+        $requestPayload->propertyContent['otherNumber']                    = new ODataProperty('', '', 42);
+        $requestPayload->propertyContent['CustomerID']                     = new ODataProperty('', '', 42);
         $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);

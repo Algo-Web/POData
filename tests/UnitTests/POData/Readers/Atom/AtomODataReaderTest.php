@@ -37,24 +37,24 @@ class AtomODataReaderTest extends TestCase
             $data->id,
             'feed ID sailed to deserialize correctly'
         );
-        $this->assertEquals('text', $data->title->type, 'Feed-Title-Type Attribute failed to deserialize correctly');
-        $this->assertEquals('ProductDetails', $data->title->title, 'Feed-Title  failed to deserialize correctly');
+        $this->assertEquals('text', $data->getTitle()->getType(), 'Feed-Title-Type Attribute failed to deserialize correctly');
+        $this->assertEquals('ProductDetails', $data->getTitle()->getTitle(), 'Feed-Title  failed to deserialize correctly');
         $this->assertEquals(
             '2020-03-12T16:26:25Z',
-            $data->updated,
+            $data->getUpdated(),
             'the feed updated value failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails',
-            $data->selfLink->title,
+            $data->getSelfLink()->getTitle(),
             'the Feed Self Link Title Failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails',
-            $data->selfLink->url,
+            $data->getSelfLink()->getUrl(),
             'the Feed Self Link href Failed to deserialise correctly'
         );
-        $this->assertEquals('self', $data->selfLink->name, 'the Feed Self Link Title Failed to deseralize correctly');
+        $this->assertEquals('self', $data->getSelfLink()->getName(), 'the Feed Self Link Title Failed to deseralize correctly');
         $this->assertEquals(4, count($data->getEntries()), 'The Feed Deseralized the wrong number of entries');
         $this->assertInstanceOf(
             ODataEntry::class,
@@ -86,33 +86,33 @@ class AtomODataReaderTest extends TestCase
         );
         $this->assertEquals(
             'edit',
-            $entry->editLink->name,
+            $entry->editLink->getName(),
             'the name of the edit link failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetail',
-            $entry->editLink->title,
+            $entry->editLink->getTitle(),
             'The title of the edit link failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails(1)',
-            $entry->editLink->url,
+            $entry->editLink->getUrl(),
             'The edit link url failed to deserialise correctly'
         );
         $this->assertEquals(
             'ODataDemo.ProductDetail',
-            $entry->type->term,
+            $entry->type->getTerm(),
             'The Type Term of the entry failed to deserialise correctly'
         );
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme',
-            $entry->type->scheme,
+            $entry->type->getScheme(),
             'The Type Scheme of the entry failed to deserialise correctly'
         );
 
         $this->assertEquals(2, count($entry->links), 'the entry deserialised the wrong number of links');
 
-        if ($entry->links[0]->name === 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product') {
+        if ($entry->links[0]->getName() === 'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product') {
             /**
              * @var ODataLink $relatedLink
              */
@@ -135,47 +135,47 @@ class AtomODataReaderTest extends TestCase
 
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Product',
-            $relatedLink->name,
+            $relatedLink->getName(),
             'The Name of the Related link failed to deserialise correctly'
         );
         $this->assertEquals(
             'Product',
-            $relatedLink->title,
+            $relatedLink->getTitle(),
             'the title of the related link failed to deserialise correctly'
         );
         $this->assertEquals(
             'application/atom+xml;type=entry',
-            $relatedLink->type,
+            $relatedLink->getType(),
             'the type of the related link failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails(1)/Product',
-            $relatedLink->url,
+            $relatedLink->getUrl(),
             'The url of the related link failed to deserialise correctly'
         );
 
         $this->assertEquals(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/relatedlinks/Product',
-            $associatedLink->name,
+            $associatedLink->getName(),
             'The Name of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(
             'Product',
-            $associatedLink->title,
+            $associatedLink->getTitle(),
             'the title of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(
             'application/xml',
-            $associatedLink->type,
+            $associatedLink->getType(),
             'the type of the associated link failed to deserialise correctly'
         );
         $this->assertEquals(
             'ProductDetails(1)/$links/Product',
-            $associatedLink->url,
+            $associatedLink->getUrl(),
             'The url of the associated link failed to deserialise correctly'
         );
 
-        $content = $entry->atomContent;
+        $content = $entry->getAtomContent();
 
         $this->assertEquals(
             'application/xml',
@@ -183,11 +183,11 @@ class AtomODataReaderTest extends TestCase
             'the type of the atom content failed to deserialise correctly'
         );
 
-        $this->assertEquals(2, count($content->properties->properties), 'the entity deserialised the wrong number of properties');
+        $this->assertEquals(2, count($content->properties), 'the entity deserialised the wrong number of properties');
         /**
          * @var ODataProperty[] $properties;
          */
-        $properties = $content->properties->properties;
+        $properties = $content->properties->getPropertys();
         $this->assertArrayHasKey('ProductID', $properties, 'The properties array failed to deserialise a correct key');
         $this->assertArrayHasKey('Details', $properties, 'The properties array failed to deserialise a correct key');
 
@@ -204,33 +204,33 @@ class AtomODataReaderTest extends TestCase
 
         $this->assertEquals(
             'ProductID',
-            $properties['ProductID']->name,
+            $properties['ProductID']->getName(),
             'the property ProductID Deseralized the wrong name'
         );
         $this->assertEquals(
             'Edm.Int32',
-            $properties['ProductID']->typeName,
+            $properties['ProductID']->getTypeName(),
             'the property ProductID Deseralized the wrong TypeName'
         );
         $this->assertEquals(
             '1',
-            $properties['ProductID']->value,
+            $properties['ProductID']->getValue(),
             'the property ProductID deserialised the wrong value'
         );
 
         $this->assertEquals(
             'Details',
-            $properties['Details']->name,
+            $properties['Details']->getName(),
             'the property Details deserialised the wrong name'
         );
         $this->assertEquals(
             null,
-            $properties['Details']->typeName,
+            $properties['Details']->getTypeName(),
             'the property Details deserialised the wrong TypeName'
         );
         $this->assertEquals(
             'Details of product 1',
-            $properties['Details']->value,
+            $properties['Details']->getValue(),
             'the property Details deserialised the wrong value'
         );
     }

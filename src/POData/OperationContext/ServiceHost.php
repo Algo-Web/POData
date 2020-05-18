@@ -68,7 +68,7 @@ class ServiceHost
     private $queryOptions;
 
     /**
-     * @param IOperationContext $context the OperationContext implementation to use.
+     * @param IOperationContext $context the OperationContext implementation to use
      *
      * @throws ODataException
      * @throws UrlFormatException

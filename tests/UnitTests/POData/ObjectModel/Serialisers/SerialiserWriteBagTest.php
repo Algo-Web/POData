@@ -53,11 +53,11 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = null;
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objectResult                              = new ODataPropertyContent();
-        $objectResult->properties['makeItPhunkee'] = $objProp;
+        $objectResult                              = new ODataPropertyContent(
+            [
+                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', null)
+            ]
+        );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -159,11 +159,11 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [];
 
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objectResult                              = new ODataPropertyContent();
-        $objectResult->properties['makeItPhunkee'] = $objProp;
+        $objectResult                              = new ODataPropertyContent(
+            [
+                'makeItPhunkee' =>  new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', null)
+            ]
+        );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -194,13 +194,12 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection->results = ['eins', 'zwei', 'polizei'];
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = ['eins', 'zwei', 'polizei'];
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
-        $objectResult                              = new ODataPropertyContent();
-        $objectResult->properties['makeItPhunkee'] = $objProp;
+        $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
+        $objectResult                              = new ODataPropertyContent(
+            [
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
+            ]
+        );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -231,13 +230,12 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection->results = ['eins', null, 'zwei', null, 'polizei'];
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = ['eins', 'zwei', 'polizei'];
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
-        $objectResult                              = new ODataPropertyContent();
-        $objectResult->properties['makeItPhunkee'] = $objProp;
+        $bag->setPropertyContents(['eins', 'zwei', 'polizei']);
+        $objectResult                              = new ODataPropertyContent(
+            [
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
+            ]
+        );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -287,26 +285,20 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $collection          = new QueryResult();
         $collection->results = [$model];
 
-        $comp1           = new ODataProperty();
-        $comp1->name     = 'name';
-        $comp1->typeName = 'Edm.String';
-        $comp1->value    = 'name';
-        $comp2           = new ODataProperty();
-        $comp2->name     = 'type';
-        $comp2->typeName = 'Edm.String';
-        $comp2->value    = 'type';
-
-        $complex             = new ODataPropertyContent();
-        $complex->properties = ['name' => $comp1, 'type' => $comp2];
+        $complex             = new ODataPropertyContent(
+            [
+                'name' => new ODataProperty('name', 'Edm.String', 'name'),
+                'type' => new ODataProperty('type', 'Edm.String', 'type')
+            ]
+        );
 
         $bag                                       = new ODataBagContent();
-        $bag->propertyContents                     = [$complex];
-        $objProp                                   = new ODataProperty();
-        $objProp->name                             = 'makeItPhunkee';
-        $objProp->typeName                         = 'Collection(stopHammerTime)';
-        $objProp->value                            = $bag;
-        $objectResult                              = new ODataPropertyContent();
-        $objectResult->properties['makeItPhunkee'] = $objProp;
+        $bag->setPropertyContents([$complex]);
+        $objectResult                              = new ODataPropertyContent(
+            [
+                'makeItPhunkee' => new ODataProperty('makeItPhunkee', 'Collection(stopHammerTime)', $bag)
+            ]
+        );
         $ironicResult                              = $ironic->writeTopLevelBagObject($collection, $propName, $rType);
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));

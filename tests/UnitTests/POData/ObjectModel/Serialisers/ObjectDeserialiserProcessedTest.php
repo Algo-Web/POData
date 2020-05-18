@@ -6,6 +6,7 @@ namespace UnitTests\POData\ObjectModel\Serialisers;
 
 use Mockery as m;
 use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\Providers\Metadata\IMetadataProvider;
@@ -51,7 +52,7 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $payload->links = [new ODataLink()];
 
         $child                             = new ODataEntry();
-        $payload->links[0]->expandedResult = $child;
+        $payload->links[0]->setExpandedResult(new ODataExpandedResult($child));
 
         $foo = new CynicDeserialiserDummy($meta, $wrapper);
         $this->assertFalse($foo->isEntryProcessed($payload));
@@ -70,7 +71,7 @@ class ObjectDeserialiserProcessedTest extends TestCase
 
         $child                             = new ODataEntry();
         $child->id                         = $key;
-        $payload->links[0]->expandedResult = $child;
+        $payload->links[0]->setExpandedResult(new ODataExpandedResult($child));
 
         $foo = new CynicDeserialiserDummy($meta, $wrapper);
         $this->assertTrue($foo->isEntryProcessed($payload));
@@ -101,7 +102,7 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $payload->id = $key;
 
         $payload->links                    = [new ODataLink()];
-        $payload->links[0]->expandedResult = new ODataFeed();
+        $payload->links[0]->setExpandedResult(new ODataExpandedResult(new ODataFeed()));
 
         $foo = new CynicDeserialiserDummy($meta, $wrapper);
         $this->assertTrue($foo->isEntryProcessed($payload));
@@ -117,10 +118,10 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $payload->id = $key;
 
         $feed            = new ODataFeed();
-        $feed->entries[] = new ODataEntry();
+        $feed->addEntry(new ODataEntry());
 
         $payload->links                    = [new ODataLink()];
-        $payload->links[0]->expandedResult = $feed;
+        $payload->links[0]->setExpandedResult(new ODataExpandedResult($feed));
 
         $foo = new CynicDeserialiserDummy($meta, $wrapper);
         $this->assertFalse($foo->isEntryProcessed($payload));
@@ -139,12 +140,12 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $child->id = $key;
 
         $feed            = new ODataFeed();
-        $feed->entries[] = new ODataEntry();
+        $feed->addEntry(new ODataEntry());
 
         $payload->links                    = [new ODataLink()];
-        $payload->links[0]->expandedResult = $child;
+        $payload->links[0]->setExpandedResult(new ODataExpandedResult($child));
         $child->links                      = [new ODataLink()];
-        $child->links[0]->expandedResult   = $feed;
+        $child->links[0]->setExpandedResult(new ODataExpandedResult($feed));
 
         $foo = new CynicDeserialiserDummy($meta, $wrapper);
         $this->assertFalse($foo->isEntryProcessed($payload));

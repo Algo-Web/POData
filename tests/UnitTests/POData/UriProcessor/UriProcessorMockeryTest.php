@@ -472,9 +472,8 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals([], $filterInfo->getNavigationPropertiesUsed());
 
         $this->assertEquals(
-            '',
-            $filterInfo->getExpressionAsString(),
-            'because northwind expression provider does nothing, this is empty'
+            '(!(is_null($lt->Country)) && (strcmp($lt->Country, \'USA\') == 0))',
+            $filterInfo->getExpressionAsString()
         );
     }
 
@@ -1071,7 +1070,6 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForLinksResourceSet4()
     {
-        $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri      = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders';
         $hostInfo     = [
@@ -1144,7 +1142,6 @@ class UriProcessorMockeryTest extends TestCase
      */
     public function testUriProcessorForLinksResourceSetReference1()
     {
-        $this->markTestSkipped("This test checks that POData will generate a filter function for providers that don't handle filtering...but i temporarily removed that functionality by elimination IDataServiceQueryProvider1.  Need to make this service provider use PHPExpressionProvider, then re-enable tests");
         $baseUri      = 'http://localhost:8083/NorthWindDataService.svc/';
         $resourcePath = 'Customers(CustomerID=\'ALFKI\', CustomerGuid=guid\'05b242e752eb46bd8f0e6568b72cd9a5\')/$links/Orders(123)';
         $hostInfo     = [
@@ -1591,9 +1588,8 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertTrue($filterInfo instanceof FilterInfo);
 
         $this->assertEquals(
-            '',
-            $filterInfo->getExpressionAsString(),
-            'because northwind expression provider does nothing, this is empty'
+            'is_null($lt->HouseNumber)',
+            $filterInfo->getExpressionAsString()
         );
 
         $this->assertNull($requestDescription->getRootProjectionNode());

@@ -16,10 +16,10 @@ class HttpProcessUtility
     /**
      * Gets the appropriate MIME type for the request, throwing if there is none.
      *
-     * @param string|null   $acceptTypesText    Text as it appears in an HTTP Accepts header
-     * @param string[]      $exactContentTypes  Preferred content type to match if an exact media type is given - in
-     *                                          descending order of preference
-     * @param string|null   $inexactContentType Preferred fallback content type for inexact matches
+     * @param string|null $acceptTypesText    Text as it appears in an HTTP Accepts header
+     * @param string[]    $exactContentTypes  Preferred content type to match if an exact media type is given - in
+     *                                        descending order of preference
+     * @param string|null $inexactContentType Preferred fallback content type for inexact matches
      *
      * @throws HttpHeaderFailure
      * @return string|null       One of exactContentType or inexactContentType
@@ -418,7 +418,7 @@ class HttpProcessUtility
 
         $adjustFactor = 1000;
         while (1 < $adjustFactor && $textIndex < $textLen) {
-            $c = $text[$textIndex];
+            $c         = $text[$textIndex];
             $charValue = self::digitToInt32($c);
             if (0 <= $charValue) {
                 ++$textIndex;
@@ -485,7 +485,7 @@ class HttpProcessUtility
      */
     public static function headerToServerKey(string $headerName): string
     {
-        $name = strtoupper(str_replace('-', '_', $headerName));
+        $name           = strtoupper(str_replace('-', '_', $headerName));
         $prefixableKeys = ['HOST', 'CONNECTION', 'CACHE_CONTROL', 'ORIGIN', 'USER_AGENT', 'POSTMAN_TOKEN', 'ACCEPT',
             'ACCEPT_ENCODING', 'ACCEPT_LANGUAGE', 'DATASERVICEVERSION', 'MAXDATASERVICEVERSION'];
         return in_array($name, $prefixableKeys) ? 'HTTP_' . $name : $name;

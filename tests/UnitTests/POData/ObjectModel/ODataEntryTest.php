@@ -14,6 +14,7 @@ use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
+use POData\ObjectModel\ODataTitle;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\SimpleMetadataProvider;
@@ -38,7 +39,7 @@ class ODataEntryTest extends TestCase
     public function testOkEmptyContent()
     {
         $foo                  = new ODataEntry();
-        $foo->propertyContent = new ODataPropertyContent();
+        $foo->propertyContent = new ODataPropertyContent([]);
         $expected             = 'Must have at least one property present.';
 
         $actual = null;
@@ -130,7 +131,7 @@ class ODataEntryTest extends TestCase
         $foo->setLinks([$link1, $link2]);
 
         $editLink = $foo->getEditLink();
-        $this->assertEquals('Piecez', $editLink->url);
+        $this->assertEquals('Piecez', $editLink->getUrl());
         $this->assertEquals('Piecez', $foo->resourceSetName);
     }
 
@@ -185,7 +186,7 @@ class ODataEntryTest extends TestCase
 
     public function testGetContentWhenIsMediaLinkEntry()
     {
-        $content = new ODataPropertyContent();
+        $content = new ODataPropertyContent([]);
 
         $foo = new ODataEntry();
         $foo->setPropertyContent($content);
@@ -198,10 +199,9 @@ class ODataEntryTest extends TestCase
 
     public function testIsOkWhenMPropertyContentNotEmpty()
     {
-        $property = new ODataProperty();
+        $property = new ODataProperty('', '', null);
 
-        $content               = new ODataPropertyContent();
-        $content->properties[] = $property;
+        $content               = new ODataPropertyContent([$property]);
 
         $foo = new ODataEntry();
         $foo->setPropertyContent($content);
@@ -228,5 +228,74 @@ class ODataEntryTest extends TestCase
         $foo = new ODataEntry();
 
         $this->assertNull($foo->getType());
+    }
+
+    public function testSetGetEtagRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = 'etag';
+        $expected = 'etag';
+        $actual   = $foo->setETag($etag)->getETag();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetIsMediaLinkEntry()
+    {
+        $foo = new ODataEntry();
+
+        $expected = true;
+        $actual   = $foo->setIsMediaLinkEntry(true)->getIsMediaLinkEntry();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetResourceSetNameRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = 'rSet';
+        $expected = 'rSet';
+        $actual   = $foo->setResourceSetName($etag)->getResourceSetName();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetIdRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = 'id';
+        $expected = 'id';
+        $actual   = $foo->setId($etag)->getId();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetTitleRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = new ODataTitle('title');
+        $expected = new ODataTitle('title');
+        $actual   = $foo->setTitle($etag)->getTitle();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetUpdatedRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = 'update';
+        $expected = 'update';
+        $actual   = $foo->setUpdated($etag)->getUpdated();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSetGetBaseUriRoundTrip()
+    {
+        $foo = new ODataEntry();
+
+        $etag     = 'baseURI';
+        $expected = 'baseURI';
+        $actual   = $foo->setBaseURI($etag)->getBaseURI();
+        $this->assertEquals($expected, $actual);
     }
 }

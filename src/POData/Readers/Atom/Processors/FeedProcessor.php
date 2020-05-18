@@ -16,8 +16,6 @@ use POData\ObjectModel\ODataTitle;
  */
 class FeedProcessor extends BaseNodeHandler
 {
-
-
     /**
      * @var ODataFeed
      */
@@ -62,7 +60,7 @@ class FeedProcessor extends BaseNodeHandler
             ''
         );
         $this->enqueueEnd(function () {
-            $this->oDataFeed->title = new ODataTitle($this->popCharData(), $this->titleType);
+            $this->oDataFeed->setTitle(new ODataTitle($this->popCharData(), $this->titleType));
             $this->titleType = null;
         });
     }
@@ -70,7 +68,7 @@ class FeedProcessor extends BaseNodeHandler
     public function handleStartAtomUpdated()
     {
         $this->enqueueEnd(function () {
-            $this->oDataFeed->updated = $this->popCharData();
+            $this->oDataFeed->setUpdated($this->popCharData());
         });
     }
 
@@ -84,20 +82,20 @@ class FeedProcessor extends BaseNodeHandler
             ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
             ''
         );
-        $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'selfLink' : 'nextPageLink';
-        $this->oDataFeed->{$prop} = new ODataLink(
+        $prop                     = $rel === ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE ? 'setSelfLink' : 'setNextPageLink';
+        $this->oDataFeed->{$prop}(new ODataLink(
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TITLE_ELELMET_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME, ''),
             $this->arrayKeyOrDefault($attributes, ODataConstants::ATOM_HREF_ATTRIBUTE_NAME, '')
-        );
+        ));
         $this->enqueueEnd($this->doNothing());
     }
 
     public function handleStartMetadataCount()
     {
         $this->enqueueEnd(function () {
-            $this->oDataFeed->rowCount = (int)$this->popCharData();
+            $this->oDataFeed->setRowCount((int)$this->popCharData());
         });
     }
 
@@ -108,7 +106,7 @@ class FeedProcessor extends BaseNodeHandler
     public function handleChildComplete($objectModel)
     {
         //assert($objectModel instanceof ODataEntry);
-        $this->oDataFeed->entries[] = $objectModel;
+        $this->oDataFeed->addEntry($objectModel);
     }
 
     /**

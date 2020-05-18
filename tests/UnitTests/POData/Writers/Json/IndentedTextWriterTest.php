@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace UnitTests\POData\Writers\Json;
 
 use POData\Writers\Json\IndentedTextWriter;
-use UnitTests\POData\TestCase;
+use UnitTests\POData\Writers\BaseWriterTest;
 
-class IndentedTextWriterTest extends TestCase
+/**
+ * Class IndentedTextWriterTest.
+ * @package UnitTests\POData\Writers\Json
+ */
+class IndentedTextWriterTest extends BaseWriterTest
 {
     public function testWriteLine()
     {

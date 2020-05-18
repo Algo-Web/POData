@@ -652,7 +652,7 @@ class StreamProviderWrapperTest extends TestCase
         $streamInfo = m::mock(ResourceStreamInfo::class);
         $foo->setService($service);
 
-        $result = $foo->getReadStreamUri($data, $streamInfo, 'http://www.example.com');
+        $result   = $foo->getReadStreamUri($data, $streamInfo, 'http://www.example.com');
         $expected = 'http://index';
         $this->assertEquals($expected, $result);
     }

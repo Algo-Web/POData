@@ -179,11 +179,11 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $one = new \stdClass();
-        $one->id = 1;
-        $two = new \stdClass();
-        $two->id = 2;
-        $three = new \stdClass();
+        $one       = new \stdClass();
+        $one->id   = 1;
+        $two       = new \stdClass();
+        $two->id   = 2;
+        $three     = new \stdClass();
         $three->id = 3;
 
         $fakeQueryResult          = new QueryResult();
@@ -513,11 +513,11 @@ class UriProcessorTest extends TestCase
 
         $uriProcessor = UriProcessor::process($this->mockService);
 
-        $one = new \stdClass();
-        $one->id = 1;
-        $two = new \stdClass();
-        $two->id = 2;
-        $three = new \stdClass();
+        $one       = new \stdClass();
+        $one->id   = 1;
+        $two       = new \stdClass();
+        $two->id   = 2;
+        $three     = new \stdClass();
         $three->id = 3;
 
         $fakeQueryResult          = new QueryResult();
@@ -580,11 +580,11 @@ class UriProcessorTest extends TestCase
         $this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V3());
 
-        $one = new \stdClass();
-        $one->id = 1;
-        $two = new \stdClass();
-        $two->id = 2;
-        $three = new \stdClass();
+        $one       = new \stdClass();
+        $one->id   = 1;
+        $two       = new \stdClass();
+        $two->id   = 2;
+        $three     = new \stdClass();
         $three->id = 3;
 
         $fakeQueryResult          = new QueryResult();

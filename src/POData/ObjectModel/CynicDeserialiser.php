@@ -87,28 +87,17 @@ class CynicDeserialiser
     {
         // check links
         foreach ($payload->links as $link) {
-            $hasUrl      = isset($link->url);
-            $hasExpanded = isset($link->expandedResult);
-            if ($hasUrl) {
-                if (!is_string($link->url)) {
-                    $msg = 'Url must be either string or null';
-                    throw new InvalidArgumentException($msg);
-                }
-            }
-            if ($hasExpanded) {
-                $isGood = $link->expandedResult instanceof ODataEntry || $link->expandedResult instanceof ODataFeed;
-                if (!$isGood) {
-                    $msg = 'Expanded result must null, or be instance of ODataEntry or ODataFeed';
-                    throw new InvalidArgumentException($msg);
-                }
-            }
-            $isEntry = $link->expandedResult instanceof ODataEntry;
+            /** @var ODataLink $link */
+            $hasExpanded = null !== $link->getExpandedResult();
+
+            $isEntry = ($link->getExpandedResult() ? $link->getExpandedResult()->getData() : null)
+                       instanceof ODataEntry;
 
             if ($hasExpanded) {
                 if ($isEntry) {
-                    $this->isEntryOK($link->expandedResult);
+                    $this->isEntryOK($link->getExpandedResult()->getEntry());
                 } else {
-                    foreach ($link->expandedResult->entries as $expanded) {
+                    foreach ($link->getExpandedResult()->getFeed()->getEntries() as $expanded) {
                         $this->isEntryOK($expanded);
                     }
                 }
@@ -156,7 +145,7 @@ class CynicDeserialiser
             $key     = $this->generateKeyDescriptor($type, $result);
             $keyProp = $key->getODataProperties();
             foreach ($keyProp as $keyName => $payload) {
-                $content->propertyContent->properties[$keyName] = $payload;
+                $content->propertyContent[$keyName] = $payload;
             }
         } else {
             $key = $this->generateKeyDescriptor($type, $content->propertyContent, $content->id);
@@ -212,7 +201,7 @@ class CynicDeserialiser
                 $iType = $prop->getInstanceType();
                 assert($iType instanceof IType, get_class($iType));
                 $keyName = $prop->getName();
-                $rawKey  = $isOData ? $result->properties[$keyName]->value : $result->{$keyName};
+                $rawKey  = $isOData ? $result[$keyName]->getValue() : $result->{$keyName};
                 $keyVal  = $iType->convertToOData(strval($rawKey));
                 assert(isset($keyVal), 'Key property ' . $keyName . ' must not be null');
                 $keyPredicate .= $keyName . '=' . $keyVal . ', ';
@@ -246,14 +235,14 @@ class CynicDeserialiser
      */
     protected function processLink(ODataLink &$link, ResourceSet $sourceSet, $source)
     {
-        $hasUrl     = isset($link->url);
-        $result     = $link->expandedResult;
+        $hasUrl     = null !== $link->getUrl();
+        $result     = $link->getExpandedResult() ? $link->getExpandedResult()->getData() : null;
         $hasPayload = isset($result);
         assert(
             null == $result || $result instanceof ODataEntry || $result instanceof ODataFeed,
             (null === $result ? 'null' : get_class($result))
         );
-        $isFeed = $link->expandedResult instanceof ODataFeed;
+        $isFeed = ($link->getExpandedResult() ? $link->getExpandedResult()->getData() : null) instanceof ODataFeed;
 
         // if nothing to hook up, bail out now
         if (!$hasUrl && !$hasPayload) {
@@ -282,23 +271,23 @@ class CynicDeserialiser
     protected function processLinkFeed(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         assert(
-            $link->expandedResult instanceof ODataFeed,
-            get_class($link->expandedResult)
+            $link->getExpandedResult()->getData() instanceof ODataFeed,
+            get_class($link->getExpandedResult()->getData())
         );
-        $propName = $link->title;
+        $propName = $link->getTitle();
 
         // if entries is empty, bail out - nothing to do
-        $numEntries = count($link->expandedResult->entries);
+        $numEntries = count($link->getExpandedResult()->getFeed()->getEntries());
         if (0 === $numEntries) {
             return;
         }
         // check that each entry is of consistent resource set after checking it hasn't been processed
-        $first = $link->expandedResult->entries[0]->resourceSetName;
-        if ($link->expandedResult->entries[0]->id instanceof KeyDescriptor) {
+        $first = $link->getExpandedResult()->getFeed()->getEntries()[0]->resourceSetName;
+        if ($link->getExpandedResult()->getFeed()->getEntries()[0]->id instanceof KeyDescriptor) {
             return;
         }
         for ($i = 1; $i < $numEntries; $i++) {
-            if ($first !== $link->expandedResult->entries[$i]->resourceSetName) {
+            if ($first !== $link->getExpandedResult()->getFeed()->getEntries()[$i]->resourceSetName) {
                 $msg = 'All entries in given feed must have same resource set';
                 throw new InvalidArgumentException($msg);
             }
@@ -318,11 +307,11 @@ class CynicDeserialiser
         for ($i = 0; $i < $numEntries; $i++) {
             $data[] = $this->getDeserialiser()->bulkDeserialise(
                 $targType,
-                $link->expandedResult->entries[$i]
+                $link->getExpandedResult()->getFeed()->getEntries()[$i]
             );
             $keys[] = $hasUrl ? $this->generateKeyDescriptor(
                 $targType,
-                $link->expandedResult->entries[$i]->propertyContent
+                $link->getExpandedResult()->getFeed()->getEntries()[$i]->propertyContent
             ) : null;
         }
 
@@ -333,8 +322,8 @@ class CynicDeserialiser
             for ($i = 0; $i < $numEntries; $i++) {
                 $targEntityInstance = $bulkResult[$i];
                 $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $key                                   = $this->generateKeyDescriptor($targType, $targEntityInstance);
-                $link->expandedResult->entries[$i]->id = $key;
+                $key                                                        = $this->generateKeyDescriptor($targType, $targEntityInstance);
+                $link->getExpandedResult()->getFeed()->getEntries()[$i]->id = $key;
             }
         }
         // update
@@ -343,16 +332,16 @@ class CynicDeserialiser
             for ($i = 0; $i < $numEntries; $i++) {
                 $targEntityInstance = $bulkResult[$i];
                 $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $targEntityInstance, $propName);
-                $link->expandedResult->entries[$i]->id = $keys[$i];
+                $link->getExpandedResult()->getFeed()->getEntries()[$i]->id = $keys[$i];
             }
         }
         assert(isset($bulkResult) && is_array($bulkResult));
 
         for ($i = 0; $i < $numEntries; $i++) {
-            assert($link->expandedResult->entries[$i]->id instanceof KeyDescriptor);
-            $numLinks = count($link->expandedResult->entries[$i]->links);
+            assert($link->getExpandedResult()->getFeed()->getEntries()[$i]->id instanceof KeyDescriptor);
+            $numLinks = count($link->getExpandedResult()->getFeed()->getEntries()[$i]->links);
             for ($j = 0; $j < $numLinks; $j++) {
-                $this->processLink($link->expandedResult->entries[$i]->links[$j], $targSet, $bulkResult[$i]);
+                $this->processLink($link->getExpandedResult()->getFeed()->getEntries()[$i]->links[$j], $targSet, $bulkResult[$i]);
             }
         }
 
@@ -372,27 +361,14 @@ class CynicDeserialiser
     protected function processLinkSingleton(ODataLink &$link, ResourceSet $sourceSet, $source, $hasUrl, $hasPayload)
     {
         /** @var ODataEntry|null $result */
-        $result = $link->expandedResult;
+        $result = $link->getExpandedResult() ? $link->getExpandedResult()->getEntry() : null;
         assert(
             null === $result || $result instanceof ODataEntry,
             (null === $result ? 'null' : get_class($result))
         );
-        // if link result has already been processed, bail out
-        if (null !== $result || null !== $link->url) {
-            $isUrlKey = $link->url instanceof KeyDescriptor;
-            $isIdKey  = $result instanceof ODataEntry &&
-                $result->id instanceof KeyDescriptor;
-            if ($isUrlKey || $isIdKey) {
-                if ($isIdKey) {
-                    $link->url = $result->id;
-                }
-                return;
-            }
-        }
-        assert(null === $result || !$result->id instanceof KeyDescriptor);
-        assert(null === $link->url || is_string($link->url));
+
         if ($hasUrl) {
-            $urlBitz      = explode('/', $link->url);
+            $urlBitz      = explode('/', $link->getUrl());
             $rawPredicate = $urlBitz[count($urlBitz) - 1];
             $rawPredicate = explode('(', $rawPredicate);
             $setName      = $rawPredicate[0];
@@ -401,10 +377,25 @@ class CynicDeserialiser
             assert(null !== $targSet, get_class($targSet));
             $type = $targSet->getResourceType();
         } else {
-            $type = $this->getMetaProvider()->resolveResourceType($result->type->term);
+            $type = $this->getMetaProvider()->resolveResourceType($result->type->getTerm());
         }
+
+        // if link result has already been processed, bail out
+        if (null !== $result || null !== $link->getUrl()) {
+            $isUrlKey = $link->getUrl() instanceof KeyDescriptor;
+            $isIdKey  = $result instanceof ODataEntry &&
+                $result->id instanceof KeyDescriptor;
+            if ($isUrlKey || $isIdKey) {
+                if ($isIdKey) {
+                }
+                return;
+            }
+        }
+        assert(null === $result || !$result->id instanceof KeyDescriptor);
+        assert(null === $link->getUrl() || is_string($link->getUrl()));
+
         assert($type instanceof ResourceEntityType, get_class($type));
-        $propName = $link->title;
+        $propName = $link->getTitle();
 
         /** @var KeyDescriptor|null $keyDesc */
         $keyDesc = null;
@@ -423,7 +414,6 @@ class CynicDeserialiser
             $target = $this->getWrapper()->getResourceFromResourceSet($targSet, $keyDesc);
             assert(isset($target));
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
-            $link->url = $keyDesc;
             return;
         }
         // creating new resource
@@ -431,7 +421,7 @@ class CynicDeserialiser
             list($targSet, $target) = $this->processEntryContent($result);
             assert(isset($target));
             $key        = $this->generateKeyDescriptor($type, $result->propertyContent);
-            $link->url  = $key;
+            $link->setUrl($key->generateRelativeUri($targSet));
             $result->id = $key;
             $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
             return;
@@ -439,7 +429,6 @@ class CynicDeserialiser
         // updating existing resource and connecting to it
         list($targSet, $target) = $this->processEntryContent($result);
         assert(isset($target));
-        $link->url  = $keyDesc;
         $result->id = $keyDesc;
         $this->getWrapper()->hookSingleModel($sourceSet, $source, $targSet, $target, $propName);
         return;
@@ -457,7 +446,7 @@ class CynicDeserialiser
             return false;
         }
         foreach ($payload->links as $link) {
-            $expand = $link->expandedResult;
+            $expand = $link->getExpandedResult() ? $link->getExpandedResult()->getData() : null;
             if (null === $expand) {
                 continue;
             }
@@ -469,7 +458,7 @@ class CynicDeserialiser
                 }
             }
             if ($expand instanceof ODataFeed) {
-                foreach ($expand->entries as $entry) {
+                foreach ($expand->getEntries() as $entry) {
                     if (!$this->isEntryProcessed($entry, $depth + 1)) {
                         return false;
                     }

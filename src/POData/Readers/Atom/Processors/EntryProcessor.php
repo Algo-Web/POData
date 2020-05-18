@@ -109,7 +109,7 @@ class EntryProcessor extends BaseNodeHandler
             ''
         );
         $this->enqueueEnd(function () use ($titleType) {
-            $this->oDataEntry->title = new ODataTitle($this->popCharData(), $titleType);
+            $this->oDataEntry->setTitle(new ODataTitle($this->popCharData(), $titleType));
         });
     }
 
@@ -122,7 +122,7 @@ class EntryProcessor extends BaseNodeHandler
     protected function handleStartAtomUpdated()
     {
         $this->enqueueEnd(function () {
-            $this->oDataEntry->updated = $this->popCharData();
+            $this->oDataEntry->setUpdated($this->popCharData());
         });
     }
 
@@ -171,7 +171,7 @@ class EntryProcessor extends BaseNodeHandler
      */
     private function handleODataLink(ODataLink $link)
     {
-        if ($link->name === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
+        if ($link->getName() === ODataConstants::ATOM_EDIT_RELATION_ATTRIBUTE_VALUE) {
             $this->oDataEntry->editLink = $link;
         } else {
             $this->oDataEntry->links[] = $link;

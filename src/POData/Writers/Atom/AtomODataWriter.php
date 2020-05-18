@@ -186,7 +186,7 @@ class AtomODataWriter implements IODataWriter
     {
         $this->xmlWriter->startElement(ODataConstants::ATOM_URI_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX, ODataConstants::ODATA_NAMESPACE);
-        $this->xmlWriter->text($url->url);
+        $this->xmlWriter->text($url->getUrl());
         $this->xmlWriter->endElement();
 
         return $this;
@@ -207,7 +207,7 @@ class AtomODataWriter implements IODataWriter
             ODataConstants::ODATA_NAMESPACE
         );
         $this->xmlWriter->endAttribute();
-        if ($urls->count != null) {
+        if ($urls->getCount() !== null) {
             $this->xmlWriter->writeAttributeNs(
                 ODataConstants::XMLNS_NAMESPACE_PREFIX,
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
@@ -220,15 +220,15 @@ class AtomODataWriter implements IODataWriter
                 ODataConstants::ROWCOUNT_ELEMENT,
                 null
             );
-            $this->xmlWriter->text(strval($urls->count));
+            $this->xmlWriter->text(strval($urls->getCount()));
             $this->xmlWriter->endElement();
         }
-        foreach ($urls->urls as $url) {
-            $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->url);
+        foreach ($urls->getUrls() as $url) {
+            $this->writeNodeValue(ODataConstants::ATOM_URI_ELEMENT_NAME, $url->getUrl());
         }
 
-        if ($urls->nextPageLink != null) {
-            $this->writeLinkNode($urls->nextPageLink, false);
+        if ($urls->getNextPageLink() != null) {
+            $this->writeLinkNode($urls->getNextPageLink(), false);
         }
         $this->xmlWriter->endElement();
 
@@ -265,23 +265,23 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter->startElement(ODataConstants::ATOM_LINK_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_LINK_RELATION_ATTRIBUTE_NAME,
-            $link->name ?? ''
+            $link->getName() ?? ''
         );
-        if ($link->type != null) {
+        if ($link->getType() != null) {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
-                $link->type ?? ''
+                $link->getType() ?? ''
             );
         }
-        if ($link->title != null) {
+        if ($link->getTitle() != null) {
             $this->xmlWriter->writeAttribute(
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
-                $link->title ?? ''
+                $link->getTitle() ?? ''
             );
         }
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_HREF_ATTRIBUTE_NAME,
-            $link->url ?? ''
+            $link->getUrl() ?? ''
         );
         if (!$isExpanded) {
             $this->xmlWriter->endElement();
@@ -303,17 +303,17 @@ class AtomODataWriter implements IODataWriter
     protected function writeProperties(ODataPropertyContent $properties = null, $topLevel = false)
     {
         if (null !== $properties) {
-            foreach ($properties->properties as $property) {
+            foreach ($properties as $property) {
                 $this->beginWriteProperty($property, $topLevel);
 
-                if ($property->value == null) {
+                if ($property->getValue() == null) {
                     $this->writeNullValue($property);
-                } elseif ($property->value instanceof ODataPropertyContent) {
-                    $this->writeProperties($property->value, false);
-                } elseif ($property->value instanceof ODataBagContent) {
-                    $this->writeBagContent($property->value);
+                } elseif ($property->getValue() instanceof ODataPropertyContent) {
+                    $this->writeProperties($property->getValue(), false);
+                } elseif ($property->getValue() instanceof ODataBagContent) {
+                    $this->writeBagContent($property->getValue());
                 } else {
-                    $value = $this->beforeWriteValue($property->value, $property->typeName);
+                    $value = $this->beforeWriteValue($property->getValue(), $property->getTypeName());
                     $this->xmlWriter->text(strval($value));
                 }
 
@@ -336,16 +336,16 @@ class AtomODataWriter implements IODataWriter
     {
         $this->xmlWriter->startElementNs(
             ODataConstants::ODATA_NAMESPACE_PREFIX,
-            $property->name,
+            $property->getName(),
             null
         );
-        if ($property->typeName != null) {
+        if (!empty($property->getTypeName())) {
             $this->xmlWriter->startAttributeNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 null
             );
-            $this->xmlWriter->text($property->typeName);
+            $this->xmlWriter->text($property->getTypeName());
         }
         if ($isTopLevel) {
             $this->xmlWriter->startAttribute(ODataConstants::XMLNS_NAMESPACE_PREFIX);
@@ -363,7 +363,7 @@ class AtomODataWriter implements IODataWriter
             );
             $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
         }
-        if ($property->typeName != null || $isTopLevel) {
+        if (!empty($property->getTypeName()) || $isTopLevel) {
             $this->xmlWriter->endAttribute();
         }
 
@@ -400,7 +400,7 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeBagContent(ODataBagContent $bag)
     {
-        foreach ($bag->propertyContents as $content) {
+        foreach ($bag->getPropertyContents() as $content) {
             if ($content instanceof ODataPropertyContent) {
                 $this->xmlWriter->startElementNs(
                     ODataConstants::ODATA_NAMESPACE_PREFIX,
@@ -464,7 +464,7 @@ class AtomODataWriter implements IODataWriter
             $this->writeBaseUriAndDefaultNamespaces();
         }
 
-        $effectiveTitle = $feed->title instanceof ODataTitle ? $feed->title->title : $feed->title;
+        $effectiveTitle = $feed->getTitle()->getTitle();
         $this
             ->writeNodeAttributeValue(
                 ODataConstants::ATOM_TITLE_ELELMET_NAME,
@@ -474,24 +474,24 @@ class AtomODataWriter implements IODataWriter
             )
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $feed->id)
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM))
-            ->writeLinkNode($feed->selfLink, false);
+            ->writeLinkNode($feed->getSelfLink(), false);
 
-        if ($feed->rowCount != null) {
+        if ($feed->getRowCount() != null) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ROWCOUNT_ELEMENT,
                 null
             );
-            $this->xmlWriter->text($feed->rowCount);
+            $this->xmlWriter->text(strval($feed->getRowCount()));
             $this->xmlWriter->endElement();
         }
 
-        foreach ($feed->entries as $entry) {
+        foreach ($feed->getEntries() as $entry) {
             $this->writeEntry($entry);
         }
 
-        if ($feed->nextPageLink != null) {
-            $this->writeLinkNode($feed->nextPageLink, false);
+        if ($feed->getNextPageLink() != null) {
+            $this->writeLinkNode($feed->getNextPageLink(), false);
         }
         $this->xmlWriter->endElement();
 
@@ -614,7 +614,7 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->endAttribute();
         }
 
-        $effectiveTitle = $entry->title instanceof ODataTitle ? $entry->title->title : $entry->title;
+        $effectiveTitle = $entry->getTitle()->getTitle();
         $this
             ->writeNodeValue(ODataConstants::ATOM_ID_ELEMENT_NAME, $entry->id)
             ->writeNodeAttributeValue(
@@ -642,7 +642,7 @@ class AtomODataWriter implements IODataWriter
         if (null === $entry->editLink || is_string($entry->editLink)) {
             $this->xmlWriter->text(strval($entry->editLink));
         } else {
-            $this->xmlWriter->text($entry->editLink->url);
+            $this->xmlWriter->text($entry->editLink->getUrl());
         }
         $this->xmlWriter->endAttribute();
 
@@ -721,20 +721,20 @@ class AtomODataWriter implements IODataWriter
      */
     protected function writeLink(ODataLink $link)
     {
-        $this->writeLinkNode($link, $link->isExpanded);
+        $this->writeLinkNode($link, $link->isExpanded());
 
-        if ($link->isExpanded) {
+        if ($link->isExpanded()) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_INLINE_ELEMENT_NAME,
                 null
             );
 
-            if (null !== $link->expandedResult) {
-                if ($link->isCollection) {
-                    $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+            if (null !== $link->getExpandedResult() && null != $link->getExpandedResult()->getData()) {
+                if ($link->isCollection()) {
+                    $this->writeFeed($link->getExpandedResult()->getFeed());
                 } else {
-                    $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+                    $this->writeEntry($link->getExpandedResult()->getEntry());
                 }
             }
 
@@ -754,7 +754,7 @@ class AtomODataWriter implements IODataWriter
      */
     public function postWriteProperties(ODataEntry $entry)
     {
-        if (!$entry->isMediaLinkEntry) {
+        if (true !== $entry->isMediaLinkEntry) {
             $this->xmlWriter->endElement();
         }
         $this->xmlWriter->endElement();
@@ -771,7 +771,7 @@ class AtomODataWriter implements IODataWriter
      */
     public function preWriteProperties(ODataEntry $entry)
     {
-        $effectiveType = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
+        $effectiveType = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
         $this->xmlWriter->startElement(ODataConstants::ATOM_CATEGORY_ELEMENT_NAME);
         $this->xmlWriter->writeAttribute(
             ODataConstants::ATOM_CATEGORY_TERM_ATTRIBUTE_NAME,

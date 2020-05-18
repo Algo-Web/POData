@@ -150,7 +150,7 @@ class JsonODataV1Writer implements IODataWriter
     {
         $this->writer
             ->writeName($this->urlKey)
-            ->writeValue($url->url);
+            ->writeValue($url->getUrl());
 
         return $this;
     }
@@ -165,7 +165,7 @@ class JsonODataV1Writer implements IODataWriter
      */
     public function writeUrlCollection(ODataURLCollection $urls)
     {
-        foreach ($urls->urls as $url) {
+        foreach ($urls->getUrls() as $url) {
             $this->writer->startObjectScope();
             $this->writeUrl($url);
             $this->writer->endScope();
@@ -186,18 +186,18 @@ class JsonODataV1Writer implements IODataWriter
     protected function writeProperties(ODataPropertyContent $properties = null)
     {
         if (null !== $properties) {
-            foreach ($properties->properties as $property) {
+            foreach ($properties as $property) {
                 $this->writePropertyMeta($property);
-                $this->writer->writeName($property->name);
+                $this->writer->writeName($property->getName());
 
-                if ($property->value == null) {
+                if ($property->getValue() == null) {
                     $this->writer->writeValue('null');
-                } elseif ($property->value instanceof ODataPropertyContent) {
+                } elseif ($property->getValue() instanceof ODataPropertyContent) {
                     $this->writeComplexProperty($property);
-                } elseif ($property->value instanceof ODataBagContent) {
-                    $this->writeBagContent($property->value);
+                } elseif ($property->getValue() instanceof ODataBagContent) {
+                    $this->writeBagContent($property->getValue());
                 } else {
-                    $this->writer->writeValue($property->value, $property->typeName);
+                    $this->writer->writeValue($property->getValue(), $property->getTypeName());
                 }
             }
         }
@@ -231,10 +231,10 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)
             ->startObjectScope()
             ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($property->typeName)
+            ->writeValue($property->getTypeName())
             ->endScope();
 
-        $this->writeProperties($property->value);
+        $this->writeProperties($property->getValue());
 
         $this->writer->endScope();
 
@@ -256,12 +256,12 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)//__metadata : { Type : "typename" }
             ->startObjectScope()
             ->writeName(ODataConstants::JSON_TYPE_STRING)
-            ->writeValue($bag->type)
+            ->writeValue($bag->getType())
             ->endScope()// }
             ->writeName(ODataConstants::JSON_RESULT_NAME)// "__results":
             ->startArrayScope(); // [
 
-        foreach ($bag->propertyContents as $content) {
+        foreach ($bag->getPropertyContents() as $content) {
             if ($content instanceof ODataPropertyContent) {
                 $this->writer->startObjectScope();
                 $this->writeProperties($content);
@@ -269,7 +269,7 @@ class JsonODataV1Writer implements IODataWriter
             } else {
                 // retrieving the collection datatype in order
                 //to write in json specific format, with in chords or not
-                preg_match('#\((.*?)\)#', $bag->type, $type);
+                preg_match('#\((.*?)\)#', $bag->getType(), $type);
                 $this->writer->writeValue($content, $type[1]);
             }
         }
@@ -290,7 +290,7 @@ class JsonODataV1Writer implements IODataWriter
      */
     protected function writeFeed(ODataFeed $feed)
     {
-        foreach ($feed->entries as $entry) {
+        foreach ($feed->getEntries() as $entry) {
             $this->writer->startObjectScope();
             $this->writeEntry($entry);
             $this->writer->endScope();
@@ -308,7 +308,7 @@ class JsonODataV1Writer implements IODataWriter
     protected function writeEntry(ODataEntry $entry)
     {
         $this->writeEntryMetadata($entry);
-        foreach ($entry->links as $link) {
+        foreach ($entry->getLinks() as $link) {
             $this->writeLink($link);
         }
 
@@ -332,28 +332,29 @@ class JsonODataV1Writer implements IODataWriter
             ->writeName(ODataConstants::JSON_METADATA_STRING)
             ->startObjectScope();
         // __metadata : { uri: "Uri", type: "Type" [Media Link Properties] }
-        if ($entry->id != null || $entry->type != null || $entry->eTag != null) {
-            // Write uri value only for entity types
-            if ($entry->id != null) {
-                $this->writer
-                    ->writeName($this->urlKey)
-                    ->writeValue($entry->id);
-            }
+        $hasId   = !empty($entry->id);
+        $hasType = !empty($entry->type);
+        $hasEtag = !empty($entry->eTag);
+        // Write uri value only for entity types
+        if ($hasId) {
+            $this->writer
+                ->writeName($this->urlKey)
+                ->writeValue($entry->id);
+        }
 
-            // Write the etag property, if the entry has etag properties.
-            if ($entry->eTag != null) {
-                $this->writer
-                    ->writeName(ODataConstants::JSON_ETAG_STRING)
-                    ->writeValue($entry->eTag);
-            }
+        // Write the etag property, if the entry has etag properties.
+        if ($hasEtag) {
+            $this->writer
+                ->writeName(ODataConstants::JSON_ETAG_STRING)
+                ->writeValue($entry->eTag);
+        }
 
-            // Write the type property, if the entry has type properties.
-            if ($entry->type != null) {
-                $value = $entry->type instanceof ODataCategory ? $entry->type->term : $entry->type;
-                $this->writer
-                    ->writeName(ODataConstants::JSON_TYPE_STRING)
-                    ->writeValue($value);
-            }
+        // Write the type property, if the entry has type properties.
+        if ($hasType) {
+            $value = $entry->type instanceof ODataCategory ? $entry->type->getTerm() : $entry->type;
+            $this->writer
+                ->writeName(ODataConstants::JSON_TYPE_STRING)
+                ->writeValue($value);
         }
 
         // Media links.
@@ -411,10 +412,10 @@ class JsonODataV1Writer implements IODataWriter
     {
 
         // "<linkname>" :
-        $this->writer->writeName($link->title);
+        $this->writer->writeName($link->getTitle());
 
-        if ($link->isExpanded) {
-            if (null === $link->expandedResult) {
+        if ($link->isExpanded()) {
+            if (null === $link->getExpandedResult() || null === $link->getExpandedResult()->getData()) {
                 $this->writer->writeValue('null');
             } else {
                 $this->writeExpandedLink($link);
@@ -425,7 +426,7 @@ class JsonODataV1Writer implements IODataWriter
                 ->writeName(ODataConstants::JSON_DEFERRED_STRING)
                 ->startObjectScope()
                 ->writeName($this->urlKey)
-                ->writeValue($link->url)
+                ->writeValue($link->getUrl())
                 ->endScope()
                 ->endScope();
         }
@@ -439,12 +440,12 @@ class JsonODataV1Writer implements IODataWriter
      */
     protected function writeExpandedLink(ODataLink $link)
     {
-        if ($link->isCollection) {
+        if ($link->isCollection()) {
             $this->writer->startArrayScope();
-            $this->writeFeed(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeFeed($link->getExpandedResult()->getFeed());
         } else {
             $this->writer->startObjectScope();
-            $this->writeEntry(/* @scrutinizer ignore-type */ $link->expandedResult);
+            $this->writeEntry($link->getExpandedResult()->getEntry());
         }
 
         $this->writer->endScope();

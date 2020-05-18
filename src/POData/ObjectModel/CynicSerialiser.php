@@ -88,7 +88,7 @@ class CynicSerialiser implements IObjectSerialiser
     private $lightStack = [];
 
     /**
-     * Update time to insert into ODataEntry/ODataFeed fields
+     * Update time to insert into ODataEntry/ODataFeed fields.
      * @var \DateTime;
      */
     private $updated;
@@ -100,8 +100,8 @@ class CynicSerialiser implements IObjectSerialiser
     private $isBaseWritten = false;
 
     /**
-     * @param IService                $service Reference to the data service instance
-     * @param RequestDescription|null $request Type instance describing the client submitted request
+     * @param  IService                $service Reference to the data service instance
+     * @param  RequestDescription|null $request Type instance describing the client submitted request
      * @throws \Exception
      */
     public function __construct(IService $service, RequestDescription $request = null)
@@ -126,52 +126,55 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeTopLevelElements(QueryResult &$entryObjects)
     {
-        $results = $entryObjects->results;
-        if (!is_array($results)) {
+        $res = $entryObjects->results;
+        if (!(is_array($res))) {
             throw new InvalidOperationException('!is_array($entryObjects->results)');
         }
-        //TODO: this line is kinda bodgy? accessor on "HasMore" would be a better option.
-        $entryObjects->hasMore = $entryObjects->hasMore && 0 !== count($results);
-        $pageSize              = $this->getService()->getConfiguration()->getEntitySetPageSize(
-            $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet()
-        );
-        $requestTop  = $this->getRequest()->getTopOptionCount() ?? PHP_INT_MAX ;
-        $entryObjects->hasMore &= $requestTop > $pageSize;
+
+        if (is_array($res) && 0 == count($entryObjects->results)) {
+            $entryObjects->hasMore = false;
+        }
 
         $this->loadStackIfEmpty();
+        $setName = $this->getRequest()->getTargetResourceSetWrapper()->getName();
 
-        $baseUri             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $title       = $this->getRequest()->getContainerName();
+        $relativeUri = $this->getRequest()->getIdentifier();
+        $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
+
+
+        $selfLink            = new ODataLink('self', $title, null, $relativeUri);
+        $title               = new ODataTitle($title);
+        $id                  = $absoluteUri;
+        $updated             = $this->getUpdated()->format(DATE_ATOM);
+        $baseURI             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $entries             = [];
         $this->isBaseWritten = true;
-        $request             = $this->getRequest();
+        $nextLink            = null;
 
-        return new ODataFeed(
-            $request->getRequestUrl()->getUrlAsString(),
-            new ODataTitle($this->getRequest()->getContainerName()),
-            new ODataLink(
-                'self',
-                $request->getContainerName(),
-                null,
-                $request->getIdentifier()
-            ),
-            $request->queryType == QueryType::ENTITIES_WITH_COUNT() ?
-                $request->getCountValue() :
-                null,
-            $entryObjects->hasMore ? new ODataLink(
-                ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
-                null,
-                null,
-                rtrim($this->absoluteServiceUri, '/') .
-                '/' . $request->getTargetResourceSetWrapper()->getName() .
-                $this->getNextLinkUri(end($results))
-            ) : null,
-            array_map(function ($entry) {
-                return $this->writeTopLevelElement(
-                    $entry instanceof QueryResult ? $entry : new QueryResult($entry)
-                );
-            }, $results),
-            $this->getUpdated()->format(DATE_ATOM),
-            $baseUri
-        );
+        $rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
+            $this->getRequest()->getCountValue() :
+            null;
+        foreach ($res as $entry) {
+            $query     = $entry instanceof QueryResult ? $entry : new QueryResult($entry);
+            $entries[] = $this->writeTopLevelElement($query);
+        }
+
+        $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
+        $requestTop  = $this->getRequest()->getTopOptionCount();
+        $pageSize    = $this->getService()->getConfiguration()->getEntitySetPageSize($resourceSet);
+        $requestTop  = (null === $requestTop) ? $pageSize + 1 : $requestTop;
+
+        if (true === $entryObjects->hasMore && $requestTop > $pageSize) {
+            $stackSegment        = $setName;
+            $lastObject          = end($entryObjects->results);
+            $segment             = $this->getNextLinkUri($lastObject);
+            $nextLink            = new ODataNextPageLink(
+                rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment
+            );
+        }
+
+        return new ODataFeed($id, $title, $selfLink, $rowCount, $nextLink, $entries, $updated, $baseURI);
     }
 
     /**
@@ -284,7 +287,6 @@ class CynicSerialiser implements IObjectSerialiser
 
         $resourceSet = $resourceType->getCustomState();
         assert($resourceSet instanceof ResourceSet);
-        $title = $resourceType->getName();
         $type  = $resourceType->getFullName();
 
         $relativeUri = $this->getEntryInstanceKey(
@@ -293,19 +295,19 @@ class CynicSerialiser implements IObjectSerialiser
             $resourceSet->getName()
         );
         $absoluteUri = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
-
-        list($mediaLink, $mediaLinks) = $this->writeMediaData(
+        $mediaLinks  = $this->writeMediaData(
             $entryObject->results,
             $type,
             $relativeUri,
             $resourceType
         );
+        $mediaLink = array_shift($mediaLinks);
+
 
         $propertyContent = $this->writeProperties($entryObject->results, $nonRelProp);
 
         $links = [];
         foreach ($relProp as $prop) {
-            $nuLink   = new ODataLink();
             $propKind = $prop->getKind();
 
             assert(
@@ -315,42 +317,44 @@ class CynicSerialiser implements IObjectSerialiser
                 . ' $propKind != ResourcePropertyKind::RESOURCE_REFERENCE'
             );
             $propTail             = ResourcePropertyKind::RESOURCE_REFERENCE() == $propKind ? 'entry' : 'feed';
-            $nuLink->isCollection = 'feed' === $propTail;
             $propType             = 'application/atom+xml;type=' . $propTail;
             $propName             = $prop->getName();
-            $nuLink->title        = $propName;
-            $nuLink->name         = ODataConstants::ODATA_RELATED_NAMESPACE . $propName;
-            $nuLink->url          = $relativeUri . '/' . $propName;
-            $nuLink->type         = $propType;
+            $nuLink               = new ODataLink(
+                ODataConstants::ODATA_RELATED_NAMESPACE . $propName,
+                $propName,
+                $propType,
+                $relativeUri . '/' . $propName,
+                'feed' === $propTail
+            );
+
 
             $shouldExpand = $this->shouldExpandSegment($propName);
 
-            $navProp = new ODataNavigationPropertyInfo($prop, $shouldExpand);
-            if ($navProp->expanded) {
+            if ($shouldExpand) {
                 $this->expandNavigationProperty($entryObject, $prop, $nuLink, $propKind, $propName);
             }
-            $nuLink->isExpanded = isset($nuLink->expandedResult);
-            assert(null !== $nuLink->isCollection);
+            $nuLink->setIsExpanded(null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData());
+            assert(null !== $nuLink->isCollection());
 
             $links[] = $nuLink;
         }
 
-        $odata                   = new ODataEntry();
-        $odata->resourceSetName  = $resourceSet->getName();
-        $odata->id               = $absoluteUri;
-        $odata->title            = new ODataTitle($title);
-        $odata->type             = new ODataCategory($type);
-        $odata->propertyContent  = $propertyContent;
-        $odata->isMediaLinkEntry = true === $resourceType->isMediaLinkEntry() ? true : null;
-        $odata->editLink         = new ODataLink();
-        $odata->editLink->url    = $relativeUri;
-        $odata->editLink->name   = 'edit';
-        $odata->editLink->title  = $title;
-        $odata->mediaLink        = $mediaLink;
-        $odata->mediaLinks       = $mediaLinks;
-        $odata->links            = $links;
-        $odata->updated          = $this->getUpdated()->format(DATE_ATOM);
-        $odata->baseURI          = $baseURI;
+        $odata                   = new ODataEntry(
+            $absoluteUri,
+            null,
+            new ODataTitle($resourceType->getName()),
+            new ODataLink('edit', $resourceType->getName(), null, $relativeUri),
+            new ODataCategory($type),
+            $propertyContent,
+            $mediaLinks,
+            $mediaLink,
+            $links,
+            null,
+            true === $resourceType->isMediaLinkEntry(),
+            $resourceSet->getName(),
+            $this->getUpdated()->format(DATE_ATOM),
+            $baseURI
+        );
 
         $newCount = count($this->lightStack);
         assert(
@@ -499,7 +503,7 @@ class CynicSerialiser implements IObjectSerialiser
      * @param $relativeUri
      * @param $resourceType
      *
-     * @return array<ODataMediaLink|array|null>
+     * @return ODataMediaLink[]|null[]
      */
     protected function writeMediaData($entryObject, $type, $relativeUri, ResourceType $resourceType)
     {
@@ -538,7 +542,7 @@ class CynicSerialiser implements IObjectSerialiser
             }
         }
 
-        return [$mediaLink, $mediaLinks];
+        return array_merge([$mediaLink], $mediaLinks);
     }
 
     /**
@@ -551,7 +555,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     private function writeProperties($entryObject, $nonRelProp)
     {
-        $propertyContent = new ODataPropertyContent();
+        $properties = [];
         foreach ($nonRelProp as $corn => $flake) {
             /** @var ResourceType $resource */
             $resource = $nonRelProp[$corn]->getResourceType();
@@ -563,25 +567,24 @@ class CynicSerialiser implements IObjectSerialiser
             $typePrepend       = $isBag ? 'Collection(' : '';
             $typeAppend        = $isBag ? ')' : '';
             $nonNull           = null !== $result;
-            $subProp           = new ODataProperty();
-            $subProp->name     = strval($corn);
-            $subProp->typeName = $typePrepend . $resource->getFullName() . $typeAppend;
-
+            $name              = strval($corn);
+            $typeName          = $typePrepend . $resource->getFullName() . $typeAppend;
+            $value             = null;
             if ($nonNull && is_array($result)) {
-                $subProp->value = $this->writeBagValue($resource, $result);
+                $value = $this->writeBagValue($resource, $result);
             } elseif ($resource instanceof ResourcePrimitiveType && $nonNull) {
                 $rType = $resource->getInstanceType();
                 if (!$rType instanceof IType) {
                     throw new InvalidOperationException(get_class($rType));
                 }
-                $subProp->value = $this->primitiveToString($rType, $result);
+                $value = $this->primitiveToString($rType, $result);
             } elseif ($resource instanceof ResourceComplexType && $nonNull) {
-                $subProp->value = $this->writeComplexValue($resource, $result, $flake->getName());
+                $value = $this->writeComplexValue($resource, $result, $flake->getName());
             }
-            $propertyContent->properties[$corn] = $subProp;
+            $properties[$corn] = new ODataProperty($name, $typeName, $value);
         }
 
-        return $propertyContent;
+        return new ODataPropertyContent($properties);
     }
 
     /**
@@ -616,9 +619,9 @@ class CynicSerialiser implements IObjectSerialiser
                     if (!$instance instanceof IType) {
                         throw new InvalidOperationException(get_class($instance));
                     }
-                    $bag->propertyContents[] = $this->primitiveToString($instance, $value);
+                    $bag->addPropertyContent($this->primitiveToString($instance, $value));
                 } elseif (ResourceTypeKind::COMPLEX() == $typeKind) {
-                    $bag->propertyContents[] = $this->writeComplexValue($resourceType, $value);
+                    $bag->addPropertyContent($this->writeComplexValue($resourceType, $value));
                 }
             }
         }
@@ -677,14 +680,15 @@ class CynicSerialiser implements IObjectSerialiser
 
         $this->complexTypeInstanceCollection[$count] = &$result;
 
-        $internalContent    = new ODataPropertyContent();
+        $properties         = [];
         $resourceProperties = $resourceType->getAllProperties();
         // first up, handle primitive properties
         foreach ($resourceProperties as $prop) {
             $resourceKind           = $prop->getKind();
             $propName               = $prop->getName();
-            $internalProperty       = new ODataProperty();
-            $internalProperty->name = $propName;
+            $name                   = $propName;
+            $typeName               = null;
+            $value                  = null;
             $raw                    = $result->{$propName};
             if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
@@ -692,28 +696,28 @@ class CynicSerialiser implements IObjectSerialiser
                     throw new InvalidOperationException(get_class($iType));
                 }
 
-                $internalProperty->typeName = $iType->getFullTypeName();
+                $typeName = $iType->getFullTypeName();
 
                 $rType = $prop->getResourceType()->getInstanceType();
                 if (!$rType instanceof IType) {
                     throw new InvalidOperationException(get_class($rType));
                 }
                 if (null !== $raw) {
-                    $internalProperty->value = $this->primitiveToString($rType, $raw);
+                    $value = $this->primitiveToString($rType, $raw);
                 }
             } elseif (ResourcePropertyKind::COMPLEX_TYPE() == $resourceKind) {
                 $rType                      = $prop->getResourceType();
-                $internalProperty->typeName = $rType->getFullName();
+                $typeName                   = $rType->getFullName();
                 if (null !== $raw) {
-                    $internalProperty->value = $this->writeComplexValue($rType, $raw, $propName);
+                    $value = $this->writeComplexValue($rType, $raw, $propName);
                 }
             }
-            $internalContent->properties[$propName] = $internalProperty;
+            $properties[$propName] = new ODataProperty($name, $typeName, $value);
         }
 
         unset($this->complexTypeInstanceCollection[$count]);
 
-        return $internalContent;
+        return new ODataPropertyContent($properties);
     }
 
     /**
@@ -774,10 +778,10 @@ class CynicSerialiser implements IObjectSerialiser
         string $propName
     ) {
         $nextName             = $prop->getResourceType()->getName();
-        $nuLink->isExpanded   = true;
+        $nuLink->setIsExpanded(true);
         $value                = $entryObject->results->{$propName};
         $isCollection         = ResourcePropertyKind::RESOURCESET_REFERENCE() == $propKind;
-        $nuLink->isCollection = $isCollection;
+        $nuLink->setIsCollection($isCollection);
         $nullResult           = null === $value;
         $object               = (is_object($value));
         $resultCount          = ($nullResult) ? 0 : ($object ? 1 : count($value));
@@ -790,32 +794,32 @@ class CynicSerialiser implements IObjectSerialiser
                 array_push($this->lightStack, $newStackLine);
                 if (isset($value)) {
                     if (!$isCollection) {
-                        $nuLink->type   = 'application/atom+xml;type=entry';
+                        $nuLink->setType('application/atom+xml;type=entry');
                         $expandedResult = $this->writeTopLevelElement($result);
                     } else {
-                        $nuLink->type   = 'application/atom+xml;type=feed';
+                        $nuLink->setType('application/atom+xml;type=feed');
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
-                    $nuLink->expandedResult = $expandedResult;
+                    if (null !== $expandedResult) {
+                        $nuLink->setExpandedResult(new ODataExpandedResult($expandedResult));
+                    }
                 }
             }
         } else {
             $type = $this->getService()->getProvidersWrapper()->resolveResourceType($nextName);
-            if (!$isCollection) {
+            if ($isCollection) {
+                $result = new ODataFeed(null, null, new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE));
+            } else {
                 $result                  = new ODataEntry();
                 $result->resourceSetName = $type->getName();
-            } else {
-                $result                 = new ODataFeed();
-                $result->selfLink       = new ODataLink();
-                $result->selfLink->name = ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE;
             }
-            $nuLink->expandedResult = $result;
+            $nuLink->setExpandedResult(new ODataExpandedResult($result));
         }
-        if (isset($nuLink->expandedResult->selfLink)) {
-            $nuLink->expandedResult->selfLink->title = $propName;
-            $nuLink->expandedResult->selfLink->url   = $nuLink->url;
-            $nuLink->expandedResult->title           = new ODataTitle($propName);
-            $nuLink->expandedResult->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->url;
+        if (null !== $nuLink->getExpandedResult() && null !== $nuLink->getExpandedResult()->getData() && null !== $nuLink->getExpandedResult()->getData()->getSelfLink()) {
+            $nuLink->getExpandedResult()->getData()->getSelfLink()->setTitle($propName);
+            $nuLink->getExpandedResult()->getData()->getSelfLink()->setUrl($nuLink->getUrl());
+            $nuLink->getExpandedResult()->getData()->setTitle(new ODataTitle($propName));
+            $nuLink->getExpandedResult()->getData()->id              = rtrim($this->absoluteServiceUri, '/') . '/' . $nuLink->getUrl();
         }
     }
 
@@ -906,7 +910,9 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeUrlElements(QueryResult $entryObjects)
     {
-        $urls = new ODataURLCollection();
+        $urls         = [];
+        $count        = null;
+        $nextPageLink = null;
         if (!empty($entryObjects->results)) {
             $i = 0;
             foreach ($entryObjects->results as $entryObject) {
@@ -916,7 +922,7 @@ class CynicSerialiser implements IObjectSerialiser
                 } else {
                     $query = $entryObject;
                 }
-                $urls->urls[$i] = $this->writeUrlElement($query);
+                $urls[$i] = $this->writeUrlElement($query);
                 ++$i;
             }
 
@@ -924,19 +930,21 @@ class CynicSerialiser implements IObjectSerialiser
                 $stackSegment       = $this->getRequest()->getTargetResourceSetWrapper()->getName();
                 $lastObject         = end($entryObjects->results);
                 $segment            = $this->getNextLinkUri($lastObject);
-                $nextLink           = new ODataLink();
-                $nextLink->name     = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-                $nextLink->url      = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment;
-                $nextLink->url      = ltrim($nextLink->url, '/');
-                $urls->nextPageLink = $nextLink;
+                $nextLink           = new ODataLink(
+                    ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
+                    null,
+                    null,
+                    ltrim(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment, '/')
+                );
+                $nextPageLink = $nextLink;
             }
         }
 
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $urls->count = $this->getRequest()->getCountValue();
+            $count = $this->getRequest()->getCountValue();
         }
 
-        return $urls;
+        return new ODataURLCollection($urls, $nextPageLink, $count);
     }
 
     /**
@@ -950,7 +958,7 @@ class CynicSerialiser implements IObjectSerialiser
      */
     public function writeUrlElement(QueryResult $entryObject)
     {
-        $url = new ODataURL();
+        $url = null;
 
         /** @var object|null $results */
         $results = $entryObject->results;
@@ -962,7 +970,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $this->getCurrentResourceSetWrapper()->getName()
             );
 
-            $url->url = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
+            $url = new ODataURL(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri);
         }
 
         return $url;
@@ -996,21 +1004,22 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $result = $complexValue->results;
 
-        $propertyContent         = new ODataPropertyContent();
-        $odataProperty           = new ODataProperty();
-        $odataProperty->name     = $propertyName;
-        $odataProperty->typeName = $resourceType->getFullName();
+        $name     = $propertyName;
+        $typeName = $resourceType->getFullName();
+        $value    = null;
         if (null !== $result) {
             if (!is_object($result)) {
                 throw new InvalidOperationException('Supplied $customObject must be an object');
             }
             $internalContent      = $this->writeComplexValue($resourceType, $result);
-            $odataProperty->value = $internalContent;
+            $value                = $internalContent;
         }
 
-        $propertyContent->properties[$propertyName] = $odataProperty;
-
-        return $propertyContent;
+        return new ODataPropertyContent(
+            [
+                $propertyName => new ODataProperty($name, $typeName, $value)
+            ]
+        );
     }
 
     /**
@@ -1028,15 +1037,13 @@ class CynicSerialiser implements IObjectSerialiser
     {
         $result = $bagValue->results;
 
-        $propertyContent         = new ODataPropertyContent();
-        $odataProperty           = new ODataProperty();
-        $odataProperty->name     = $propertyName;
-        $odataProperty->typeName = 'Collection(' . $resourceType->getFullName() . ')';
-        $odataProperty->value    = $this->writeBagValue($resourceType, $result);
+        $odataProperty           = new ODataProperty(
+            $propertyName,
+            'Collection(' . $resourceType->getFullName() . ')',
+            $this->writeBagValue($resourceType, $result)
+        );
 
-        $propertyContent->properties[$propertyName] = $odataProperty;
-
-        return $propertyContent;
+        return new ODataPropertyContent([$propertyName => $odataProperty]);
     }
 
     /**
@@ -1054,26 +1061,26 @@ class CynicSerialiser implements IObjectSerialiser
         if (null === $resourceProperty) {
             throw new InvalidOperationException('Resource property must not be null');
         }
-        $result         = new ODataPropertyContent();
-        $property       = new ODataProperty();
-        $property->name = $resourceProperty->getName();
-
+        $name  = $resourceProperty->getName();
+        $value = null;
         $iType = $resourceProperty->getInstanceType();
         if (!$iType instanceof IType) {
             throw new InvalidOperationException(get_class($iType));
         }
-        $property->typeName = $iType->getFullTypeName();
+        $typeName = $iType->getFullTypeName();
         if (null !== $primitiveValue->results) {
             $rType = $resourceProperty->getResourceType()->getInstanceType();
             if (!$rType instanceof IType) {
                 throw new InvalidOperationException(get_class($rType));
             }
-            $property->value = $this->primitiveToString($rType, $primitiveValue->results);
+            $value = $this->primitiveToString($rType, $primitiveValue->results);
         }
 
-        $result->properties[$property->name] = $property;
-
-        return $result;
+        return new ODataPropertyContent(
+            [
+                $name => new ODataProperty($name, $typeName, $value)
+            ]
+        );
     }
 
     /**

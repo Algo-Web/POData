@@ -7,58 +7,27 @@ namespace POData\ObjectModel;
 /**
  * Class ODataFeed.
  */
-class ODataFeed
+class ODataFeed extends ODataContainerBase
 {
-    /**
-     * Feed iD.
-     *
-     * @var string
-     */
-    public $id;
-    /**
-     * Feed title.
-     *
-     * @var ODataTitle
-     */
-    public $title;
-    /**
-     * Feed self link.
-     *
-     * @var ODataLink
-     */
-    public $selfLink;
     /**
      * Row count, in case of $inlinecount option.
      *
      * @var int
      */
-    public $rowCount = null;
+    private $rowCount = null;
+
     /**
      * Enter URL to next page, if pagination is enabled.
      *
-     * @var ODataLink
+     * @var ODataNextPageLink
      */
-    public $nextPageLink = null;
+    private $nextPageLink = null;
     /**
      * Collection of entries under this feed.
      *
      * @var ODataEntry[]
      */
-    public $entries = [];
-
-    /**
-     * Last updated timestamp.
-     *
-     * @var string
-     */
-    public $updated;
-
-    /**
-     * Service Base URI.
-     *
-     * @var string
-     */
-    public $baseURI;
+    private $entries = [];
 
     /**
      * ODataFeed constructor.
@@ -71,52 +40,80 @@ class ODataFeed
      * @param string       $updated
      * @param string       $baseURI
      */
-    public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
+    public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataNextPageLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
-        $this->id           = $id;
-        $this->title        = $title;
-        $this->selfLink     = $selfLink;
-        $this->rowCount     = $rowCount;
-        $this->nextPageLink = $nextPageLink;
-        $this->entries      = $entries;
-        $this->updated      = $updated;
-        $this->baseURI      = $baseURI;
+        parent::__construct($id, $title, $selfLink, $updated, $baseURI);
+        $this
+            ->setRowCount($rowCount)
+            ->setNextPageLink($nextPageLink)
+            ->setEntries($entries);
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getRowCount(): ?int
+    {
+        return $this->rowCount;
+    }
+
+    /**
+     * @param  int       $rowCount
+     * @return ODataFeed
+     */
+    public function setRowCount(?int $rowCount): ODataFeed
+    {
+        $this->rowCount = $rowCount;
+        return $this;
     }
 
     /**
      * @return ODataLink
      */
-    public function getNextPageLink()
+    public function getNextPageLink(): ?ODataLink
     {
         return $this->nextPageLink;
     }
 
     /**
-     * @param ODataLink $nextPageLink
+     * @param  ODataLink|null $nextPageLink
+     * @return ODataFeed
      */
-    public function setNextPageLink(ODataLink $nextPageLink)
+    public function setNextPageLink(?ODataLink $nextPageLink): self
     {
-        foreach (get_object_vars($nextPageLink) as $property) {
-            if (null !== $property) {
-                $this->nextPageLink = $nextPageLink;
-                return;
-            }
-        }
+        $this->nextPageLink = null === $nextPageLink || $nextPageLink->isEmpty() ? null : $nextPageLink;
+        return $this;
     }
 
     /**
      * @return ODataEntry[]
      */
-    public function getEntries()
+    public function getEntries(): array
     {
         return $this->entries;
     }
 
     /**
-     * @param ODataEntry[] $entries
+     * @param  ODataEntry[] $entries
+     * @return ODataFeed
      */
-    public function setEntries(array $entries)
+    public function setEntries(array $entries): self
     {
+        assert(array_reduce($entries, function ($carry, $item) {
+            return  $carry & $item instanceof ODataEntry;
+        }, true));
         $this->entries = $entries;
+        return $this;
+    }
+
+    /**
+     * @param  ODataEntry $entry
+     * @return ODataFeed
+     */
+    public function addEntry(ODataEntry $entry): self
+    {
+        $this->entries[] = $entry;
+        return $this;
     }
 }

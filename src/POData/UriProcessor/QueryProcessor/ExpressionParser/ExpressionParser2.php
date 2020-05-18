@@ -295,8 +295,8 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process an arithmetic expression node for nullability.
      *
-     * @param FunctionCallExpression      $expression       The function call expression node to process
-     * @param AbstractExpression|null     $parentExpression The parent expression of expression node to process
+     * @param FunctionCallExpression  $expression       The function call expression node to process
+     * @param AbstractExpression|null $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return null|AbstractExpression
@@ -421,8 +421,8 @@ class ExpressionParser2 extends ExpressionParser
     /**
      * Process a relational expression node for nullability.
      *
-     * @param RelationalExpression      $expression       The relational expression node to process
-     * @param AbstractExpression|null   $parentExpression The parent expression of expression node to process
+     * @param RelationalExpression    $expression       The relational expression node to process
+     * @param AbstractExpression|null $parentExpression The parent expression of expression node to process
      *
      * @throws ODataException
      * @return null|AbstractExpression

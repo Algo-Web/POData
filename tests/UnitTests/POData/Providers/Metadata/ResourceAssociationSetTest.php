@@ -14,7 +14,7 @@ use POData\Providers\Metadata\ResourceType;
 use UnitTests\POData\TestCase;
 
 /**
- * Class ResourceAssociationSetTest
+ * Class ResourceAssociationSetTest.
  * @package UnitTests\POData\Providers\Metadata
  */
 class ResourceAssociationSetTest extends TestCase
@@ -67,9 +67,9 @@ class ResourceAssociationSetTest extends TestCase
         $property = m::mock(ResourceProperty::class);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -129,9 +129,9 @@ class ResourceAssociationSetTest extends TestCase
         $property = m::mock(ResourceProperty::class);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -158,9 +158,9 @@ class ResourceAssociationSetTest extends TestCase
         $property = m::mock(ResourceProperty::class);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -190,9 +190,9 @@ class ResourceAssociationSetTest extends TestCase
         $property = m::mock(ResourceProperty::class);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -220,9 +220,9 @@ class ResourceAssociationSetTest extends TestCase
         $property = m::mock(ResourceProperty::class);
 
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -254,7 +254,7 @@ class ResourceAssociationSetTest extends TestCase
         $end1->shouldReceive('getResourceProperty')->andReturn($prop1)->times(2);
         $end1->shouldReceive('getResourceType')->andReturn($type1)->once();
         $prop2 = m::mock(ResourceProperty::class);
-        $end2 = m::mock(ResourceAssociationSetEnd::class);
+        $end2  = m::mock(ResourceAssociationSetEnd::class);
         $end2->shouldReceive('getResourceProperty')->andReturn($prop2)->twice();
         $end2->shouldReceive('getResourceType')->andReturn($type2)->once();
 
@@ -284,9 +284,9 @@ class ResourceAssociationSetTest extends TestCase
     public function testIsBidirectionalRightEndHasResourcen()
     {
         $prop1 = m::mock(ResourceProperty::class);
-        $prop1->shouldReceive("getName")->andReturn('foo');
+        $prop1->shouldReceive('getName')->andReturn('foo');
         $prop2 = m::mock(ResourceProperty::class);
-        $prop2->shouldReceive("getName")->andReturn('bar');
+        $prop2->shouldReceive('getName')->andReturn('bar');
         $type1 = m::mock(ResourceEntityType::class);
         $type1->shouldReceive('getName')->andReturn('bar');
         $type2 = m::mock(ResourceEntityType::class);
@@ -296,7 +296,7 @@ class ResourceAssociationSetTest extends TestCase
         $end1->shouldReceive('getResourceProperty')->andReturn(null)->times(2);
         $end1->shouldReceive('getResourceType')->andReturn($type1)->once();
         $prop2 = m::mock(ResourceProperty::class);
-        $end2 = m::mock(ResourceAssociationSetEnd::class);
+        $end2  = m::mock(ResourceAssociationSetEnd::class);
         $end2->shouldReceive('getResourceProperty')->andReturn($prop2)->once();
         $end2->shouldReceive('getResourceType')->andReturn($type2)->once();
 
