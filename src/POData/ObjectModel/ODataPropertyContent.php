@@ -39,6 +39,7 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
      */
     public function setPropertys(array $newProperties): self
     {
+        assert(array_reduce($newProperties, function($carry, $item) { return  $carry & $item instanceof ODataProperty; }, true));
         $this->properties = $newProperties;
         return $this;
     }
