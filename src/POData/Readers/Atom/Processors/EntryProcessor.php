@@ -122,7 +122,7 @@ class EntryProcessor extends BaseNodeHandler
     protected function handleStartAtomUpdated()
     {
         $this->enqueueEnd(function () {
-            $this->oDataEntry->updated = $this->popCharData();
+            $this->oDataEntry->setUpdated($this->popCharData());
         });
     }
 

@@ -41,7 +41,7 @@ class AtomODataReaderTest extends TestCase
         $this->assertEquals('ProductDetails', $data->getTitle()->getTitle(), 'Feed-Title  failed to deserialize correctly');
         $this->assertEquals(
             '2020-03-12T16:26:25Z',
-            $data->updated,
+            $data->getUpdated(),
             'the feed updated value failed to deserialise correctly'
         );
         $this->assertEquals(

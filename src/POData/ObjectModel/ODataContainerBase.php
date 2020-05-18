@@ -32,7 +32,7 @@ abstract class ODataContainerBase
      *
      * @var string|null
      */
-    public $updated;
+    private $updated;
 
     /**
      * Service Base URI.

@@ -68,7 +68,7 @@ class FeedProcessor extends BaseNodeHandler
     public function handleStartAtomUpdated()
     {
         $this->enqueueEnd(function () {
-            $this->oDataFeed->updated = $this->popCharData();
+            $this->oDataFeed->setUpdated($this->popCharData());
         });
     }
 
