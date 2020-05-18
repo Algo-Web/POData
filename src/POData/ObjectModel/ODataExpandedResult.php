@@ -68,7 +68,7 @@ class ODataExpandedResult
         return $this;
     }
 
-    public function getData(): ?ODataContainerBase
+    public function getData(): ODataContainerBase
     {
         return $this->data;
     }
