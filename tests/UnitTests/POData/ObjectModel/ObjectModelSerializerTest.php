@@ -439,7 +439,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals(null, $result['name']->value);
     }
@@ -465,7 +465,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals('true', $result['name']->value);
     }
@@ -491,7 +491,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals('YXliYWJ0dQ==', $result['name']->value);
     }
@@ -517,7 +517,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals('2016-01-01T', substr($result['name']->value, 0, 11));
     }
@@ -543,7 +543,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals('Börk, börk, börk!', $result['name']->value);
     }
@@ -569,7 +569,7 @@ class ObjectModelSerializerTest extends TestCase
 
         $result = $foo->writeTopLevelPrimitive($queryResult, $property);
         $this->assertTrue($result instanceof ODataPropertyContent, get_class($result));
-        $this->assertEquals('name', $result['name']->name);
+        $this->assertEquals('name', $result['name']->getName());
         $this->assertEquals('typeName', $result['name']->typeName);
         $this->assertEquals('Börk, börk, börk!', $result['name']->value);
     }
@@ -682,7 +682,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($result[$propertyName] instanceof ODataProperty);
         $this->assertNull($result[$propertyName]->value);
         $this->assertNull($result[$propertyName]->attributeExtensions);
-        $this->assertEquals('property', $result[$propertyName]->name);
+        $this->assertEquals('property', $result[$propertyName]->getName());
         $this->assertEquals('typeName', $result[$propertyName]->typeName);
     }
 
@@ -720,7 +720,7 @@ class ObjectModelSerializerTest extends TestCase
         //$this->assertNull($result->properties[0]->value);
         $this->assertTrue($result[$propertyName]->value instanceof ODataPropertyContent);
         $this->assertTrue($result[$propertyName]->value['name'] instanceof ODataProperty);
-        $this->assertEquals('name', $result[$propertyName]->value['name']->name);
+        $this->assertEquals('name', $result[$propertyName]->value['name']->getName());
         $this->assertEquals('fullName', $result[$propertyName]->value['name']->typeName);
     }
 
@@ -769,7 +769,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($result['property'] instanceof ODataProperty);
         $this->assertNull($result['property']->attributeExtensions);
         $this->assertNull($result['property']->value);
-        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('property', $result['property']->getName());
         $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
@@ -791,7 +791,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($result['property'] instanceof ODataProperty);
         $this->assertNull($result['property']->attributeExtensions);
         $this->assertNull($result['property']->value);
-        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('property', $result['property']->getName());
         $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
@@ -815,7 +815,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertTrue($result['property']->value instanceof ODataBagContent);
         $this->assertNull($result['property']->value->getType());
         $this->assertNull($result['property']->value->getPropertyContents());
-        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('property', $result['property']->getName());
         $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 
@@ -868,7 +868,7 @@ class ObjectModelSerializerTest extends TestCase
         $this->assertNull($result['property']->value->getType());
         $this->assertTrue(is_array($result['property']->value->getPropertyContents()));
         $this->assertEquals($expected, $result['property']->value->getPropertyContents());
-        $this->assertEquals('property', $result['property']->name);
+        $this->assertEquals('property', $result['property']->getName());
         $this->assertEquals('Collection(fullName)', $result['property']->typeName);
     }
 

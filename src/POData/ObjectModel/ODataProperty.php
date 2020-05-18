@@ -17,7 +17,7 @@ class ODataProperty
      *
      * @var string
      */
-    public $name;
+    private $name;
     /**
      * The property type name.
      *

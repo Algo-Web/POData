@@ -188,7 +188,7 @@ class JsonODataV1Writer implements IODataWriter
         if (null !== $properties) {
             foreach ($properties as $property) {
                 $this->writePropertyMeta($property);
-                $this->writer->writeName($property->name);
+                $this->writer->writeName($property->getName());
 
                 if ($property->value == null) {
                     $this->writer->writeValue('null');

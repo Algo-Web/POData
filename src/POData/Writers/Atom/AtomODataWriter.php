@@ -336,7 +336,7 @@ class AtomODataWriter implements IODataWriter
     {
         $this->xmlWriter->startElementNs(
             ODataConstants::ODATA_NAMESPACE_PREFIX,
-            $property->name,
+            $property->getName(),
             null
         );
         if ($property->typeName != null) {
