@@ -39,7 +39,7 @@ abstract class ODataContainerBase
      *
      * @var string|null
      */
-    public $baseURI;
+    private $baseURI;
 
     /**
      * ODataContainerBase constructor.
