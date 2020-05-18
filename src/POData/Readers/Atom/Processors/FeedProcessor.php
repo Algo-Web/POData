@@ -97,7 +97,7 @@ class FeedProcessor extends BaseNodeHandler
     public function handleStartMetadataCount()
     {
         $this->enqueueEnd(function () {
-            $this->oDataFeed->rowCount = (int)$this->popCharData();
+            $this->oDataFeed->setRowCount((int)$this->popCharData());
         });
     }
 

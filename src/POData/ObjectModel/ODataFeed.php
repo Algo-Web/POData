@@ -14,7 +14,7 @@ class ODataFeed extends ODataContainerBase
      *
      * @var int
      */
-    public $rowCount = null;
+    private $rowCount = null;
 
     /**
      * Enter URL to next page, if pagination is enabled.

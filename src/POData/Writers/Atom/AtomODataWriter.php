@@ -476,13 +476,13 @@ class AtomODataWriter implements IODataWriter
             ->writeNodeValue(ODataConstants::ATOM_UPDATED_ELEMENT_NAME, $this->getUpdated()->format(DATE_ATOM))
             ->writeLinkNode($feed->getSelfLink(), false);
 
-        if ($feed->rowCount != null) {
+        if ($feed->getRowCount() != null) {
             $this->xmlWriter->startElementNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ROWCOUNT_ELEMENT,
                 null
             );
-            $this->xmlWriter->text($feed->rowCount);
+            $this->xmlWriter->text(strval($feed->getRowCount()));
             $this->xmlWriter->endElement();
         }
 

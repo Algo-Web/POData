@@ -82,7 +82,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
         } elseif ($model instanceof ODataFeed) {
             // Json Format V2:
             // "results":
-            $this->writeRowCount($model->rowCount);
+            $this->writeRowCount($model->getRowCount());
             $this->writeNextPageLink($model->getNextPageLink());
             $this->writer
                 ->writeName($this->dataArrayName)

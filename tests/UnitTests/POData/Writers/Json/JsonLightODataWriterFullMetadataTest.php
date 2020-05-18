@@ -170,7 +170,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         //IE: http://services.odata.org/v3/OData/OData.svc/Categories?$top=1&$inlinecount=allpages&$format=application/json;odata=fullmetadata
         //The feed count will be null unless inlinecount is specified
 
-        $oDataFeed->rowCount = null;
+        $oDataFeed->setRowCount(null);
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
@@ -201,7 +201,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $this->assertEquals([$expected], [$actual], 'raw JSON is: ' . $writer->getOutput());
 
         //Now we'll simulate an $inlinecount=allpages by specifying a count
-        $oDataFeed->rowCount = 33;
+        $oDataFeed->setRowCount(33);
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
@@ -294,7 +294,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
 
         $oDataFeed->entries = [$entry1, $entry2];
 
-        $oDataFeed->rowCount = null; //simulate no inline count
+        $oDataFeed->setRowCount(null); //simulate no inline count
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);
@@ -347,7 +347,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
 
         $this->assertEquals([$expected], [$actual], 'raw JSON is: ' . $writer->getOutput());
 
-        $oDataFeed->rowCount = 55; //simulate  $inlinecount=allpages
+        $oDataFeed->setRowCount(55); //simulate  $inlinecount=allpages
 
         $writer = new JsonLightODataWriter(PHP_EOL, true, JsonLightMetadataLevel::FULL(), $this->serviceBase);
         $result = $writer->write($oDataFeed);

@@ -99,7 +99,7 @@ class JsonODataV1WriterTest extends BaseWriterTest
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->rowCount = '3';
+        $oDataFeed->setRowCount(3);
 
         //next page link
         $nextPageLink            = new ODataLink(
@@ -177,7 +177,7 @@ class JsonODataV1WriterTest extends BaseWriterTest
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->rowCount = '3';
+        $oDataFeed->setRowCount(3);
 
         //next page
         $nextPageLink            = new ODataLink(

@@ -153,7 +153,7 @@ class CynicSerialiser implements IObjectSerialiser
         $this->isBaseWritten = true;
 
         if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $odata->rowCount = $this->getRequest()->getCountValue();
+            $odata->setRowCount($this->getRequest()->getCountValue());
         }
         foreach ($res as $entry) {
             if (!$entry instanceof QueryResult) {

@@ -117,7 +117,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $feed           = new ODataFeed();
         $feed->id       = 'Feed Id';
-        $feed->rowCount = 'Count';
+        $feed->setRowCount(50);
 
         $selfLink        = new ODataLink('Self Link Name', '', '', 'Self Link Url');
 
@@ -217,7 +217,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
  <id>Feed Id</id>
  <updated>2013-09-17T19:22:33-06:00</updated>
  <link rel="Self Link Name" href="Self Link Url"/>
- <m:count>Count</m:count>
+ <m:count>50</m:count>
  <entry m:etag="Entry ETag">
   <id>Entry 1</id>
   <title type="text">Entry Title</title>

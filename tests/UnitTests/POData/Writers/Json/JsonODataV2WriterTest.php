@@ -100,7 +100,7 @@ class JsonODataV2WriterTest extends BaseWriterTest
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->rowCount = '3';
+        $oDataFeed->setRowCount(3);
 
         //next page link
         $nextPageLink            = new ODataLink(
@@ -223,7 +223,7 @@ class JsonODataV2WriterTest extends BaseWriterTest
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->rowCount = '13';
+        $oDataFeed->setRowCount(13);
 
         //next page
         $nextPageLink            = new ODataLink(
@@ -302,7 +302,7 @@ class JsonODataV2WriterTest extends BaseWriterTest
 
         $this->assertEquals([$expected], [$actual], 'raw JSON is: ' . $writer->getOutput());
 
-        $oDataFeed->rowCount = null;
+        $oDataFeed->setRowCount(null);
         $writer              = new JsonODataV2Writer(PHP_EOL, true);
         $result              = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);
