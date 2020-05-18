@@ -108,7 +108,7 @@ class ODataProperty
     }
 
     /**
-     * @return ODataBagContent|ODataPropertyContent|string
+     * @return ODataBagContent|ODataPropertyContent|mixed|null
      */
     public function getValue()
     {
