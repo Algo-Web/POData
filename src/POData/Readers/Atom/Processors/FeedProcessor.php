@@ -16,8 +16,6 @@ use POData\ObjectModel\ODataTitle;
  */
 class FeedProcessor extends BaseNodeHandler
 {
-
-
     /**
      * @var ODataFeed
      */

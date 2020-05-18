@@ -72,11 +72,11 @@ class ODataProperty
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTypeName(): ?string
+    public function getTypeName(): string
     {
-        return $this->typeName;
+        return $this->typeName ?? '' ;
     }
 
     /**

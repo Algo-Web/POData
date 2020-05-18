@@ -339,7 +339,7 @@ class AtomODataWriter implements IODataWriter
             $property->getName(),
             null
         );
-        if ($property->getTypeName() != null) {
+        if (!empty($property->getTypeName())) {
             $this->xmlWriter->startAttributeNs(
                 ODataConstants::ODATA_METADATA_NAMESPACE_PREFIX,
                 ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
@@ -363,7 +363,7 @@ class AtomODataWriter implements IODataWriter
             );
             $this->xmlWriter->text(ODataConstants::ODATA_METADATA_NAMESPACE);
         }
-        if ($property->getTypeName() != null || $isTopLevel) {
+        if (!empty($property->getTypeName()) || $isTopLevel) {
             $this->xmlWriter->endAttribute();
         }
 
