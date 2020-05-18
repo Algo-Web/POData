@@ -103,13 +103,14 @@ class JsonODataV2WriterTest extends BaseWriterTest
         $oDataFeed->setRowCount(3);
 
         //next page link
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
 
         //entry1
@@ -226,13 +227,14 @@ class JsonODataV2WriterTest extends BaseWriterTest
         $oDataFeed->setRowCount(13);
 
         //next page
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
         $oDataFeed->entries = [$entry1, $entry2];
 
@@ -368,7 +370,7 @@ class JsonODataV2WriterTest extends BaseWriterTest
 
         $this->assertEquals([$expected], [$actual], 'raw JSON is: ' . $writer->getOutput());
 
-        $oDataFeed->nextPageLink = null;
+        $oDataFeed->setNextPageLink(null);
         $writer                  = new JsonODataV2Writer(PHP_EOL, true);
         $result                  = $writer->write($oDataFeed);
         $this->assertSame($writer, $result);

@@ -102,13 +102,14 @@ class JsonODataV1WriterTest extends BaseWriterTest
         $oDataFeed->setRowCount(3);
 
         //next page link
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
 
         //entry1
@@ -180,13 +181,14 @@ class JsonODataV1WriterTest extends BaseWriterTest
         $oDataFeed->setRowCount(3);
 
         //next page
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
 
         //entry1

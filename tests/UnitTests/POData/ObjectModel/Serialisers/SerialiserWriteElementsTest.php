@@ -15,6 +15,7 @@ use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
+use POData\ObjectModel\ODataNextPageLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
@@ -201,18 +202,20 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $selfLink        = new ODataLink('self', 'Customers', null, 'Customers');
 
-        $nextLink       = new ODataLink('next', null, null, 'http://localhost/odata.svc/Customers?$skiptoken=\'300\''
+        $nextLink       = new ODataNextPageLink('http://localhost/odata.svc/Customers?$skiptoken=\'300\''
             . ', guid\'123e4567-e89b-12d3-a456-426655440000\'');
 
 
-        $objectResult               = new ODataFeed();
-        $objectResult->id           = 'http://localhost/odata.svc/Customers';
-        $objectResult->title        = new ODataTitle('Customers');
-        $objectResult->setSelfLink($selfLink);
-        $objectResult->nextPageLink = $nextLink;
-        $objectResult->entries      = $entries;
-        $objectResult->updated      = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI      = 'http://localhost/odata.svc/';
+        $objectResult               = new ODataFeed(
+            'http://localhost/odata.svc/Customers',
+            new ODataTitle('Customers'),
+            $selfLink,
+            null,
+            $nextLink,
+            $entries,
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+        );
 
         $ironicResult = $ironic->writeTopLevelElements($results);
 

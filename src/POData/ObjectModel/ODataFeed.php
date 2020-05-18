@@ -19,9 +19,9 @@ class ODataFeed extends ODataContainerBase
     /**
      * Enter URL to next page, if pagination is enabled.
      *
-     * @var ODataLink
+     * @var ODataNextPageLink
      */
-    public $nextPageLink = null;
+    private $nextPageLink = null;
     /**
      * Collection of entries under this feed.
      *
@@ -40,7 +40,7 @@ class ODataFeed extends ODataContainerBase
      * @param string       $updated
      * @param string       $baseURI
      */
-    public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
+    public function __construct(string $id = null, ODataTitle $title = null, ODataLink $selfLink = null, int $rowCount = null, ODataNextPageLink $nextPageLink = null, array $entries = [], string $updated = null, string $baseURI = null)
     {
         parent::__construct($id, $title, $selfLink, $updated, $baseURI);
         $this

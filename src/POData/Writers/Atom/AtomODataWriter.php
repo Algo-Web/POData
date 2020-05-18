@@ -490,8 +490,8 @@ class AtomODataWriter implements IODataWriter
             $this->writeEntry($entry);
         }
 
-        if ($feed->nextPageLink != null) {
-            $this->writeLinkNode($feed->nextPageLink, false);
+        if ($feed->getNextPageLink() != null) {
+            $this->writeLinkNode($feed->getNextPageLink(), false);
         }
         $this->xmlWriter->endElement();
 

@@ -161,9 +161,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $oDataFeed->entries = [$entry1];
 
         //next page link: NOTE minimalmetadata means this won't be output
-        $nextPageLink            = new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12');
-
-        $oDataFeed->nextPageLink = $nextPageLink;
+        $oDataFeed->setNextPageLink( new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12')
+    );
         //feed entries
 
         //Note that even if the top limits the collection the count should not be output unless inline count is specified
@@ -288,8 +287,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         //self link end
 
         //next page
-        $nextPageLink            = new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12');
-        $oDataFeed->nextPageLink = $nextPageLink;
+        $oDataFeed->setNextPageLink(new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12'));
         //feed entries
 
         $oDataFeed->entries = [$entry1, $entry2];

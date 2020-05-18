@@ -153,13 +153,14 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
         //self link end
 
         //next page link: NOTE nometadata means this won't be output
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
         $oDataFeed->entries = [$entry1];
 
@@ -276,13 +277,14 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
         //self link end
 
         //next page
-        $nextPageLink            = new ODataLink(
-            'Next Page Link',
-            'Next Page',
-            null,
-            'http://services.odata.org/OData/OData.svc$skiptoken=12'
+        $oDataFeed->setNextPageLink(
+            new ODataLink(
+                'Next Page Link',
+                'Next Page',
+                null,
+                'http://services.odata.org/OData/OData.svc$skiptoken=12'
+            )
         );
-        $oDataFeed->nextPageLink = $nextPageLink;
         //feed entries
 
         $oDataFeed->entries = [$entry1, $entry2];

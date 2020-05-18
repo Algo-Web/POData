@@ -119,13 +119,10 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $feed->id       = 'Feed Id';
         $feed->setRowCount(50);
 
-        $selfLink        = new ODataLink('Self Link Name', '', '', 'Self Link Url');
+        $feed->setSelfLink(new ODataLink('Self Link Name', '', '', 'Self Link Url'));
 
-        $feed->setSelfLink($selfLink);
 
-        $nextPageLink        = new ODataLink('Next', '', '', 'Next Link Url');
-
-        $feed->nextPageLink = $nextPageLink;
+        $feed->setNextPageLink(new ODataLink('Next', '', '', 'Next Link Url'));
         $feed->title        = new ODataTitle('Feed Title');
 
         // Entry 1
