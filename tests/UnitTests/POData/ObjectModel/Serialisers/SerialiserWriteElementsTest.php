@@ -58,6 +58,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $model               = new Customer2();
@@ -162,6 +163,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
 
         $results          = new QueryResult();
@@ -238,6 +240,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $deet1            = new OrderDetails2();
@@ -324,6 +327,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $order            = new Order2();
@@ -457,6 +461,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
 
         $collection          = new QueryResult();
@@ -477,7 +482,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $ironic->getRequest()->setRootProjectionNode($node);
 
         $result = $ironic->writeTopLevelElements($collection);
-        $this->assertEquals(0, count($result->entries));
+        $this->assertEquals(0, count($result->getEntries()));
     }
 
     public function testWriteTopLevelElementsWithEmptyCollectionPayloadAndHasMore()
@@ -492,6 +497,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
+
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
 
         $collection          = new QueryResult();
@@ -512,7 +519,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $ironic->getRequest()->setRootProjectionNode($node);
 
         $result = $ironic->writeTopLevelElements($collection);
-        $this->assertEquals(0, count($result->entries));
+        $this->assertEquals(0, count($result->getEntries()));
     }
 
     public function testWriteNullTopLevelElements()
@@ -524,6 +531,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
+
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $collection          = new QueryResult();
@@ -559,6 +568,8 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
+
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $mod1                 = new Employee2();
@@ -681,10 +692,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
         // zero out etag values
-        $ironicResult->entries[0]->mediaLink->eTag     = '';
-        $ironicResult->entries[1]->mediaLink->eTag     = '';
-        $ironicResult->entries[0]->mediaLinks[0]->eTag = '';
-        $ironicResult->entries[1]->mediaLinks[0]->eTag = '';
+        $ironicResult->getEntries()[0]->mediaLink->eTag     = '';
+        $ironicResult->getEntries()[1]->mediaLink->eTag     = '';
+        $ironicResult->getEntries()[0]->mediaLinks[0]->eTag = '';
+        $ironicResult->getEntries()[1]->mediaLinks[0]->eTag = '';
 
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);

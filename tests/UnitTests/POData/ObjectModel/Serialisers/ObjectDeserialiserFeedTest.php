@@ -298,7 +298,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
         $this->assertNull($objectResult->links[0]->getUrl());
-        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getFeed()->entries[0]->id instanceof KeyDescriptor);
+        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getFeed()->getEntries()[0]->id instanceof KeyDescriptor);
     }
 
     public function testUpdateAndUpdateFeedAssociatedWithEmptyGrandchild()
@@ -402,7 +402,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $cereal->processPayload($objectResult);
         $this->assertTrue($objectResult->id instanceof KeyDescriptor);
         $this->assertNotNull($objectResult->links[0]->getUrl());
-        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getFeed()->entries[0]->id instanceof KeyDescriptor);
+        $this->assertTrue($objectResult->links[0]->getExpandedResult()->getFeed()->getEntries()[0]->id instanceof KeyDescriptor);
     }
 
     /**

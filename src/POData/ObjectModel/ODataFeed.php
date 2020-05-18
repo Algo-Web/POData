@@ -27,7 +27,7 @@ class ODataFeed extends ODataContainerBase
      *
      * @var ODataEntry[]
      */
-    public $entries = [];
+    private $entries = [];
 
     /**
      * ODataFeed constructor.
