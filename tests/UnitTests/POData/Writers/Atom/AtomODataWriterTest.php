@@ -31,7 +31,7 @@ use POData\Writers\Atom\AtomODataWriter;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class AtomODataWriterTest
+ * Class AtomODataWriterTest.
  * @package UnitTests\POData\Writers\Atom
  */
 class AtomODataWriterTest extends BaseWriterTest
@@ -200,7 +200,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $feed->setEntries(
             [$entry1]
-            );
+        );
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($feed);
@@ -265,7 +265,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
-        $etag = time();
+        $etag            = time();
         $entry1->setSelfLink($selfLink);
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', 'http://cdn-8.nflximg.com/US/boxshots/large/5632678.jpg', 'image/jpg', $etag);
         $entry1->mediaLinks = [new ODataMediaLink(
@@ -291,7 +291,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $propCont                = new ODataPropertyContent([]);
         $entry1->propertyContent = $propCont;
         $entry1->type            = new ODataCategory('');
-        $now = new Carbon('2020-05-17T08:03:24-06:00');
+        $now                     = new Carbon('2020-05-17T08:03:24-06:00');
         Carbon::setTestNow($now);
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($entry1);
@@ -307,7 +307,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         <name/>
     </author>
     <link rel="edit" title="Entry Title" href="Edit Link URL"/>
-    <link m:etag="'.$etag.'" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
+    <link m:etag="' . $etag . '" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
     <link m:etag="Media ETag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name" type="Media Content Type" title="Media Link Name" href="Edit Media link"/>
     <link m:etag="Media ETag2" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name2" type="Media Content Type2" title="Media Link Name2" href="Edit Media link2"/>
     <category term="" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
@@ -333,7 +333,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry1->editLink = $editLink;
 
         $selfLink        = new ODataLink('self', 'self Link Title', '', 'Self Link URL');
-$etag = time();
+        $etag            = time();
         $entry1->setSelfLink($selfLink);
         $entry1->mediaLink  = new ODataMediaLink('Thumbnail_600X450', 'http://storage.live.com/123/christmas-tree-with-presents.jpg', null, 'image/jpg', $etag);
         $entry1->mediaLinks = [new ODataMediaLink(
@@ -455,7 +455,8 @@ $etag = time();
                                         'Flat_no' => new ODataProperty(
                                             'Flat_no',
                                             '',
-                                            '31'),
+                                            '31'
+                                        ),
                                         'Street_name' => new ODataProperty(
                                             'Street_name',
                                             '',
@@ -592,7 +593,7 @@ $etag = time();
         <name/>
     </author>
     <link rel="edit" title="Entry Title" href="Edit Link URL"/>
-    <link m:etag="'.$etag.'" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
+    <link m:etag="' . $etag . '" rel="edit-media" type="image/jpg" title="Thumbnail_600X450" href="http://storage.live.com/123/christmas-tree-with-presents.jpg"/>
     <link m:etag="Media ETag" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name" type="Media Content Type" title="Media Link Name" href="Edit Media link"/>
     <link m:etag="Media ETag2" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/mediaresource/Media Link Name2" type="Media Content Type2" title="Media Link Name2" href="Edit Media link2"/>
     <link rel="Link Name" type="Link Type" title="Link Title" href="Link URL"/>
@@ -911,7 +912,6 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">56</d:C
      */
     public function testComplexProperty()
     {
-
         $propCont             = new ODataPropertyContent(
             [
                 'Address' => new ODataProperty(
@@ -976,14 +976,18 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
                 'EmailAddresses' => new ODataProperty(
                     'EmailAddresses',
                     'Bag(Edm.String)',
-                    new ODataBagContent('', [
+                    new ODataBagContent(
+                        '',
+                        [
                             'mike@foo.com',
                             'mike2@foo.com'
                         ]
                     )
                 ),
                 'Addresses' => new ODataProperty(
-                    'Addresses', 'Bag(SampleModel.Address)', new ODataBagContent(
+                    'Addresses',
+                    'Bag(SampleModel.Address)',
+                    new ODataBagContent(
                         '',
                         [
                             new ODataPropertyContent(

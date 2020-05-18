@@ -28,7 +28,7 @@ use POData\Writers\Json\JsonODataV1Writer;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class JsonODataV1WriterTest
+ * Class JsonODataV1WriterTest.
  * @package UnitTests\POData\Writers\Json
  */
 class JsonODataV1WriterTest extends BaseWriterTest

@@ -220,7 +220,6 @@ class SerialiserWriteComplexTest extends SerialiserTestBase
     public function testWriteEloquentComplexObjectWithNonEloquentComplexProperty()
     {
         /** @var m\Mock $request */
-
         $request = $this->setUpRequest();
         $request->shouldReceive('prepareRequestUri')->andReturn('/odata.svc/Customers');
         $request->shouldReceive('getRawUrl')->andReturn('http://localhost/odata.svc/Customers');

@@ -8,7 +8,7 @@ use POData\Writers\Json\IndentedTextWriter;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class IndentedTextWriterTest
+ * Class IndentedTextWriterTest.
  * @package UnitTests\POData\Writers\Json
  */
 class IndentedTextWriterTest extends BaseWriterTest

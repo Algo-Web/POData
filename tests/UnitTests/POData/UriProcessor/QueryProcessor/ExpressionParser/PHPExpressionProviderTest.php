@@ -558,8 +558,8 @@ class PHPExpressionProviderTest extends TestCase
         $expressionProcessor = new ExpressionProcessor($phpProvider);
         $phpExpression       = $expressionProcessor->processExpression($expressionTree);
         //create an anonymous function with the generated PHP expression in if condition
-        $fun = function($lt) use ($phpExpression){
-            return (eval('return ' .$phpExpression . ';'));
+        $fun = function ($lt) use ($phpExpression) {
+            return (eval('return ' . $phpExpression . ';'));
         };
         $result = [];
         foreach ($entries as $lt) {

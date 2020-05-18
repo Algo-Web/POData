@@ -25,7 +25,7 @@ use POData\Writers\Json\JsonLightODataWriter;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class JsonLightODataWriterMinimalMetadataTest
+ * Class JsonLightODataWriterMinimalMetadataTest.
  * @package UnitTests\POData\Writers\Json
  */
 class JsonLightODataWriterMinimalMetadataTest extends BaseWriterTest
@@ -165,7 +165,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseWriterTest
         //next page link: NOTE minimalmetadata means this won't be output
         $oDataFeed->setNextPageLink(
             new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12')
-            );
+        );
         //feed entries
 
         //Note that even if the top limits the collection the count should not be output unless inline count is specified

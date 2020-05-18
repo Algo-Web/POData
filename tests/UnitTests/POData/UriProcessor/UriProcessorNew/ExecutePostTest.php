@@ -144,7 +144,7 @@ class ExecutePostTest extends TestCase
         $requestPayload                                                    = new ODataEntry();
         $requestPayload->type                                              = new ODataCategory('Customer');
         $requestPayload->propertyContent                                   = new ODataPropertyContent([]);
-        $requestPayload->propertyContent['otherNumber']                    = new ODataProperty('','',42);
+        $requestPayload->propertyContent['otherNumber']                    = new ODataProperty('', '', 42);
         $requestPayload->resourceSetName                                   = 'Customer';
 
         $request = m::mock(IHTTPRequest::class);

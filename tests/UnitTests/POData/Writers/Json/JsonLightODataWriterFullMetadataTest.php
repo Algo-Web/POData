@@ -25,7 +25,7 @@ use POData\Writers\Json\JsonLightODataWriter;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class JsonLightODataWriterFullMetadataTest
+ * Class JsonLightODataWriterFullMetadataTest.
  * @package UnitTests\POData\Writers\Json
  */
 class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
@@ -161,8 +161,9 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $oDataFeed->setEntries([$entry1]);
 
         //next page link: NOTE minimalmetadata means this won't be output
-        $oDataFeed->setNextPageLink( new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12')
-    );
+        $oDataFeed->setNextPageLink(
+            new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12')
+        );
         //feed entries
 
         //Note that even if the top limits the collection the count should not be output unless inline count is specified
@@ -603,8 +604,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
             ),
         ];
 
-        $entry->eTag             = 'Entry ETag';
-        $entry->isMediaLinkEntry = false;
+        $entry->eTag                        = 'Entry ETag';
+        $entry->isMediaLinkEntry            = false;
         $entry->propertyContent             = new ODataPropertyContent(
             [
                 new ODataProperty(
@@ -825,7 +826,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
 
         $foo = new JsonLightODataWriter(PHP_EOL, true, $level, $serviceUri);
 
-        $property           = new ODataProperty('','Edm.String', null);
+        $property           = new ODataProperty('', 'Edm.String', null);
 
         $model               = new ODataPropertyContent([$property]);
 
@@ -849,7 +850,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $bag                   = new ODataBagContent();
         $bag->setPropertyContents([]);
 
-        $property           = new ODataProperty('','Edm.String', $bag);
+        $property           = new ODataProperty('', 'Edm.String', $bag);
 
         $model               = new ODataPropertyContent([$property]);
 

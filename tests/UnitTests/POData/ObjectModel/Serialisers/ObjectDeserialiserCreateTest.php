@@ -249,7 +249,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'ShipName' => new ODataProperty('ShipName', 'Edm.String', 'Ship'),
                 'ItemCount' => new ODataProperty('ItemCount', 'Edm.Int32', 11),
                 'QualityRate' => new ODataProperty('QualityRate', 'Edm.Int32', null),
-                'Price' => new ODataProperty('Price','Edm.Double', 42)
+                'Price' => new ODataProperty('Price', 'Edm.Double', 42)
             ]
         );
 
@@ -338,7 +338,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'ShipName' => new ODataProperty('ShipName', 'Edm.String', 'Ship'),
                 'ItemCount' => new ODataProperty('ItemCount', 'Edm.Int32', 11),
                 'QualityRate' => new ODataProperty('QualityRate', 'Edm.Int32', null),
-                'Price' => new ODataProperty('Price','Edm.Double', 42)
+                'Price' => new ODataProperty('Price', 'Edm.Double', 42)
             ]
         );
 
@@ -429,7 +429,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
                 'ShipName' => new ODataProperty('ShipName', 'Edm.String', 'Ship'),
                 'ItemCount' => new ODataProperty('ItemCount', 'Edm.Int32', 11),
                 'QualityRate' => new ODataProperty('QualityRate', 'Edm.Int32', null),
-                'Price' => new ODataProperty('Price','Edm.Double', 42)
+                'Price' => new ODataProperty('Price', 'Edm.Double', 42)
             ]
         );
 

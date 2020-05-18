@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: alex
  * Date: 17/05/20
- * Time: 10:37 PM
+ * Time: 10:37 PM.
  */
-
 namespace UnitTests\POData\Writers;
 
 use Mockery as m;
@@ -22,7 +23,7 @@ use POData\Providers\ProvidersWrapper;
 use UnitTests\POData\TestCase;
 
 /**
- * Class BaseWriterTest
+ * Class BaseWriterTest.
  * @package UnitTests\POData\Writers
  */
 class BaseWriterTest extends TestCase
@@ -40,13 +41,13 @@ class BaseWriterTest extends TestCase
      */
     protected function buildSingleEntry(): ODataEntry
     {
-        $entry1 = new ODataEntry();
+        $entry1     = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Products(0)';
         $entry1->setSelfLink(new ODataLink('entry1 self link'));
-        $entry1->title = 'title of entry 1';
+        $entry1->title    = 'title of entry 1';
         $entry1->editLink = 'edit link of entry 1';
-        $entry1->type = 'DataServiceProviderDemo.Product';
-        $entry1->eTag = '';
+        $entry1->type     = 'DataServiceProviderDemo.Product';
+        $entry1->eTag     = '';
 
         $entry1->propertyContent = new ODataPropertyContent(
             [
@@ -85,13 +86,13 @@ class BaseWriterTest extends TestCase
      */
     protected function buildEntryWithComplexProperties(): ODataEntry
     {
-        $entry1 = new ODataEntry();
+        $entry1     = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
         $entry1->setSelfLink(new ODataLink('entry1 self link'));
-        $entry1->title = new ODataTitle('title of entry 1');
+        $entry1->title    = new ODataTitle('title of entry 1');
         $entry1->editLink = 'edit link of entry 1';
-        $entry1->type = 'ODataDemo.Supplier';
-        $entry1->eTag = 'W/"0"';
+        $entry1->type     = 'ODataDemo.Supplier';
+        $entry1->eTag     = 'W/"0"';
 
         $entry1->propertyContent = new ODataPropertyContent(
             [
@@ -153,13 +154,13 @@ class BaseWriterTest extends TestCase
      */
     protected function buildSecondEntryWithComplexProperties(): ODataEntry
     {
-        $entry2 = new ODataEntry();
+        $entry2     = new ODataEntry();
         $entry2->id = 'http://services.odata.org/OData/OData.svc/Suppliers(1)';
         $entry2->setSelfLink(new ODataLink('entry2 self link'));
-        $entry2->title = 'title of entry 2';
+        $entry2->title    = 'title of entry 2';
         $entry2->editLink = 'edit link of entry 2';
-        $entry2->type = 'ODataDemo.Supplier';
-        $entry2->eTag = 'W/"0"';
+        $entry2->type     = 'ODataDemo.Supplier';
+        $entry2->eTag     = 'W/"0"';
 
         $entry2->propertyContent = new ODataPropertyContent(
             [
@@ -221,13 +222,13 @@ class BaseWriterTest extends TestCase
      */
     protected function buildTestEntry(): ODataEntry
     {
-        $entry = new ODataEntry();
+        $entry     = new ODataEntry();
         $entry->id = 'http://services.odata.org/OData/OData.svc/Categories(0)';
         $entry->setSelfLink(new ODataLink('entry2 self link'));
-        $entry->title = new ODataTitle('title of entry 2');
-        $entry->editLink = 'edit link of entry 2';
-        $entry->type = 'ODataDemo.Category';
-        $entry->eTag = '';
+        $entry->title           = new ODataTitle('title of entry 2');
+        $entry->editLink        = 'edit link of entry 2';
+        $entry->type            = 'ODataDemo.Category';
+        $entry->eTag            = '';
         $entry->resourceSetName = 'resource set name';
 
 
@@ -307,13 +308,13 @@ class BaseWriterTest extends TestCase
      */
     protected function buildEntryWithBagProperty(): ODataEntry
     {
-        $entry = new ODataEntry();
+        $entry     = new ODataEntry();
         $entry->id = 'http://host/service.svc/Customers(1)';
         $entry->setSelfLink(new ODataLink('entry1 self link'));
-        $entry->title = new ODataTitle('title of entry 1');
-        $entry->editLink = 'edit link of entry 1';
-        $entry->type = 'SampleModel.Customer';
-        $entry->eTag = 'some eTag';
+        $entry->title           = new ODataTitle('title of entry 1');
+        $entry->editLink        = 'edit link of entry 1';
+        $entry->type            = 'SampleModel.Customer';
+        $entry->eTag            = 'some eTag';
         $entry->resourceSetName = 'resource set name';
 
 
@@ -387,10 +388,10 @@ class BaseWriterTest extends TestCase
      */
     protected function buildEntryWithExpandedFeed(): ODataEntry
     {
-        $expandedEntry1 = new ODataEntry();
-        $expandedEntry1->id = 'Expanded Entry 1';
-        $expandedEntry1->title = new ODataTitle('Expanded Entry 1 Title');
-        $expandedEntry1->type = 'Expanded.Type';
+        $expandedEntry1           = new ODataEntry();
+        $expandedEntry1->id       = 'Expanded Entry 1';
+        $expandedEntry1->title    = new ODataTitle('Expanded Entry 1 Title');
+        $expandedEntry1->type     = 'Expanded.Type';
         $expandedEntry1->editLink = 'Edit Link URL';
         $expandedEntry1->setSelfLink(new ODataLink('Self Link URL'));
 
@@ -411,8 +412,8 @@ class BaseWriterTest extends TestCase
             ),
         ];
 
-        $expandedEntry1->links = [];
-        $expandedEntry1->eTag = 'Entry ETag';
+        $expandedEntry1->links            = [];
+        $expandedEntry1->eTag             = 'Entry ETag';
         $expandedEntry1->isMediaLinkEntry = false;
 
         $expandedEntry1->propertyContent = new ODataPropertyContent(
@@ -450,10 +451,10 @@ class BaseWriterTest extends TestCase
         //End the expanded entry 1
 
         //First build up the expanded entry 2
-        $expandedEntry2 = new ODataEntry();
-        $expandedEntry2->id = 'Expanded Entry 2';
-        $expandedEntry2->title = new ODataTitle('Expanded Entry 2 Title');
-        $expandedEntry2->type = 'Expanded.Type';
+        $expandedEntry2           = new ODataEntry();
+        $expandedEntry2->id       = 'Expanded Entry 2';
+        $expandedEntry2->title    = new ODataTitle('Expanded Entry 2 Title');
+        $expandedEntry2->type     = 'Expanded.Type';
         $expandedEntry2->editLink = 'Edit Link URL';
         $expandedEntry2->setSelfLink(new ODataLink('Self Link URL'));
 
@@ -474,8 +475,8 @@ class BaseWriterTest extends TestCase
             ),
         ];
 
-        $expandedEntry2->links = [];
-        $expandedEntry2->eTag = 'Entry ETag';
+        $expandedEntry2->links            = [];
+        $expandedEntry2->eTag             = 'Entry ETag';
         $expandedEntry2->isMediaLinkEntry = false;
 
 
@@ -505,7 +506,7 @@ class BaseWriterTest extends TestCase
                     'string',
                     'Entry 2 City Value'
                 ),
-                 new ODataProperty(
+                new ODataProperty(
                     'Expanded Entry State Property',
                     'string',
                     'Entry 2 State Value'
@@ -516,10 +517,10 @@ class BaseWriterTest extends TestCase
 
         //build up the main entry
 
-        $entry = new ODataEntry();
-        $entry->id = 'Main Entry';
-        $entry->title = new ODataTitle('Entry Title');
-        $entry->type = 'Main.Type';
+        $entry           = new ODataEntry();
+        $entry->id       = 'Main Entry';
+        $entry->title    = new ODataTitle('Entry Title');
+        $entry->type     = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->setSelfLink(new ODataLink('Self Link URL'));
         $entry->mediaLinks = [
@@ -539,7 +540,7 @@ class BaseWriterTest extends TestCase
             ),
         ];
 
-        $entry->eTag = 'Entry ETag';
+        $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
 
 
@@ -560,8 +561,8 @@ class BaseWriterTest extends TestCase
         //End of main entry
 
         //Create a the expanded feed
-        $expandedFeed = new ODataFeed();
-        $expandedFeed->id = 'expanded feed id';
+        $expandedFeed        = new ODataFeed();
+        $expandedFeed->id    = 'expanded feed id';
         $expandedFeed->title = new ODataTitle('SubCollection');
         $expandedFeed->setEntries([
             $expandedEntry1,
@@ -592,10 +593,10 @@ class BaseWriterTest extends TestCase
      */
     protected function buildEntryWithExpandedEntry(): ODataEntry
     {
-        $expandedEntry = new ODataEntry();
-        $expandedEntry->id = 'Expanded Entry 1';
-        $expandedEntry->title = 'Expanded Entry Title';
-        $expandedEntry->type = 'Expanded.Type';
+        $expandedEntry           = new ODataEntry();
+        $expandedEntry->id       = 'Expanded Entry 1';
+        $expandedEntry->title    = 'Expanded Entry Title';
+        $expandedEntry->type     = 'Expanded.Type';
         $expandedEntry->editLink = 'Edit Link URL';
         $expandedEntry->setSelfLink(new ODataLink('Self Link URL'));
 
@@ -616,8 +617,8 @@ class BaseWriterTest extends TestCase
             ),
         ];
 
-        $expandedEntry->links = [];
-        $expandedEntry->eTag = 'Entry ETag';
+        $expandedEntry->links            = [];
+        $expandedEntry->eTag             = 'Entry ETag';
         $expandedEntry->isMediaLinkEntry = false;
 
         $expandedEntry->propertyContent = new ODataPropertyContent(
@@ -656,10 +657,10 @@ class BaseWriterTest extends TestCase
 
         //build up the main entry
 
-        $entry = new ODataEntry();
-        $entry->id = 'Main Entry';
-        $entry->title = 'Entry Title';
-        $entry->type = 'Main.Type';
+        $entry           = new ODataEntry();
+        $entry->id       = 'Main Entry';
+        $entry->title    = 'Entry Title';
+        $entry->type     = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->setSelfLink(new ODataLink('Self Link URL'));
         $entry->mediaLinks = [
@@ -679,7 +680,7 @@ class BaseWriterTest extends TestCase
             ),
         ];
 
-        $entry->eTag = 'Entry ETag';
+        $entry->eTag             = 'Entry ETag';
         $entry->isMediaLinkEntry = false;
 
 

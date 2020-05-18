@@ -25,7 +25,7 @@ use POData\Writers\Json\JsonLightODataWriter;
 use UnitTests\POData\Writers\BaseWriterTest;
 
 /**
- * Class JsonLightODataWriterNoMetadataTest
+ * Class JsonLightODataWriterNoMetadataTest.
  * @package UnitTests\POData\Writers\Json
  */
 class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
@@ -467,7 +467,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
         //see http://services.odata.org/v3/OData/OData.svc/Suppliers(0)/Address/City?$format=application/json;odata=nometadata
         $content             = new ODataPropertyContent(
             [
-               new ODataProperty(
+                new ODataProperty(
                     'Count',
                     'Edm.Int16',
                     56

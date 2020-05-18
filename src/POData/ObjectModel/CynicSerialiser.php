@@ -143,20 +143,20 @@ class CynicSerialiser implements IObjectSerialiser
         $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
 
 
-        $selfLink        = new ODataLink('self', $title, null, $relativeUri);
-        $title        = new ODataTitle($title);
-        $id           = $absoluteUri;
-        $updated      = $this->getUpdated()->format(DATE_ATOM);
-        $baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
-        $entries      = [];
+        $selfLink            = new ODataLink('self', $title, null, $relativeUri);
+        $title               = new ODataTitle($title);
+        $id                  = $absoluteUri;
+        $updated             = $this->getUpdated()->format(DATE_ATOM);
+        $baseURI             = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $entries             = [];
         $this->isBaseWritten = true;
-        $nextLink = null;
+        $nextLink            = null;
 
         $rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
             $this->getRequest()->getCountValue() :
             null;
         foreach ($res as $entry) {
-            $query = $entry instanceof QueryResult ? $entry : new QueryResult($entry);
+            $query     = $entry instanceof QueryResult ? $entry : new QueryResult($entry);
             $entries[] = $this->writeTopLevelElement($query);
         }
 
@@ -174,7 +174,7 @@ class CynicSerialiser implements IObjectSerialiser
             );
         }
 
-        return new ODataFeed($id,$title,$selfLink,$rowCount,$nextLink,$entries,$updated,$baseURI);
+        return new ODataFeed($id, $title, $selfLink, $rowCount, $nextLink, $entries, $updated, $baseURI);
     }
 
     /**
@@ -295,7 +295,7 @@ class CynicSerialiser implements IObjectSerialiser
             $resourceSet->getName()
         );
         $absoluteUri = rtrim(strval($this->absoluteServiceUri), '/') . '/' . $relativeUri;
-        $mediaLinks = $this->writeMediaData(
+        $mediaLinks  = $this->writeMediaData(
             $entryObject->results,
             $type,
             $relativeUri,
@@ -565,9 +565,9 @@ class CynicSerialiser implements IObjectSerialiser
             $typePrepend       = $isBag ? 'Collection(' : '';
             $typeAppend        = $isBag ? ')' : '';
             $nonNull           = null !== $result;
-            $name     = strval($corn);
-            $typeName = $typePrepend . $resource->getFullName() . $typeAppend;
-            $value = null;
+            $name              = strval($corn);
+            $typeName          = $typePrepend . $resource->getFullName() . $typeAppend;
+            $value             = null;
             if ($nonNull && is_array($result)) {
                 $value = $this->writeBagValue($resource, $result);
             } elseif ($resource instanceof ResourcePrimitiveType && $nonNull) {
@@ -684,9 +684,9 @@ class CynicSerialiser implements IObjectSerialiser
         foreach ($resourceProperties as $prop) {
             $resourceKind           = $prop->getKind();
             $propName               = $prop->getName();
-            $name = $propName;
-            $typeName = null;
-            $value = null;
+            $name                   = $propName;
+            $typeName               = null;
+            $value                  = null;
             $raw                    = $result->{$propName};
             if (static::isMatchPrimitive($resourceKind)) {
                 $iType = $prop->getInstanceType();
@@ -705,7 +705,7 @@ class CynicSerialiser implements IObjectSerialiser
                 }
             } elseif (ResourcePropertyKind::COMPLEX_TYPE() == $resourceKind) {
                 $rType                      = $prop->getResourceType();
-                $typeName = $rType->getFullName();
+                $typeName                   = $rType->getFullName();
                 if (null !== $raw) {
                     $value = $this->writeComplexValue($rType, $raw, $propName);
                 }
@@ -798,7 +798,7 @@ class CynicSerialiser implements IObjectSerialiser
                         $nuLink->setType('application/atom+xml;type=feed');
                         $expandedResult = $this->writeTopLevelElements($result);
                     }
-                    if(null !== $expandedResult) {
+                    if (null !== $expandedResult) {
                         $nuLink->setExpandedResult(new ODataExpandedResult($expandedResult));
                     }
                 }
@@ -808,7 +808,7 @@ class CynicSerialiser implements IObjectSerialiser
             if ($isCollection) {
                 $result = new ODataFeed(null, null, new ODataLink(ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE));
             } else {
-                $result = new ODataEntry();
+                $result                  = new ODataEntry();
                 $result->resourceSetName = $type->getName();
             }
             $nuLink->setExpandedResult(new ODataExpandedResult($result));
@@ -1004,13 +1004,13 @@ class CynicSerialiser implements IObjectSerialiser
 
         $name     = $propertyName;
         $typeName = $resourceType->getFullName();
-        $value = null;
+        $value    = null;
         if (null !== $result) {
             if (!is_object($result)) {
                 throw new InvalidOperationException('Supplied $customObject must be an object');
             }
             $internalContent      = $this->writeComplexValue($resourceType, $result);
-            $value = $internalContent;
+            $value                = $internalContent;
         }
 
         return new ODataPropertyContent(
@@ -1059,7 +1059,7 @@ class CynicSerialiser implements IObjectSerialiser
         if (null === $resourceProperty) {
             throw new InvalidOperationException('Resource property must not be null');
         }
-        $name = $resourceProperty->getName();
+        $name  = $resourceProperty->getName();
         $value = null;
         $iType = $resourceProperty->getInstanceType();
         if (!$iType instanceof IType) {

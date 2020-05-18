@@ -167,7 +167,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                 'ShipName' => new ODataProperty('ShipName', 'Edm.String', null),
                 'ItemCount' => new ODataProperty('ItemCount', 'Edm.Int32', null),
                 'QualityRate' => new ODataProperty('QualityRate', 'Edm.Int32', null),
-                'Price' => new ODataProperty('Price','Edm.Double', null)
+                'Price' => new ODataProperty('Price', 'Edm.Double', null)
             ]
         );
 
@@ -451,8 +451,8 @@ class SerialiserWriteElementTest extends SerialiserTestBase
                 'FirstName'  => new ODataProperty('FirstName', 'Edm.String', null),
                 'LastName'   => new ODataProperty('LastName', 'Edm.String', null),
                 'ReportsTo'  => new ODataProperty('ReportsTo', 'Edm.Int32', null),
-                'Emails'     => new ODataProperty('Emails', 'Collection(Edm.String)', new ODataBagContent(null,['foo', 'bar']))
-        ]
+                'Emails'     => new ODataProperty('Emails', 'Collection(Edm.String)', new ODataBagContent(null, ['foo', 'bar']))
+            ]
         );
 
         $managerMedia1 = new ODataMediaLink(

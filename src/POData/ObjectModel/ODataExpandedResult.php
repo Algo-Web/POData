@@ -41,7 +41,7 @@ class ODataExpandedResult
     }
 
     /**
-     * @param  ODataEntry     $entry
+     * @param  ODataEntry          $entry
      * @return ODataExpandedResult
      */
     public function setEntry(ODataEntry $entry): ODataExpandedResult
@@ -59,7 +59,7 @@ class ODataExpandedResult
     }
 
     /**
-     * @param  ODataFeed      $feed
+     * @param  ODataFeed           $feed
      * @return ODataExpandedResult
      */
     public function setFeed(ODataFeed $feed): ODataExpandedResult

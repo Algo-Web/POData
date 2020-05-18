@@ -39,9 +39,9 @@ class ODataProperty
     public $attributeExtensions;
     /**
      * ODataProperty constructor.
-     * @param string $name
-     * @param string $typeName
-     * @param XMLAttribute[] $attributeExtensions
+     * @param string                                      $name
+     * @param string                                      $typeName
+     * @param XMLAttribute[]                              $attributeExtensions
      * @param ODataBagContent|ODataPropertyContent|string $value
      */
     public function __construct(string $name, ?string $typeName, $value, array $attributeExtensions = [])
@@ -62,7 +62,7 @@ class ODataProperty
     }
 
     /**
-     * @param string $name
+     * @param  string        $name
      * @return ODataProperty
      */
     public function setName(string $name): ODataProperty
@@ -80,7 +80,7 @@ class ODataProperty
     }
 
     /**
-     * @param string $typeName
+     * @param  string        $typeName
      * @return ODataProperty
      */
     public function setTypeName(?string $typeName): ODataProperty
@@ -98,7 +98,7 @@ class ODataProperty
     }
 
     /**
-     * @param XMLAttribute[]|null $attributeExtensions
+     * @param  XMLAttribute[]|null $attributeExtensions
      * @return ODataProperty
      */
     public function setAttributeExtensions(?array $attributeExtensions): ODataProperty
@@ -116,7 +116,7 @@ class ODataProperty
     }
 
     /**
-     * @param ODataBagContent|ODataPropertyContent|string $value
+     * @param  ODataBagContent|ODataPropertyContent|string $value
      * @return ODataProperty
      */
     public function setValue($value)

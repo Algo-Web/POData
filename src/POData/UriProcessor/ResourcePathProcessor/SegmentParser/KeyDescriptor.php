@@ -594,7 +594,6 @@ class KeyDescriptor
                 strval($propName),
                 $propDeets[1]->getFullTypeName(),
                 $propDeets[1]->convert($propDeets[0])
-
             );
             $result[$propName]  = $property;
         }

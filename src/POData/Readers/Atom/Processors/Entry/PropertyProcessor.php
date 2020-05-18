@@ -57,7 +57,8 @@ class PropertyProcessor extends BaseNodeHandler
                 ODataConstants::ODATA_METADATA_NAMESPACE . '|' . ODataConstants::ATOM_TYPE_ATTRIBUTE_NAME,
                 null
             ),
-            null);
+            null
+        );
 
         $this->properties->push($property);
         $this->propertyContent->push(new ODataPropertyContent([]));

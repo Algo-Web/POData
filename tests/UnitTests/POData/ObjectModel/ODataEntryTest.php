@@ -199,7 +199,7 @@ class ODataEntryTest extends TestCase
 
     public function testIsOkWhenMPropertyContentNotEmpty()
     {
-        $property = new ODataProperty('','',null);
+        $property = new ODataProperty('', '', null);
 
         $content               = new ODataPropertyContent([$property]);
 

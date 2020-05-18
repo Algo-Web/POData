@@ -498,7 +498,6 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         // default data service
         /** @var IronicSerialiser $ironic */
-
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host, 10);
 
         $collection          = new QueryResult();
@@ -532,7 +531,6 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         // default data service
         /** @var IronicSerialiser $ironic */
-
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $collection          = new QueryResult();
@@ -569,7 +567,6 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         // default data service
         /** @var IronicSerialiser $ironic */
-
         list($object, $ironic) = $this->setUpSerialisers($query, $meta, $host);
 
         $mod1                 = new Employee2();
