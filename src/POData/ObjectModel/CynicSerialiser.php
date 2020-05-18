@@ -142,27 +142,22 @@ class CynicSerialiser implements IObjectSerialiser
         $relativeUri = $this->getRequest()->getIdentifier();
         $absoluteUri = $this->getRequest()->getRequestUrl()->getUrlAsString();
 
+
         $selfLink        = new ODataLink('self', $title, null, $relativeUri);
-
-        $odata               = new ODataFeed();
-        $odata->title        = new ODataTitle($title);
-        $odata->id           = $absoluteUri;
-        $odata->setSelfLink($selfLink);
-        $odata->updated      = $this->getUpdated()->format(DATE_ATOM);
-        $odata->baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $title        = new ODataTitle($title);
+        $id           = $absoluteUri;
+        $updated      = $this->getUpdated()->format(DATE_ATOM);
+        $baseURI      = $this->isBaseWritten ? null : $this->absoluteServiceUriWithSlash;
+        $entries      = [];
         $this->isBaseWritten = true;
+        $nextLink = null;
 
-        if ($this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT()) {
-            $odata->setRowCount($this->getRequest()->getCountValue());
-        }
+        $rowCount = $this->getRequest()->queryType == QueryType::ENTITIES_WITH_COUNT() ?
+            $this->getRequest()->getCountValue() :
+            null;
         foreach ($res as $entry) {
-            if (!$entry instanceof QueryResult) {
-                $query          = new QueryResult();
-                $query->results = $entry;
-            } else {
-                $query = $entry;
-            }
-            $odata->entries[] = $this->writeTopLevelElement($query);
+            $query = $entry instanceof QueryResult ? $entry : new QueryResult($entry);
+            $entries[] = $this->writeTopLevelElement($query);
         }
 
         $resourceSet = $this->getRequest()->getTargetResourceSetWrapper()->getResourceSet();
@@ -180,10 +175,9 @@ class CynicSerialiser implements IObjectSerialiser
                 null,
                 rtrim($this->absoluteServiceUri, '/') . '/' . $stackSegment . $segment
             );
-            $odata->nextPageLink = $nextLink;
         }
 
-        return $odata;
+        return new ODataFeed($id,$title,$selfLink,$rowCount,$nextLink,$entries,$updated,$baseURI);
     }
 
     /**
