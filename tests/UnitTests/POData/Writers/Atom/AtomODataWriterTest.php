@@ -123,13 +123,13 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
 
         $feed->setNextPageLink(new ODataLink('Next', '', '', 'Next Link Url'));
-        $feed->title        = new ODataTitle('Feed Title');
+        $feed->setTitle(new ODataTitle('Feed Title'));
 
         // Entry 1
 
         $entry1        = new ODataEntry();
         $entry1->id    = 'Entry 1';
-        $entry1->title = new ODataTitle('Entry Title');
+        $entry1->setTitle( new ODataTitle('Entry Title'));
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
@@ -258,7 +258,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $entry1        = new ODataEntry();
         $entry1->id    = 'Entry 1';
-        $entry1->title = new ODataTitle('Entry Title');
+        $entry1->setTitle(new ODataTitle('Entry Title'));
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
@@ -326,7 +326,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $entry1        = new ODataEntry();
         $entry1->id    = 'Entry 1';
-        $entry1->title = new ODataTitle('Entry Title');
+        $entry1->setTitle(new ODataTitle('Entry Title'));
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
@@ -660,7 +660,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $entry        = new ODataEntry();
         $entry->id    = 'Expand Entry';
-        $entry->title = new ODataTitle('Entry Title');
+        $entry->setTitle(new ODataTitle('Entry Title'));
         $entry->type  = new ODataCategory('');
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
@@ -692,7 +692,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $odataExpandEntry        = new ODataEntry();
 
         $odataExpandEntry->id    = 'Entry 1';
-        $odataExpandEntry->title = new ODataTitle('Entry Title');
+        $odataExpandEntry->setTitle(new ODataTitle('Entry Title'));
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 
@@ -954,7 +954,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry           = new ODataEntry();
         $entry->id       = 'http://host/service.svc/Customers(1)';
         $entry->setSelfLink(new ODataLink('entry2 self link'));
-        $entry->title    = new ODataTitle('title of entry 2');
+        $entry->setTitle(new ODataTitle('title of entry 2'));
         $entry->editLink = 'edit link of entry 2';
         $entry->type     = 'SampleModel.Customer';
         $entry->eTag     = '';
@@ -1296,7 +1296,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         $entry->mediaLink        = $media;
         $entry->mediaLinks[]     = $media;
         $entry->editLink         = 'edit';
-        $entry->title            = new ODataTitle('');
+        $entry->setTitle(new ODataTitle(''));
 
         $foo = new AtomODataWriterDummy(PHP_EOL, true, 'http://localhost/odata.svc');
         $foo->writeBeginEntry($entry, false);
@@ -1355,7 +1355,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     {
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
-        $feed->title           = new ODataTitle('title');
+        $feed->setTitle(new ODataTitle('title'));
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',

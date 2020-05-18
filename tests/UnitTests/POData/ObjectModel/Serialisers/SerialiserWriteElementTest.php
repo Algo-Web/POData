@@ -83,7 +83,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $objectResult     = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->title         = new ODataTitle('Customer');
+        $objectResult->setTitle(new ODataTitle('Customer'));
         $objectResult->type          = new ODataCategory('NorthWind.Customer');
         $objectResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
@@ -197,7 +197,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkRawResult     = new ODataFeed();
         $linkRawResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\','
                              . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
-        $linkRawResult->title           = new ODataTitle('Orders');
+        $linkRawResult->setTitle(new ODataTitle('Orders'));
         $linkRawResult->setSelfLink(new ODataLink('self', 'Orders', null, 'Customers(CustomerID=\'1\','
             . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders'));
 
@@ -205,7 +205,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $linkResult     = new ODataEntry();
         $linkResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                           . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $linkResult->title         = new ODataTitle('Customer');
+        $linkResult->setTitle(new ODataTitle('Customer'));
         $linkResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\','
             . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $linkResult->type            = new ODataCategory('NorthWind.Customer');
@@ -227,7 +227,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $linkFeedResult                  = new ODataFeed();
         $linkFeedResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
-        $linkFeedResult->title           = new ODataTitle('Order_Details');
+        $linkFeedResult->setTitle(new ODataTitle('Order_Details'));
         $linkFeedResult->setSelfLink(new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'));
 
         $links                    = [
@@ -253,7 +253,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult                  = new ODataEntry();
         $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $objectResult->title           = new ODataTitle('Order');
+        $objectResult->setTitle(new ODataTitle('Order'));
         $objectResult->type            = new ODataCategory('NorthWind.Order');
         $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
@@ -342,7 +342,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult                   = new ODataEntry();
         $objectResult->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
-        $objectResult->title            = new ODataTitle('Employee');
+        $objectResult->setTitle(new ODataTitle('Employee'));
         $objectResult->type             = new ODataCategory('NorthWind.Employee');
         $objectResult->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')');
         $objectResult->isMediaLinkEntry = true;
@@ -495,7 +495,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $manager                   = new ODataEntry();
         $manager->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
-        $manager->title            = new ODataTitle('Employee');
+        $manager->setTitle(new ODataTitle('Employee'));
         $manager->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')');
         $manager->mediaLink        = $managerMedia1;
         $manager->mediaLinks       = [$managerMedia2];
@@ -524,7 +524,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult                   = new ODataEntry();
         $objectResult->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')';
-        $objectResult->title            = new ODataTitle('Employee');
+        $objectResult->setTitle(new ODataTitle('Employee'));
         $objectResult->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Bruce\')');
         $objectResult->type             = new ODataCategory('NorthWind.Employee');
         $objectResult->propertyContent  = $objContent;

@@ -1,12 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 17/05/20
- * Time: 10:37 PM.
- */
+
 namespace UnitTests\POData\Writers;
 
 use Mockery as m;
@@ -44,7 +39,7 @@ class BaseWriterTest extends TestCase
         $entry1     = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Products(0)';
         $entry1->setSelfLink(new ODataLink('entry1 self link'));
-        $entry1->title    = 'title of entry 1';
+        $entry1->setTitle(new ODataTitle('title of entry 1'));
         $entry1->editLink = 'edit link of entry 1';
         $entry1->type     = 'DataServiceProviderDemo.Product';
         $entry1->eTag     = '';
@@ -89,7 +84,7 @@ class BaseWriterTest extends TestCase
         $entry1     = new ODataEntry();
         $entry1->id = 'http://services.odata.org/OData/OData.svc/Suppliers(0)';
         $entry1->setSelfLink(new ODataLink('entry1 self link'));
-        $entry1->title    = new ODataTitle('title of entry 1');
+        $entry1->setTitle(new ODataTitle('title of entry 1'));
         $entry1->editLink = 'edit link of entry 1';
         $entry1->type     = 'ODataDemo.Supplier';
         $entry1->eTag     = 'W/"0"';
@@ -157,7 +152,7 @@ class BaseWriterTest extends TestCase
         $entry2     = new ODataEntry();
         $entry2->id = 'http://services.odata.org/OData/OData.svc/Suppliers(1)';
         $entry2->setSelfLink(new ODataLink('entry2 self link'));
-        $entry2->title    = 'title of entry 2';
+        $entry2->setTitle(new ODataTitle('title of entry 2'));
         $entry2->editLink = 'edit link of entry 2';
         $entry2->type     = 'ODataDemo.Supplier';
         $entry2->eTag     = 'W/"0"';
@@ -225,7 +220,7 @@ class BaseWriterTest extends TestCase
         $entry     = new ODataEntry();
         $entry->id = 'http://services.odata.org/OData/OData.svc/Categories(0)';
         $entry->setSelfLink(new ODataLink('entry2 self link'));
-        $entry->title           = new ODataTitle('title of entry 2');
+        $entry->setTitle(new ODataTitle('title of entry 2'));
         $entry->editLink        = 'edit link of entry 2';
         $entry->type            = 'ODataDemo.Category';
         $entry->eTag            = '';
@@ -311,7 +306,7 @@ class BaseWriterTest extends TestCase
         $entry     = new ODataEntry();
         $entry->id = 'http://host/service.svc/Customers(1)';
         $entry->setSelfLink(new ODataLink('entry1 self link'));
-        $entry->title           = new ODataTitle('title of entry 1');
+        $entry->setTitle(new ODataTitle('title of entry 1'));
         $entry->editLink        = 'edit link of entry 1';
         $entry->type            = 'SampleModel.Customer';
         $entry->eTag            = 'some eTag';
@@ -390,7 +385,7 @@ class BaseWriterTest extends TestCase
     {
         $expandedEntry1           = new ODataEntry();
         $expandedEntry1->id       = 'Expanded Entry 1';
-        $expandedEntry1->title    = new ODataTitle('Expanded Entry 1 Title');
+        $expandedEntry1->setTitle(new ODataTitle('Expanded Entry 1 Title'));
         $expandedEntry1->type     = 'Expanded.Type';
         $expandedEntry1->editLink = 'Edit Link URL';
         $expandedEntry1->setSelfLink(new ODataLink('Self Link URL'));
@@ -453,7 +448,7 @@ class BaseWriterTest extends TestCase
         //First build up the expanded entry 2
         $expandedEntry2           = new ODataEntry();
         $expandedEntry2->id       = 'Expanded Entry 2';
-        $expandedEntry2->title    = new ODataTitle('Expanded Entry 2 Title');
+        $expandedEntry2->setTitle(new ODataTitle('Expanded Entry 2 Title'));
         $expandedEntry2->type     = 'Expanded.Type';
         $expandedEntry2->editLink = 'Edit Link URL';
         $expandedEntry2->setSelfLink(new ODataLink('Self Link URL'));
@@ -519,7 +514,7 @@ class BaseWriterTest extends TestCase
 
         $entry           = new ODataEntry();
         $entry->id       = 'Main Entry';
-        $entry->title    = new ODataTitle('Entry Title');
+        $entry->setTitle(new ODataTitle('Entry Title'));
         $entry->type     = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->setSelfLink(new ODataLink('Self Link URL'));
@@ -563,7 +558,7 @@ class BaseWriterTest extends TestCase
         //Create a the expanded feed
         $expandedFeed        = new ODataFeed();
         $expandedFeed->id    = 'expanded feed id';
-        $expandedFeed->title = new ODataTitle('SubCollection');
+        $expandedFeed->setTitle(new ODataTitle('SubCollection'));
         $expandedFeed->setEntries([
             $expandedEntry1,
             $expandedEntry2
@@ -595,7 +590,7 @@ class BaseWriterTest extends TestCase
     {
         $expandedEntry           = new ODataEntry();
         $expandedEntry->id       = 'Expanded Entry 1';
-        $expandedEntry->title    = 'Expanded Entry Title';
+        $expandedEntry->setTitle(new ODataTitle('Expanded Entry Title'));
         $expandedEntry->type     = 'Expanded.Type';
         $expandedEntry->editLink = 'Edit Link URL';
         $expandedEntry->setSelfLink(new ODataLink('Self Link URL'));
@@ -659,7 +654,7 @@ class BaseWriterTest extends TestCase
 
         $entry           = new ODataEntry();
         $entry->id       = 'Main Entry';
-        $entry->title    = 'Entry Title';
+        $entry->setTitle(new ODataTitle('Entry Title'));
         $entry->type     = 'Main.Type';
         $entry->editLink = 'Edit Link URL';
         $entry->setSelfLink(new ODataLink('Self Link URL'));

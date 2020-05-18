@@ -193,7 +193,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             $cand                                                     = new ODataEntry();
             $cand->id                                                 = 'http://localhost/odata.svc/' . $editStub;
             $cand->editLink                                           = new ODataLink('edit', 'Customer', null, $editStub);
-            $cand->title                                              = new ODataTitle('Customer');
+            $cand->setTitle(new ODataTitle('Customer'));
             $cand->type                                               = new ODataCategory('NorthWind.Customer');
             $cand->propertyContent                                    = $this->generateCustomerProperties();
             $cand->propertyContent['CustomerID']->setValue(strval($i));
@@ -276,27 +276,44 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $links[1][1]->setUrl('Order_Details(ProductID=2,OrderID=1)/Product');
 
         /** @var ODataEntry[] $entries */
-        $entries                                                     = [new ODataEntry(), new ODataEntry()];
-        $entries[0]->id                                              = 'http://localhost/odata.svc/Order_Details(ProductID=1,OrderID=1)';
-        $entries[0]->title                                           = new ODataTitle('Order_Details');
-        $entries[0]->editLink                                        = new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=1,OrderID=1)');
-        $entries[0]->type                                            = new ODataCategory('NorthWind.Order_Details');
-        $entries[0]->propertyContent                                 = $this->generateOrderDetailsProperties();
+        $entries                                                     = [
+            new ODataEntry(
+                'http://localhost/odata.svc/Order_Details(ProductID=1,OrderID=1)',
+                null,
+                new ODataTitle('Order_Details'),
+                new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=1,OrderID=1)'),
+                new ODataCategory('NorthWind.Order_Details'),
+                $this->generateOrderDetailsProperties(),
+                [],
+                null,
+                $links[0],
+                null,
+                null,
+                'Order_Details',
+                '2017-01-01T00:00:00+00:00',
+                null
+            ),
+            new ODataEntry(
+                'http://localhost/odata.svc/Order_Details(ProductID=2,OrderID=1)',
+                null,
+                new ODataTitle('Order_Details'),
+                new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=2,OrderID=1)'),
+                new ODataCategory('NorthWind.Order_Details'),
+                $this->generateOrderDetailsProperties(),
+                [],
+                null,
+                $links[1],
+                null,
+                null,
+                'Order_Details',
+                '2017-01-01T00:00:00+00:00'
+            )
+        ];
+
         $entries[0]->propertyContent['ProductID']->setValue('1');
         $entries[0]->propertyContent['OrderID']->setValue('1');
-        $entries[0]->links                                           = $links[0];
-        $entries[0]->resourceSetName                                 = 'Order_Details';
-        $entries[0]->updated                                         = '2017-01-01T00:00:00+00:00';
-        $entries[1]->id                                              = 'http://localhost/odata.svc/Order_Details(ProductID=2,OrderID=1)';
-        $entries[1]->title                                           = new ODataTitle('Order_Details');
-        $entries[1]->editLink                                        = new ODataLink('edit', 'Order_Details', null, 'Order_Details(ProductID=2,OrderID=1)');
-        $entries[1]->type                                            = new ODataCategory('NorthWind.Order_Details');
-        $entries[1]->propertyContent                                 = $this->generateOrderDetailsProperties();
         $entries[1]->propertyContent['ProductID']->setValue('2');
         $entries[1]->propertyContent['OrderID']->setValue('1');
-        $entries[1]->links                                           = $links[1];
-        $entries[1]->resourceSetName                                 = 'Order_Details';
-        $entries[1]->updated                                         = '2017-01-01T00:00:00+00:00';
 
         $objectResult           = new ODataFeed(
             'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details',
@@ -364,7 +381,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $detailsFeed                  = new ODataFeed();
         $detailsFeed->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
-        $detailsFeed->title           = new ODataTitle('Order_Details');
+        $detailsFeed->setTitle(new ODataTitle('Order_Details'));
         $detailsFeed->setSelfLink(new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'));
 
         $customerEntry                  = new ODataEntry();
@@ -393,7 +410,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $subEntry                                                = new ODataEntry();
         $subEntry->id                                            = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $subEntry->title                                         = new ODataTitle('Order');
+        $subEntry->setTitle(new ODataTitle('Order'));
         $subEntry->editLink                                      = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $subEntry->type                                          = new ODataCategory('NorthWind.Order');
         $subEntry->resourceSetName                               = 'Orders';
@@ -407,7 +424,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $subFeed     = new ODataFeed();
         $subFeed->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                        . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
-        $subFeed->title    = new ODataTitle('Orders');
+        $subFeed->setTitle(new ODataTitle('Orders'));
         $subFeed->setSelfLink($subSelf);
         $subFeed->addEntry($subEntry);
         $subFeed->updated  = '2017-01-01T00:00:00+00:00';
@@ -425,7 +442,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
         $entry     = new ODataEntry();
         $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                      . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry->title                                              = new ODataTitle('Customer');
+        $entry->setTitle(new ODataTitle('Customer'));
         $entry->editLink                                           = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
         $entry->type                                               = new ODataCategory('NorthWind.Customer');
         $entry->resourceSetName                                    = 'Customers';
@@ -437,7 +454,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
 
         $objectResult           = new ODataFeed();
         $objectResult->id       = 'http://localhost/odata.svc/Customers';
-        $objectResult->title    = new ODataTitle('Customers');
+        $objectResult->setTitle(new ODataTitle('Customers'));
         $objectResult->setSelfLink($selfLink);
         $objectResult->setEntries([$entry, $entry]);
         $objectResult->updated  = '2017-01-01T00:00:00+00:00';

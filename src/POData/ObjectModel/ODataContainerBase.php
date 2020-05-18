@@ -18,7 +18,7 @@ abstract class ODataContainerBase
      *
      * @var ODataTitle
      */
-    public $title;
+    private $title;
 
     /**
      * Entry Self Link.

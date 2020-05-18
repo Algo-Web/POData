@@ -236,7 +236,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
 
 
         $linkResult                  = new ODataEntry();
-        $linkResult->title           = new ODataTitle('Customer');
+        $linkResult->setTitle(new ODataTitle('Customer'));
         $linkResult->type            = new ODataCategory('Customer');
         $linkResult->resourceSetName = 'Customers';
         $linkResult->propertyContent = $linkPropContent;
@@ -268,7 +268,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setExpandedResult(null);
 
         $objectResult                  = new ODataEntry();
-        $objectResult->title           = new ODataTitle('Order');
+        $objectResult->setTitle(new ODataTitle('Order'));
         $objectResult->type            = new ODataCategory('Order');
         $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
         $objectResult->propertyContent = $propContent;
@@ -420,13 +420,21 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
             ]
         );
 
-        $linkResult                  = new ODataEntry();
-        $linkResult->title           = new ODataTitle('Customer');
-        $linkResult->type            = new ODataCategory('Customer');
-        $linkResult->resourceSetName = 'Customers';
-        $linkResult->propertyContent = $linkPropContent;
-        $linkResult->id              = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
+        $linkResult                  = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            null,
+            new ODataTitle('Customer'),
+            null,
+            new ODataCategory('Customer'),
+            $linkPropContent,
+            [],
+            null,
+            [],
+            null,
+            null,
+            'Customers'
+        );
 
         $propContent             = new ODataPropertyContent(
             [
@@ -454,15 +462,20 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
         $links[1]->setUrl(null);
         $links[1]->setExpandedResult(null);
 
-        $objectResult                  = new ODataEntry();
-        $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $objectResult->title           = new ODataTitle('Order');
-        $objectResult->type            = new ODataCategory('Order');
-        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
-        $objectResult->propertyContent = $propContent;
-        $objectResult->links           = $links;
-        $objectResult->resourceSetName = 'Orders';
-
+        $objectResult                  = new ODataEntry(
+            'http://localhost/odata.svc/Orders(OrderID=1)',
+            null,
+            new ODataTitle('Order'),
+            new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
+            new ODataCategory('Order'),
+            $propContent,
+            [],
+            null,
+            $links,
+            null,
+            null,
+            'Orders'
+        );
         $cereal = new CynicDeserialiser($meta, $prov);
 
         $cereal->processPayload($objectResult);

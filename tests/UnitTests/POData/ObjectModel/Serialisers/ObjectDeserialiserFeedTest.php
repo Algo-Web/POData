@@ -226,7 +226,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $deet                  = new ODataEntry();
         $deet->resourceSetName = 'Order_Details';
-        $deet->title           = new ODataTitle('Order_Details');
+        $deet->setTitle(new ODataTitle('Order_Details'));
         $deet->type            = new ODataCategory('Order_Details');
         $deet->propertyContent = $deetContent;
 
@@ -257,7 +257,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $order                  = new ODataEntry();
         $order->resourceSetName = 'Orders';
-        $order->title           = new ODataTitle('Order');
+        $order->setTitle(new ODataTitle('Order'));
         $order->type            = new ODataCategory('Order');
         $order->propertyContent = $linkContent;
         $order->links           = [$orderLink];
@@ -356,7 +356,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
 
         $order                  = new ODataEntry();
         $order->resourceSetName = 'Orders';
-        $order->title           = new ODataTitle('Order');
+        $order->setTitle(new ODataTitle('Order'));
         $order->type            = new ODataCategory('Order');
         $order->propertyContent = $linkContent;
         $order->links           = [$orderLink];

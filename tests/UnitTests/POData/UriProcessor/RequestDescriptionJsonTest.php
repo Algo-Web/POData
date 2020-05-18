@@ -113,7 +113,7 @@ class RequestDescriptionJsonTest extends TestCase
         $objectResult     = new ODataEntry();
         $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
                             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->title         = new ODataTitle('Customer');
+        $objectResult->setTitle(new ODataTitle('Customer'));
         $objectResult->type          = new ODataCategory('Customer');
         $objectResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');

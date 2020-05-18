@@ -955,6 +955,7 @@ class ObjectModelSerializerTest extends TestCase
         $service->shouldReceive('getOperationContext')->andReturn($context);
         $service->shouldReceive('getStreamProviderWrapper')->andReturn($streamWrap);
 
+        /** @var ObjectModelSerializer|m\Mock $foo */
         $foo = m::mock(ObjectModelSerializer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $foo->shouldReceive('getRequest')->andReturn($request);
         $foo->shouldReceive('getStack')->andReturn($stack);
@@ -984,7 +985,7 @@ class ObjectModelSerializerTest extends TestCase
         $result = $foo->writeTopLevelElement($queryResult);
         $this->assertTrue($result instanceof ODataEntry);
         $this->assertEquals('/customer', $result->id);
-        $this->assertEquals(new ODataTitle('customers'), $result->title);
+        $this->assertEquals(new ODataTitle('customers'), $result->getTitle());
         $this->assertEquals($editLink, $result->editLink);
         $this->assertEquals($type, $result->type);
         $this->assertEquals('wrapper', $result->resourceSetName);

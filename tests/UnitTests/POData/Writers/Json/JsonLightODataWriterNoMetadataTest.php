@@ -141,7 +141,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
 
         $oDataFeed        = new ODataFeed();
         $oDataFeed->id    = 'FEED ID';
-        $oDataFeed->title = new ODataTitle('FEED TITLE');
+        $oDataFeed->setTitle(new ODataTitle('FEED TITLE'));
         //self link
         $selfLink            = new ODataLink(
             'Products',
@@ -265,7 +265,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
 
         $oDataFeed        = new ODataFeed();
         $oDataFeed->id    = 'FEED ID';
-        $oDataFeed->title = new ODataTitle('FEED TITLE');
+        $oDataFeed->setTitle(new ODataTitle('FEED TITLE'));
         //self link
         $selfLink            = new ODataLink(
             'Products',
@@ -524,7 +524,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
 
         $entry             = new ODataEntry();
         $entry->id         = 'Main Entry';
-        $entry->title      = new ODataTitle('Entry Title');
+        $entry->setTitle(new ODataTitle('Entry Title'));
         $entry->type       = 'Main.Type';
         $entry->editLink   = 'Edit Link URL';
         $entry->setSelfLink(new ODataLink('Self Link URL'));
@@ -738,7 +738,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
     {
         $feed                  = new ODataFeed();
         $feed->id              = 'http://localhost/odata.svc/feedID';
-        $feed->title           = new ODataTitle('title');
+        $feed->setTitle(new ODataTitle('title'));
         $feed->setSelfLink(new ODataLink(
             ODataConstants::ATOM_SELF_RELATION_ATTRIBUTE_VALUE,
             'Feed Title',
