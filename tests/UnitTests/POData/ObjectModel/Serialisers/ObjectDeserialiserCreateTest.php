@@ -366,7 +366,7 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
             null,
             $links,
             null,
-            null,
+            false,
             'Orders'
         );
 
@@ -427,12 +427,11 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
             new ODataTitle('Customer'),
             null,
             new ODataCategory('Customer'),
-            $linkPropContent,
-            [],
+            $linkPropContent, [],
             null,
             [],
             null,
-            null,
+            false,
             'Customers'
         );
 
@@ -468,12 +467,11 @@ class ObjectDeserialiserCreateTest extends SerialiserTestBase
             new ODataTitle('Order'),
             new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
             new ODataCategory('Order'),
-            $propContent,
-            [],
+            $propContent, [],
             null,
             $links,
             null,
-            null,
+            false,
             'Orders'
         );
         $cereal = new CynicDeserialiser($meta, $prov);

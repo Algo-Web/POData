@@ -341,7 +341,7 @@ class CynicSerialiser implements IObjectSerialiser
 
         $odata                   = new ODataEntry(
             $absoluteUri,
-            null, // this is wrong. every entry needs a selflink.
+            null,
             new ODataTitle($resourceType->getName()),
             new ODataLink('edit', $resourceType->getName(), null, $relativeUri),
             new ODataCategory($type),
@@ -350,7 +350,7 @@ class CynicSerialiser implements IObjectSerialiser
             $mediaLink,
             $links,
             null,
-            true === $resourceType->isMediaLinkEntry() ? true : null,
+            true === $resourceType->isMediaLinkEntry() ,
             $resourceSet->getName(),
             $this->getUpdated()->format(DATE_ATOM),
             $baseURI

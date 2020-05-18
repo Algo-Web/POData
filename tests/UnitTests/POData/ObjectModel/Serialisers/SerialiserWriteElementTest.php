@@ -83,18 +83,16 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult     = new ODataEntry(
             'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
-            null,
-            new ODataTitle('Customer'),
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')', null, new ODataTitle('Customer'),
             new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
-                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
             new ODataCategory('NorthWind.Customer'),
             $propContent,
             [],
             null,
             [$link],
             null,
-            null,
+            false,
             'Customers',
             '2017-01-01T00:00:00+00:00',
             'http://localhost/odata.svc/'
@@ -216,25 +214,25 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             null,
             new ODataTitle('Customer'),
             new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\','
-                . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
             new ODataCategory('NorthWind.Customer'),
             $linkPropContent,
             [],
             null,
             [
-                new ODataLink(
-                    'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders',
-                    'Orders',
-                    'application/atom+xml;type=feed',
-                    'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
-                    . '-e89b-12d3-a456-426655440000\')/Orders',
-                    true,
-                    new ODataExpandedResult($linkRawResult),
-                    true
-                )
-            ],
+            new ODataLink(
+                'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders',
+                'Orders',
+                'application/atom+xml;type=feed',
+                'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
+                . '-e89b-12d3-a456-426655440000\')/Orders',
+                true,
+                new ODataExpandedResult($linkRawResult),
+                true
+            )
+        ],
             null,
-            null,
+            false,
             'Customers',
             '2017-01-01T00:00:00+00:00',
             null
@@ -274,8 +272,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult                  = new ODataEntry(
             'http://localhost/odata.svc/Orders(OrderID=1)',
-            null,
-            new ODataTitle('Order'),
+            null, new ODataTitle('Order'),
             new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
             new ODataCategory('NorthWind.Order'),
             $propContent,
@@ -283,7 +280,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             null,
             $links,
             null,
-            null,
+            false,
             'Orders',
             '2017-01-01T00:00:00+00:00',
             'http://localhost/odata.svc/'
@@ -561,8 +558,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
 
         $objectResult                   = new ODataEntry(
             'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')',
-            null,
-            new ODataTitle('Employee'),
+            null, new ODataTitle('Employee'),
             new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Bruce\')'),
             new ODataCategory('NorthWind.Employee'),
             $objContent,

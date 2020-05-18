@@ -201,7 +201,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                 null,
                 [$link],
                 null,
-                null,
+                false,
                 'Customers',
                 '2017-01-01T00:00:00+00:00'
             );
@@ -294,7 +294,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                 null,
                 $links[0],
                 null,
-                null,
+                false,
                 'Order_Details',
                 '2017-01-01T00:00:00+00:00',
                 null
@@ -310,7 +310,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                 null,
                 $links[1],
                 null,
-                null,
+                false,
                 'Order_Details',
                 '2017-01-01T00:00:00+00:00'
             )
@@ -425,10 +425,10 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             null,
             $subLinks,
             null,
-            null,
+            false,
             'Orders',
             '2017-01-01T00:00:00+00:00',
-        null
+            null
         );
         $subEntry->propertyContent['OrderID']->setValue('1');
 
@@ -468,7 +468,7 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             null,
             [$link],
             null,
-            null,
+            false,
             'Customers',
             '2017-01-01T00:00:00+00:00',
             null

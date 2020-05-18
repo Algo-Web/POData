@@ -66,7 +66,7 @@ class ODataEntry extends ODataContainerBase
     /**
      * True if this is a media link entry.
      *
-     * @var bool|null
+     * @var bool
      */
     public $isMediaLinkEntry;
 
@@ -78,23 +78,22 @@ class ODataEntry extends ODataContainerBase
     public $resourceSetName;
 
 
-
     /**
      * ODataEntry constructor.
-     * @param string|null               $id
-     * @param string|null               $selfLink
-     * @param ODataTitle|null           $title
-     * @param ODataLink|null            $editLink
-     * @param ODataCategory|null        $type
+     * @param string|null $id
+     * @param ODataLink|null $selfLink
+     * @param ODataTitle|null $title
+     * @param ODataLink|null $editLink
+     * @param ODataCategory|null $type
      * @param ODataPropertyContent|null $propertyContent
-     * @param array                     $mediaLinks
-     * @param ODataMediaLink|null       $mediaLink
-     * @param array                     $links
-     * @param string|null               $eTag
-     * @param bool|null                 $isMediaLinkEntry
-     * @param string|null               $resourceSetName
-     * @param string|null               $updated
-     * @param string|null               $baseURI
+     * @param array $mediaLinks
+     * @param ODataMediaLink|null $mediaLink
+     * @param array $links
+     * @param string|null $eTag
+     * @param bool $isMediaLinkEntry
+     * @param string|null $resourceSetName
+     * @param string|null $updated
+     * @param string|null $baseURI
      */
     public function __construct(
         ?string $id = null,
@@ -107,7 +106,7 @@ class ODataEntry extends ODataContainerBase
         ?ODataMediaLink $mediaLink = null,
         array $links = [],
         ?string $eTag = null,
-        ?bool $isMediaLinkEntry = null,
+        bool $isMediaLinkEntry = false,
         ?string $resourceSetName = null,
         ?string $updated = null,
         ?string $baseURI = null
@@ -145,18 +144,18 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getIsMediaLinkEntry(): ?bool
+    public function getIsMediaLinkEntry(): bool
     {
         return $this->isMediaLinkEntry;
     }
 
     /**
-     * @param  bool|null  $isMediaLinkEntry
+     * @param  bool  $isMediaLinkEntry
      * @return ODataEntry
      */
-    public function setIsMediaLinkEntry(?bool $isMediaLinkEntry): ODataEntry
+    public function setIsMediaLinkEntry(bool $isMediaLinkEntry): ODataEntry
     {
         $this->isMediaLinkEntry = $isMediaLinkEntry;
         return $this;
