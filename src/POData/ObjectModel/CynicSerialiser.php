@@ -350,11 +350,10 @@ class CynicSerialiser implements IObjectSerialiser
             $mediaLink,
             $links,
             null,
-            true === $resourceType->isMediaLinkEntry() ,
+            true === $resourceType->isMediaLinkEntry(),
             $resourceSet->getName(),
             $this->getUpdated()->format(DATE_ATOM),
             $baseURI
-
         );
 
         $newCount = count($this->lightStack);

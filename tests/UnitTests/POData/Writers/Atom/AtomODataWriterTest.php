@@ -129,7 +129,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $entry1        = new ODataEntry();
         $entry1->id    = 'Entry 1';
-        $entry1->setTitle( new ODataTitle('Entry Title'));
+        $entry1->setTitle(new ODataTitle('Entry Title'));
 
         $editLink        = new ODataLink('edit', 'Edit Link Title', 'Edit link type', 'Edit Link URL');
 

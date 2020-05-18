@@ -85,10 +85,13 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $objectResult     = new ODataEntry(
             'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
-            new ODataLink('self', 'Customer',
+            new ODataLink(
+                'self',
+                'Customer',
                 null,
                 'Customers(CustomerID=\'1\',CustomerGuid'
-                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'
+            ),
             new ODataTitle('Customer'),
             new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
                 . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),

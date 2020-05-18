@@ -80,20 +80,20 @@ class ODataEntry extends ODataContainerBase
 
     /**
      * ODataEntry constructor.
-     * @param string|null $id
-     * @param ODataLink|null $selfLink
-     * @param ODataTitle|null $title
-     * @param ODataLink|null $editLink
-     * @param ODataCategory|null $type
+     * @param string|null               $id
+     * @param ODataLink|null            $selfLink
+     * @param ODataTitle|null           $title
+     * @param ODataLink|null            $editLink
+     * @param ODataCategory|null        $type
      * @param ODataPropertyContent|null $propertyContent
-     * @param array $mediaLinks
-     * @param ODataMediaLink|null $mediaLink
-     * @param array $links
-     * @param string|null $eTag
-     * @param bool $isMediaLinkEntry
-     * @param string|null $resourceSetName
-     * @param string|null $updated
-     * @param string|null $baseURI
+     * @param array                     $mediaLinks
+     * @param ODataMediaLink|null       $mediaLink
+     * @param array                     $links
+     * @param string|null               $eTag
+     * @param bool                      $isMediaLinkEntry
+     * @param string|null               $resourceSetName
+     * @param string|null               $updated
+     * @param string|null               $baseURI
      */
     public function __construct(
         ?string $id = null,
@@ -152,7 +152,7 @@ class ODataEntry extends ODataContainerBase
     }
 
     /**
-     * @param  bool  $isMediaLinkEntry
+     * @param  bool       $isMediaLinkEntry
      * @return ODataEntry
      */
     public function setIsMediaLinkEntry(bool $isMediaLinkEntry): ODataEntry
