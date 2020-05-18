@@ -51,6 +51,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $model               = new Customer2();
@@ -80,18 +81,24 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             ]
         );
 
-        $objectResult     = new ODataEntry();
-        $objectResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $objectResult->setTitle(new ODataTitle('Customer'));
-        $objectResult->type          = new ODataCategory('NorthWind.Customer');
-        $objectResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
-            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
-        $objectResult->propertyContent = $propContent;
-        $objectResult->links[]         = $link;
-        $objectResult->resourceSetName = 'Customers';
-        $objectResult->updated         = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI         = 'http://localhost/odata.svc/';
+        $objectResult     = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            null,
+            new ODataTitle('Customer'),
+            new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid'
+                . '=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataCategory('NorthWind.Customer'),
+            $propContent,
+            [],
+            null,
+            [$link],
+            null,
+            null,
+            'Customers',
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+        );
 
         $ironicResult = $ironic->writeTopLevelElement($result);
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
@@ -127,6 +134,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $expandNode = m::mock(ExpandedProjectionNode::class);
@@ -202,33 +210,46 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders'));
 
 
-        $linkResult     = new ODataEntry();
-        $linkResult->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                          . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $linkResult->setTitle(new ODataTitle('Customer'));
-        $linkResult->editLink      = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\','
-            . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
-        $linkResult->type            = new ODataCategory('NorthWind.Customer');
-        $linkResult->links           = [
-            new ODataLink(
-                'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders',
-                'Orders',
-                'application/atom+xml;type=feed',
-                'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
-                . '-e89b-12d3-a456-426655440000\')/Orders',
-                true,
-                new ODataExpandedResult($linkRawResult),
-                true
-            )
-        ];
-        $linkResult->resourceSetName          = 'Customers';
-        $linkResult->propertyContent          = $linkPropContent;
-        $linkResult->updated                  = '2017-01-01T00:00:00+00:00';
+        $linkResult     = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            null,
+            new ODataTitle('Customer'),
+            new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\','
+                . 'CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataCategory('NorthWind.Customer'),
+            $linkPropContent,
+            [],
+            null,
+            [
+                new ODataLink(
+                    'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders',
+                    'Orders',
+                    'application/atom+xml;type=feed',
+                    'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567'
+                    . '-e89b-12d3-a456-426655440000\')/Orders',
+                    true,
+                    new ODataExpandedResult($linkRawResult),
+                    true
+                )
+            ],
+            null,
+            null,
+            'Customers',
+            '2017-01-01T00:00:00+00:00',
+            null
+        );
 
-        $linkFeedResult                  = new ODataFeed();
-        $linkFeedResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details';
-        $linkFeedResult->setTitle(new ODataTitle('Order_Details'));
-        $linkFeedResult->setSelfLink(new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'));
+        $linkFeedResult                  = new ODataFeed(
+            'http://localhost/odata.svc/Orders(OrderID=1)/Order_Details',
+            new ODataTitle('Order_Details'),
+            new ODataLink('self', 'Order_Details', null, 'Orders(OrderID=1)/Order_Details'),
+            null,
+            null,
+            [],
+            null,
+            null
+        );
 
         $links                    = [
             new ODataLink(
@@ -251,16 +272,22 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             )
         ];
 
-        $objectResult                  = new ODataEntry();
-        $objectResult->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $objectResult->setTitle(new ODataTitle('Order'));
-        $objectResult->type            = new ODataCategory('NorthWind.Order');
-        $objectResult->editLink        = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
-        $objectResult->propertyContent = $propContent;
-        $objectResult->links           = $links;
-        $objectResult->resourceSetName = 'Orders';
-        $objectResult->updated         = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI         = 'http://localhost/odata.svc/';
+        $objectResult                  = new ODataEntry(
+            'http://localhost/odata.svc/Orders(OrderID=1)',
+            null,
+            new ODataTitle('Order'),
+            new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
+            new ODataCategory('NorthWind.Order'),
+            $propContent,
+            [],
+            null,
+            $links,
+            null,
+            null,
+            'Orders',
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+        );
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 
@@ -282,6 +309,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $caveJohnson                 = new Employee2();
@@ -340,19 +368,23 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             )
         ];
 
-        $objectResult                   = new ODataEntry();
-        $objectResult->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
-        $objectResult->setTitle(new ODataTitle('Employee'));
-        $objectResult->type             = new ODataCategory('NorthWind.Employee');
-        $objectResult->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')');
-        $objectResult->isMediaLinkEntry = true;
-        $objectResult->mediaLink        = $mediaLink;
-        $objectResult->mediaLinks[]     = $mediaArray;
-        $objectResult->propertyContent  = $propContent;
-        $objectResult->links            = $links;
-        $objectResult->resourceSetName  = 'Employees';
-        $objectResult->updated          = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI          = 'http://localhost/odata.svc/';
+        $objectResult                   = new ODataEntry(
+            'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')',
+            null,
+            new ODataTitle('Employee'),
+            new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')'),
+            new ODataCategory('NorthWind.Employee'),
+            $propContent,
+            [$mediaArray],
+            $mediaLink,
+            $links,
+            null,
+            true,
+            'Employees',
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+
+        );
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 
@@ -378,6 +410,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         list($host, $meta, $query) = $this->setUpDataServiceDeps($request);
 
         // default data service
+        /** @var IronicSerialiser $ironic */
         $ironic = $this->setUpSerialisers($query, $meta, $host);
 
         $iType = new StringType();
@@ -493,18 +526,22 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $managerLink2->setIsExpanded(false);
 
 
-        $manager                   = new ODataEntry();
-        $manager->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')';
-        $manager->setTitle(new ODataTitle('Employee'));
-        $manager->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')');
-        $manager->mediaLink        = $managerMedia1;
-        $manager->mediaLinks       = [$managerMedia2];
-        $manager->propertyContent  = $propContent;
-        $manager->type             = new ODataCategory('NorthWind.Employee');
-        $manager->isMediaLinkEntry = true;
-        $manager->links            = [$managerLink1, $managerLink2];
-        $manager->resourceSetName  = 'Employees';
-        $manager->updated          = '2017-01-01T00:00:00+00:00';
+        $manager                   = new ODataEntry(
+            'http://localhost/odata.svc/Employees(EmployeeID=\'Cave+Johnson\')',
+            null,
+            new ODataTitle('Employee'),
+            new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Cave+Johnson\')'),
+            new ODataCategory('NorthWind.Employee'),
+            $propContent,
+            [$managerMedia2],
+            $managerMedia1,
+            [$managerLink1, $managerLink2],
+            null,
+            true,
+            'Employees',
+            '2017-01-01T00:00:00+00:00',
+            null
+        );
 
         $link                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Manager',
@@ -522,19 +559,22 @@ class SerialiserWriteElementTest extends SerialiserTestBase
             ]
         );
 
-        $objectResult                   = new ODataEntry();
-        $objectResult->id               = 'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')';
-        $objectResult->setTitle(new ODataTitle('Employee'));
-        $objectResult->editLink         = new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Bruce\')');
-        $objectResult->type             = new ODataCategory('NorthWind.Employee');
-        $objectResult->propertyContent  = $objContent;
-        $objectResult->isMediaLinkEntry = true;
-        $objectResult->mediaLink        = $media1;
-        $objectResult->mediaLinks       = [$media2];
-        $objectResult->links[]          = $link;
-        $objectResult->resourceSetName  = 'Employees';
-        $objectResult->updated          = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI          = 'http://localhost/odata.svc/';
+        $objectResult                   = new ODataEntry(
+            'http://localhost/odata.svc/Employees(EmployeeID=\'Bruce\')',
+            null,
+            new ODataTitle('Employee'),
+            new ODataLink('edit', 'Employee', null, 'Employees(EmployeeID=\'Bruce\')'),
+            new ODataCategory('NorthWind.Employee'),
+            $objContent,
+            [$media2],
+            $media1,
+            [$link],
+            null,
+            true,
+            'Employees',
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+        );
 
         $ironicResult = $ironic->writeTopLevelElement($result);
 

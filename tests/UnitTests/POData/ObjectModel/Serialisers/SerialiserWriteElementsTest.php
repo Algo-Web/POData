@@ -190,17 +190,23 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
                 true
             );
 
-            $cand                                                     = new ODataEntry();
-            $cand->id                                                 = 'http://localhost/odata.svc/' . $editStub;
-            $cand->editLink                                           = new ODataLink('edit', 'Customer', null, $editStub);
-            $cand->setTitle(new ODataTitle('Customer'));
-            $cand->type                                               = new ODataCategory('NorthWind.Customer');
-            $cand->propertyContent                                    = $this->generateCustomerProperties();
+            $cand                                                     = new ODataEntry(
+                'http://localhost/odata.svc/' . $editStub,
+                null,
+                new ODataTitle('Customer'),
+                new ODataLink('edit', 'Customer', null, $editStub),
+                new ODataCategory('NorthWind.Customer'),
+                $this->generateCustomerProperties(),
+                [],
+                null,
+                [$link],
+                null,
+                null,
+                'Customers',
+                '2017-01-01T00:00:00+00:00'
+            );
             $cand->propertyContent['CustomerID']->setValue(strval($i));
             $cand->propertyContent['CustomerGuid']->setValue('123e4567-e89b-12d3-a456-426655440000');
-            $cand->links                                              = [$link];
-            $cand->resourceSetName                                    = 'Customers';
-            $cand->updated                                            = '2017-01-01T00:00:00+00:00';
 
             $entries[] = $cand;
         }
@@ -408,26 +414,37 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             )
         ];
 
-        $subEntry                                                = new ODataEntry();
-        $subEntry->id                                            = 'http://localhost/odata.svc/Orders(OrderID=1)';
-        $subEntry->setTitle(new ODataTitle('Order'));
-        $subEntry->editLink                                      = new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)');
-        $subEntry->type                                          = new ODataCategory('NorthWind.Order');
-        $subEntry->resourceSetName                               = 'Orders';
-        $subEntry->propertyContent                               = $this->generateOrderProperties();
+        $subEntry                                                = new ODataEntry(
+            'http://localhost/odata.svc/Orders(OrderID=1)',
+            null,
+            new ODataTitle('Order'),
+            new ODataLink('edit', 'Order', null, 'Orders(OrderID=1)'),
+            new ODataCategory('NorthWind.Order'),
+            $this->generateOrderProperties(),
+            [],
+            null,
+            $subLinks,
+            null,
+            null,
+            'Orders',
+            '2017-01-01T00:00:00+00:00',
+        null
+        );
         $subEntry->propertyContent['OrderID']->setValue('1');
-        $subEntry->links                                         = $subLinks;
-        $subEntry->updated                                       = '2017-01-01T00:00:00+00:00';
 
         $subSelf        = new ODataLink('self', 'Orders', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders');
 
-        $subFeed     = new ODataFeed();
-        $subFeed->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                       . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders';
-        $subFeed->setTitle(new ODataTitle('Orders'));
-        $subFeed->setSelfLink($subSelf);
-        $subFeed->addEntry($subEntry);
-        $subFeed->updated  = '2017-01-01T00:00:00+00:00';
+        $subFeed     = new ODataFeed(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')/Orders',
+            new ODataTitle('Orders'),
+            $subSelf,
+            null,
+            null,
+            [$subEntry],
+            '2017-01-01T00:00:00+00:00',
+            null
+        );
 
         $link                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Orders',
@@ -439,26 +456,36 @@ class SerialiserWriteElementsTest extends SerialiserTestBase
             true
         );
 
-        $entry     = new ODataEntry();
-        $entry->id = 'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
-                     . '=guid\'123e4567-e89b-12d3-a456-426655440000\')';
-        $entry->setTitle(new ODataTitle('Customer'));
-        $entry->editLink                                           = new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')');
-        $entry->type                                               = new ODataCategory('NorthWind.Customer');
-        $entry->resourceSetName                                    = 'Customers';
-        $entry->propertyContent                                    = $this->generateCustomerProperties();
+        $entry     = new ODataEntry(
+            'http://localhost/odata.svc/Customers(CustomerID=\'1\',CustomerGuid'
+            . '=guid\'123e4567-e89b-12d3-a456-426655440000\')',
+            null,
+            new ODataTitle('Customer'),
+            new ODataLink('edit', 'Customer', null, 'Customers(CustomerID=\'1\',CustomerGuid=guid\'123e4567-e89b-12d3-a456-426655440000\')'),
+            new ODataCategory('NorthWind.Customer'),
+            $this->generateCustomerProperties(),
+            [],
+            null,
+            [$link],
+            null,
+            null,
+            'Customers',
+            '2017-01-01T00:00:00+00:00',
+            null
+        );
         $entry->propertyContent['CustomerID']->setValue('1');
         $entry->propertyContent['CustomerGuid']->setValue('123e4567-e89b-12d3-a456-426655440000');
-        $entry->links                                              = [$link];
-        $entry->updated                                            = '2017-01-01T00:00:00+00:00';
 
-        $objectResult           = new ODataFeed();
-        $objectResult->id       = 'http://localhost/odata.svc/Customers';
-        $objectResult->setTitle(new ODataTitle('Customers'));
-        $objectResult->setSelfLink($selfLink);
-        $objectResult->setEntries([$entry, $entry]);
-        $objectResult->updated  = '2017-01-01T00:00:00+00:00';
-        $objectResult->baseURI  = 'http://localhost/odata.svc/';
+        $objectResult           = new ODataFeed(
+            'http://localhost/odata.svc/Customers',
+            new ODataTitle('Customers'),
+            $selfLink,
+            null,
+            null,
+            [$entry, $entry],
+            '2017-01-01T00:00:00+00:00',
+            'http://localhost/odata.svc/'
+        );
 
         $ironicResult = $ironic->writeTopLevelElements($collection);
 
