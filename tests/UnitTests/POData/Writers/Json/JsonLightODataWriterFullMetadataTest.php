@@ -158,7 +158,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $selfLink            = new ODataLink('Products', 'Products', null, 'Categories(0)/Products');
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->entries = [$entry1];
+        $oDataFeed->setEntries([$entry1]);
 
         //next page link: NOTE minimalmetadata means this won't be output
         $oDataFeed->setNextPageLink( new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12')
@@ -290,7 +290,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseWriterTest
         $oDataFeed->setNextPageLink(new ODataLink('Next Page Link', 'Next Page', null, 'http://services.odata.org/OData/OData.svc$skiptoken=12'));
         //feed entries
 
-        $oDataFeed->entries = [$entry1, $entry2];
+        $oDataFeed->setEntries([$entry1, $entry2]);
 
         $oDataFeed->setRowCount(null); //simulate no inline count
 

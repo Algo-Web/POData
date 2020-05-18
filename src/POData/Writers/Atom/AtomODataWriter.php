@@ -486,7 +486,7 @@ class AtomODataWriter implements IODataWriter
             $this->xmlWriter->endElement();
         }
 
-        foreach ($feed->entries as $entry) {
+        foreach ($feed->getEntries() as $entry) {
             $this->writeEntry($entry);
         }
 

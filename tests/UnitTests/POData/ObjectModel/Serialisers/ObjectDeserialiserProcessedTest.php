@@ -118,7 +118,7 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $payload->id = $key;
 
         $feed            = new ODataFeed();
-        $feed->entries[] = new ODataEntry();
+        $feed->addEntry(new ODataEntry());
 
         $payload->links                    = [new ODataLink()];
         $payload->links[0]->setExpandedResult(new ODataExpandedResult($feed));
@@ -140,7 +140,7 @@ class ObjectDeserialiserProcessedTest extends TestCase
         $child->id = $key;
 
         $feed            = new ODataFeed();
-        $feed->entries[] = new ODataEntry();
+        $feed->addEntry(new ODataEntry());
 
         $payload->links                    = [new ODataLink()];
         $payload->links[0]->setExpandedResult(new ODataExpandedResult($child));

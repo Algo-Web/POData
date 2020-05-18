@@ -290,7 +290,7 @@ class JsonODataV1Writer implements IODataWriter
      */
     protected function writeFeed(ODataFeed $feed)
     {
-        foreach ($feed->entries as $entry) {
+        foreach ($feed->getEntries() as $entry) {
             $this->writer->startObjectScope();
             $this->writeEntry($entry);
             $this->writer->endScope();

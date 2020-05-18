@@ -563,10 +563,10 @@ class BaseWriterTest extends TestCase
         $expandedFeed = new ODataFeed();
         $expandedFeed->id = 'expanded feed id';
         $expandedFeed->title = new ODataTitle('SubCollection');
-        $expandedFeed->entries = [
+        $expandedFeed->setEntries([
             $expandedEntry1,
             $expandedEntry2
-        ];
+        ]);
 
         $expandedFeedSelfLink = new ODataLink('self', 'SubCollection', null, 'SubCollection Self URL');
 

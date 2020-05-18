@@ -162,7 +162,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
             )
         );
         //feed entries
-        $oDataFeed->entries = [$entry1];
+        $oDataFeed->setEntries([$entry1]);
 
         //Note that even if the top limits the collection the count should not be output unlesss inline count is specified
         //IE: http://services.odata.org/v3/(S(q0qf0chjvehdij1b1itgm1yy))/OData/OData.svc/Categories?$top=1&$inlinecount=allpages&$format=application/json;odata=nometadata
@@ -287,7 +287,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseWriterTest
         );
         //feed entries
 
-        $oDataFeed->entries = [$entry1, $entry2];
+        $oDataFeed->setEntries([$entry1, $entry2]);
 
         $oDataFeed->setRowCount(null); //simulate no inline count
 

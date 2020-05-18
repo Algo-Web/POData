@@ -198,9 +198,9 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
         );
         $entry1->type            = new ODataCategory('');
 
-        $feed->entries = [
-            $entry1,
-        ];
+        $feed->setEntries(
+            [$entry1]
+            );
 
         $writer = new AtomODataWriter(PHP_EOL, true, 'http://localhost/NorthWind.svc');
         $result = $writer->write($feed);

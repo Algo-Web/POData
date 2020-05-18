@@ -160,7 +160,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseWriterTest
         );
         $oDataFeed->setSelfLink($selfLink);
         //self link end
-        $oDataFeed->entries = [$entry1];
+        $oDataFeed->setEntries([$entry1]);
 
         //next page link: NOTE minimalmetadata means this won't be output
         $oDataFeed->setNextPageLink(
@@ -293,7 +293,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseWriterTest
         );
         //feed entries
 
-        $oDataFeed->entries = [$entry1, $entry2];
+        $oDataFeed->setEntries([$entry1, $entry2]);
 
         $oDataFeed->setRowCount(null); //simulate no inline count
 

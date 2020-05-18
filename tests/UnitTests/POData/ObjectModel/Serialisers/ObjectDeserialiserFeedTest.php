@@ -134,7 +134,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $feed2->resourceSetName = 'Customers';
 
         $feed          = new ODataFeed();
-        $feed->entries = [$feed1, $feed1, $feed2];
+        $feed->setEntries([$feed1, $feed1, $feed2]);
 
         $link                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order',
@@ -231,7 +231,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $deet->propertyContent = $deetContent;
 
         $orderFeed          = new ODataFeed();
-        $orderFeed->entries = [$deet];
+        $orderFeed->addEntry($deet);
 
         $orderLink                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order',
@@ -263,7 +263,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $order->links           = [$orderLink];
 
         $feed          = new ODataFeed();
-        $feed->entries = [$order];
+        $feed->addEntry($order);
 
         $link                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order',
@@ -331,7 +331,6 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $prov->shouldReceive('hookSingleModel')->andReturn(null)->once();
 
         $orderFeed          = new ODataFeed();
-        $orderFeed->entries = [];
 
         $orderLink                 = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order',
@@ -364,7 +363,7 @@ class ObjectDeserialiserFeedTest extends SerialiserTestBase
         $order->id              = 'http://localhost/odata.svc/Orders(OrderID=1)';
 
         $feed          = new ODataFeed();
-        $feed->entries = [$order];
+        $feed->addEntry($order);
 
         $link        = new ODataLink(
             'http://schemas.microsoft.com/ado/2007/08/dataservices/related/Order',

@@ -108,7 +108,7 @@ class FeedProcessor extends BaseNodeHandler
     public function handleChildComplete($objectModel)
     {
         //assert($objectModel instanceof ODataEntry);
-        $this->oDataFeed->entries[] = $objectModel;
+        $this->oDataFeed->addEntry($objectModel);
     }
 
     /**

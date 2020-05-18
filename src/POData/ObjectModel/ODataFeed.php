@@ -100,7 +100,18 @@ class ODataFeed extends ODataContainerBase
      */
     public function setEntries(array $entries): self
     {
+        assert(array_reduce($entries, function($carry, $item) { return  $carry & $item instanceof ODataEntry; }, true));
         $this->entries = $entries;
+        return $this;
+    }
+
+    /**
+     * @param ODataEntry $entry
+     * @return ODataFeed
+     */
+    public function addEntry(ODataEntry $entry): self
+    {
+        $this->entries[] = $entry;
         return $this;
     }
 }

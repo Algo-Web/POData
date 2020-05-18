@@ -131,7 +131,7 @@ class JsonODataV1WriterTest extends BaseWriterTest
         //entry 1 links end
 
         //entry 1 end
-        $oDataFeed->entries = [$entry1];
+        $oDataFeed->setEntries([$entry1]);
 
         $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($oDataFeed);
@@ -231,7 +231,7 @@ class JsonODataV1WriterTest extends BaseWriterTest
 
         //entry 2 end
 
-        $oDataFeed->entries = [$entry1, $entry2];
+        $oDataFeed->setEntries([$entry1, $entry2]);
 
         $writer = new JsonODataV1Writer(PHP_EOL, true);
         $result = $writer->write($oDataFeed);
