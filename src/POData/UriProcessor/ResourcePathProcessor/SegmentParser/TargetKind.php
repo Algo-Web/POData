@@ -34,13 +34,12 @@ use MyCLabs\Enum\Enum;
  * @method isBAG(): bool
  * @method static TargetKind SINGLETON()
  * @method isSINGLETON(): bool
+ * @method isComponentOfTERMINAL(): bool
+ * @method isComponentOfSPECIAL_PURPOSE(): bool
+ * @method isComponentOfNON_FILTERABLE(): bool
  */
 class TargetKind extends BitMask
 {
-    protected const TERMINAL_VALUES       = [32 => true, 64 => true, 256 => true, 1024 => true, 2048 => true];
-    protected const DIRECT_PROCESS_VALUES = [2 => true, 64 => true, 256 => true];
-    protected const NON_FILTERABLE_VALUES = [4 => true, 8 => true];
-
     /**
      * Nothing specific is being requested.
      * e.g. http://localhost.
@@ -121,6 +120,12 @@ class TargetKind extends BitMask
      */
     protected const SINGLETON = 4096;
 
+    protected const NON_FILTERABLE = 4 | 8;
+
+    protected const SPECIAL_PURPOSE = 2 | 64 | 256;
+
+    protected const TERMINAL = 32 | 64 | 256 | 1024 | 2048;
+
     /**
      * Is this segment a terminal segment - nothing else can be added after it?
      *
@@ -128,7 +133,7 @@ class TargetKind extends BitMask
      */
     public function isTerminal(): bool
     {
-        return array_key_exists($this->getValue(), self::TERMINAL_VALUES);
+        return $this->isComponentOfTERMINAL();
     }
 
     /**
@@ -138,7 +143,7 @@ class TargetKind extends BitMask
      */
     public function isSpecialPurpose(): bool
     {
-        return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
+        return $this->isComponentOfSPECIAL_PURPOSE();
     }
 
     /**
@@ -148,6 +153,6 @@ class TargetKind extends BitMask
      */
     public function isNotFilterable(): bool
     {
-        return array_key_exists($this->getValue(), self::NON_FILTERABLE_VALUES);
+        return $this->isComponentOfNON_FILTERABLE();
     }
 }
