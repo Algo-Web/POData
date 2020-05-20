@@ -51,6 +51,21 @@ class Url
      * > \/ matches the character / literally (case sensitive)
      */
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
+    /**
+     * ^ asserts position at start of the string
+     * 1st Capturing Group (\/|\/([\w#!:.?+=&%@!\-\/]))?
+     * > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > 1st Alternative \/
+     * > > \/ matches the character / literally (case sensitive)
+     * > 2nd Alternative \/([\w#!:.?+=&%@!\-\/])
+     * > > \/ matches the character / literally (case sensitive)
+     * 2nd Capturing Group ([\w#!:.?+=&%@!\-\/])
+     * > Match a single character present in the list below [\w#!:.?+=&%@!\-\/]
+     * > \w matches any word character (equal to [a-zA-Z0-9_])
+     * > #!:.?+=&%@! matches a single character in the list #!:.?+=&%@ (case sensitive)
+     * > \- matches the character - literally (case sensitive)
+     * > \/ matches the character / literally (case sensitive)
+     */
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     private $urlAsString = null;
     private $parts       = [];
