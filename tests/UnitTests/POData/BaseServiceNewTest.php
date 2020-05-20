@@ -1213,6 +1213,13 @@ class BaseServiceNewTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @throws ODataException
+     * @throws \POData\Common\HttpHeaderFailure
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
     public function testSerializeResultWithNonDeleteRequestAndIsNotLinkSingleResultNullTypeTripAssertion()
     {
         $url = new Url('https://www.example.org/odata.svc');
