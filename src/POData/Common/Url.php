@@ -9,7 +9,63 @@ namespace POData\Common;
  */
 class Url
 {
+    /**
+     * ^asserts position at start of the string
+     * 1st Capturing Group (ftp|http|https)
+     * > 1st Alternative ftp
+     * > > ftp matches the characters ftp literally (case sensitive)
+     * > 2nd Alternative http
+     * > > http matches the characters http literally (case sensitive)
+     * > 3rd Alternative https
+     *  > > https matches the characters https literally (case sensitive)
+     * : matches the character : literally (case sensitive)
+     * \/ matches the character / literally (case sensitive)
+     * \/ matches the character / literally (case sensitive)
+     * 2nd Capturing Group (\w+:{0,1}\w*@)?
+     * > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > \w+ matches any word character (equal to [a-zA-Z0-9_])
+     * > + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
+     * > :{0,1} matches the character : literally (case sensitive)
+     * > {0,1} Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > \w* matches any word character (equal to [a-zA-Z0-9_])
+     * > * Quantifier — Matches between zero and unlimited times, as many times as possible, giving back as needed (greedy)
+     * > @ matches the character @ literally (case sensitive)
+     * 3rd Capturing Group (\S+)
+     * > \S+ matches any non-whitespace character (equal to [^\r\n\t\f\v ])
+     * > + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
+     * 4th Capturing Group (:[0-9]+)?
+     * > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > : matches the character : literally (case sensitive)
+     * > Match a single character present in the list below [0-9]+
+     * 5th Capturing Group (\/|\/([\w#!:.?+=&%@!\-\/]))?
+     * > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > 1st Alternative \/
+     * > > \/ matches the character / literally (case sensitive)
+     * > 2nd Alternative \/([\w#!:.?+=&%@!\-\/])
+     * > > \/ matches the character / literally (case sensitive)
+     * 6th Capturing Group ([\w#!:.?+=&%@!\-\/])
+     * > Match a single character present in the list below [\w#!:.?+=&%@!\-\/]
+     * > \w matches any word character (equal to [a-zA-Z0-9_])
+     * > #!:.?+=&%@! matches a single character in the list #!:.?+=&%@ (case sensitive)
+     * > \- matches the character - literally (case sensitive)
+     * > \/ matches the character / literally (case sensitive)
+     */
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
+    /**
+     * ^ asserts position at start of the string
+     * 1st Capturing Group (\/|\/([\w#!:.?+=&%@!\-\/]))?
+     * > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > 1st Alternative \/
+     * > > \/ matches the character / literally (case sensitive)
+     * > 2nd Alternative \/([\w#!:.?+=&%@!\-\/])
+     * > > \/ matches the character / literally (case sensitive)
+     * 2nd Capturing Group ([\w#!:.?+=&%@!\-\/])
+     * > Match a single character present in the list below [\w#!:.?+=&%@!\-\/]
+     * > \w matches any word character (equal to [a-zA-Z0-9_])
+     * > #!:.?+=&%@! matches a single character in the list #!:.?+=&%@ (case sensitive)
+     * > \- matches the character - literally (case sensitive)
+     * > \/ matches the character / literally (case sensitive)
+     */
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     private $urlAsString = null;
     private $parts       = [];

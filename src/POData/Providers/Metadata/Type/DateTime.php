@@ -12,6 +12,67 @@ use Exception;
  */
 class DateTime implements IType
 {
+    /**
+     * ^ asserts position at start of the string
+     * datetime matches the characters datetime literally (case sensitive)
+     * \' matches the character ' literally (case sensitive)
+     * > 1st Capturing Group (\d{4})
+     * > > \d{4} matches a digit (equal to [0-9])
+     * > > {4} Quantifier — Matches exactly 4 times
+     * > > - matches the character - literally (case sensitive)
+     * > 2nd Capturing Group (\d{2})
+     * > > \d{2} matches a digit (equal to [0-9])
+     * > > {2} Quantifier — Matches exactly 2 times
+     * > > - matches the character - literally (case sensitive)
+     * > 3rd Capturing Group (\d{2})
+     * > > \d{2} matches a digit (equal to [0-9])
+     * > 4th Capturing Group ((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?
+     * > > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > > 5th Capturing Group (\s|T)
+     * > > > 1st Alternative \s
+     * > > > > \s matches any whitespace character (equal to [\r\n\t\f\v ])
+     * > > > 2nd Alternative T
+     * > > > > T matches the character T literally (case sensitive)
+     * > > 6th Capturing Group ([0-1][0-9]|2[0-4])
+     * > > > 1st Alternative [0-1][0-9]
+     * > > > > Match a single character present in the list below [0-1]
+     * > > > > 0-1 a single character in the range between 0 (index 48) and 1 (index 49) (case sensitive)
+     * > > > > Match a single character present in the list below [0-9]
+     * > > > > 0-9 a single character in the range between 0 (index 48) and 9 (index 57) (case sensitive)
+     * > > > 2nd Alternative 2[0-4]
+     * > > > > 2 matches the character 2 literally (case sensitive)
+     * > > > > Match a single character present in the list below [0-4]
+     * > > > > 0-4 a single character in the range between 0 (index 48) and 4 (index 52) (case sensitive)
+     * > > : matches the character : literally (case sensitive)
+     * > > 7th Capturing Group ([0-5][0-9])
+     * > > > Match a single character present in the list below [0-5]
+     * > > > 0-5 a single character in the range between 0 (index 48) and 5 (index 53) (case sensitive)
+     * > > > Match a single character present in the list below [0-9]
+     * > > > 0-9 a single character in the range between 0 (index 48) and 9 (index 57) (case sensitive)
+     * > > 8th Capturing Group (:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?
+     * > > > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > > > : matches the character : literally (case sensitive)
+     * > > > 9th Capturing Group ([0-5][0-9])
+     * > > > > Match a single character present in the list below [0-5]
+     * > > > > 0-5 a single character in the range between 0 (index 48) and 5 (index 53) (case sensitive)
+     * > > > > Match a single character present in the list below [0-9]
+     * > > > > 0-9 a single character in the range between 0 (index 48) and 9 (index 57) (case sensitive)
+     * > > > 10th Capturing Group ([Z]|[\+|-]\d{2}:\d{2})?
+     * > > > > ? Quantifier — Matches between zero and one times, as many times as possible, giving back as needed (greedy)
+     * > > > > 1st Alternative [Z]
+     * > > > > > Match a single character present in the list below [Z]
+     * > > > > 2nd Alternative [\+|-]\d{2}:\d{2}
+     * > > > > > Match a single character present in the list below [\+|-]
+     * > > > > > \+ matches the character + literally (case sensitive)
+     * > > > > > |- matches a single character in the list |- (case sensitive)
+     * > > > > > \d{2} matches a digit (equal to [0-9])
+     * > > > > > {2} Quantifier — Matches exactly 2 times
+     * > > > > > : matches the character : literally (case sensitive)
+     * > > > > > \d{2} matches a digit (equal to [0-9])
+     * > > > > > {2} Quantifier — Matches exactly 2 times
+     * \' matches the character ' literally (case sensitive)
+     * $ asserts position at the end of the string, or before the line terminator right at the end of the string (if anyy)
+     */
     protected static $comboRegex =
         "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?\'$/";
 
