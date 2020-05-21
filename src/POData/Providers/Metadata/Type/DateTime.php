@@ -73,7 +73,7 @@ class DateTime implements IType
      * \' matches the character ' literally (case sensitive)
      * $ asserts position at the end of the string, or before the line terminator right at the end of the string (if anyy)
      */
-    protected static $comboRegex =
+    protected const VALID_DATETIME_REGEX =
         "/^datetime\'(\d{4})-(\d{2})-(\d{2})((\s|T)([0-1][0-9]|2[0-4]):([0-5][0-9])(:([0-5][0-9])([Z]|[\+|-]\d{2}:\d{2})?)?)?\'$/";
 
     protected static $timeProvider = null;
@@ -265,7 +265,7 @@ class DateTime implements IType
         //1. The datetime value present in the $filter option should have 'datetime' prefix.
         //2. Month and day should be two digit
         if (!preg_match(
-            self::$comboRegex,
+            self::VALID_DATETIME_REGEX,
             strval($value),
             $matches
         )) {
