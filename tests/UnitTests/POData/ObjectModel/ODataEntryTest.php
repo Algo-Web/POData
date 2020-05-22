@@ -194,7 +194,7 @@ class ODataEntryTest extends TestCase
 
         $result = $foo->getPropertyContent();
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertEquals(0, count($result->getPropertys()));
+        $this->assertEquals(0, count($result->getProperties()));
     }
 
     public function testIsOkWhenMPropertyContentNotEmpty()
@@ -209,7 +209,7 @@ class ODataEntryTest extends TestCase
 
         $result = $foo->getPropertyContent();
         $this->assertTrue($result instanceof ODataPropertyContent);
-        $this->assertEquals(1, count($result->getPropertys()));
+        $this->assertEquals(1, count($result->getProperties()));
         $this->assertTrue($foo->isOk());
     }
 

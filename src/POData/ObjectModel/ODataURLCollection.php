@@ -18,7 +18,7 @@ class ODataURLCollection
     /**
      * Enter URL to next page, if pagination is enabled.
      *
-     * @var ODataLink|null
+     * @var ODataNextPageLink|null
      */
     private $nextPageLink = null;
     /**
@@ -31,10 +31,10 @@ class ODataURLCollection
     /**
      * ODataURLCollection constructor.
      * @param ODataURL[] $urls
-     * @param ODataLink  $nextPageLink
+     * @param ODataNextPageLink  $nextPageLink
      * @param int        $count
      */
-    public function __construct(array $urls = [], ODataLink $nextPageLink = null, int $count = null)
+    public function __construct(array $urls = [], ODataNextPageLink $nextPageLink = null, int $count = null)
     {
         $this
             ->setUrls($urls)
@@ -60,18 +60,18 @@ class ODataURLCollection
     }
 
     /**
-     * @return ODataLink|null
+     * @return ODataNextPageLink|null
      */
-    public function getNextPageLink(): ?ODataLink
+    public function getNextPageLink(): ?ODataNextPageLink
     {
         return $this->nextPageLink;
     }
 
     /**
-     * @param  ODataLink|null     $nextPageLink
+     * @param  ODataNextPageLink|null     $nextPageLink
      * @return ODataURLCollection
      */
-    public function setNextPageLink(?ODataLink $nextPageLink): ODataURLCollection
+    public function setNextPageLink(?ODataNextPageLink $nextPageLink): ODataURLCollection
     {
         $this->nextPageLink = $nextPageLink;
         return $this;

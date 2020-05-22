@@ -187,30 +187,30 @@ class AtomODataReaderTest extends TestCase
         /**
          * @var ODataProperty[] $properties;
          */
-        $properties = $content->properties->getPropertys();
+        $properties = $content->properties->getProperties();
         $this->assertArrayHasKey('ProductID', $properties, 'The properties array failed to deserialise a correct key');
         $this->assertArrayHasKey('Details', $properties, 'The properties array failed to deserialise a correct key');
 
         $this->assertInstanceOf(
             ODataProperty::class,
             $properties['ProductID'],
-            'the property ProductID deseralized to the wrong object type'
+            'the property ProductID deserialised to the wrong object type'
         );
         $this->assertInstanceOf(
             ODataProperty::class,
             $properties['Details'],
-            'the property Details deseralized to the wrong object type'
+            'the property Details deserialised to the wrong object type'
         );
 
         $this->assertEquals(
             'ProductID',
             $properties['ProductID']->getName(),
-            'the property ProductID Deseralized the wrong name'
+            'the property ProductID deserialised the wrong name'
         );
         $this->assertEquals(
             'Edm.Int32',
             $properties['ProductID']->getTypeName(),
-            'the property ProductID Deseralized the wrong TypeName'
+            'the property ProductID deserialised the wrong TypeName'
         );
         $this->assertEquals(
             '1',
