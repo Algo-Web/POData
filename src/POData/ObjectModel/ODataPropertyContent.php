@@ -22,13 +22,13 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
      */
     public function __construct(array $properties)
     {
-        $this->setPropertys($properties);
+        $this->setProperties($properties);
     }
 
     /**
      * @return ODataProperty[]
      */
-    public function getPropertys(): array
+    public function getProperties(): array
     {
         return $this->properties;
     }
@@ -37,7 +37,7 @@ class ODataPropertyContent implements \ArrayAccess, \Iterator, \Countable
      * @param $newProperties ODataProperty[]
      * @return ODataPropertyContent
      */
-    public function setPropertys(array $newProperties): self
+    public function setProperties(array $newProperties): self
     {
         assert(array_reduce($newProperties, function ($carry, $item) {
             return  $carry & $item instanceof ODataProperty;

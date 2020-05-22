@@ -104,7 +104,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $this->assertEquals(get_class($objectResult), get_class($ironicResult));
         $this->assertEquals($objectResult, $ironicResult);
         $numProperties = count($objectResult->propertyContent);
-        $keys          = array_keys($objectResult->propertyContent->getPropertys());
+        $keys          = array_keys($objectResult->propertyContent->getProperties());
         for ($i = 0; $i < $numProperties; $i++) {
             $propName  = $objectResult->propertyContent[$keys[$i]]->getName();
             $objectVal = $objectResult->propertyContent[$keys[$i]]->getValue();
