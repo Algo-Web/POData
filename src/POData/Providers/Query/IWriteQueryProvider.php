@@ -90,7 +90,7 @@ interface IWriteQueryProvider
      * @param string $propertyOnPrimary
      * @return bool true on success and false on failure
      */
-    public function disassociate(ResourceSet $primaryResourceSet,
+    public function dissociate(ResourceSet $primaryResourceSet,
                                     KeyDescriptor $primaryKeyDescriptor,
                                     ResourceSet $secondaryResourceSet,
                                     KeyDescriptor $secondaryKeyDescriptor,
