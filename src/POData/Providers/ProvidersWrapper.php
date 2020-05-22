@@ -667,7 +667,7 @@ class ProvidersWrapper
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
-        array $eagerLoad = null
+        array $eagerLoad = []
     ) {
         return $this->getProviderWrapper()->getResourceFromResourceSet($resourceSet, $keyDescriptor, $eagerLoad);
     }

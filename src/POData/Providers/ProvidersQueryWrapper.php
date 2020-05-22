@@ -177,7 +177,7 @@ class ProvidersQueryWrapper
         $top = null,
         $skip = null,
         SkipTokenInfo $skipToken = null,
-        array $eagerLoad = null
+        array $eagerLoad = []
     ) {
         $queryResult = $this->getQueryProvider()->getResourceSet(
             $queryType,
@@ -533,7 +533,7 @@ class ProvidersQueryWrapper
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
-        array $eagerLoad = null
+        array $eagerLoad = []
     ) {
         $entityInstance = $this->getQueryProvider()
             ->getResourceFromResourceSet($resourceSet, $keyDescriptor, $eagerLoad);

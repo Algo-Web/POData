@@ -36,37 +36,6 @@ class ProvidersQueryWrapperTest extends TestCase
         $this->targProperty      = m::mock(ResourceProperty::class)->makePartial();
         $this->filterInfo        = m::mock(FilterInfo::class)->makePartial();
     }
-
-    public function testGetRelatedResourceSetNotInstanceOfQueryResult()
-    {
-        $query = m::mock(IReadQueryProvider::class);
-        $query->shouldReceive('getRelatedResourceSet')->andReturnNull()->once();
-
-        $foo = new ProvidersQueryWrapper($query);
-
-        $expected = 'The implementation of the method IReadQueryProvider::getRelatedResourceSet'
-                    . ' must return a QueryResult instance.';
-        $actual = null;
-
-        try {
-            $foo->getRelatedResourceSet(
-                $this->queryType,
-                $this->sourceResourceSet,
-                new \StdClass(),
-                $this->targResourceSet,
-                $this->targProperty,
-                $this->filterInfo,
-                null,
-                null,
-                null,
-                null
-            );
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testGetRelatedResourceSetHandlesPagingYetNonNumericCount()
     {
         $this->queryType = QueryType::ENTITIES_WITH_COUNT();
@@ -238,43 +207,6 @@ class ProvidersQueryWrapperTest extends TestCase
         $this->assertTrue(is_array($result->results));
         $this->assertEquals(1, count($result->results));
         $this->assertEquals('BORK BORK BORK!', $result->results[0]);
-    }
-
-    public function testGetNullExpressionProviderThrowException()
-    {
-        $query = m::mock(IReadQueryProvider::class);
-        $query->shouldReceive('getExpressionProvider')->andReturnNull()->once();
-
-        $foo = new ProvidersQueryWrapper($query);
-
-        $expected = 'The value returned by IReadQueryProvider::getExpressionProvider method must not be null or empty';
-        $actual   = null;
-
-        try {
-            $foo->getExpressionProvider();
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testGetWrongTypeExpressionProviderThrowException()
-    {
-        $query = m::mock(IReadQueryProvider::class);
-        $query->shouldReceive('getExpressionProvider')->andReturn(new \stdClass())->once();
-
-        $foo = new ProvidersQueryWrapper($query);
-
-        $expected = 'The value returned by IReadQueryProvider::getExpressionProvider method must be an'
-                    . ' implementation of IExpressionProvider';
-        $actual = null;
-
-        try {
-            $foo->getExpressionProvider();
-        } catch (ODataException $e) {
-            $actual = $e->getMessage();
-        }
-        $this->assertEquals($expected, $actual);
     }
 
     public function testGetRightTypeExpressionProvider()

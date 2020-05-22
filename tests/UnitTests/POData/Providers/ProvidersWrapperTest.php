@@ -570,43 +570,6 @@ class ProvidersWrapperTest extends TestCase
         $this->assertEquals($fakeQueryResult, $actual);
     }
 
-    public function testGetResourceSetReturnsNonQueryResult()
-    {
-        $orderBy = null;
-        $top     = 10;
-        $skip    = 10;
-
-        /* TODO: Audit this and see if it still applies
-        * $this->mockQueryProvider->shouldReceive('getResourceSet')->withArgs([
-        QueryType::ENTITIES(),
-        $this->mockResourceSet,
-        $this->mockFilterInfo,
-        $orderBy,
-        $top,
-        $skip,
-        null
-        ]
-        )->andReturn($fakeQueryResult);*/
-        $this->mockQueryProvider->shouldReceive('getResourceSet')->andReturn(null);
-
-        $wrapper = $this->getMockedWrapper();
-
-        try {
-            $wrapper->getResourceSet(
-                QueryType::ENTITIES(),
-                $this->mockResourceSet,
-                $this->mockFilterInfo,
-                $orderBy,
-                $top,
-                $skip
-            );
-            $this->fail('expected exception not thrown');
-        } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderReturnsNonQueryResult('IReadQueryProvider::getResourceSet'), $ex->getMessage());
-            $this->assertEquals(500, $ex->getStatusCode());
-        }
-    }
-
     public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
     {
         $orderBy                  = null;
@@ -896,50 +859,6 @@ class ProvidersWrapperTest extends TestCase
             $skip
         );
         $this->assertEquals($fakeQueryResult, $actual);
-    }
-
-    public function testGetRelatedResourceSetReturnsNonQueryResult()
-    {
-        $orderBy = null;
-        $top     = 10;
-        $skip    = 10;
-
-        $fakeSourceEntity = new \stdClass();
-
-        /* TODO: Audit this to see if it still works
-        $this->mockQueryProvider->shouldReceive('getRelatedResourceSet')->withArgs([
-        QueryType::ENTITIES(),
-        $this->mockResourceSet,
-        $fakeSourceEntity,
-        $this->mockResourceSet2,
-        $this->mockResourceProperty,
-        $this->mockFilterInfo,
-        $orderBy,
-        $top,
-        $skip
-        ])->andReturn($fakeQueryResult); */
-
-        $this->mockQueryProvider->shouldReceive('getRelatedResourceSet')->andReturn(null);
-
-        $wrapper = $this->getMockedWrapper();
-
-        try {
-            $wrapper->getRelatedResourceSet(
-                QueryType::ENTITIES(),
-                $this->mockResourceSet,
-                $fakeSourceEntity,
-                $this->mockResourceSet2,
-                $this->mockResourceProperty,
-                $this->mockFilterInfo,
-                $orderBy,
-                $top,
-                $skip
-            );
-            $this->fail('expected exception not thrown');
-        } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderReturnsNonQueryResult('IReadQueryProvider::getRelatedResourceSet'), $ex->getMessage());
-            $this->assertEquals(500, $ex->getStatusCode());
-        }
     }
 
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
