@@ -24,14 +24,14 @@ interface IReadQueryProvider
      *
      * @return bool True if the query provider can handle ordered paging, false if POData should perform the paging
      */
-    public function handlesOrderedPaging();
+    public function handlesOrderedPaging(): bool;
 
     /**
      * Gets the expression provider used by to compile OData expressions into expression used by this query provider.
      *
      * @return IExpressionProvider
      */
-    public function getExpressionProvider();
+    public function getExpressionProvider(): IExpressionProvider;
 
     /**
      * Gets collection of entities belongs to an entity set
@@ -57,7 +57,7 @@ interface IReadQueryProvider
         int $top = null,
         int $skip = null,
         SkipTokenInfo $skipToken = null,
-        array $expandedProperties = null
+        array $expandedProperties = []
     ): QueryResult;
 
     /**
@@ -74,7 +74,7 @@ interface IReadQueryProvider
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
-        array $expandedProperties = null
+        array $expandedProperties = []
     );
 
     /**

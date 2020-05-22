@@ -17,23 +17,23 @@ interface IWriteQueryProvider
      * Start database transaction.
      *
      * @param  bool $isBulk Is this transaction inside a batch request?
-     * @return void
+     * @return bool
      */
-    public function startTransaction($isBulk = false);
+    public function startTransaction($isBulk = false): bool;
 
     /**
      * Commit database transaction.
      *
-     * @return void
+     * @return bool
      */
-    public function commitTransaction();
+    public function commitTransaction(): bool;
 
     /**
      * Abort database transaction.
      *
-     * @return void
+     * @return bool
      */
-    public function rollBackTransaction();
+    public function rollBackTransaction(): bool;
 
     /**
      * @param  ResourceEntityType $entityType
@@ -48,7 +48,7 @@ interface IWriteQueryProvider
      * @param  array       $bindProperties key value pair of associated objects to hook up at creation (<string propertyName,<object $entities>>)
      * @return object|null On sucess it would return the new object (including new default and key fields) on failure it would return null
      */
-    public function saveNewEntity($newEntity, array $bindProperties);//: ?object
+    public function saveNewEntity($newEntity, array $bindProperties = []);//: ?object
 
     /**
      * Update an Entity.
@@ -57,7 +57,7 @@ interface IWriteQueryProvider
      * @param  array       $bindProperties key value pair of associated objects to hook up at creation (<string propertyName,<object $entities>>)
      * @return object|null the updated entity on sucess or null on failure
      */
-    public function updateEntity($entity, array $bindProperties);// : ?object
+    public function updateEntity($entity, array $bindProperties = []);// : ?object
 
     /**
      * Delete an Entity.
