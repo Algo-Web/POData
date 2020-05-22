@@ -12,7 +12,7 @@ namespace UnitTests\POData\Facets\WordPress2;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -32,7 +32,7 @@ define('DB_PASSWORD', 'root');
 /* MySQL hostname */
 define('DB_HOST', 'localhost');
 
-class WordPressQueryProvider implements IQueryProvider
+class WordPressQueryProvider implements IReadQueryProvider
 {
     /**
      * The not implemented error message.
@@ -51,9 +51,9 @@ class WordPressQueryProvider implements IQueryProvider
     /**
      * (non-PHPdoc).
      *
-     * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
+     * @see POData\Providers\Query.IReadQueryProvider::getExpressionProvider()
      */
-    public function getExpressionProvider()
+    public function getExpressionProvider(): IExpressionProvider
     {
         if (null === $this->_wordPressMySQLExpressionProvider) {
             $this->_wordPressMySQLExpressionProvider = new WordPressDSExpressionProvider();
@@ -69,7 +69,7 @@ class WordPressQueryProvider implements IQueryProvider
      *
      * @return bool True if the query provider can handle ordered paging, false if POData should perform the paging
      */
-    public function handlesOrderedPaging()
+    public function handlesOrderedPaging(): bool
     {
         // TODO: Implement handlesOrderedPaging() method.
     }
@@ -93,13 +93,13 @@ class WordPressQueryProvider implements IQueryProvider
     public function getResourceSet(
         QueryType $queryType,
         ResourceSet $resourceSet,
-        $filterInfo = null,
-        $orderBy = null,
-        $top = null,
-        $skip = null,
-        $skipToken = null,
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
         array $eagerLoad = null
-    ) {
+    ): QueryResult {
         // TODO: Implement getResourceSet() method.
     }
 
@@ -147,11 +147,11 @@ class WordPressQueryProvider implements IQueryProvider
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         FilterInfo $filter = null,
-        $orderBy = null,
-        $top = null,
-        $skip = null,
-        $skipToken = null
-    ) {
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null
+    ): QueryResult {
         // TODO: Implement getRelatedResourceSet() method.
     }
 

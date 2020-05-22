@@ -11,7 +11,7 @@ use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Metadata\ResourceEntityType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -27,18 +27,18 @@ use ReflectionException;
 class ProvidersQueryWrapper
 {
     /**
-     * Holds reference to IQueryProvider implementation.
+     * Holds reference to IReadQueryProvider implementation.
      *
-     * @var IQueryProvider
+     * @var IReadQueryProvider
      */
     private $queryProvider;
 
     /**
      * Creates a new instance of ProvidersWrapper.
      *
-     * @param IQueryProvider $query Reference to IQueryProvider implementation
+     * @param IReadQueryProvider $query Reference to IReadQueryProvider implementation
      */
-    public function __construct(IQueryProvider $query)
+    public function __construct(IReadQueryProvider $query)
     {
         $this->queryProvider = $query;
     }
@@ -87,13 +87,13 @@ class ProvidersQueryWrapper
             $skipToken
         );
 
-        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getRelatedResourceSet');
+        $this->validateQueryResult($queryResult, $queryType, 'IReadQueryProvider::getRelatedResourceSet');
 
         return $queryResult;
     }
 
     /**
-     * @return IQueryProvider
+     * @return IReadQueryProvider
      */
     public function getQueryProvider()
     {
@@ -190,7 +190,7 @@ class ProvidersQueryWrapper
             $eagerLoad
         );
 
-        $this->validateQueryResult($queryResult, $queryType, 'IQueryProvider::getResourceSet');
+        $this->validateQueryResult($queryResult, $queryType, 'IReadQueryProvider::getResourceSet');
 
         return $queryResult;
     }
@@ -385,7 +385,7 @@ class ProvidersQueryWrapper
         // Orders(1234)/Customer/Orders => here if Customer is null then
         // the UriProcessor will throw error.
         if (null !== $entityInstance) {
-            $methodName = 'IQueryProvider::getRelatedResourceReference';
+            $methodName = 'IReadQueryProvider::getRelatedResourceReference';
 
             $targetResourceType = $this->verifyResourceType($methodName, $entityInstance, $targetResourceSet);
             foreach ($targetProperty->getResourceType()->getKeyProperties() as $keyName => $resourceProperty) {
@@ -465,7 +465,7 @@ class ProvidersQueryWrapper
             $entityInstance,
             $targetResourceSet,
             $keyDescriptor,
-            'IQueryProvider::getResourceFromRelatedResourceSet'
+            'IReadQueryProvider::getResourceFromRelatedResourceSet'
         );
 
         return $entityInstance;
@@ -541,7 +541,7 @@ class ProvidersQueryWrapper
             $entityInstance,
             $resourceSet,
             $keyDescriptor,
-            'IQueryProvider::getResourceFromResourceSet'
+            'IReadQueryProvider::getResourceFromResourceSet'
         );
 
         return $entityInstance;

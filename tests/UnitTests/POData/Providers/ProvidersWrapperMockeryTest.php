@@ -20,7 +20,7 @@ use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\ProvidersQueryWrapper;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\Address2;
@@ -127,7 +127,7 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testResolveNullSingleton()
     {
         $meta    = m::mock(SimpleMetadataProvider::class)->makePartial();
-        $query   = m::mock(IQueryProvider::class);
+        $query   = m::mock(IReadQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo = new ProvidersWrapper($meta, $query, $service);
@@ -137,7 +137,7 @@ class ProvidersWrapperMockeryTest extends TestCase
     public function testGetNullSingletons()
     {
         $meta    = m::mock(SimpleMetadataProvider::class)->makePartial();
-        $query   = m::mock(IQueryProvider::class);
+        $query   = m::mock(IReadQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo    = new ProvidersWrapper($meta, $query, $service);
@@ -153,7 +153,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
-        $query   = m::mock(IQueryProvider::class);
+        $query   = m::mock(IReadQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo    = new ProvidersWrapper($meta, $query, $service);
@@ -168,7 +168,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn(['singleton' => $func]);
-        $query   = m::mock(IQueryProvider::class);
+        $query   = m::mock(IReadQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo    = new ProvidersWrapper($meta, $query, $service);
@@ -181,7 +181,7 @@ class ProvidersWrapperMockeryTest extends TestCase
     {
         $meta = m::mock(SimpleMetadataProvider::class)->makePartial();
         $meta->shouldReceive('getSingletons')->andReturn([]);
-        $query   = m::mock(IQueryProvider::class);
+        $query   = m::mock(IReadQueryProvider::class);
         $service = m::mock(IServiceConfiguration::class);
 
         $foo    = new ProvidersWrapper($meta, $query, $service);
@@ -505,7 +505,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testCreateBulkResource()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('createBulkResourceforResourceSet')->andReturn('eins')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -524,7 +524,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testUpdateBulkResource()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('updateBulkResource')->andReturn('eins')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -545,7 +545,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testHookSingleModel()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('hookSingleModel')->andReturn('eins')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -566,7 +566,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testUnHookSingleModel()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('unhookSingleModel')->andReturn('eins')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -587,7 +587,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testStartTransaction()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('startTransaction')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -601,7 +601,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testCommitTransaction()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('commitTransaction')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();
@@ -615,7 +615,7 @@ class ProvidersWrapperMockeryTest extends TestCase
 
     public function testRollBackTransaction()
     {
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('rollBackTransaction')->once();
 
         $wrap = m::mock(ProvidersQueryWrapper::class)->makePartial();

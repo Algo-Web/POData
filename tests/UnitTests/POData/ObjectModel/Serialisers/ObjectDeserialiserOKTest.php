@@ -18,7 +18,7 @@ use POData\OperationContext\Web\WebOperationContext as OperationContextAdapter;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;

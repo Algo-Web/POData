@@ -24,7 +24,7 @@ class OrderByInfo
     private $orderByPathSegments;
 
     /**
-     * The IQueryProvider implementation sets this to true using 'setSorted' function if it is going to perform
+     * The IReadQueryProvider implementation sets this to true using 'setSorted' function if it is going to perform
      * the sorting, a false value for this flag means the library is responsible for sorting.
      *
      * @var bool
@@ -84,7 +84,7 @@ class OrderByInfo
     /**
      * Gets collection of navigation properties specified in the orderby clause
      * if no navigation (resource reference) properties are used in the clause then
-     * this function returns null, IQueryProvider must check this
+     * this function returns null, IReadQueryProvider must check this
      * function and include these resource reference type navigation properties in the result.
      *
      * @return array<array<ResourceProperty>>|null
@@ -95,7 +95,7 @@ class OrderByInfo
     }
 
     /**
-     * IQueryProvider implementation should use this function to let the library know that whether implementation
+     * IReadQueryProvider implementation should use this function to let the library know that whether implementation
      * will be performing the sorting or will library perform the sorting.
      *
      * @param  bool $isSorted Set the flag so indicate that the result has been sorted
@@ -108,7 +108,7 @@ class OrderByInfo
     }
 
     /**
-     * Whether library should do the sorting or not, if the IQueryProvider implementation already sorted the
+     * Whether library should do the sorting or not, if the IReadQueryProvider implementation already sorted the
      * entities, then library will not perform the sorting.
      *
      * @return bool

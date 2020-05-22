@@ -13,7 +13,7 @@ use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
 /**
- * Class IQueryProvider.
+ * Class IReadQueryProvider.
  */
 interface IReadQueryProvider
 {

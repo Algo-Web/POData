@@ -11,8 +11,7 @@ use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\SimpleMetadataProvider;
-use POData\Providers\Query\IQueryProvider;
-use POData\Providers\Query\SimpleQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\SimpleStreamProvider;
 
@@ -26,9 +25,9 @@ class SimpleDataService extends BaseService implements IService
      */
     protected $metaProvider;
     /**
-     * @var IQueryProvider
+     * @var IReadQueryProvider
      */
-    protected $queryProvider;
+    protected $readQueryProvider;
 
     /**
      * @var IStreamProvider2;
@@ -54,11 +53,11 @@ class SimpleDataService extends BaseService implements IService
         IServiceConfiguration $config = null
     ) {
         $this->metaProvider = $metaProvider;
-        if ($db instanceof IQueryProvider) {
-            $this->queryProvider = $db;
+        if ($db instanceof IReadQueryProvider) {
+            $this->readQueryProvider = $db;
         } elseif (!empty($db->queryProviderClassName)) {
             $queryProviderClassName = $db->queryProviderClassName;
-            $this->queryProvider    = new $queryProviderClassName($db);
+            $this->readQueryProvider    = new $queryProviderClassName($db);
         } else {
             throw new ODataException('Invalid query provider supplied', 500);
         }
@@ -95,11 +94,11 @@ class SimpleDataService extends BaseService implements IService
     }
 
     /**
-     * @return IQueryProvider
+     * @return IReadQueryProvider
      */
-    public function getQueryProvider(): ?IQueryProvider
+    public function getReadQueryProvider(): ?IReadQueryProvider
     {
-        return $this->queryProvider;
+        return $this->readQueryProvider;
     }
 
     /**

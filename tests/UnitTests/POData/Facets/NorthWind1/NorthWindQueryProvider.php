@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace UnitTests\POData\Facets\NorthWind1;
 
+use MongoDB\Driver\Query;
 use POData\Common\ODataException;
+use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Expression\PHPExpressionProvider;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -19,7 +21,7 @@ use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality
 // we will not test the actual data, instead the sql query generated.
 
-class NorthWindQueryProvider implements IQueryProvider
+class NorthWindQueryProvider implements IReadQueryProvider
 {
     /**
      * The not implemented error message.
@@ -28,12 +30,12 @@ class NorthWindQueryProvider implements IQueryProvider
      */
     private $_message = 'This functionality is not implemented as the class is only for testing IExpressionProvider for SQL-Server';
 
-    public function handlesOrderedPaging()
+    public function handlesOrderedPaging(): bool
     {
         throw ODataException::createNotImplementedError($this->_message);
     }
 
-    public function getExpressionProvider()
+    public function getExpressionProvider(): IExpressionProvider
     {
         return new PHPExpressionProvider('$lt');
     }
@@ -57,13 +59,13 @@ class NorthWindQueryProvider implements IQueryProvider
     public function getResourceSet(
         QueryType $queryType,
         ResourceSet $resourceSet,
-        $filterInfo = null,
-        $orderBy = null,
-        $top = null,
-        $skip = null,
-        $skipToken = null,
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
         array $eagerLoad = null
-    ) {
+    ): QueryResult {
         // TODO: Implement getResourceSet() method.
     }
 
@@ -111,11 +113,11 @@ class NorthWindQueryProvider implements IQueryProvider
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         FilterInfo $filter = null,
-        $orderBy = null,
-        $top = null,
-        $skip = null,
-        $skipToken = null
-    ) {
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null
+    ): QueryResult {
         // TODO: Implement getRelatedResourceSet() method.
     }
 

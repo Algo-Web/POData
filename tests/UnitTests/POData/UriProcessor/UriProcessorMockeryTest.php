@@ -20,7 +20,7 @@ use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\SimpleDataService;
@@ -2338,7 +2338,7 @@ class UriProcessorMockeryTest extends TestCase
         $cereal->shouldReceive('writeTopLevelElement')->andReturn($payload);
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $host = new ServiceHostTestFake($hostInfo);
-        $db   = m::mock(IQueryProvider::class);
+        $db   = m::mock(IReadQueryProvider::class);
 
         $functionName = [get_class($this), 'exampleSingleton'];
         $forward      = new reusableEntityClass4('foo', 'bar');

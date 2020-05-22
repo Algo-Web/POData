@@ -10,7 +10,7 @@ use POData\ObjectModel\IObjectSerialiser;
 use POData\OperationContext\ServiceHost;
 use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\Interfaces\IUriProcessor;
 use POData\UriProcessor\RequestDescription;
@@ -26,14 +26,14 @@ class BaseServiceDummy extends BaseServiceTestWrapper
     protected $metaProvider;
 
     /**
-     * @var IQueryProvider
+     * @var IReadQueryProvider
      */
     protected $queryProvider;
 
     public $maxPageSize = 200;
 
     public function __construct(
-        IQueryProvider $db = null,
+        IReadQueryProvider $db = null,
         ServiceHost $host = null,
         IObjectSerialiser $serialiser = null,
         StreamProviderWrapper $provider = null,
@@ -50,9 +50,9 @@ class BaseServiceDummy extends BaseServiceTestWrapper
     }
 
     /**
-     * @return IQueryProvider
+     * @return IReadQueryProvider
      */
-    public function getQueryProvider(): ?IQueryProvider
+    public function getReadQueryProvider(): ?IReadQueryProvider
     {
         return $this->queryProvider;
     }

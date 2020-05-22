@@ -19,7 +19,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -32,7 +32,7 @@ use TypeError;
 /**
  * Class ProvidersWrapper.
  *
- * A wrapper class over IMetadataProvider and IQueryProvider implementations, All calls to implementation of methods
+ * A wrapper class over IMetadataProvider and IReadQueryProvider implementations, All calls to implementation of methods
  * of these interfaces should go through this wrapper class so that wrapper methods of this class can perform validation
  */
 class ProvidersWrapper
@@ -86,10 +86,10 @@ class ProvidersWrapper
      * Creates a new instance of ProvidersWrapper.
      *
      * @param IMetadataProvider     $meta   Reference to IMetadataProvider implementation
-     * @param IQueryProvider        $query  Reference to IQueryProvider implementation
+     * @param IReadQueryProvider        $query  Reference to IReadQueryProvider implementation
      * @param IServiceConfiguration $config Reference to IServiceConfiguration implementation
      */
-    public function __construct(IMetadataProvider $meta, IQueryProvider $query, IServiceConfiguration $config)
+    public function __construct(IMetadataProvider $meta, IReadQueryProvider $query, IServiceConfiguration $config)
     {
         $this->metaProvider    = $meta;
         $this->config          = $config;

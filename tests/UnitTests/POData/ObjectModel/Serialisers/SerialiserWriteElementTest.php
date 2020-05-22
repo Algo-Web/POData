@@ -26,7 +26,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourcePropertyKind;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
@@ -631,7 +631,7 @@ class SerialiserWriteElementTest extends SerialiserTestBase
         $host = new ServiceHost($op);
 
         $meta  = NorthWindMetadata::Create();
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
 
         return [$host, $meta, $query];
     }
