@@ -18,6 +18,7 @@ use POData\ObjectModel\ODataExpandedResult;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
 use POData\ObjectModel\ODataMediaLink;
+use POData\ObjectModel\ODataNextPageLink;
 use POData\ObjectModel\ODataProperty;
 use POData\ObjectModel\ODataPropertyContent;
 use POData\ObjectModel\ODataTitle;
@@ -83,9 +84,12 @@ class AtomODataWriterTest extends BaseWriterTest
         $url1      = new ODataURL('http://www.odata.org/developers/protocols/atom-format');
         $url2      = new ODataURL('http://www.odata.org/developers/protocols/json-format');
 
+        $link      = new ODataNextPageLink('Next Link Url');
+        $link->setName('Next');
+
         $urls       = new ODataURLCollection(
             [$url1, $url2],
-            new ODataLink('Next', '', '', 'Next Link Url'),
+            $link,
             10
         );
 
