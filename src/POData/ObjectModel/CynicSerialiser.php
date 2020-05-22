@@ -930,10 +930,7 @@ class CynicSerialiser implements IObjectSerialiser
                 $stackSegment       = $this->getRequest()->getTargetResourceSetWrapper()->getName();
                 $lastObject         = end($entryObjects->results);
                 $segment            = $this->getNextLinkUri($lastObject);
-                $nextLink           = new ODataLink(
-                    ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING,
-                    null,
-                    null,
+                $nextLink           = new ODataNextPageLink(
                     ltrim(rtrim(strval($this->absoluteServiceUri), '/') . '/' . $stackSegment . $segment, '/')
                 );
                 $nextPageLink = $nextLink;

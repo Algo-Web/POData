@@ -8,6 +8,7 @@ use Mockery as m;
 use POData\ObjectModel\CynicSerialiser as IronicSerialiser;
 use POData\ObjectModel\ObjectModelSerializer;
 use POData\ObjectModel\ODataLink;
+use POData\ObjectModel\ODataNextPageLink;
 use POData\ObjectModel\ODataURL;
 use POData\ObjectModel\ODataURLCollection;
 use POData\OperationContext\ServiceHost;
@@ -111,7 +112,7 @@ class SerialiserWriteUrlTest extends SerialiserTestBase
         $url      = new ODataURL('http://localhost/odata.svc/Customers(CustomerID=\'2\',CustomerGuid'
             . '=guid\'123e4567-e89b-12d3-a456-426655440000\')');
 
-        $nextLink       = new ODataLink();
+        $nextLink       = new ODataNextPageLink('');
         $nextLink->setName('next');
         $nextLink->setUrl('http://localhost/odata.svc/Customers?$skiptoken=\'2\', '
                          . 'guid\'123e4567-e89b-12d3-a456-426655440000\'');
