@@ -9,7 +9,7 @@ use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenParser;
 use TypeError;
@@ -18,12 +18,12 @@ use UnitTests\POData\TestCase;
 
 class SkipTokenParser2Test extends TestCase
 {
-    /** @var IQueryProvider */
+    /** @var IReadQueryProvider */
     protected $mockQueryProvider;
 
     public function setUp()
     {
-        $this->mockQueryProvider = m::mock(IQueryProvider::class)->makePartial();
+        $this->mockQueryProvider = m::mock(IReadQueryProvider::class)->makePartial();
     }
 
     /**

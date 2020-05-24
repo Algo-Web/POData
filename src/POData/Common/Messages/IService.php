@@ -21,7 +21,7 @@ trait IService
     }
 
     /**
-     * Message to show when service implementation does not provide a valid IQueryProvider.
+     * Message to show when service implementation does not provide a valid IReadQueryProvider.
      *
      *
      * @return string The message

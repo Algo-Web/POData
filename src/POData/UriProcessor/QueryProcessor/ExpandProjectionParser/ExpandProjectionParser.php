@@ -40,7 +40,7 @@ use ReflectionException;
 class ExpandProjectionParser
 {
     /**
-     * The wrapper of IMetadataProvider and IQueryProvider
+     * The wrapper of IMetadataProvider and IReadQueryProvider
      * .
      *
      * @var ProvidersWrapper

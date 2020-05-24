@@ -21,7 +21,7 @@ use POData\Providers\Metadata\ResourcePrimitiveType;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\DateTime;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use UnitTests\POData\Facets\NorthWind1\Address4;
 use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Employee2;
@@ -205,7 +205,7 @@ class ModelDeserialiserTest extends SerialiserTestBase
         $host = new ServiceHost($op);
 
         $meta  = NorthWindMetadata::Create();
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
 
         return [$host, $meta, $query];
     }

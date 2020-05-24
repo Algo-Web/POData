@@ -26,7 +26,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
@@ -42,7 +42,7 @@ class BaseServiceNewTest extends TestCase
 {
     public function testGetResultWithNullMetadataProviderThrowException()
     {
-        $db     = m::mock(IQueryProvider::class);
+        $db     = m::mock(IReadQueryProvider::class);
         $host   = m::mock(ServiceHost::class)->makePartial();
         $cereal = $this->spinUpMockSerialiser();
         $wrap   = m::mock(StreamProviderWrapper::class)->makePartial();
@@ -50,7 +50,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, null);
 
         $expected = 'For custom providers, GetService should not return null for both IMetadataProvider'
-                    . ' and IQueryProvider types.';
+                    . ' and IReadQueryProvider types.';
         $actual = null;
 
         try {
@@ -88,7 +88,7 @@ class BaseServiceNewTest extends TestCase
         $foo = new BaseServiceDummy($db, $host, $cereal, $wrap, $meta);
 
         $expected = 'For custom providers, GetService should not return null for both IMetadataProvider'
-                    . ' and IQueryProvider types.';
+                    . ' and IReadQueryProvider types.';
         $actual = null;
 
         try {
@@ -1898,7 +1898,7 @@ class BaseServiceNewTest extends TestCase
 
     public function testGetResponseTypeForMetadata()
     {
-        $db   = m::mock(IQueryProvider::class);
+        $db   = m::mock(IReadQueryProvider::class);
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
         $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();
@@ -1920,7 +1920,7 @@ class BaseServiceNewTest extends TestCase
 
     public function testGetResponseTypeForServiceDirectory()
     {
-        $db   = m::mock(IQueryProvider::class);
+        $db   = m::mock(IReadQueryProvider::class);
         $host = m::mock(ServiceHost::class)->makePartial();
         $host->shouldReceive('getRequestAccept')->andReturn('application/xml, application/atomsvc+xml');
         $host->shouldReceive('getQueryStringItem')->andReturn(null)->once();

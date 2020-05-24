@@ -23,7 +23,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
@@ -31,7 +31,7 @@ use UnitTests\POData\TestCase;
 
 class ProvidersWrapperTest extends TestCase
 {
-    /** @var IQueryProvider */
+    /** @var IReadQueryProvider */
     protected $mockQueryProvider;
 
     /** @var IMetadataProvider */
@@ -70,7 +70,7 @@ class ProvidersWrapperTest extends TestCase
         $this->mockResourceSet2              = m::mock(ResourceSet::class)->makePartial();
         $this->mockResourceType              = m::mock(ResourceEntityType::class)->makePartial();
         $this->mockResourceType2             = m::mock(ResourceEntityType::class)->makePartial();
-        $this->mockQueryProvider             = m::mock(IQueryProvider::class)->makePartial();
+        $this->mockQueryProvider             = m::mock(IReadQueryProvider::class)->makePartial();
         $this->mockServiceConfig             = m::mock(ServiceConfiguration::class)->makePartial();
         $this->mockResourceProperty          = m::mock(ResourceProperty::class)->makePartial();
         $this->mockResourceAssociationSet    = m::mock(ResourceAssociationSet::class)->makePartial();
@@ -570,43 +570,6 @@ class ProvidersWrapperTest extends TestCase
         $this->assertEquals($fakeQueryResult, $actual);
     }
 
-    public function testGetResourceSetReturnsNonQueryResult()
-    {
-        $orderBy = null;
-        $top     = 10;
-        $skip    = 10;
-
-        /* TODO: Audit this and see if it still applies
-        * $this->mockQueryProvider->shouldReceive('getResourceSet')->withArgs([
-        QueryType::ENTITIES(),
-        $this->mockResourceSet,
-        $this->mockFilterInfo,
-        $orderBy,
-        $top,
-        $skip,
-        null
-        ]
-        )->andReturn($fakeQueryResult);*/
-        $this->mockQueryProvider->shouldReceive('getResourceSet')->andReturn(null);
-
-        $wrapper = $this->getMockedWrapper();
-
-        try {
-            $wrapper->getResourceSet(
-                QueryType::ENTITIES(),
-                $this->mockResourceSet,
-                $this->mockFilterInfo,
-                $orderBy,
-                $top,
-                $skip
-            );
-            $this->fail('expected exception not thrown');
-        } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getResourceSet'), $ex->getMessage());
-            $this->assertEquals(500, $ex->getStatusCode());
-        }
-    }
-
     public function testGetResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
     {
         $orderBy                  = null;
@@ -646,7 +609,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', QueryType::COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getResourceSet', QueryType::COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -687,7 +650,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', QueryType::COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultCountMissing('IReadQueryProvider::getResourceSet', QueryType::COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -728,7 +691,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultCountMissing('IQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultCountMissing('IReadQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -770,7 +733,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -809,7 +772,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', QueryType::ENTITIES()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getResourceSet', QueryType::ENTITIES()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -851,7 +814,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -896,50 +859,6 @@ class ProvidersWrapperTest extends TestCase
             $skip
         );
         $this->assertEquals($fakeQueryResult, $actual);
-    }
-
-    public function testGetRelatedResourceSetReturnsNonQueryResult()
-    {
-        $orderBy = null;
-        $top     = 10;
-        $skip    = 10;
-
-        $fakeSourceEntity = new \stdClass();
-
-        /* TODO: Audit this to see if it still works
-        $this->mockQueryProvider->shouldReceive('getRelatedResourceSet')->withArgs([
-        QueryType::ENTITIES(),
-        $this->mockResourceSet,
-        $fakeSourceEntity,
-        $this->mockResourceSet2,
-        $this->mockResourceProperty,
-        $this->mockFilterInfo,
-        $orderBy,
-        $top,
-        $skip
-        ])->andReturn($fakeQueryResult); */
-
-        $this->mockQueryProvider->shouldReceive('getRelatedResourceSet')->andReturn(null);
-
-        $wrapper = $this->getMockedWrapper();
-
-        try {
-            $wrapper->getRelatedResourceSet(
-                QueryType::ENTITIES(),
-                $this->mockResourceSet,
-                $fakeSourceEntity,
-                $this->mockResourceSet2,
-                $this->mockResourceProperty,
-                $this->mockFilterInfo,
-                $orderBy,
-                $top,
-                $skip
-            );
-            $this->fail('expected exception not thrown');
-        } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderReturnsNonQueryResult('IQueryProvider::getRelatedResourceSet'), $ex->getMessage());
-            $this->assertEquals(500, $ex->getStatusCode());
-        }
     }
 
     public function testGetRelatedResourceSetReturnsCountWhenQueryTypeIsCountProviderDoesNotHandlePaging()
@@ -989,7 +908,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getRelatedResourceSet', QueryType::COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -1039,7 +958,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultCountMissing('IQueryProvider::getRelatedResourceSet', QueryType::COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultCountMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -1089,7 +1008,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultCountMissing('IQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultCountMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -1140,7 +1059,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -1188,7 +1107,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getRelatedResourceSet', QueryType::ENTITIES()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::ENTITIES()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }
@@ -1238,7 +1157,7 @@ class ProvidersWrapperTest extends TestCase
             );
             $this->fail('expected exception not thrown');
         } catch (ODataException $ex) {
-            $this->assertEquals(Messages::queryProviderResultsMissing('IQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
+            $this->assertEquals(Messages::queryProviderResultsMissing('IReadQueryProvider::getRelatedResourceSet', QueryType::ENTITIES_WITH_COUNT()), $ex->getMessage());
             $this->assertEquals(500, $ex->getStatusCode());
         }
     }

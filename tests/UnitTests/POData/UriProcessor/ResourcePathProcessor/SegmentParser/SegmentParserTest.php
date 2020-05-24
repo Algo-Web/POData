@@ -9,7 +9,7 @@ use POData\Common\ODataException;
 use POData\Configuration\EntitySetRights;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -23,7 +23,7 @@ class SegmentParserTest extends TestCase
     private $_serviceConfiguration;
     private $_segmentParser;
 
-    /** @var IQueryProvider */
+    /** @var IReadQueryProvider */
     protected $mockQueryProvider;
 
     public function setUp()
@@ -33,7 +33,7 @@ class SegmentParserTest extends TestCase
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL());
 
-        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IReadQueryProvider');
 
         $this->providersWrapper = new ProvidersWrapper(
             $this->_metadataProvider,

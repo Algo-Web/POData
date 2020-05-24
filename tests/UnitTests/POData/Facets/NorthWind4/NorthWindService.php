@@ -12,7 +12,7 @@ use POData\Configuration\IServiceConfiguration;
 use POData\Configuration\ProtocolVersion;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\ServiceHost;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\UriProcessor;
 
 class NorthWindService extends BaseService
@@ -53,9 +53,9 @@ class NorthWindService extends BaseService
     }
 
     /**
-     * @return \POData\Providers\Query\IQueryProvider
+     * @return \POData\Providers\Query\IReadQueryProvider
      */
-    public function getQueryProvider(): ?IQueryProvider
+    public function getReadQueryProvider(): ?IReadQueryProvider
     {
         if (null === $this->_northWindQueryProvider) {
             $this->_northWindQueryProvider = new NorthWindQueryProvider4();

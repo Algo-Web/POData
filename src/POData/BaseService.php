@@ -29,7 +29,7 @@ use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Stream\IStreamProvider2;
 use POData\Providers\Stream\StreamProviderWrapper;
@@ -88,7 +88,7 @@ abstract class BaseService implements IRequestHandler, IService
     /** @var ODataReaderRegistry */
     protected $readerRegistry;
     /**
-     * The wrapper over IQueryProvider and IMetadataProvider implementations.
+     * The wrapper over IReadQueryProvider and IMetadataProvider implementations.
      *
      * @var ProvidersWrapper
      */
@@ -192,7 +192,7 @@ abstract class BaseService implements IRequestHandler, IService
      * (1) Check whether the top level service class implements
      *     IServiceProvider which means the service is a custom service, in
      *     this case make sure the top level service class implements
-     *     IMetaDataProvider and IQueryProvider.
+     *     IMetaDataProvider and IReadQueryProvider.
      *     These are the minimal interfaces that a custom service to be
      *     implemented in order to expose its data as OData. Save reference to
      *     These interface implementations.
@@ -208,7 +208,7 @@ abstract class BaseService implements IRequestHandler, IService
      *      processor will do the following:
      *      (a). Validate the request uri syntax using OData uri rules
      *      (b). Validate the request using metadata of this service
-     *      (c). Parse the request uri and using, IQueryProvider
+     *      (c). Parse the request uri and using, IReadQueryProvider
      *           implementation, fetches the resources pointed by the uri
      *           if required
      *      (d). Build a RequestDescription which encapsulate everything
@@ -245,7 +245,7 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * This method will query and validates for IMetadataProvider and IQueryProvider implementations, invokes
+     * This method will query and validates for IMetadataProvider and IReadQueryProvider implementations, invokes
      * BaseService::Initialize to initialize service specific policies.
      *
      * @throws ODataException
@@ -262,7 +262,7 @@ abstract class BaseService implements IRequestHandler, IService
             throw ODataException::createInternalServerError(Messages::invalidMetadataInstance());
         }
 
-        $queryProvider = $this->getQueryProvider();
+        $queryProvider = $this->getReadQueryProvider();
 
         if (null === $queryProvider) {
             throw ODataException::createInternalServerError(Messages::providersWrapperNull());
@@ -289,9 +289,9 @@ abstract class BaseService implements IRequestHandler, IService
     abstract public function getMetadataProvider();
 
     /**
-     * @return IQueryProvider|null
+     * @return IReadQueryProvider|null
      */
-    abstract public function getQueryProvider(): ?IQueryProvider;
+    abstract public function getReadQueryProvider(): ?IReadQueryProvider;
 
     /**
      * @throws Exception
@@ -400,7 +400,7 @@ abstract class BaseService implements IRequestHandler, IService
     }
 
     /**
-     * Get the wrapper over developer's IQueryProvider and IMetadataProvider implementation.
+     * Get the wrapper over developer's IReadQueryProvider and IMetadataProvider implementation.
      *
      * @return ProvidersWrapper
      */

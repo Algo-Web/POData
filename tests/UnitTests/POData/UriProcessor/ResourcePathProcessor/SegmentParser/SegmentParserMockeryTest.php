@@ -16,7 +16,7 @@ use POData\Providers\Metadata\SimpleMetadataProvider;
 use POData\Providers\Metadata\Type\EdmPrimitiveType;
 use POData\Providers\Metadata\Type\TypeCode;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentParser;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
@@ -31,7 +31,7 @@ class SegmentParserMockeryTest extends TestCase
     private $providersWrapper;
     private $serviceConfiguration;
 
-    /** @var IQueryProvider */
+    /** @var IReadQueryProvider */
     protected $mockQueryProvider;
 
     protected function commencePrimaryIgnition(IMetadataProvider $meta)
@@ -40,7 +40,7 @@ class SegmentParserMockeryTest extends TestCase
         $this->serviceConfiguration = new ServiceConfiguration($this->metadataProvider);
         $this->serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL());
 
-        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IReadQueryProvider');
 
         $this->providersWrapper = new ProvidersWrapper(
             $this->metadataProvider,

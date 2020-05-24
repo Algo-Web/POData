@@ -360,7 +360,7 @@ class ResourceFunctionTypeTest extends TestCase
 
         // needed an object, this was close to hand
         $obj    = m::mock(BaseServiceDummy::class)->makePartial();
-        $method = 'getQueryProvider';
+        $method = 'getReadQueryProvider';
 
         $name = [$obj, $method];
 
