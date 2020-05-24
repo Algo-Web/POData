@@ -19,7 +19,7 @@ interface IWriteQueryProvider
      * @param  bool $isBulk Is this transaction inside a batch request?
      * @return bool
      */
-    public function startTransaction($isBulk = false): bool;
+    public function startTransaction(bool $isBulk = false): bool;
 
     /**
      * Commit database transaction.

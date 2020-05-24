@@ -9,6 +9,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSet;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 
@@ -41,7 +42,7 @@ interface IReadQueryProvider
      * @param QueryType                $queryType          Is this is a query for a count, entities, or entities-with-count
      * @param ResourceSet              $resourceSet        The entity set containing the entities to fetch
      * @param FilterInfo|null          $filterInfo         The $filter parameter of the OData query.  NULL if none specified
-     * @param null|InternalOrderByInfo $orderBy            sorted order if we want to get the data in some specific order
+     * @param null|OrderByInfo         $orderBy            sorted order if we want to get the data in some specific order
      * @param int|null                 $top                number of records which need to be retrieved
      * @param int|null                 $skip               number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken          value indicating what records to skip
@@ -53,7 +54,7 @@ interface IReadQueryProvider
         QueryType $queryType,
         ResourceSet $resourceSet,
         FilterInfo $filterInfo = null,
-        InternalOrderByInfo $orderBy = null,
+        OrderByInfo $orderBy = null,
         int $top = null,
         int $skip = null,
         SkipTokenInfo $skipToken = null,
@@ -88,7 +89,7 @@ interface IReadQueryProvider
      * @param ResourceSet              $targetResourceSet    The resource set pointed to by the navigation property
      * @param ResourceProperty         $targetProperty       The navigation property to retrieve
      * @param FilterInfo|null          $filter               The $filter parameter of the OData query.  NULL if none specified
-     * @param InternalOrderByInfo|null $orderBy              sorted order if we want to get the data in some specific order
+     * @param OrderByInfo|null         $orderBy              sorted order if we want to get the data in some specific order
      * @param int|null                 $top                  number of records which need to be retrieved
      * @param int|null                 $skip                 number of records which need to be skipped
      * @param SkipTokenInfo|null       $skipToken            value indicating what records to skip
@@ -102,7 +103,7 @@ interface IReadQueryProvider
         ResourceSet $targetResourceSet,
         ResourceProperty $targetProperty,
         FilterInfo $filter = null,
-        InternalOrderByInfo $orderBy = null,
+        OrderByInfo $orderBy = null,
         int $top = null,
         int $skip = null,
         SkipTokenInfo $skipToken = null
