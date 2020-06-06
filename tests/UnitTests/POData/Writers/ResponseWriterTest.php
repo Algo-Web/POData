@@ -17,7 +17,12 @@ use POData\Providers\Stream\StreamProviderWrapper;
 use POData\UriProcessor\RequestDescription;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\SegmentDescriptor;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetKind;
+use POData\Writers\Atom\AtomODataWriter;
 use POData\Writers\IODataWriter;
+use POData\Writers\Json\JsonLightMetadataLevel;
+use POData\Writers\Json\JsonLightODataWriter;
+use POData\Writers\Json\JsonODataV1Writer;
+use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\ODataWriterRegistry;
 use POData\Writers\ResponseWriter;
 use UnitTests\POData\TestCase;
@@ -201,5 +206,93 @@ class ResponseWriterTest extends TestCase
         }
         $this->assertNotNull($actual);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function contentTypeProvider(): array
+    {
+        $result = [];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON_VERBOSE, 3, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 3, false];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON_NO_META, 3, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, 3, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON_FULL_META, 3, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 2, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 1, true];
+
+        return $result;
+    }
+
+    /**
+     * @dataProvider contentTypeProvider
+     *
+     * @param string $type
+     * @param int $version
+     * @param bool $succeed
+     * @throws \Exception
+     */
+    public function testWriteJsonResponse(string $type, int $version, bool $succeed)
+    {
+        $writer = m::mock(IODataWriter::class);
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+
+        $entityModel = new \stdClass();
+
+        switch ($version) {
+            case 1:
+                $responseVer = Version::v1();
+                break;
+            case 2:
+                $responseVer = Version::v2();
+                break;
+            case 3:
+                $responseVer = Version::v3();
+                break;
+            default:
+                throw new \InvalidArgumentException('OData version out of range');
+        };
+
+        $svc = 'http://localhost/odata.svc/Plans';
+        $registry = new ODataWriterRegistry();
+
+        $registry->register(new AtomODataWriter('\n', true));
+        $registry->register(new JsonLightODataWriter('\n', true, JsonLightMetadataLevel::NONE(), $svc));
+        $registry->register(new JsonLightODataWriter('\n', true, JsonLightMetadataLevel::MINIMAL(), $svc));
+        $registry->register(new JsonLightODataWriter('\n', true, JsonLightMetadataLevel::FULL(), $svc));
+
+        $registry->register(new JsonODataV1Writer('\n', true));
+        $registry->register(new JsonODataV2Writer('\n', true));
+
+        $wrapper = m::mock(ProvidersWrapper::class);
+
+        $seg1 = m::mock(SegmentDescriptor::class);
+        $seg1->shouldReceive('getIdentifier')->andReturn('Plans');
+
+        $request = m::mock(RequestDescription::class);
+        $request->shouldReceive('getResponseVersion')->andReturn($responseVer);
+        $request->shouldReceive('getTargetKind')->andReturn(TargetKind::RESOURCE());
+        $request->shouldReceive('getSegments')->andReturn([$seg1])->times(intval($succeed));
+
+        $response = m::mock(OutgoingResponse::class)->makePartial();
+
+        $host = m::mock(ServiceHost::class);
+        $host->shouldReceive('getOperationContext->outgoingResponse')->andReturn($response);
+
+        if ($succeed) {
+            $host->shouldReceive('getResponseHeaders')->andReturn([])->once();
+            $host->shouldReceive('setResponseStatusCode')->withArgs([200])->once();
+            $host->shouldReceive('setResponseContentType')->withArgs([$type])->once();
+            $host->shouldReceive('setResponseVersion')->withArgs(['3.0;'])->once();
+            $host->shouldReceive('setResponseCacheControl')->withArgs(['no-cache'])->once();
+        } else {
+            $this->expectExceptionMessage('No writer can handle the request');
+        }
+
+        $service = m::mock(IService::class)->makePartial();
+        $service->shouldReceive('getHost')->andReturn($host)->atLeast(1);
+        $service->shouldReceive('getProvidersWrapper')->andReturn($wrapper);
+        $service->shouldReceive('getODataWriterRegistry')->andReturn($registry);
+
+        ResponseWriter::write($service, $request, $entityModel, $type);
     }
 }
