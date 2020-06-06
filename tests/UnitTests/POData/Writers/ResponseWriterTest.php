@@ -217,7 +217,7 @@ class ResponseWriterTest extends TestCase
         $result[] = [MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, 3, true];
         $result[] = [MimeTypes::MIME_APPLICATION_JSON_FULL_META, 3, true];
         $result[] = [MimeTypes::MIME_APPLICATION_JSON, 2, true];
-        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 1, true];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 1, false];
 
         return $result;
     }
@@ -278,10 +278,11 @@ class ResponseWriterTest extends TestCase
         $host = m::mock(ServiceHost::class);
         $host->shouldReceive('getOperationContext->outgoingResponse')->andReturn($response);
 
+
         if ($succeed) {
             $host->shouldReceive('getResponseHeaders')->andReturn([])->once();
             $host->shouldReceive('setResponseStatusCode')->withArgs([200])->once();
-            $host->shouldReceive('setResponseContentType')->withArgs([$type])->once();
+            $host->shouldReceive('setResponseContentType')->once();
             $host->shouldReceive('setResponseVersion')->withArgs(['3.0;'])->once();
             $host->shouldReceive('setResponseCacheControl')->withArgs(['no-cache'])->once();
         } else {
