@@ -19,6 +19,7 @@ Unreleased
    * Drop explicit symfony/* dependencies (see [#259] (https://github.com/Algo-Web/POData/pull/259))
    * Convert to PSR-4 autoloading (see [#260] (https://github.com/Algo-Web/POData/pull/260))
    * Cleanup HttpProcessUtility(see [#261] (https://github.com/Algo-Web/POData/pull/261))
+   * Unsnarl v3 json response writes (see [#277] (https://github.com/Algo-Web/POData/pull/277))
 
 0.3.7 (2020-03-13)
 ------------------
