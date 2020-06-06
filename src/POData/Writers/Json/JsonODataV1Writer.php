@@ -117,24 +117,33 @@ class JsonODataV1Writer implements IODataWriter
             ->startObjectScope()
             ->writeName('d');
 
+        $open = false;
+
         if ($model instanceof ODataURL) {
             $this->writer->startObjectScope();
             $this->writeUrl($model);
+            $open = true;
         } elseif ($model instanceof ODataURLCollection) {
             $this->writer->startArrayScope();
             $this->writeUrlCollection($model);
+            $open = true;
         } elseif ($model instanceof ODataPropertyContent) {
             $this->writer->startObjectScope();
             $this->writeProperties($model);
+            $open = true;
         } elseif ($model instanceof ODataFeed) {
             $this->writer->startArrayScope();
             $this->writeFeed($model);
+            $open = true;
         } elseif ($model instanceof ODataEntry) {
             $this->writer->startObjectScope();
             $this->writeEntry($model);
+            $open = true;
         }
 
-        $this->writer->endScope();
+        if ($open) {
+            $this->writer->endScope();
+        }
         $this->writer->endScope();
 
         return $this;

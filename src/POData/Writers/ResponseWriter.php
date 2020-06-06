@@ -75,7 +75,10 @@ class ResponseWriter
             }
         } else {
             $responsePieces      = explode(';', $responseContentType);
-            $responseContentType = $responsePieces[0];
+            $responsePieces      = array_filter($responsePieces, function ($line) {
+                return false === stripos($line, 'charset');
+            });
+            $responseContentType = implode(';', $responsePieces);
 
             $writer = $service->getODataWriterRegistry()->getWriter(
                 $request->getResponseVersion(),
