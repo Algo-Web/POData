@@ -217,7 +217,7 @@ class ResponseWriterTest extends TestCase
         $result[] = [MimeTypes::MIME_APPLICATION_JSON_MINIMAL_META, 3, true];
         $result[] = [MimeTypes::MIME_APPLICATION_JSON_FULL_META, 3, true];
         $result[] = [MimeTypes::MIME_APPLICATION_JSON, 2, true];
-        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 1, false];
+        $result[] = [MimeTypes::MIME_APPLICATION_JSON, 1, true];
 
         return $result;
     }
