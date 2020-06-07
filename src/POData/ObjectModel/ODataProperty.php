@@ -9,7 +9,7 @@ namespace POData\ObjectModel;
  * Represents a property that comes under "m:properties" node or entry
  * or under complex property.
  */
-class ODataProperty
+class ODataProperty implements IOData
 {
 
     /**

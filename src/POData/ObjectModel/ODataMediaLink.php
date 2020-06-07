@@ -9,7 +9,7 @@ use POData\Common\ODataConstants;
 /**
  * Class ODataMediaLink represents an OData Media link.
  */
-class ODataMediaLink
+class ODataMediaLink implements IOData
 {
     /**
      * Name for media link.

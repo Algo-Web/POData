@@ -7,7 +7,7 @@ namespace POData\ObjectModel;
 /**
  * Class ODataURL Represents top level link.
  */
-class ODataURL
+class ODataURL implements IOData
 {
 
     /**
