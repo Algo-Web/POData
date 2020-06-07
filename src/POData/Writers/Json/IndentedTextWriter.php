@@ -37,16 +37,24 @@ class IndentedTextWriter
      */
     private $tabString;
 
-
+    /**
+     * @var string
+     */
     private $eol;
+
+    /**
+     * @var bool
+     */
     private $prettyPrint;
 
     /**
      * Creates a new instance of IndentedTextWriter.
      *
      * @param string $writer writer which IndentedTextWriter wraps
+     * @param string $eol
+     * @param bool   $prettyPrint
      */
-    public function __construct($writer, string $eol, bool $prettyPrint)
+    public function __construct(string $writer, string $eol, bool $prettyPrint)
     {
         $this->result      = $writer;
         $this->eol         = $prettyPrint ? $eol : '';
@@ -61,7 +69,7 @@ class IndentedTextWriter
      *
      * @return IndentedTextWriter
      */
-    public function writeValue($value)
+    public function writeValue($value): self
     {
         $this->outputTabs();
         $this->write($value);
@@ -72,7 +80,7 @@ class IndentedTextWriter
     /**
      * Writes the tabs depending on the indent level.
      */
-    private function outputTabs()
+    private function outputTabs(): void
     {
         if ($this->tabsPending) {
             $this->write(str_repeat($this->tabString, $this->indentLevel));
@@ -85,7 +93,7 @@ class IndentedTextWriter
      *
      * @param string $value value to be written
      */
-    private function write($value)
+    private function write($value): void
     {
         $this->result .= $value;
     }
@@ -95,7 +103,7 @@ class IndentedTextWriter
      *
      * @return IndentedTextWriter
      */
-    public function writeLine()
+    public function writeLine(): self
     {
         $this->write($this->eol);
         $this->tabsPending = true;
@@ -110,7 +118,7 @@ class IndentedTextWriter
      *
      * @return IndentedTextWriter
      */
-    public function writeTrimmed($value)
+    public function writeTrimmed(string $value): self
     {
         $this->write(trim($value));
 
@@ -122,7 +130,7 @@ class IndentedTextWriter
      *
      * @return IndentedTextWriter
      */
-    public function increaseIndent()
+    public function increaseIndent(): self
     {
         ++$this->indentLevel;
 
@@ -134,7 +142,7 @@ class IndentedTextWriter
      *
      * @return IndentedTextWriter
      */
-    public function decreaseIndent()
+    public function decreaseIndent(): self
     {
         if ($this->indentLevel > 0) {
             $this->indentLevel--;
@@ -147,7 +155,7 @@ class IndentedTextWriter
      * @return string the current written text
      *                strReplace as json_encode does not always respect PHP_EOL
      */
-    public function getResult()
+    public function getResult(): string
     {
         return $this->result;
     }
