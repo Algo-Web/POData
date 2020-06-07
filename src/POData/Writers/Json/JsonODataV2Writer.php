@@ -8,6 +8,7 @@ use Exception;
 use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
+use POData\ObjectModel\IOData;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataLink;
@@ -60,12 +61,12 @@ class JsonODataV2Writer extends JsonODataV1Writer
     /**
      * Write the given OData model in a specific response format.
      *
-     * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
+     * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry|IOData $model Object to write
      *
      * @throws Exception
      * @return JsonODataV2Writer
      */
-    public function write($model)
+    public function write(IOData $model)
     {
         // { "d" :
         $this->writer

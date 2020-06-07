@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace POData\Writers;
 
 use POData\Common\Version;
+use POData\ObjectModel\IOData;
 use POData\ObjectModel\ODataEntry;
 use POData\ObjectModel\ODataFeed;
 use POData\ObjectModel\ODataPropertyContent;
@@ -37,7 +38,7 @@ interface IODataWriter
      *
      * @return IODataWriter
      */
-    public function write($model);
+    public function write(IOData $model);
 
     /**
      * @param ProvidersWrapper $providers
