@@ -7,7 +7,7 @@ namespace POData\ObjectModel;
 /**
  * Class ODataLink represents an OData Navigation Link.
  */
-class ODataLink
+class ODataLink implements IOData
 {
     /**
      * Name of the link. This becomes last segment of rel attribute value.

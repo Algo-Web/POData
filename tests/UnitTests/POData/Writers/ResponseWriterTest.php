@@ -10,6 +10,7 @@ use POData\Common\MimeTypes;
 use POData\Common\ODataConstants;
 use POData\Common\Version;
 use POData\IService;
+use POData\ObjectModel\ODataEntry;
 use POData\OperationContext\ServiceHost;
 use POData\OperationContext\Web\OutgoingResponse;
 use POData\Providers\ProvidersWrapper;
@@ -236,7 +237,7 @@ class ResponseWriterTest extends TestCase
 
         $wrapper = m::mock(ProvidersWrapper::class);
 
-        $entityModel = new \stdClass();
+        $entityModel = new ODataEntry();
 
         switch ($version) {
             case 1:

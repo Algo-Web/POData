@@ -10,6 +10,8 @@ use POData\Common\ODataException;
 use POData\Common\Url;
 use POData\Common\Version;
 use POData\ObjectModel\ObjectModelSerializer;
+use POData\ObjectModel\ODataEntry;
+use POData\ObjectModel\ODataTitle;
 use POData\OperationContext\HTTPRequestMethod;
 use POData\OperationContext\IOperationContext;
 use POData\Providers\Metadata\ResourceFunctionType;
@@ -2308,6 +2310,12 @@ class UriProcessorMockeryTest extends TestCase
         $this->assertEquals('Hammer, M.C.', $rebar->getName());
     }
 
+    /**
+     * @throws InvalidOperationException
+     * @throws ODataException
+     * @throws \POData\Common\UrlFormatException
+     * @throws \ReflectionException
+     */
     public function testIntegrationWithJustASingleton()
     {
         $hostInfo = [
@@ -2319,11 +2327,15 @@ class UriProcessorMockeryTest extends TestCase
             'RequestAccept'         => '*/*'
         ];
 
+        $title                = new ODataTitle('fnord');
+        $payload              = new ODataEntry('fnord');
+        $payload->setTitle($title);
+
         $queryResult          = new QueryResult();
-        $queryResult->results = 'fnord';
+        $queryResult->results = $payload;
 
         $cereal = m::mock(ObjectModelSerializer::class)->makePartial();
-        $cereal->shouldReceive('writeTopLevelElement')->andReturn('fnord');
+        $cereal->shouldReceive('writeTopLevelElement')->andReturn($payload);
         $cereal->shouldReceive('setRequest')->andReturnNull()->once();
         $host = new ServiceHostTestFake($hostInfo);
         $db   = m::mock(IQueryProvider::class);
@@ -2348,7 +2360,7 @@ class UriProcessorMockeryTest extends TestCase
 
         $this->assertEquals('application/atom+xml;charset=UTF-8', $foo->getHost()->getResponseContentType());
         $stream = $foo->getHost()->getOperationContext()->outgoingResponse()->getStream();
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', trim($stream));
+        $this->assertStringContainsString('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', trim($stream));
     }
 
 

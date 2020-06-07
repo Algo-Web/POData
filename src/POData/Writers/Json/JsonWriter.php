@@ -40,7 +40,7 @@ class JsonWriter
      * @param string $eol         the line terminator character
      * @param bool   $prettyPrint if output should be well formatted
      */
-    public function __construct($writer, string $eol, bool $prettyPrint)
+    public function __construct(string $writer, string $eol, bool $prettyPrint)
     {
         $this->writer = new IndentedTextWriter($writer, $eol, $prettyPrint);
     }
@@ -50,7 +50,7 @@ class JsonWriter
      *
      * @return JsonWriter
      */
-    public function endScope()
+    public function endScope(): self
     {
         $this->writer->writeLine()->decreaseIndent();
 
@@ -68,7 +68,7 @@ class JsonWriter
      *
      * @return JsonWriter
      */
-    public function startArrayScope()
+    public function startArrayScope(): self
     {
         $this->startScope($this->scopeType['Array']);
 
@@ -80,7 +80,7 @@ class JsonWriter
      *
      * @param int $type scope type
      */
-    private function startScope($type)
+    private function startScope(int $type): void
     {
         if (0 != count($this->scopes)) {
             $currentScope = end($this->scopes);
@@ -108,7 +108,7 @@ class JsonWriter
      *
      * @return JsonWriter
      */
-    public function startObjectScope()
+    public function startObjectScope(): self
     {
         $this->startScope($this->scopeType['Object']);
 
@@ -122,7 +122,7 @@ class JsonWriter
      *
      * @return JsonWriter
      */
-    public function writeName($name)
+    public function writeName(string $name): self
     {
         $currentScope = end($this->scopes);
         if ($currentScope && $currentScope->type == $this->scopeType['Object']) {
@@ -145,7 +145,7 @@ class JsonWriter
      * @param string $text   value to be written
      * @param bool   $quotes put quotes around the value if this value is true
      */
-    private function writeCore($text, $quotes)
+    private function writeCore($text, bool $quotes): void
     {
         if (0 != count($this->scopes)) {
             $currentScope = end($this->scopes);
@@ -177,7 +177,7 @@ class JsonWriter
      * @throws Exception
      * @return JsonWriter
      */
-    public function writeValue($value, $type = null)
+    public function writeValue($value, string $type = null): self
     {
         switch ($type) {
             case 'Edm.Boolean':
@@ -239,11 +239,9 @@ class JsonWriter
      *
      * @param string $string input string value
      *
-     * Returns the string value with special characters escaped
-     *
      * @return string
      */
-    private function quoteJScriptString($string)
+    private function quoteJScriptString($string): string
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
         $search          = ['\\', "\n", "\t", "\r", "\b", "\f", '"'];
@@ -260,7 +258,7 @@ class JsonWriter
      *
      * @return string
      */
-    public function getJsonOutput()
+    public function getJsonOutput(): string
     {
         return $this->writer->getResult();
     }

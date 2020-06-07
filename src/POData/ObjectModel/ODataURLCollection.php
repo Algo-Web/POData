@@ -7,7 +7,7 @@ namespace POData\ObjectModel;
 /**
  * Class ODataURLCollection represent collection of links for $links request.
  */
-class ODataURLCollection
+class ODataURLCollection implements IOData
 {
     /**
      * Array of ODataURL.

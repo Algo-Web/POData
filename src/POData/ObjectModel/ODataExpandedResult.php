@@ -13,7 +13,7 @@ namespace POData\ObjectModel;
  * Class ODataExpandedResult.
  * @package POData\ObjectModel
  */
-class ODataExpandedResult
+class ODataExpandedResult implements IOData
 {
     /**
      * Term.

@@ -9,7 +9,7 @@ namespace POData\ObjectModel;
  *
  * @package POData\ObjectModel
  */
-class ODataTitle
+class ODataTitle implements IOData
 {
 
     /**

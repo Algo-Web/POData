@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace POData\ObjectModel;
 
-abstract class ODataContainerBase
+abstract class ODataContainerBase implements IOData
 {
     /**
      * Entry id.

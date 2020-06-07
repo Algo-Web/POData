@@ -11,6 +11,7 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\Configuration\ServiceConfiguration;
+use POData\ObjectModel\IOData;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -152,7 +153,7 @@ class AtomODataWriter implements IODataWriter
      * @throws Exception
      * @return AtomODataWriter
      */
-    public function write($model)
+    public function write(IOData $model)
     {
         if ($model instanceof ODataURL) {
             return $this->writeUrl($model);

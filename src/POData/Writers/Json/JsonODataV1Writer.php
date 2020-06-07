@@ -10,6 +10,7 @@ use POData\Common\ODataConstants;
 use POData\Common\ODataException;
 use POData\Common\Version;
 use POData\Configuration\ServiceConfiguration;
+use POData\ObjectModel\IOData;
 use POData\ObjectModel\ODataBagContent;
 use POData\ObjectModel\ODataCategory;
 use POData\ObjectModel\ODataEntry;
@@ -105,12 +106,12 @@ class JsonODataV1Writer implements IODataWriter
     /**
      * Write the given OData model in a specific response format.
      *
-     * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry $model Object of requested content
+     * @param ODataURL|ODataURLCollection|ODataPropertyContent|ODataFeed|ODataEntry|IOData $model Object to write
      *
      * @throws Exception
      * @return JsonODataV1Writer
      */
-    public function write($model)
+    public function write(IOData $model)
     {
         // { "d" :
         $this->writer

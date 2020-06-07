@@ -10,7 +10,7 @@ namespace POData\ObjectModel;
  *  (1) Primitive Bag
  *  (2) Complex Bag.
  */
-class ODataBagContent
+class ODataBagContent implements IOData
 {
     /**
      * The type name of the element.
