@@ -4,29 +4,42 @@ declare(strict_types=1);
 
 namespace POData\UriProcessor\ResourcePathProcessor\SegmentParser;
 
+use Cruxinator\BitMask\BitMask;
 use MyCLabs\Enum\Enum;
 
 /**
  * @method static TargetKind NOTHING()
+ * @method isNOTHING(): bool
  * @method static TargetKind SERVICE_DIRECTORY()
+ * @method isSERVICE_DIRECTORY(): bool
  * @method static TargetKind RESOURCE()
+ * @method isRESOURCE(): bool
  * @method static TargetKind COMPLEX_OBJECT()
+ * @method isCOMPLEX_OBJECT(): bool
  * @method static TargetKind PRIMITIVE()
+ * @method isPRIMITIVE(): bool
  * @method static TargetKind PRIMITIVE_VALUE()
+ * @method isPRIMITIVE_VALUE(): bool
  * @method static TargetKind METADATA()
+ * @method isMETADATA(): bool
  * @method static TargetKind VOID_SERVICE_OPERATION()
+ * @method isVOID_SERVICE_OPERATION(): bool
  * @method static TargetKind BATCH()
+ * @method isBATCH(): bool
  * @method static TargetKind LINK()
+ * @method isLINK(): bool
  * @method static TargetKind MEDIA_RESOURCE()
+ * @method isMEDIA_RESOURCE(): bool
  * @method static TargetKind BAG()
+ * @method isBAG(): bool
  * @method static TargetKind SINGLETON()
+ * @method isSINGLETON(): bool
+ * @method isComponentOfTERMINAL(): bool
+ * @method isComponentOfSPECIAL_PURPOSE(): bool
+ * @method isComponentOfNON_FILTERABLE(): bool
  */
-class TargetKind extends Enum
+class TargetKind extends BitMask
 {
-    protected const TERMINAL_VALUES       = [6 => true, 7 => true, 9 => true, 11 => true, 12 => true];
-    protected const DIRECT_PROCESS_VALUES = [2 => true, 7 => true, 9 => true];
-    protected const NON_FILTERABLE_VALUES = [3 => true, 4 => true];
-
     /**
      * Nothing specific is being requested.
      * e.g. http://localhost.
@@ -44,68 +57,74 @@ class TargetKind extends Enum
      * e.g. http://localhost/myservice.svc/Customers
      *      http://localhost/myservice.svc/Customers('ALFKI')/Orders(123).
      */
-    protected const RESOURCE = 3;
+    protected const RESOURCE = 4;
 
     /**
      * A single complex value is requested (eg: an Address).
      * e.g. http://localhost/myservice.svc/Address.
      */
-    protected const COMPLEX_OBJECT = 4;
+    protected const COMPLEX_OBJECT = 8;
 
     /**
      * A single value is requested (eg: a Picture property).
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/CustomerName
      *      http://localhost/myservice.svc/Address/LineNumber.
      */
-    protected const PRIMITIVE = 5;
+    protected const PRIMITIVE = 16;
 
     /**
      * A single value is requested (eg: the raw stream of a Picture).
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/CustomerName/$value
      *      http://localhost/myservice.svc/Customers/$count.
      */
-    protected const PRIMITIVE_VALUE = 6;
+    protected const PRIMITIVE_VALUE = 32;
 
     /**
      * System metadata.
      * e.g. http://localhost/myservice.svc/$metadata.
      */
-    protected const METADATA = 7;
+    protected const METADATA = 64;
 
     /**
      * A data-service-defined operation that doesn't return anything.
      */
-    protected const VOID_SERVICE_OPERATION = 8;
+    protected const VOID_SERVICE_OPERATION = 128;
 
     /**
      * The request is a batch request.
      * e.g. http://localhost/myservice.svc/$batch.
      */
-    protected const BATCH = 9;
+    protected const BATCH = 256;
 
     /**
      * The request is a link operation - bind or unbind or simple get
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/$links/Orders.
      */
-    protected const LINK = 10;
+    protected const LINK = 512;
 
     /**
      * A stream property value is requested.
      * e.g. http://localhost/myservice.svc/Albums('trip')/Photos('123')/$value
      * e.g. http://localhost/myservice.svc/Albums('trip')/Photos('123')/ThumNail64x64/$value.
      */
-    protected const MEDIA_RESOURCE = 11;
+    protected const MEDIA_RESOURCE = 1024;
 
     /**
      * A single bag of primitive or complex values is requested
      * e.g. http://localhost/myservice.svc/Customers('ALFKI')/EMails.
      */
-    protected const BAG = 12;
+    protected const BAG = 2048;
 
     /**
      * A singleton (parameter-less function wrapper).
      */
-    protected const SINGLETON = 13;
+    protected const SINGLETON = 4096;
+
+    protected const NON_FILTERABLE = 4 | 8;
+
+    protected const SPECIAL_PURPOSE = 2 | 64 | 256;
+
+    protected const TERMINAL = 32 | 64 | 256 | 1024 | 2048;
 
     /**
      * Is this segment a terminal segment - nothing else can be added after it?
@@ -114,7 +133,7 @@ class TargetKind extends Enum
      */
     public function isTerminal(): bool
     {
-        return array_key_exists($this->getValue(), self::TERMINAL_VALUES);
+        return $this->isComponentOfTERMINAL();
     }
 
     /**
@@ -124,7 +143,7 @@ class TargetKind extends Enum
      */
     public function isSpecialPurpose(): bool
     {
-        return array_key_exists($this->getValue(), self::DIRECT_PROCESS_VALUES);
+        return $this->isComponentOfSPECIAL_PURPOSE();
     }
 
     /**
@@ -134,6 +153,6 @@ class TargetKind extends Enum
      */
     public function isNotFilterable(): bool
     {
-        return array_key_exists($this->getValue(), self::NON_FILTERABLE_VALUES);
+        return $this->isComponentOfNON_FILTERABLE();
     }
 }
