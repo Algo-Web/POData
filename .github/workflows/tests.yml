@@ -1,0 +1,171 @@
+name: Unit & Integration Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  tests:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ ubuntu-latest]
+        php-version: ['7.1', '7.4', '8.4' ]
+        dependencies: [locked,  lowest, highest ]
+        coverage-driver: [ pcov ]
+    name: Tests on ${{ matrix.operating-system }}, PHP ${{ matrix.php-version }} (${{ matrix.dependencies }};)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: ${{ matrix.coverage-driver }}
+          ini-values: memory_limit=512M, xdebug.mode=off
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
+
+      - name: Remove the configured PHP platform
+        if: matrix.dependencies != 'locked'
+        run: composer config --unset platform.php
+
+      - name: Get composer cache directory
+        id: composer-cache
+        shell: bash
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.dependencies }} }}
+          restore-keys: |
+            composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.dependencies }} }}-
+            composer-${{ runner.os }}-${{ matrix.php-version }}-
+            composer-${{ runner.os }}-
+            composer-
+
+      - name: Install dependencies
+        if: ${{ matrix.dependencies == 'locked' }}
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install highest dependencies
+        if: ${{ matrix.dependencies == 'highest' }}
+        run: composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Install lowest dependencies
+        if: ${{ matrix.dependencies == 'lowest' }}
+        run: composer update --no-interaction --prefer-dist --no-progress --prefer-lowest
+
+      - name: Run unit tests
+        shell: bash
+        run: vendor/bin/phpunit
+
+  # This is a meta job to avoid to have to constantly change the protection rules
+  # whenever we touch the matrix.
+  tests-status:
+    name: Unit & Integration Tests Status
+    runs-on: ubuntu-latest
+    needs: tests
+    if: always()
+    steps:
+      - name: Successful run
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+
+      - name: Failing run
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+
+  infection:
+    runs-on: ubuntu-latest
+    needs: tests-status
+    env:
+      MIN_MSI: 70.17
+      MIN_COVERED_MSI: 83.48
+    name: Infection complete run on Infection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          # Any supported PHP version is fine
+          php-version: '8.4'
+          coverage: pcov
+          tools: composer
+        env:
+          # This is necessary when installing a tool with a specific version
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
+          restore-keys: |
+            composer-${{ runner.os }}-${{ matrix.php-version }}-
+            composer-${{ runner.os }}-
+            composer-
+
+      - name: Install dependencies
+        # Run the locked dependencies: we are not interested in testing different
+        # variations here so having a stable set is better.
+        run: |
+          composer update --no-interaction --prefer-dist --no-progress
+          composer config --no-plugins allow-plugins.infection/extension-installer true
+          composer require infection/infection
+      - name: "Gather base branch for diff"
+        if: ${{ github.event_name == 'pull_request' }}
+        run: git fetch origin --no-tags --prune --depth=1 ${{ github.base_ref }} ${{ github.event.pull_request.base.sha }}
+      - name: Collect coverage report
+        run: |
+          php vendor/phpunit/phpunit/phpunit --stop-on-failure \
+            --coverage-xml=build/logs/coverage-xml \
+            --log-junit=build/logs/junit.xml
+      - name: "Infection on DIFF"
+        if: ${{ github.event_name == 'pull_request' }}
+        timeout-minutes: 30
+        run: |
+          php -d zend.assertions=1 \
+          		-d pcov.enabled=1 \
+          		vendor/bin/infection run \
+          		--threads=max \
+          		--git-diff-lines \
+          		--git-diff-base=origin/${{ github.base_ref }} \
+          		--skip-initial-tests \
+          		--initial-tests-php-options="'-d' 'pcov.enabled=1'" \
+          		--coverage=build/logs \
+          		--show-mutations \
+          		--verbose \
+          		--ignore-msi-with-no-mutations \
+          		--min-msi="${{ env.MIN_MSI }}" \
+          		--logger-github
+        env:
+          BASE_BRANCH: origin/${{ github.base_ref }}
+      - name: Run Infection
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          php vendor/bin/infection --threads=max \
+            --skip-initial-tests \
+            --min-msi="${{ env.MIN_MSI }}" \
+            --min-covered-msi="${{ env.MIN_COVERED_MSI }}" \
+            --coverage=build/logs  \
+          	--show-mutations \
+          	--verbose \
+          	--ignore-msi-with-no-mutations \
+            --no-interaction \
+            --no-progress 

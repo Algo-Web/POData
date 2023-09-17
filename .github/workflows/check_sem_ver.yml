@@ -1,0 +1,26 @@
+name: Check Semver
+
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    name: Check Semantic Version Changes
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Evaluate semantic versioning
+        run: |
+          wget https://psvcg.coreteks.org/php-semver-checker-git.phar
+          php php-semver-checker-git.phar suggest -vvv --include-before=src --include-after=src --details --allow-detached
