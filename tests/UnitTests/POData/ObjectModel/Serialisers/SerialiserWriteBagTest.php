@@ -25,7 +25,7 @@ use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\Type\StringType;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
@@ -317,7 +317,7 @@ class SerialiserWriteBagTest extends SerialiserTestBase
         $meta     = NorthWindMetadata::Create();
         $provider = m::mock(IExpressionProvider::class);
 
-        $query = m::mock(IQueryProvider::class);
+        $query = m::mock(IReadQueryProvider::class);
         $query->shouldReceive('getExpressionProvider')->andReturn($provider);
 
         return [$host, $meta, $query];

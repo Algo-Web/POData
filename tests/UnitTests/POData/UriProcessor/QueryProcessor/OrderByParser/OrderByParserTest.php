@@ -13,7 +13,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\ProvidersWrapper;
-use POData\Providers\Query\IQueryProvider;
+use POData\Providers\Query\IReadQueryProvider;
 use POData\UriProcessor\QueryProcessor\OrderByParser\OrderByParser;
 //These are in the file loaded by above use statement
 //TODO: move to own class files
@@ -30,13 +30,13 @@ use UnitTests\POData\TestCase;
 
 class OrderByParserTest extends TestCase
 {
-    /** @var IQueryProvider */
+    /** @var IReadQueryProvider */
     protected $mockQueryProvider;
 
     public function setUp()
     {
         parent::setUp();
-        $this->mockQueryProvider = m::mock('POData\Providers\Query\IQueryProvider');
+        $this->mockQueryProvider = m::mock('POData\Providers\Query\IReadQueryProvider');
     }
 
     public function testOrderByWithSyntaxError()

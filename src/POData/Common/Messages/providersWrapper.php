@@ -11,36 +11,36 @@ namespace POData\Common\Messages;
 trait providersWrapper
 {
     /**
-     * Message to show error service implementation returns null for IMetadataProvider or IQueryProvider.
+     * Message to show error service implementation returns null for IMetadataProvider or IReadQueryProvider.
      *
      * @return string The message
      */
     public static function providersWrapperNull()
     {
         return 'For custom providers, GetService should not return null for both IMetadataProvider and'
-            . ' IQueryProvider types.';
+            . ' IReadQueryProvider types.';
     }
 
     /**
-     * The error message to show when IQueryProvider::getExpressionProvider
+     * The error message to show when IReadQueryProvider::getExpressionProvider
      * method returns empty or null.
      *
      * @return string The message
      */
     public static function providersWrapperExpressionProviderMustNotBeNullOrEmpty()
     {
-        return 'The value returned by IQueryProvider::getExpressionProvider method must not be null or empty';
+        return 'The value returned by IReadQueryProvider::getExpressionProvider method must not be null or empty';
     }
 
     /**
-     * The error message to show when IQueryProvider::getExpressionProvider
+     * The error message to show when IReadQueryProvider::getExpressionProvider
      * method returns non-object or an object which does not implement IExpressionProvider.
      *
      * @return string The message
      */
     public static function providersWrapperInvalidExpressionProviderInstance()
     {
-        return 'The value returned by IQueryProvider::getExpressionProvider method must be an implementation'
+        return 'The value returned by IReadQueryProvider::getExpressionProvider method must be an implementation'
             . ' of IExpressionProvider';
     }
 
